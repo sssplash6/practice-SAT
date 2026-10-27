@@ -1,0 +1,1105 @@
+{
+ "skill": "Words in Context",
+ "slug": "words_in_context",
+ "part": "w4b6",
+ "domain": "Craft and Structure",
+ "plan": {
+  "templates": [
+   {
+    "code": "B6",
+    "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+   },
+   {
+    "code": "B1",
+    "name": "Blank completion, restatement clue"
+   },
+   {
+    "code": "B3",
+    "name": "Blank completion, contrast clue (including received view then finding)"
+   },
+   {
+    "code": "B5",
+    "name": "Blank completion, negated frame"
+   },
+   {
+    "code": "M1",
+    "name": "Most nearly mean, underlined word"
+   },
+   {
+    "code": "B2",
+    "name": "Blank completion, cause or consequence clue"
+   },
+   {
+    "code": "M2",
+    "name": "Most nearly mean, underlined phrase or phrase options"
+   },
+   {
+    "code": "B4",
+    "name": "Blank completion, example-pinned clue"
+   }
+  ]
+ },
+ "items": [
+  {
+   "id": "words_in_context.B6.hard.w4b6_01",
+   "template": "B6",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "Economist Marit Hinnosaar and colleagues ran a field experiment in which they added content to the Wikipedia pages of randomly selected cities. Tourists’ overnight stays subsequently increased in those cities, but the gain came mostly from improvements to pages that had been comparatively short and incomplete, suggesting that the payoff from additional content is ______ how much information a page already offers.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "independent of",
+    "proportional to",
+    "contingent on",
+    "detrimental to"
+   ],
+   "answer_letter": "C",
+   "explanation": "Contingent on means dependent on. Adding content raised overnight stays, but “the gain came mostly from improvements to pages that had been comparatively short and incomplete,” so how much a page gains from additional content depends on how much information it already offered.",
+   "distractors": {
+    "A": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Independent of means unaffected by. The text says the opposite: the gain was not the same for every page but came “mostly from improvements to pages that had been comparatively short and incomplete.”"
+    },
+    "B": {
+     "recipe": "near miss: right field, wrong direction (CONNOT)",
+     "why_wrong": "Proportional to means growing as something else grows. That would mean pages that already offered more gained more from new content, but the gain came mostly from pages that had been “comparatively short and incomplete,” the reverse."
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Detrimental to means harmful to. The text never suggests that additional content harms the information a page already offers; it describes how the size of the payoff varied with that information."
+    }
+   },
+   "models": [
+    "5dce6cab",
+    "4fa7e50e",
+    "5e57efec"
+   ],
+   "sources": [
+    {
+     "what": "Crossref abstract, Hinnosaar, Hinnosaar, Kummer and Slivko 2021, 'Wikipedia matters' (Journal of Economics and Management Strategy): randomized field experiment; adding information to Wikipedia pages about cities increases overnight stays in treated cities compared to nontreated cities; the impact is largely driven by improvements to shorter and relatively incomplete pages",
+     "url": "https://api.crossref.org/works/10.1111/jems.12421"
+    }
+   ],
+   "notes": "Subject: social science (economics). Key letter C. Steps: 2 (the gain was concentrated on short pages, so the payoff varies with what a page already holds). Raw freq.txt ranks: independent of 3,829; proportional to 68,085; contingent on 17,762; detrimental to 28,955 (3 of 4 past 10,000, 2 past 20,000). Recipes ANT, CONNOT (direction), UNSUP, as in band-6 4fa7e50e. Indicative of and obscured by were left out: each has a loose reading that fits.",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: phrase options",
+   "word_count": 62
+  },
+  {
+   "id": "words_in_context.B1.hard.w4b6_02",
+   "template": "B1",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "Felix Oberhauser and Tomer Czaczkes allowed black garden ants to drink sugar water flavored with lemon or rosemary on three consecutive visits and then presented each ant with the alternative flavor on a fourth visit, keeping the concentration of sugar unchanged. These ants accepted the food less readily and deposited less trail pheromone, suggesting that a flavor that is ______ in itself can nonetheless diminish a food’s perceived value when it contradicts expectations.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "neutral",
+    "unpalatable",
+    "nourishing",
+    "familiar"
+   ],
+   "answer_letter": "A",
+   "explanation": "Neutral here means neither good nor bad. Each ant was simply given “the alternative flavor,” lemon or rosemary, with “the concentration of sugar unchanged,” so the new flavor was no better or worse than the one the ant expected; the food lost value only because the flavor “contradicts expectations.”",
+   "distractors": {
+    "B": {
+     "recipe": "near miss: partly right (CONNOT)",
+     "why_wrong": "Unpalatable means unpleasant to taste. An unpleasant flavor could explain why the ants drank less, but each ant was simply given “the alternative flavor,” so the switch went both ways, and “nonetheless” signals that the flavor lowered the food’s value even though it was harmless in itself."
+    },
+    "C": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Nourishing means providing nutrition. The flavors did not change the food’s nutrition, since “the concentration of sugar” stayed “unchanged”; the text concerns how a flavor affects the ants’ judgment of food."
+    },
+    "D": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Familiar means well known. The flavor that lowered the food’s value was the one the ant had not tasted on its first three visits; it was unfamiliar to the ant, which is why it “contradicts expectations.”"
+    }
+   },
+   "models": [
+    "76e4c51d",
+    "3d658a5a",
+    "98364791"
+   ],
+   "sources": [
+    {
+     "what": "PubMed abstract, Oberhauser and Czaczkes 2018 (Biology Letters): Lasius niger ants drank lemon- or rosemary-flavoured 1 M sucrose; after three visits the taste was switched on the fourth while sweetness stayed the same; disconfirmed ants showed lower food acceptance and laid less pheromone; an expectation of value-neutral attributes can influence perceived value",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/30185610/"
+    }
+   ],
+   "notes": "Subject: natural science (animal behavior). Key letter A. Steps: 2 (the swap ran both ways with sweetness fixed, so neither flavor is better in itself; the concessive 'still' then needs a harmless flavor). Raw freq.txt ranks: neutral 12,276; unpalatable 27,812; nourishing 23,479; familiar 1,215 (3 of 4 past 10,000, 2 past 20,000). The source's term is 'value-neutral'; the passage never uses it. Novel was left out (the switched flavor was new to the ant, a loose fit).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: restatement clue",
+   "word_count": 73
+  },
+  {
+   "id": "words_in_context.B3.hard.w4b6_03",
+   "template": "B3",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Until recently, researchers considered salmon ______ in the diets of the hunter-gatherers of Ice Age Beringia, the region that once connected Asia and North America. But chemical analyses of 17 hearths at Alaska’s Upward Sun River site by Kyungcheol Choy and colleagues revealed substantial and recurrent salmon processing during occupations dating to between roughly 13,200 and 11,500 years ago.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "paramount",
+    "ancillary",
+    "seasonal",
+    "emblematic"
+   ],
+   "answer_letter": "B",
+   "explanation": "Ancillary means secondary or supplementary. “Until recently” and “But” set the earlier view against the finding of “substantial and recurrent salmon processing,” so the earlier view must have been that salmon played only a minor, supporting part in these people’s diets.",
+   "distractors": {
+    "A": {
+     "recipe": "reversal: trait of the other side (ANT)",
+     "why_wrong": "Paramount means of the greatest importance. If researchers had already treated salmon as the most important food, the finding of “substantial and recurrent salmon processing” would confirm their view rather than contrast with it, as “But” requires."
+    },
+    "C": {
+     "recipe": "near miss from the topic (CONNOT)",
+     "why_wrong": "Seasonal means available or used at certain times of the year. Salmon runs are seasonal, but the finding of “substantial and recurrent salmon processing” does not contradict that idea; the contrast signaled by “But” needs an earlier view about how much salmon mattered, which the finding overturns."
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Emblematic means serving as a symbol. Nothing in the text concerns salmon as a symbol for these hunter-gatherers, and a symbolic role would not stand in contrast to evidence of “substantial and recurrent salmon processing.”"
+    }
+   },
+   "models": [
+    "22a41819",
+    "e8fb0744",
+    "a5e747f0",
+    "6c9f1727"
+   ],
+   "sources": [
+    {
+     "what": "PubMed abstract, Choy et al. 2016 (PNAS): chemical analyses of 17 hearths in three occupations dating ~13,200-11,500 cal BP at the Upward Sun River site, central Alaska, show substantial anadromous salmon use in multiple components; salmonid and freshwater resources were more important for late Pleistocene hunter-gatherers than previously thought",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/27573838/"
+    }
+   ],
+   "notes": "Subject: social science (archaeology). Key letter B. Steps: 2 (undo the contrast: the finding is substantial use, so the received view was minor use). Contrast frame: Until recently ... But, as in band-7 6c9f1727. Transferred-sense key: no. Raw freq.txt ranks: paramount 14,045; ancillary 69,564; seasonal 45,224; emblematic 28,969 (4 of 4 past 10,000, 3 past 20,000). Band-5 guard: clear (the key is the rarest option, but every distractor is past 10,000). Deleterious, superfluous and anomalous were left out: each makes a coherent contrast with 'substantial use'.",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: contrast clue",
+   "word_count": 59,
+   "band7_moves": [
+    "blank on the received view (Until recently), finding after a contrastive But",
+    "trait of the finding's side offered as a reversal (paramount)",
+    "near miss from the topic that fails on one feature (seasonal: timing, not importance)",
+    "all four options past rank 10,000, three past 20,000"
+   ]
+  },
+  {
+   "id": "words_in_context.B5.hard.w4b6_04",
+   "template": "B5",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "Beginning in 1927, art historian Aby Warburg assembled nearly 1,000 pictures, drawn from books, magazines, newspapers, and other everyday sources, on 40 wooden panels covered in black cloth, arranging them according to theme. The resulting picture atlas, which he called Mnemosyne, is by no means ______: it provides viewers with no captions and only a handful of written texts.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "cryptic",
+    "derivative",
+    "ephemeral",
+    "transparent"
+   ],
+   "answer_letter": "D",
+   "explanation": "Transparent here means easy to understand. The atlas “provides viewers with no captions and only a handful of written texts,” so viewers get almost no help in seeing why Warburg grouped its nearly 1,000 pictures as he did: the work is far from easy to understand.",
+   "distractors": {
+    "A": {
+     "recipe": "reversal: negation flip (ANT)",
+     "why_wrong": "Cryptic means puzzling or obscure. Saying the atlas is “by no means” cryptic would mean it is easy to understand, but a work with “no captions and only a handful of written texts” points the other way."
+    },
+    "B": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Derivative means unoriginal, copied from others’ work. The explanation after the colon, that the atlas has “no captions and only a handful of written texts,” concerns how easily it can be understood, not whether it is original."
+    },
+    "C": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Ephemeral means short-lived. Nothing in the text concerns how long the atlas lasted; the explanation after the colon is about how little written guidance it gives viewers."
+    }
+   },
+   "models": [
+    "e7d37666",
+    "f83f0aab",
+    "bbb77c84"
+   ],
+   "sources": [
+    {
+     "what": "Wikipedia, Aby Warburg, 'Last project: Mnemosyne Atlas': in December 1927 Warburg began a picture atlas named Mnemosyne of 40 wooden panels covered with black cloth, on which were pinned nearly 1,000 pictures from books, magazines, newspapers and other daily life sources, arranged by theme; there were no captions and only a few texts",
+     "url": "https://en.wikipedia.org/wiki/Aby_Warburg"
+    }
+   ],
+   "notes": "Subject: humanities (art history). Key letter D. Steps: 2 (no captions or texts, so the atlas is hard to read; then undo 'by no means'). Transferred-sense key: yes (transparent as easy to understand). Raw freq.txt ranks: cryptic 30,140; derivative 31,569; ephemeral 21,660; transparent 7,165 (3 of 4 past 10,000, 3 past 20,000). Elaborate was left out: 'by no means elaborate' can be read as 'sparse in text', which the colon would support.",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: negated frame",
+   "word_count": 59
+  },
+  {
+   "id": "words_in_context.M1.hard.w4b6_05",
+   "template": "M1",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "The following text is from Hope Mirrlees’s 1926 novel Lud-in-the-Mist. Captain Mumchance, an officer of the law, has come to suspect the Doctor of murder.\n\nCaptain Mumchance was not exactly an imaginative man, but as he stood there contemplating the Doctor he could almost have believed that his features and expression had suffered a subtle and most <u>unbecoming</u> change since he had last seen them. It was as if he was sitting in a ghastly green light—the most disfiguring and sinister of all the effects of light with which the Law cunningly plays with appearances—the light that emanates from the word murder.",
+   "stem": "As used in the text, what does the word “unbecoming” most nearly mean?",
+   "options": [
+    "Indecorous",
+    "Unflattering",
+    "Imperceptible",
+    "Irreversible"
+   ],
+   "answer_letter": "B",
+   "explanation": "Unbecoming here describes the Doctor’s looks. The captain sees the change as if the Doctor were sitting in “a ghastly green light,” which the text calls “the most disfiguring and sinister of all the effects of light,” so the change makes the Doctor look worse: it is unflattering.",
+   "distractors": {
+    "A": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Indecorous means improper in behavior, the sense unbecoming has in a phrase such as “unbecoming conduct.” Here the word describes a change in the Doctor’s “features and expression,” likened to a “disfiguring” light, so it concerns how he looks, not how he behaves."
+    },
+    "C": {
+     "recipe": "topic echo of subtle (ASSOC)",
+     "why_wrong": "Imperceptible means too slight to be noticed. The change is “subtle,” but the captain does notice it while “contemplating the Doctor,” and the comparison to a “disfiguring” light describes its effect on the Doctor’s looks, not how hard it is to see."
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Irreversible means impossible to undo. Nothing in the text says whether the change could be undone; the comparison to a “disfiguring and sinister” light concerns how the change makes the Doctor look."
+    }
+   },
+   "models": [
+    "6557f7fc",
+    "7f935017"
+   ],
+   "sources": [
+    {
+     "what": "Project Gutenberg ebook 68061, Hope Mirrlees, Lud-in-the-Mist (London: Collins, 1926), chapter XXV; paragraph copied exactly (double hyphens set as closed em dashes)",
+     "url": "https://www.gutenberg.org/ebooks/68061"
+    }
+   ],
+   "notes": "Subject: literature (novel). Key letter B. Steps: 2 (the word's everyday sense is about conduct; the rare clue 'disfiguring' moves it to appearance). Target rank: unbecoming 15,947. Raw freq.txt ranks: Indecorous 42,941; Unflattering 31,072; Imperceptible 12,942; Irreversible 67,092 (4 of 4 past 10,000, 3 past 20,000). Mirrlees, the novel and every other work in this batch are absent from claims.txt, satbank/rw and all official items. Sinister and unseemly were left out (sinister is in the text and would fit; unseemly once meant unattractive).",
+   "table": null,
+   "figure": null,
+   "subtype": "Most nearly mean: underlined word",
+   "word_count": 102,
+   "band7_moves": [
+    "familiar word in its less common sense (unbecoming of looks, not conduct)",
+    "rare word in the clue (disfiguring)",
+    "one distractor a real sense of the target (Indecorous), one a topic echo of subtle (Imperceptible)",
+    "all four options past rank 10,000, three past 20,000"
+   ]
+  },
+  {
+   "id": "words_in_context.B5.medium.w4b6_06",
+   "template": "B5",
+   "tier": "medium",
+   "passage": "In the classic marshmallow test, an individual child decides whether to wait for a larger reward. When psychologist Rebecca Koomen and colleagues rewarded pairs of children in Germany and Kenya only if both partners waited, the children performed substantially better than on the conventional version, suggesting that young children may be considerably less ______ when patience serves a cooperative goal.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "gregarious",
+    "deferential",
+    "impulsive",
+    "trusting"
+   ],
+   "answer_letter": "C",
+   "explanation": "Impulsive means acting on sudden urges without stopping to wait. When the reward depended on both partners waiting, the children “performed substantially better than on the conventional version,” so they gave in to the urge to take the reward less often: they were less impulsive when patience served “a cooperative goal.”",
+   "distractors": {
+    "A": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Gregarious means fond of company. The text says nothing about how sociable the children became; it reports how well they waited for a reward."
+    },
+    "B": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Deferential means respectful and quick to give way to others. The study measured how well children waited for a reward, not whether they yielded to their partners."
+    },
+    "D": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Trusting means willing to rely on others. A child rewarded only if a partner also waited had to rely on that partner, and these children waited better; nothing suggests they became less willing to rely on others."
+    }
+   },
+   "models": [
+    "d4e8662d",
+    "1fa751f1",
+    "1fbf276a"
+   ],
+   "sources": [
+    {
+     "what": "PubMed abstract, Koomen, Grueneisen and Herrmann 2020 (Psychological Science): pairs of children (N = 207) took a modified marshmallow test in which they were rewarded only if both delayed gratification; children from Germany and Kenya performed substantially better than on a standard version",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/31916904/"
+    }
+   ],
+   "notes": "Subject: social science (developmental psychology). Key letter C. Negator: less. Raw freq.txt ranks: gregarious 29,890; deferential 12,560; impulsive 6,403; trusting 731 (2 of 4 past 10,000, 1 past 20,000). Impatient and competitive were left out (impatient echoes 'patience'; less competitive could be argued from a shared goal).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: negated frame",
+   "word_count": 60
+  },
+  {
+   "id": "words_in_context.B6.medium.w4b6_07",
+   "template": "B6",
+   "tier": "medium",
+   "passage": "Analyzing the genomes and characteristics of Penicillium camemberti, the white mold that ripens cheeses such as Camembert and Brie, Jeanne Ropars and colleagues determined that the domesticated mold’s traits are strikingly ______ cheese making. Compared with a related wild mold, the domesticated one is whiter, grows more rapidly on cheese, produces smaller quantities of toxin, and more effectively prevents competing fungi from growing.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "advantageous for",
+    "incidental to",
+    "inimical to",
+    "antecedent to"
+   ],
+   "answer_letter": "A",
+   "explanation": "Advantageous for means helpful to. Each trait listed, being “whiter,” growing “more rapidly on cheese,” producing “smaller quantities of toxin,” and more effectively preventing “competing fungi from growing,” helps cheesemakers, so the mold’s traits are strikingly helpful to cheese making.",
+   "distractors": {
+    "B": {
+     "recipe": "near miss: wrong degree (CONNOT)",
+     "why_wrong": "Incidental to means only loosely or accidentally connected with. The listed traits are not side effects with little bearing on cheese making; each one, such as growing “more rapidly on cheese,” bears directly on it."
+    },
+    "C": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Inimical to means harmful to. The traits work in cheesemakers’ favor: the mold produces “smaller quantities of toxin” and “more effectively prevents competing fungi from growing.”"
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Antecedent to means existing before. The text compares the mold with a wild relative; it says nothing about the mold’s traits having existed before cheese making."
+    }
+   },
+   "models": [
+    "e8c26398",
+    "f4166aae",
+    "f0be91b2"
+   ],
+   "sources": [
+    {
+     "what": "PubMed abstract, Ropars et al. 2020 (Current Biology): P. camemberti, used to ripen soft cheeses such as Camembert and Brie, is a recently domesticated clonal lineage; relative to the wild P. fuscoglaucum it shows strong signs of domestication: whiter color, faster growth on cheese medium under cave conditions, lower toxin production and greater ability to prevent the growth of other fungi, traits beneficial for cheese making",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/32976806/"
+    }
+   ],
+   "notes": "Subject: natural science (microbiology). Key letter A. Raw freq.txt ranks: advantageous for 17,474; incidental to 19,860; inimical to 27,949; antecedent to 35,359 (4 of 4 past 10,000, 2 past 20,000).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: phrase options",
+   "word_count": 63
+  },
+  {
+   "id": "words_in_context.B1.medium.w4b6_08",
+   "template": "B1",
+   "tier": "medium",
+   "passage": "Lateralized behavior, a preference for one side of the body, rarely leaves recognizable traces in fossils. Paleontologist Robert Reisz and colleagues nevertheless identified it in Captorhinus aguti, a small reptile that lived 289 million years ago: across nearly 100 jaws, tooth wear was consistently ______, indicating that the animal habitually favored chewing with the right side of its jaw.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "superficial",
+    "uniform",
+    "excessive",
+    "asymmetrical"
+   ],
+   "answer_letter": "D",
+   "explanation": "Asymmetrical means not the same on both sides. The wear indicated that the reptile “habitually favored chewing with the right side of its jaw,” so the teeth on one side were worn differently from those on the other, a pattern that held “across nearly 100 jaws.”",
+   "distractors": {
+    "A": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Superficial means only on the surface or slight. The text says nothing about how deep or slight the wear was; what matters is that it showed a preference for one side."
+    },
+    "B": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Uniform means the same throughout. Wear that was the same on both sides could not show that the animal “habitually favored chewing with the right side of its jaw.”"
+    },
+    "C": {
+     "recipe": "near miss: right field, wrong feature (CONNOT)",
+     "why_wrong": "Excessive means greater than normal. Heavy wear alone would not show which side the reptile preferred; the text’s point is that the wear differed between the right and left sides."
+    }
+   },
+   "models": [
+    "2.5",
+    "2.9",
+    "2.27"
+   ],
+   "sources": [
+    {
+     "what": "PubMed abstract, Reisz et al. 2020 (Current Biology): evidence of lateralized behaviors in extinct vertebrates is rare because they are hard to identify in fossils; tooth wear on nearly one hundred jaws of the early Permian (289 million years ago) reptile Captorhinus aguti shows it preferred to feed using the right side of the jaw, the earliest evidence of lateralized behavior in a fossil reptile",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/32413302/"
+    }
+   ],
+   "notes": "Subject: natural science (paleontology). Key letter D. Raw freq.txt ranks: superficial 9,339; uniform 4,122; excessive 9,520; asymmetrical unseen (1 of 4 past 10,000, 1 past 20,000) (asymmetrical is a modern technical word the 1850 to 1928 corpus lacks).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: restatement clue",
+   "word_count": 59
+  },
+  {
+   "id": "words_in_context.B2.medium.w4b6_09",
+   "template": "B2",
+   "tier": "medium",
+   "passage": "In the late 1950s and early 1960s, the Bell System began printing telephone area codes inside parentheses, a convention devised by designer Ladislav Sutnar that made ordinary and emergency services considerably easier to reach. Because the company regarded graphic designers as essentially as invisible as the functional graphics they produced, however, Sutnar’s contribution went ______.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "unexamined",
+    "unacknowledged",
+    "unimplemented",
+    "unpopular"
+   ],
+   "answer_letter": "B",
+   "explanation": "Unacknowledged means not given credit. The Bell System regarded designers as “essentially as invisible as the functional graphics they produced,” so although it used Sutnar’s idea of placing area codes “inside parentheses,” it did not credit him for it.",
+   "distractors": {
+    "A": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Unexamined means not studied closely. The company’s view of designers as invisible explains why the designer went uncredited, not why anyone failed to study his idea."
+    },
+    "C": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Unimplemented means not put into effect. The Bell System did put the idea into effect: it “began printing telephone area codes inside parentheses.”"
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Unpopular means disliked. Nothing suggests that people disliked a change that made services “considerably easier to reach”; the company’s view of designers bears on who got the credit, not on how the change was received."
+    }
+   },
+   "models": [
+    "757077f9",
+    "86fbc64d",
+    "35fd0eb4",
+    "ce8c03a8"
+   ],
+   "sources": [
+    {
+     "what": "Wikipedia, Ladislav Sutnar: Sutnar was not credited for the implementation of parentheses around the American area code for Bell System (late 1950s to early 1960s), which allowed much easier access to normal and emergency services; the lack of credit was because Bell System considered graphic designers 'as transparent as the function graphics they designed'",
+     "url": "https://en.wikipedia.org/wiki/Ladislav_Sutnar"
+    }
+   ],
+   "notes": "Subject: humanities (graphic design). Key letter B. Cause clue: Because ... invisible, so the contribution went uncredited. Raw freq.txt ranks: unexamined 74,511; unacknowledged 24,053; unimplemented unseen; unpopular 15,896 (4 of 4 past 10,000, 3 past 20,000). Unrewarded was left out (it could be argued as well).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: cause or consequence clue",
+   "word_count": 55
+  },
+  {
+   "id": "words_in_context.M2.medium.w4b6_10",
+   "template": "M2",
+   "tier": "medium",
+   "passage": "The following text is from Sylvia Townsend Warner’s 1926 novel Lolly Willowes. Laura Willowes, an unmarried woman, has recently lost her father.\n\nHer father being dead, [Laura’s relations] took it for granted that she should be absorbed into the household of one brother or the other. And Laura, feeling rather as if she were a piece of family property forgotten in the will, was ready to be <u>disposed of</u> as they should think best.",
+   "stem": "As used in the text, what does the phrase “disposed of” most nearly mean?",
+   "options": [
+    "Gotten rid of",
+    "Made inclined",
+    "Assigned a place",
+    "Beaten in a contest"
+   ],
+   "answer_letter": "C",
+   "explanation": "Laura’s relations expect her to “be absorbed into the household of one brother or the other,” and she feels like “a piece of family property forgotten in the will,” property that must still be handed out to someone. To be disposed of here is to be assigned a place, as such property would be, wherever her relations “think best.”",
+   "distractors": {
+    "A": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Disposed of can mean thrown away, but Laura’s relations do not plan to get rid of her; they expect her to be “absorbed into the household of one brother or the other.”"
+    },
+    "B": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Disposed can mean inclined, as in being disposed to agree, but Laura is not being made willing to do anything; she is already “ready,” and the question is where her relations will place her."
+    },
+    "D": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "To dispose of an opponent can mean to defeat one, but nothing in the text involves a contest; Laura’s relations are deciding which household she will join."
+    }
+   },
+   "models": [
+    "62a18353",
+    "ab1bd603",
+    "359902ae"
+   ],
+   "sources": [
+    {
+     "what": "Project Gutenberg ebook 72223, Sylvia Townsend Warner, Lolly Willowes, or the Loving Huntsman (London: Chatto and Windus, 1926), part I; sentences copied exactly, with [Laura’s relations] for 'they'",
+     "url": "https://www.gutenberg.org/ebooks/72223"
+    }
+   ],
+   "notes": "Subject: literature (novel). Key letter C. Phrase target with paraphrase options, every distractor a real sense of disposed (of). The excerpt's opening clause is trimmed at a sentence boundary; 'they' is glossed in brackets as CB does.",
+   "table": null,
+   "figure": null,
+   "subtype": "Most nearly mean: underlined phrase",
+   "word_count": 74
+  },
+  {
+   "id": "words_in_context.B1.easy.w4b6_11",
+   "template": "B1",
+   "tier": "easy",
+   "passage": "Architect Mary Colter designed the Bright Angel Lodge on the South Rim of the Grand Canyon to harmonize with its surroundings, testing her plans on a detailed scale model. The lodge’s remarkable “geological fireplace” ______ the canyon itself: its stones are arranged in the same sequence as the rock layers exposed along the Bright Angel Trail, which descends the canyon wall.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "mirrors",
+    "conceals",
+    "predates",
+    "overshadows"
+   ],
+   "answer_letter": "A",
+   "explanation": "Mirrors means closely copies or reflects. The fireplace’s stones “are arranged in the same sequence as the rock layers exposed along the Bright Angel Trail,” so the fireplace reproduces the layering of the canyon wall.",
+   "distractors": {
+    "B": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Conceals means hides. A fireplace built to follow the canyon’s rock layers displays their pattern; it does not hide the canyon."
+    },
+    "C": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Predates means comes before in time. The text concerns how the fireplace copies the canyon’s rock layers, not which came first."
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Overshadows means makes something seem less important. Nothing suggests the fireplace outshines the canyon; it was designed so that its stones match the rock layers of the canyon wall."
+    }
+   },
+   "models": [
+    "1.10",
+    "1.11",
+    "1.13",
+    "1.42"
+   ],
+   "sources": [
+    {
+     "what": "Wikipedia, Mary Colter: for her Bright Angel Lodge on the South Rim she used a scale model to ensure the lodge fit into the landscape; the lodge features a 'geological fireplace' with rocks arranged in the same order as the geologic strata along the Bright Angel Trail down the canyon wall",
+     "url": "https://en.wikipedia.org/wiki/Mary_Colter"
+    }
+   ],
+   "notes": "Subject: humanities (architecture). Key letter A. Raw freq.txt ranks: mirrors 3,274; conceals 3,228; predates unseen; overshadows 39,187 (2 of 4 past 10,000, 2 past 20,000).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: restatement clue",
+   "word_count": 61
+  },
+  {
+   "id": "words_in_context.B1.easy.w4b6_12",
+   "template": "B1",
+   "tier": "easy",
+   "passage": "In her 1953 memoir Nisei Daughter, writer Monica Sone ______ her experiences as the daughter of Japanese immigrants. She describes her childhood in Seattle, where her parents managed a hotel, and her family’s incarceration during World War II at Minidoka, an internment camp in Idaho where Japanese Americans were imprisoned.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "invents",
+    "ignores",
+    "predicts",
+    "recounts"
+   ],
+   "answer_letter": "D",
+   "explanation": "Recounts means tells the story of. Sone “describes her childhood in Seattle” and “her family’s incarceration during World War II at Minidoka,” so the memoir tells the story of her experiences.",
+   "distractors": {
+    "A": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Invents means makes up. A memoir that describes Sone’s own experiences, from her childhood in Seattle to her family’s incarceration, tells of real events, not made-up ones."
+    },
+    "B": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Ignores means pays no attention to. The memoir does the opposite: Sone “describes” the main events of her early life."
+    },
+    "C": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Predicts means says what will happen. The memoir looks back on events Sone had already lived through, such as growing up in Seattle."
+    }
+   },
+   "models": [
+    "1.10",
+    "1.11",
+    "1.13",
+    "1.42"
+   ],
+   "sources": [
+    {
+     "what": "Wikipedia, Monica Sone: best known for her 1953 autobiographical memoir Nisei Daughter, about the Japanese American experience in Seattle in the 1920s and 1930s and in the World War II camps; her parents, immigrants from Japan, managed a hotel; the family was sent to Puyallup and then to Minidoka, Idaho",
+     "url": "https://en.wikipedia.org/wiki/Monica_Sone"
+    }
+   ],
+   "notes": "Subject: humanities (memoir). Key letter D. Raw freq.txt ranks: invents 9,603; ignores 8,698; predicts 15,931; recounts 20,829 (2 of 4 past 10,000, 1 past 20,000).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: restatement clue",
+   "word_count": 50
+  },
+  {
+   "id": "words_in_context.B1.easy.w4b6_13",
+   "template": "B1",
+   "tier": "easy",
+   "passage": "Clara Driscoll, who headed the women’s glass-cutting department at Tiffany Studios, designed more than thirty of the company’s famous lamps, including the Dragonfly and Wisteria. Yet her role long remained ______: the lamps were credited to Louis Comfort Tiffany and his male designers until historians discovered her personal correspondence in the 2000s.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "controversial",
+    "celebrated",
+    "unrecognized",
+    "exaggerated"
+   ],
+   "answer_letter": "C",
+   "explanation": "Unrecognized means not given notice or credit. The lamps Driscoll designed “were credited to Louis Comfort Tiffany and his male designers” until historians “discovered her personal correspondence,” so for a long time her part in creating them went unnoticed.",
+   "distractors": {
+    "A": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Controversial means causing public disagreement. The text describes no dispute over Driscoll’s role; until historians found her correspondence, the credit simply went to others."
+    },
+    "B": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Celebrated means widely praised. The lamps were “famous,” but the credit for them went to “Louis Comfort Tiffany and his male designers,” not to Driscoll."
+    },
+    "D": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Exaggerated means made to seem greater than it was. The reverse was true: Driscoll’s role was hidden behind the credit given to others."
+    }
+   },
+   "models": [
+    "1.10",
+    "1.11",
+    "1.13",
+    "1.42"
+   ],
+   "sources": [
+    {
+     "what": "Wikipedia, Clara Driscoll (glass designer): head of the Tiffany Studios Women's Glass Cutting Department; designed more than thirty Tiffany lamps including the Wisteria and Dragonfly; letters found by Nina Gray and Martin Eidelberg (made public 2006) showed that she and the 'Tiffany Girls' created many lamps originally attributed to Louis Comfort Tiffany and his staff of male designers",
+     "url": "https://en.wikipedia.org/wiki/Clara_Driscoll_(glass_designer)"
+    }
+   ],
+   "notes": "Subject: history (decorative arts). Key letter C. Raw freq.txt ranks: controversial 33,131; celebrated 5,437; unrecognized 28,324; exaggerated 6,194 (2 of 4 past 10,000, 2 past 20,000).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: restatement clue",
+   "word_count": 52
+  },
+  {
+   "id": "words_in_context.B1.easy.w4b6_14",
+   "template": "B1",
+   "tier": "easy",
+   "passage": "Otti Berger, a weaver who studied and later taught at the influential Bauhaus school of art and design in Germany, considered fabric primarily in ______ terms. She maintained that a piece of fabric must be touched, felt, and held in the hands, since its beauty is recognized above all through its feel.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "visual",
+    "tactile",
+    "historical",
+    "economic"
+   ],
+   "answer_letter": "B",
+   "explanation": "Tactile means having to do with the sense of touch. Berger maintained that a fabric “must be touched, felt, and held in the hands” and that its beauty “is recognized above all through its feel,” so she thought of fabric mainly in terms of touch.",
+   "distractors": {
+    "A": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Visual means having to do with sight. Berger stressed how a fabric feels, not how it looks: its beauty “is recognized above all through its feel.”"
+    },
+    "C": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Historical means concerning the past. Nothing in the text links Berger’s view of fabric to history; she focused on how fabric feels in the hands."
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Economic means concerning money or trade. The text says nothing about what fabric costs or how it sells; it describes Berger’s focus on touch."
+    }
+   },
+   "models": [
+    "1.10",
+    "1.11",
+    "1.13",
+    "1.42"
+   ],
+   "sources": [
+    {
+     "what": "Wikipedia, Otti Berger: student and later teacher at the Bauhaus, a textile artist and weaver; her quoted statement that a piece of fabric must be touched and felt and held in the hands, and that the beauty of a fabric is above all known by its feel (paraphrased, not quoted, in the passage)",
+     "url": "https://en.wikipedia.org/wiki/Otti_Berger"
+    }
+   ],
+   "notes": "Subject: humanities (textile design). Key letter B. Raw freq.txt ranks: visual 30,727; tactile unseen; historical 5,637; economic 5,533 (2 of 4 past 10,000, 2 past 20,000) (tactile is missing from the old corpus but is a common modern word).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: restatement clue",
+   "word_count": 52
+  },
+  {
+   "id": "words_in_context.M1.easy.w4b6_15",
+   "template": "M1",
+   "tier": "easy",
+   "passage": "The following text is from Elizabeth Robins’s 1904 novel The Magnetic North. The Colonel and his companions are spending the winter in a cabin beside the Yukon River.\n\nMac had been asleep nearly three hours. The others wouldn’t be long now. Well, if they came prematurely, they must go to the Little Cabin for awhile. The Colonel <u>shot</u> the bar across door and jamb for the second time that day. Mac stirred and lifted himself on his elbow, but he wasn’t really awake.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "Slid",
+    "Fired",
+    "Photographed",
+    "Injured"
+   ],
+   "answer_letter": "A",
+   "explanation": "Shot here describes a quick physical movement. So that the others “must go to the Little Cabin” if they came back early, the Colonel locked the door by moving “the bar across door and jamb”: he slid it into place.",
+   "distractors": {
+    "B": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Shot can mean fired, as with a gun, but a bar placed “across door and jamb” is not fired; it is moved into place to keep the door shut."
+    },
+    "C": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Shot can mean photographed, but the Colonel is barring the door so that others cannot come in, not taking a picture."
+    },
+    "D": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Shot can mean wounded by a bullet, but nothing is hurt here; the Colonel moves a bar “across door and jamb.”"
+    }
+   },
+   "models": [
+    "1.19",
+    "1.30",
+    "1.56",
+    "1.38"
+   ],
+   "sources": [
+    {
+     "what": "Project Gutenberg ebook 10038, Elizabeth Robins, The Magnetic North (1904), book I chapter II; sentences copied exactly",
+     "url": "https://www.gutenberg.org/ebooks/10038"
+    }
+   ],
+   "notes": "Subject: literature (novel). Key letter A. Concrete physical sense, as in easy official items (drew the shades). Raw freq.txt ranks: Slid 5,238; Fired 345; Photographed 5,890; Injured 3,873 (0 of 4 past 10,000, 0 past 20,000). Pushed was left out (it would also fit).",
+   "table": null,
+   "figure": null,
+   "subtype": "Most nearly mean: underlined word",
+   "word_count": 83
+  },
+  {
+   "id": "words_in_context.M1.easy.w4b6_16",
+   "template": "M1",
+   "tier": "easy",
+   "passage": "The following text is adapted from Henry Blake Fuller’s 1893 novel The Cliff-Dwellers. Winthrop Floyd, an official of a Massachusetts company, has come to inspect the company’s office in Chicago.\n\nThe morning after his arrival he sat in the office of the Chicago branch. His keen and quiet eye <u>ran</u> over the furnishings of the place. He was a bachelor of forty; he was dressed simply but elegantly, except for his muddy shoes, which seemed to trouble him.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "Managed",
+    "Fled",
+    "Competed",
+    "Moved"
+   ],
+   "answer_letter": "D",
+   "explanation": "Ran here describes the movement of Floyd’s gaze. Having come to inspect the office, he sits in it while his “keen and quiet eye ran over the furnishings of the place,” passing across them as he takes them in: his eye moved over them.",
+   "distractors": {
+    "A": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Ran can mean managed, as in running a business, but an eye cannot manage furnishings; the sentence describes Floyd looking over the office."
+    },
+    "B": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Ran can mean fled, but Floyd’s “keen and quiet eye” is examining the furnishings, not escaping from them."
+    },
+    "C": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Ran can mean competed, as in a race or an election, but nothing in the sentence involves a contest; Floyd is simply looking around the office."
+    }
+   },
+   "models": [
+    "1.19",
+    "1.30",
+    "1.56",
+    "1.38"
+   ],
+   "sources": [
+    {
+     "what": "Project Gutenberg ebook 57782, Henry Blake Fuller, The Cliff-Dwellers (1893), chapter XVIII; adapted: one clause about his companions and the phrase 'he was completely comme il faut' cut",
+     "url": "https://www.gutenberg.org/ebooks/57782"
+    }
+   ],
+   "notes": "Subject: literature (novel). Key letter D. Raw freq.txt ranks: Managed 1,880; Fled 2,251; Competed 21,157; Moved 562 (1 of 4 past 10,000, 1 past 20,000). Hurried and passed were left out (both would fit).",
+   "table": null,
+   "figure": null,
+   "subtype": "Most nearly mean: underlined word",
+   "word_count": 78
+  },
+  {
+   "id": "words_in_context.M1.easy.w4b6_17",
+   "template": "M1",
+   "tier": "easy",
+   "passage": "The following text is from Gilbert Parker’s 1896 novel The Seats of the Mighty. The narrator is a prisoner, and Gabord is his jailer.\n\nI had slept a day and a half since the doors of this cell closed on me. It was Friday then; now it was Sunday afternoon. Gabord had come to me three times, and seeing how <u>sound</u> asleep I was had not disturbed me, but had brought bread and water—my prescribed diet.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "Noisily",
+    "Sensibly",
+    "Deeply",
+    "Reliably"
+   ],
+   "answer_letter": "C",
+   "explanation": "Sound here describes how fully the narrator slept. He had slept “a day and a half,” and Gabord, who came “three times,” left him undisturbed because of “how sound asleep” he was: he was deeply asleep.",
+   "distractors": {
+    "A": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Sound can refer to noise, but the text says nothing about the narrator making noise; it stresses how long and how fully he slept, “a day and a half.”"
+    },
+    "B": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Sound can mean sensible, as in sound advice, but sleep is not sensible or foolish; the word describes how deep the narrator’s sleep was."
+    },
+    "D": {
+     "recipe": "another sense of the target (SENSE)",
+     "why_wrong": "Sound can mean reliable, as in a sound investment, but the narrator’s sleep is not described as dependable; it is so deep that Gabord “had not disturbed” him."
+    }
+   },
+   "models": [
+    "1.19",
+    "1.30",
+    "1.56",
+    "1.38"
+   ],
+   "sources": [
+    {
+     "what": "Project Gutenberg ebook 6229, Gilbert Parker, The Seats of the Mighty (1896), chapter VI; paragraph copied exactly (double hyphen set as a closed em dash)",
+     "url": "https://www.gutenberg.org/ebooks/6229"
+    }
+   ],
+   "notes": "Subject: literature (novel). Key letter C. Raw freq.txt ranks: Noisily 12,237; Sensibly 13,222; Deeply 419; Reliably 53,788 (3 of 4 past 10,000, 1 past 20,000). Firmly and safely were left out (fast asleep, safe and sound).",
+   "table": null,
+   "figure": null,
+   "subtype": "Most nearly mean: underlined word",
+   "word_count": 76
+  },
+  {
+   "id": "words_in_context.B6.easy.w4b6_18",
+   "template": "B6",
+   "tier": "easy",
+   "passage": "Nobuaki Mizumoto and colleagues examined an unusual fossil that preserves an entire group of the extinct fish Erismatopterus levatus. The arrangement of the fossilized fish proved ______ the behavior of present-day shoaling fish: each individual apparently kept its distance from extremely close neighbors while remaining near more distant ones, just as fish in modern shoals do.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "unrelated to",
+    "consistent with",
+    "harmful to",
+    "hidden from"
+   ],
+   "answer_letter": "B",
+   "explanation": "Consistent with means in agreement with. Each fossilized fish “apparently kept its distance from extremely close neighbors while remaining near more distant ones, just as fish in modern shoals do,” so the arrangement agrees with how shoaling fish behave today.",
+   "distractors": {
+    "A": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Unrelated to means having no connection with. The text links the two directly: the fossil fish spaced themselves “just as fish in modern shoals do.”"
+    },
+    "C": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Harmful to means causing damage to. The arrangement of fish preserved in a fossil cannot damage the behavior of living fish; the text compares the two."
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Hidden from means kept out of sight of. Nothing was kept from living fish; the text says the fossil fish were spaced the way modern shoals are."
+    }
+   },
+   "models": [
+    "1.49",
+    "1.20",
+    "1.43"
+   ],
+   "sources": [
+    {
+     "what": "PubMed abstract, Mizumoto, Miyata and Pratt 2019 (Proceedings of the Royal Society B): a fossilized group of the extinct fish Erismatopterus levatus shows traces of two rules for social interaction similar to those used by extant fishes, repulsion from close individuals and attraction towards neighbours at a distance",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/31138077/"
+    }
+   ],
+   "notes": "Subject: natural science (paleontology). Key letter B. Raw freq.txt ranks: unrelated to 40,068; consistent with 9,500; harmful to 22,343; hidden from 1,267 (2 of 4 past 10,000, 2 past 20,000).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: phrase options",
+   "word_count": 56
+  },
+  {
+   "id": "words_in_context.B6.easy.w4b6_19",
+   "template": "B6",
+   "tier": "easy",
+   "passage": "In 1880 Charles Sumner Tainter, assistant to the inventor Alexander Graham Bell, used their photophone to transmit a spoken message, carried by a light beam, to a laboratory window about 213 meters away. The device, whose principles found practical applications only decades later, is now regarded as ______ the light-based fiber-optic systems that spread during the 1980s.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "a forerunner of",
+    "a replacement for",
+    "an obstacle to",
+    "a response to"
+   ],
+   "answer_letter": "A",
+   "explanation": "A forerunner of something is an earlier thing that leads the way to it. The photophone sent speech “carried by a light beam” in 1880, and its principles “found practical applications only decades later” in the “light-based fiber-optic systems that spread during the 1980s,” so it came first and pointed the way.",
+   "distractors": {
+    "B": {
+     "recipe": "reversal: direction (ANT)",
+     "why_wrong": "A replacement for something takes its place after it. The photophone came about a century before fiber-optic systems, so it could not have replaced them."
+    },
+    "C": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "An obstacle to something stands in its way. Nothing suggests the photophone held back fiber optics; its principles simply found uses only later."
+    },
+    "D": {
+     "recipe": "reversal: direction (ANT)",
+     "why_wrong": "A response to something comes after it. The photophone was used in 1880, long before the fiber-optic systems “that spread during the 1980s,” so it could not have been a response to them."
+    }
+   },
+   "models": [
+    "1.49",
+    "1.20",
+    "1.43"
+   ],
+   "sources": [
+    {
+     "what": "Wikipedia, Photophone: invented by Alexander Graham Bell and his assistant Charles Sumner Tainter in 1880; on June 3, 1880, Bell's assistant transmitted a wireless voice message from the roof of the Franklin School to the window of Bell's laboratory, about 213 meters away; the photophone was a precursor to fiber-optic communication systems that achieved worldwide use starting in the 1980s, its patent issued many decades before its principles came to have practical applications",
+     "url": "https://en.wikipedia.org/wiki/Photophone"
+    }
+   ],
+   "notes": "Subject: history (technology). Key letter A. Raw freq.txt ranks: a forerunner of 25,769; a replacement for 46,254; an obstacle to 8,054; a response to 2,562 (2 of 4 past 10,000, 2 past 20,000).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: phrase options",
+   "word_count": 57
+  },
+  {
+   "id": "words_in_context.B2.easy.w4b6_20",
+   "template": "B2",
+   "tier": "easy",
+   "passage": "Marine ecologist A. Randall Hughes and colleagues played underwater recordings of predatory fish such as black drum and oyster toadfish to mud crabs, which feed on hard clams. The crabs ate fewer clams while the recordings played. By causing the crabs to ______ their feeding, then, the sounds of predators alone may leave more clams alive.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "advertise",
+    "share",
+    "accelerate",
+    "curb"
+   ],
+   "answer_letter": "D",
+   "explanation": "Curb means to hold back or reduce. The crabs “ate fewer clams while the recordings played,” so the predator sounds made them cut back their feeding, which could leave more clams alive.",
+   "distractors": {
+    "A": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Advertise means to call attention to. Nothing suggests the crabs made their feeding more noticeable; they simply “ate fewer clams.”"
+    },
+    "B": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Share means to divide with others. The text says nothing about crabs dividing their food; it reports that they ate less."
+    },
+    "C": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Accelerate means to speed up. The crabs did the opposite: they “ate fewer clams while the recordings played.”"
+    }
+   },
+   "models": [
+    "1.5",
+    "1.44",
+    "1.35"
+   ],
+   "sources": [
+    {
+     "what": "PMC full text, Hughes, Mann and Kimbro 2014 (Proceedings of the Royal Society B), 'Predatory fish sounds can alter crab foraging behaviour and influence bivalve abundance': food web of vocalizing fish predators (hardhead catfish, black drum, oyster toadfish), mud crab (Panopeus spp.) prey and hard clam resources; crabs suppress their resource consumption when played acoustic stimuli from multiple predatory fish species, with potential cascading effects on resource abundance",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4083791/"
+    }
+   ],
+   "notes": "Subject: natural science (marine ecology). Key letter D. Raw freq.txt ranks: advertise 15,330; share 1,377; accelerate 32,213; curb 10,513 (3 of 4 past 10,000, 1 past 20,000).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: cause or consequence clue",
+   "word_count": 56
+  },
+  {
+   "id": "words_in_context.B4.easy.w4b6_21",
+   "template": "B4",
+   "tier": "easy",
+   "passage": "The extinct “hell ants” of the Cretaceous period, among the earliest known ants, possessed strikingly ______ heads. Unlike any living species, they had scythe-like mandibles that moved vertically rather than horizontally, and many had horn-like projections that, as Phillip Barden and colleagues demonstrated, helped them pin prey against those mandibles.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "fragile",
+    "ordinary",
+    "peculiar",
+    "colorful"
+   ],
+   "answer_letter": "C",
+   "explanation": "Peculiar means strange or unusual. The examples show how odd the heads were: “Unlike any living species,” hell ants had “scythe-like mandibles that moved vertically rather than horizontally,” and many had “horn-like projections.”",
+   "distractors": {
+    "A": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Fragile means easily broken. The text describes the shape and use of the ants’ mandibles and horns, not how easily they broke."
+    },
+    "B": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Ordinary means normal. The text stresses the opposite: the hell ants had mouthparts and horns unlike those of “any living species.”"
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Colorful means brightly colored. Nothing in the text mentions the color of the ants’ heads; it describes their mandibles and horns."
+    }
+   },
+   "models": [
+    "1.7",
+    "1.18",
+    "1.34"
+   ],
+   "sources": [
+    {
+     "what": "PubMed abstract, Barden, Perrichot and Wang 2020 (Current Biology): Cretaceous haidomyrmecine 'hell ants', among the earliest ants known, had bizarre scythe-like mouthparts and horn-like cephalic projections; a fossilized predation shows they captured other arthropods between mandible and horn by moving their mouthparts in a plane perpendicular to that of modern ants",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/32763171/"
+    }
+   ],
+   "notes": "Subject: natural science (paleontology). Key letter C. Raw freq.txt ranks: fragile 9,404; ordinary 1,336; peculiar 1,920; colorful 70,399 (1 of 4 past 10,000, 1 past 20,000).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: example-pinned clue",
+   "word_count": 50
+  },
+  {
+   "id": "words_in_context.B4.easy.w4b6_22",
+   "template": "B4",
+   "tier": "easy",
+   "passage": "Beginning at the age of 71, English artist Mary Delany created nearly 1,000 remarkably ______ images of plants from colored paper. Working from a real specimen, she cut tiny pieces of paper to represent each petal, stamen, leaf, and vein, so that a single picture might contain hundreds of pieces.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "careless",
+    "detailed",
+    "imaginary",
+    "temporary"
+   ],
+   "answer_letter": "B",
+   "explanation": "Detailed means showing many small parts with care. Delany “cut tiny pieces of paper to represent each petal, stamen, leaf, and vein,” and “a single picture might contain hundreds of pieces,” so her images reproduced even the smallest parts of each plant.",
+   "distractors": {
+    "A": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Careless means done without attention. Cutting “tiny pieces of paper to represent each petal, stamen, leaf, and vein” is painstaking work, the opposite of careless."
+    },
+    "C": {
+     "recipe": "reversal (ANT)",
+     "why_wrong": "Imaginary means existing only in the mind. Delany worked “from a real specimen,” so her images showed actual plants, not made-up ones."
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Temporary means lasting only a short time. The text says nothing about how long the images lasted; it describes how many small pieces went into each one."
+    }
+   },
+   "models": [
+    "1.7",
+    "1.18",
+    "1.34"
+   ],
+   "sources": [
+    {
+     "what": "Wikipedia, Mary Delany: from 1771, a widow in her early 70s, she made 985 detailed, botanically accurate depictions of plants in cut paper, her 'paper mosaicks', from age 71 to 88; with the plant specimen before her she cut minute particles of coloured paper to represent the petals, stamens, calyx, leaves, veins and stalk, and a complete picture might hold hundreds of pieces",
+     "url": "https://en.wikipedia.org/wiki/Mary_Delany"
+    }
+   ],
+   "notes": "Subject: humanities (art). Key letter B. Replaces a Gurindji Kriol draft withdrawn as a concept twin of live w2b3_09 (Light Warlpiri). Raw freq.txt ranks: careless 2,563; detailed 2,847; imaginary 6,384; temporary 4,540 (0 of 4 past 10,000, 0 past 20,000). Accurate and colorful were left out (accurate would also fit; colorful is half supported by colored paper).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: example-pinned clue",
+   "word_count": 50
+  },
+  {
+   "id": "words_in_context.B5.easy.w4b6_23",
+   "template": "B5",
+   "tier": "easy",
+   "passage": "Colombian artist Beatriz González, renowned for vividly colored paintings depicting everyday life during the period of political violence known as La Violencia, is frequently associated with the international pop art movement. Yet González did not consider that label ______: she regarded herself primarily as a painter, and she believed that pop art was essentially absent from painting.",
+   "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+   "options": [
+    "fitting",
+    "flattering",
+    "familiar",
+    "profitable"
+   ],
+   "answer_letter": "A",
+   "explanation": "Fitting means suitable. González “regarded herself primarily as a painter” and “believed that pop art was essentially absent from painting,” so she did not think the pop art label suited her work.",
+   "distractors": {
+    "B": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Flattering means praising or pleasing. The reasons González gives concern whether the label suits her painting, not whether it compliments her."
+    },
+    "C": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Familiar means well known. González was “frequently associated with the international pop art movement,” so the label was well known to her; her objection was that it did not suit her work."
+    },
+    "D": {
+     "recipe": "plausible but unsupported (UNSUP)",
+     "why_wrong": "Profitable means bringing in money. The text says nothing about money; González’s reasons concern whether her painting belonged to pop art."
+    }
+   },
+   "models": [
+    "1.12",
+    "1.28",
+    "1.48"
+   ],
+   "sources": [
+    {
+     "what": "Wikipedia, Beatriz González: Colombian painter often associated with pop art, best known for bright and colorful paintings depicting life in Colombia during La Violencia; she never considered herself a pop artist, thinking the pop movement was not present in her medium of painting and the label not appropriate for her work",
+     "url": "https://en.wikipedia.org/wiki/Beatriz_Gonz%C3%A1lez"
+    }
+   ],
+   "notes": "Subject: humanities (painting). Key letter A. Negator: did not. Raw freq.txt ranks: fitting 4,023; flattering 6,575; familiar 1,215; profitable 8,932 (0 of 4 past 10,000, 0 past 20,000).",
+   "table": null,
+   "figure": null,
+   "subtype": "Blank completion: negated frame",
+   "word_count": 57
+  }
+ ],
+ "done": true
+}

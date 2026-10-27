@@ -1,390 +1,1553 @@
 {
- "skill": "Text Structure and Purpose",
- "slug": "text_structure_and_purpose",
- "part": "w4b4",
- "domain": "Craft and Structure",
- "plan": {
-  "templates": [
-   {
-    "code": "P_study",
-    "name": "Main purpose: study report"
-   },
-   {
-    "code": "P_lit",
-    "name": "Main purpose: literary reaction, mood or trait"
-   },
-   {
-    "code": "F_example",
-    "name": "Function: example or supporting detail for a claim"
-   },
-   {
-    "code": "P_view",
-    "name": "Main purpose: view then challenge"
-   },
-   {
-    "code": "S12_critique_attempt",
-    "name": "Presents someone’s critique, then an attempt to address the problem it identifies"
-   },
-   {
-    "code": "S14_project_approach_critique",
-    "name": "Three moves: introduces a project, details its approach, gives a critique it received"
-   },
-   {
-    "code": "F_setup",
-    "name": "Function: set-up or context for what follows"
-   }
-  ],
-  "skipped": []
- },
- "done": false,
- "items": [
-  {
-   "id": "text_structure_and_purpose.P_study.hard.w4b4_01",
-   "template": "P_study",
-   "tier": "hard",
-   "band_target": 6,
-   "subtype": "Main purpose",
-   "passage": "In 2017, Hurricane Maria devastated Cayo Santiago, a small island off Puerto Rico inhabited by a free-ranging population of rhesus macaques (Macaca mulatta). Comparing the social networks of two groups of these monkeys before and after the storm, neuroscientist Camille Testard and colleagues found that the animals established more affiliative connections in its aftermath. This increase was driven predominantly by the individuals that had been most socially isolated before the hurricane, and it derived mainly from relationships with new partners rather than from the strengthening of existing ones.",
-   "stem": "Which choice best states the main purpose of the text?",
-   "options": [
-    "It discusses a study indicating that after a natural disaster, monkeys invested more heavily in their established relationships, especially monkeys that had previously been isolated.",
-    "It presents a comparison of two monkey groups, one of which became more socially connected after a natural disaster while the other remained as it had been.",
-    "It summarizes research suggesting that following a natural disaster, monkeys broadened their social networks, with formerly isolated individuals accounting for much of the change.",
-    "It describes a study showing that monkeys formed more social connections after a natural disaster, a change the researchers link to a shortage of food on the island."
-   ],
-   "answer_letter": "C",
-   "explanation": "The text reports that after Hurricane Maria the monkeys “established more affiliative connections,” that this increase “was driven predominantly by the individuals that had been most socially isolated before the hurricane,” and that it “derived mainly from relationships with new partners.” Choice C states this whole finding: the monkeys broadened their networks, and previously isolated monkeys accounted for much of the change.",
-   "distractors": {
-    "A": {
-     "recipe": "first clause true, later detail reversed (REV)",
-     "why_wrong": "The isolated monkeys did drive the change, but the text says the new connections came “mainly from relationships with new partners rather than from the strengthening of existing ones,” not from established relationships."
-    },
-    "B": {
-     "recipe": "word hook on “two groups” (LIT)",
-     "why_wrong": "The researchers compared the social networks of the two groups before and after the storm; the text does not say that one group changed while the other did not."
-    },
-    "D": {
-     "recipe": "first clause true, invented cause (INV)",
-     "why_wrong": "The text reports more social connections after the storm but gives no cause for the change, and it never mentions food."
-    }
-   },
-   "models": [
-    "3.2",
-    "3.8",
-    "3.1"
-   ],
-   "sources": [
-    {
-     "what": "Testard et al. (2021, Current Biology): Cayo Santiago rhesus macaques, social networks of two groups compared before and after Hurricane Maria (2017); more affiliative connections, driven largely by the most isolated monkeys, who built new relationships rather than strengthening existing ones",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/33836140/"
-    }
-   ],
-   "notes": "Area: natural science (animal behavior). Key C, 25 words, paraphrased (broadened networks, formerly isolated). Each wrong option keeps a true study frame and fails on one later link: A reverses new vs existing, B misreads the two-group comparison, D adds a cause. Testard is first author; the PubMed affiliation is a neuroscience department.",
-   "table": null,
-   "figure": null,
-   "word_count": 88
+  "skill": "Text Structure and Purpose",
+  "slug": "text_structure_and_purpose",
+  "part": "w4b4",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "P_study",
+        "name": "Main purpose: study report"
+      },
+      {
+        "code": "P_lit",
+        "name": "Main purpose: literary reaction, mood or trait"
+      },
+      {
+        "code": "F_example",
+        "name": "Function: example or supporting detail for a claim"
+      },
+      {
+        "code": "P_view",
+        "name": "Main purpose: view then challenge"
+      },
+      {
+        "code": "S12_critique_attempt",
+        "name": "Presents someone’s critique, then an attempt to address the problem it identifies"
+      },
+      {
+        "code": "S14_project_approach_critique",
+        "name": "Three moves: introduces a project, details its approach, gives a critique it received"
+      },
+      {
+        "code": "F_setup",
+        "name": "Function: set-up or context for what follows"
+      },
+      {
+        "code": "F_method",
+        "name": "Function: method or mechanism"
+      },
+      {
+        "code": "S4_efforts_limit",
+        "name": "The speaker describes attempts or efforts, then acknowledges a limit (poem)"
+      },
+      {
+        "code": "S6_field_distinction",
+        "name": "Characterizes a field through two examples, then distinguishes some works in it"
+      },
+      {
+        "code": "S8_view_challenge",
+        "name": "Describes a common view, then a recent finding that challenges it"
+      },
+      {
+        "code": "S10_opinion_behaviors",
+        "name": "Presents the regard in which a character is held, then the behaviors that sustain it (literary prose)"
+      },
+      {
+        "code": "P_profile",
+        "name": "Main purpose: profile of a person, work or institution"
+      },
+      {
+        "code": "F_qualify",
+        "name": "Function: qualification of an earlier description"
+      },
+      {
+        "code": "F_lit",
+        "name": "Function: literary emphasis"
+      },
+      {
+        "code": "S2_person_work",
+        "name": "Introduces a person, then gives characteristics of their work"
+      },
+      {
+        "code": "P_argue",
+        "name": "Main purpose: explicit argument"
+      }
+    ],
+    "skipped": []
   },
-  {
-   "id": "text_structure_and_purpose.P_lit.hard.w4b4_02",
-   "template": "P_lit",
-   "tier": "hard",
-   "band_target": 6,
-   "subtype": "Main purpose",
-   "passage": "The following text is from Alexander L. Kielland’s 1882 short story “Karen” (translated by R. L. Cassie in 1896). Karen serves the guests at Krarup Kro, a country inn in Denmark.\n\nKaren’s eyes were of that large gray sort which seem at once to look at one and to look far, far beyond, and her eyebrows were loftily arched, as if in wonder.\n\nTherefore strangers thought she did not rightly understand what they asked for. But she understood very well, and made no mistakes. There was only something strange about her, as if she were looking for something far away, or listening, or waiting, or dreaming.",
-   "stem": "Which choice best states the main purpose of the text?",
-   "options": [
-    "To portray a young woman whose faraway manner leads strangers to misjudge her, though she does her work without fault",
-    "To show that Karen often misunderstands what guests ask for because her thoughts are elsewhere",
-    "To suggest that Karen longs to leave the inn and travel to some distant place she has imagined",
-    "To convey the strangers’ admiration for both Karen’s unusual appearance and her quiet efficiency"
-   ],
-   "answer_letter": "A",
-   "explanation": "Karen’s eyes “seem at once to look at one and to look far, far beyond,” so “strangers thought she did not rightly understand what they asked for.” The text then corrects them: “she understood very well, and made no mistakes,” though there remained “something strange about her, as if she were looking for something far away.” Choice A captures both halves: a distant manner that misleads strangers, and work done without error.",
-   "distractors": {
-    "B": {
-     "recipe": "first part plausible, outcome reversed (REV)",
-     "why_wrong": "This is what strangers wrongly believe; the text says “she understood very well, and made no mistakes.”"
-    },
-    "C": {
-     "recipe": "literalized image (LIT)",
-     "why_wrong": "The phrase “as if she were looking for something far away” describes how Karen seems, not a wish to leave the inn or travel anywhere."
-    },
-    "D": {
-     "recipe": "wrong holder of the feeling (SWAP)",
-     "why_wrong": "The strangers do not admire Karen; they think “she did not rightly understand what they asked for.”"
-    }
-   },
-   "models": [
-    "3.3",
-    "3.15",
-    "3.19"
-   ],
-   "sources": [
+  "done": true,
+  "items": [
     {
-     "what": "text copied from Project Gutenberg eBook #14593, Norse Tales and Sketches (Kielland, translated by R. L. Cassie, 1896), story “Karen”",
-     "url": "https://www.gutenberg.org/cache/epub/14593/pg14593.txt"
-    },
-    {
-     "what": "“Karen” appeared in Kielland’s 1882 collection To Novelletter fra Danmark (with “Trofast”)",
-     "url": "https://lokalhistoriewiki.no/wiki/Alexander_Lange_Kielland"
-    }
-   ],
-   "notes": "Literature (Norwegian short story in translation). Excerpt: two consecutive paragraphs copied exactly; Gutenberg double hyphens none here. Two-part trait in the key (band-6 literary purpose, like Brontë’s outward calm and inner restlessness). B reverses the outcome, C literalizes “far away,” D gives the feeling to the strangers. Kielland is not used in any official item or live item.",
-   "table": null,
-   "figure": null,
-   "word_count": 106
-  },
-  {
-   "id": "text_structure_and_purpose.F_example.hard.w4b4_03",
-   "template": "F_example",
-   "tier": "hard",
-   "band_target": 6,
-   "subtype": "Function of an underlined part",
-   "passage": "By the close of Japan’s Edo period (1603–1868), literacy had become remarkably widespread, an achievement usually credited to two kinds of institutions. Domain schools educated the children of samurai, while terakoya—small private academies operated by Buddhist priests, samurai, or ordinary townspeople, frequently in their own residences—instructed the children of commoners in reading, writing, and sometimes arithmetic. Expanding from metropolitan centers such as Edo and Osaka into agricultural and coastal communities, terakoya became so popular that, <u>according to one estimate, roughly 70 percent of children in Edo attended them around 1800</u>.",
-   "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
-   "options": [
-    "It provides evidence that terakoya were more common in large cities than in the agricultural and coastal communities mentioned earlier in the text.",
-    "It indicates that terakoya had come to replace domain schools as the main source of education for the children of samurai.",
-    "It presents a statistic that the text uses to question how widespread literacy actually became during the Edo period.",
-    "It offers a figure that conveys how far the use of one kind of school had spread, supporting the text’s account of how literacy grew."
-   ],
-   "answer_letter": "D",
-   "explanation": "The text says literacy “had become remarkably widespread,” an achievement “usually credited to two kinds of institutions,” and that terakoya “became so popular that” roughly 70 percent of children in Edo attended them. The underlined figure shows how far the schools’ reach extended and so supports the text’s account of how literacy grew, as choice D says.",
-   "distractors": {
-    "A": {
-     "recipe": "true first part, invented comparison (INV)",
-     "why_wrong": "The figure describes a large city, but the text gives no figure for villages and never says terakoya were less common there; it says they expanded “into agricultural and coastal communities.”"
-    },
-    "B": {
-     "recipe": "misattribution of the schools’ pupils (SWAP)",
-     "why_wrong": "The text says domain schools “educated the children of samurai” while terakoya “instructed the children of commoners”; nothing says terakoya replaced domain schools."
-    },
-    "C": {
-     "recipe": "stance flip (STANCE)",
-     "why_wrong": "The figure supports, rather than questions, the opening claim that literacy “had become remarkably widespread.”"
-    }
-   },
-   "models": [
-    "3.12",
-    "3.10",
-    "ac9a3a26"
-   ],
-   "sources": [
-    {
-     "what": "terakoya: private schools for commoners’ children, teachers were samurai, Buddhist priests or commoners, often in their own homes; common in Edo and Osaka and in rural and coastal regions; attendance reached 70% in Edo at the end of the 18th and start of the 19th century; with han schools, high literacy by the end of the Edo period",
-     "url": "https://en.wikipedia.org/wiki/Terakoya"
-    }
-   ],
-   "notes": "Area: history (education in Japan). Key D, a band-6 F_example on the 3.12 pattern (a figure that underscores extent), worded away from 3.12’s key. A is the near miss (true that the figure concerns a city, false comparison). Domain (han) schools as samurai schools is standard and simplified.",
-   "table": null,
-   "figure": null,
-   "word_count": 90
-  },
-  {
-   "id": "text_structure_and_purpose.P_view.hard.w4b4_04",
-   "template": "P_view",
-   "tier": "hard",
-   "band_target": 7,
-   "subtype": "Main purpose",
-   "passage": "Accounts of animals behaving strangely in the days preceding an earthquake have encouraged hopes that such behavior could function as a warning system, but those hopes rest on remarkably thin evidence. Reviewing 729 reports of unusual animal behavior associated with 160 earthquakes, geoscientist Heiko Woith and colleagues found that only 14 documented a series of observations made over time; nearly all described a single episode. Moreover, the reported behavior tended to coincide with foreshocks, suggesting that many of the animals may simply have been responding to seismic activity that was already under way.",
-   "stem": "Which choice best states the main purpose of the text?",
-   "options": [
-    "It discusses a review of reported animal behavior to argue that animals sense foreshocks well before people do and could therefore give early warning of earthquakes.",
-    "It draws on a review of reported animal behavior to suggest that the case for treating such behavior as a sign of coming earthquakes is weaker than it may appear.",
-    "It describes a review of reported animal behavior in order to show that observers have often misidentified which species were reacting to earthquakes.",
-    "It presents a review of reported animal behavior in order to explain why some species respond to earthquakes while others show no reaction at all."
-   ],
-   "answer_letter": "B",
-   "explanation": "The first sentence says hopes that animal behavior could warn of earthquakes “rest on remarkably thin evidence.” The rest of the text supports that judgment: only 14 of 729 reports “documented a series of observations made over time,” and the behavior “tended to coincide with foreshocks,” so the animals “may simply have been responding to seismic activity that was already under way.” Choice B states this purpose: the review is used to show that the case is weaker than it seems.",
-   "distractors": {
-    "A": {
-     "recipe": "right review, stance flipped (STANCE)",
-     "why_wrong": "The text uses the foreshock finding to cast doubt on warning systems, since animals responding to activity “already under way” are not anticipating a quake; it never argues for early warning."
-    },
-    "C": {
-     "recipe": "right review, invented purpose (INV)",
-     "why_wrong": "The review’s problems concern how reports were made (single episodes, timing with foreshocks), not mistakes about which species were involved."
-    },
-    "D": {
-     "recipe": "right review, invented purpose (INV)",
-     "why_wrong": "The text does not compare species that react with species that do not; it questions whether the reported reactions show any ability to anticipate earthquakes."
-    }
-   },
-   "models": [
-    "3.4",
-    "3.16"
-   ],
-   "band7_moves": [
-    "hedged dual purpose (review used to show the evidence is weaker than it seems)",
-    "all three wrong options keep the true first half (a review of reported animal behavior) and invent the purpose",
-    "stance trap: A turns the foreshock finding into support for warnings"
-   ],
-   "sources": [
-    {
-     "what": "Woith, Petersen, Hainzl, Dahm (2018, Bulletin of the Seismological Society of America), “Can Animals Predict Earthquakes?”: 729 reports of abnormal animal behavior for 160 earthquakes; only 14 reports record a series of observations over time; foreshocks and abnormal behavior strongly cluster",
-     "url": "https://www.sciencedaily.com/releases/2018/04/180417115641.htm"
+      "id": "text_structure_and_purpose.P_study.hard.w4b4_01",
+      "template": "P_study",
+      "tier": "hard",
+      "band_target": 6,
+      "subtype": "Main purpose",
+      "passage": "In 2017, Hurricane Maria devastated Cayo Santiago, a small island off Puerto Rico inhabited by a free-ranging population of rhesus macaques (Macaca mulatta). Comparing the social networks of two groups of these monkeys before and after the storm, neuroscientist Camille Testard and colleagues found that the animals established more affiliative connections in its aftermath. This increase was driven predominantly by the individuals that had been most socially isolated before the hurricane, and it derived mainly from relationships with new partners rather than from the strengthening of existing ones.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "It discusses a study indicating that after a natural disaster, monkeys invested more heavily in their established relationships, especially monkeys that had previously been isolated.",
+        "It presents a comparison of two monkey groups, one of which became more socially connected after a natural disaster while the other remained as it had been.",
+        "It summarizes research suggesting that following a natural disaster, monkeys broadened their social networks, with formerly isolated individuals accounting for much of the change.",
+        "It describes a study showing that monkeys formed more social connections after a natural disaster, a change the researchers link to a shortage of food on the island."
+      ],
+      "answer_letter": "C",
+      "explanation": "The text reports that after Hurricane Maria the monkeys “established more affiliative connections,” that this increase “was driven predominantly by the individuals that had been most socially isolated before the hurricane,” and that it “derived mainly from relationships with new partners.” Choice C states this whole finding: the monkeys broadened their networks, and previously isolated monkeys accounted for much of the change.",
+      "distractors": {
+        "A": {
+          "recipe": "first clause true, later detail reversed (REV)",
+          "why_wrong": "The isolated monkeys did drive the change, but the text says the new connections came “mainly from relationships with new partners rather than from the strengthening of existing ones,” not from established relationships."
+        },
+        "B": {
+          "recipe": "word hook on “two groups” (LIT)",
+          "why_wrong": "The researchers compared the social networks of the two groups before and after the storm; the text does not say that one group changed while the other did not."
+        },
+        "D": {
+          "recipe": "first clause true, invented cause (INV)",
+          "why_wrong": "The text reports more social connections after the storm but gives no cause for the change, and it never mentions food."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.8",
+        "3.1"
+      ],
+      "sources": [
+        {
+          "what": "Testard et al. (2021, Current Biology): Cayo Santiago rhesus macaques, social networks of two groups compared before and after Hurricane Maria (2017); more affiliative connections, driven largely by the most isolated monkeys, who built new relationships rather than strengthening existing ones",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33836140/"
+        }
+      ],
+      "notes": "Area: natural science (animal behavior). Key C, 25 words, paraphrased (broadened networks, formerly isolated). Each wrong option keeps a true study frame and fails on one later link: A reverses new vs existing, B misreads the two-group comparison, D adds a cause. Testard is first author; the PubMed affiliation is a neuroscience department.",
+      "table": null,
+      "figure": null,
+      "word_count": 88,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Targeted 6. Two-part paraphrased key (broadened networks, formerly isolated monkeys); A keeps the isolated monkeys and reverses new vs existing ties, B misreads the two-group comparison, D adds an unstated cause. A single-finding report without a hedged second purpose, so band 6."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Targeted 6. Two-part paraphrased key (broadened networks, formerly isolated monkeys); A keeps the isolated monkeys and reverses new vs existing ties, B misreads the two-group comparison, D adds an unstated cause. A single-finding report without a hedged second purpose, so band 6."
+        }
+      }
     },
     {
-     "what": "the paper",
-     "url": "https://doi.org/10.1785/0120170313"
-    }
-   ],
-   "notes": "Area: natural science (seismology and animal behavior). Band-7 P_view: evaluative opening (“rest on thin evidence”), then a review as the case. Key 31 words, not the longest. Architecture differs from 3.4 (no hypothesis-then-null; two weaknesses instead), and the key avoids 3.4’s “caution” wording. Woith works at the GFZ German Research Centre for Geosciences.",
-   "table": null,
-   "figure": null,
-   "word_count": 93
-  },
-  {
-   "id": "text_structure_and_purpose.S12_critique_attempt.hard.w4b4_05",
-   "template": "S12_critique_attempt",
-   "tier": "hard",
-   "band_target": 6,
-   "subtype": "Overall structure",
-   "passage": "Over twenty-four years of teaching in rural New Zealand schools whose enrollment was predominantly Māori, educator Sylvia Ashton-Warner became convinced that the sanitized vocabulary of standard beginning readers was largely meaningless to her pupils: a child’s earliest reading vocabulary, she wrote, “must be words that are already part of a child’s being,” not words chosen because they were “pleasant” or “respectable.” Abandoning the required readers, Ashton-Warner instead invited each child to select a personally significant word every day, which she inscribed on a large card for that child to learn.",
-   "stem": "Which choice best describes the overall structure of the text?",
-   "options": [
-    "The text presents Ashton-Warner’s objection to the reading materials her students were given and then explains how school inspectors came to share that objection.",
-    "The text presents Ashton-Warner’s criticism of the words in beginning readers and then describes a study she conducted to measure her students’ progress in reading.",
-    "The text presents Ashton-Warner’s view of what was wrong with the words her students were taught and then describes a practice she adopted in response.",
-    "The text describes a method of teaching reading that Ashton-Warner developed and then presents the objections it drew from her students’ families."
-   ],
-   "answer_letter": "C",
-   "explanation": "The first sentence gives Ashton-Warner’s criticism: the “sanitized vocabulary of standard beginning readers” was “largely meaningless to her pupils,” since early words “must be words that are already part of a child’s being.” The second sentence describes what she did instead: “Abandoning the required readers,” she had each child “select a personally significant word every day.” Choice C names both moves in order.",
-   "distractors": {
-    "A": {
-     "recipe": "first move right, invented second move (INV)",
-     "why_wrong": "The text begins with Ashton-Warner’s objection, but it says nothing about school inspectors or anyone coming to share her view."
-    },
-    "B": {
-     "recipe": "first move right, invented second move (INV)",
-     "why_wrong": "The last sentence describes a classroom practice, not a study measuring her students’ progress."
-    },
-    "D": {
-     "recipe": "wrong order and invented critics (ORDER/INV)",
-     "why_wrong": "The text gives Ashton-Warner’s criticism before her method, and it mentions no objections from families."
-    }
-   },
-   "models": [
-    "3.7"
-   ],
-   "sources": [
-    {
-     "what": "Ashton-Warner taught for 24 years in schools with all or mainly Māori enrolment; key vocabulary techniques; quotation “Pleasant words won’t do. Respectable words won’t do. … They must be words that are already part of a child’s being.” (the item quotes the last clause and the words “pleasant” and “respectable”)",
-     "url": "https://en.wikipedia.org/wiki/Sylvia_Ashton-Warner"
-    },
-    {
-     "what": "she replaced the traditional readers (inspectors objected that she was not using the required materials); children chose a word each day, written on a large card",
-     "url": "https://glli-us.org/2020/02/23/sylvia-ashton-warner-learning-to-read/"
-    }
-   ],
-   "notes": "Area: humanities (education). Key C; A and B keep move 1 and invent move 2 (hard-tier pattern), D is a wholly different template. The quotation is copied from Wikipedia’s quote section; “the first words children learn to read” is our framing of her “They.”",
-   "table": null,
-   "figure": null,
-   "word_count": 90
-  },
-  {
-   "id": "text_structure_and_purpose.S14_project_approach_critique.hard.w4b4_06",
-   "template": "S14_project_approach_critique",
-   "tier": "hard",
-   "band_target": 6,
-   "subtype": "Overall structure",
-   "passage": "Beginning in 1907, music teacher Frances Densmore spent five decades recording the songs of Native American peoples for the Smithsonian Institution’s Bureau of American Ethnology, collecting thousands of recordings among the Ojibwe, Mandan, Tohono O’odham, Seminole, and many other nations. Densmore captured performances on wax cylinders and then transcribed each song into Western staff notation, sorting and analyzing the songs by their musical features. Some scholars have since argued that this approach imposed on the songs a theoretical framework designed for European art music rather than one suited to the music itself.",
-   "stem": "Which choice best describes the overall structure of the text?",
-   "options": [
-    "It introduces a long-term effort to document a body of music, describes how the music was recorded and analyzed, and then notes a criticism of that approach.",
-    "It introduces a long-term effort to document a body of music, describes how the music was recorded and analyzed, and then explains how later scholars corrected the resulting transcriptions.",
-    "It introduces a researcher’s recordings of Native American songs, describes how the recordings were preserved, and then notes that scholars have praised their accuracy.",
-    "It describes a collection of Native American songs, explains how the songs were performed in ceremonies, and then presents a dispute over who should own the recordings."
-   ],
-   "answer_letter": "A",
-   "explanation": "The first sentence introduces Densmore’s decades-long project of “recording the songs of Native American peoples.” The second describes her method: she recorded “on wax cylinders and then transcribed each song into Western staff notation.” The last sentence gives a criticism: some scholars argue the approach “imposed on the songs a theoretical framework designed for European art music.” Choice A follows these three moves.",
-   "distractors": {
-    "B": {
-     "recipe": "moves 1 and 2 right, move 3 invented (INV)",
-     "why_wrong": "The final sentence reports a criticism of Densmore’s approach; it does not say that later scholars corrected her transcriptions."
-    },
-    "C": {
-     "recipe": "moves 1 and 2 roughly right, move 3 reversed (REV)",
-     "why_wrong": "The scholars mentioned in the text criticize the approach for imposing a framework on the music; they do not praise its accuracy."
-    },
-    "D": {
-     "recipe": "wholly different template (INV)",
-     "why_wrong": "The text does not describe how the songs were performed in ceremonies or any dispute over ownership of the recordings."
-    }
-   },
-   "models": [
-    "3.9"
-   ],
-   "sources": [
-    {
-     "what": "Densmore: music teacher, recorded for the Bureau of American Ethnology from 1907 for fifty-plus years, thousands of recordings on wax cylinders, among the Ojibwe, Mandan, Tohono O’odham, Seminole and others",
-     "url": "https://en.wikipedia.org/wiki/Frances_Densmore"
+      "id": "text_structure_and_purpose.P_lit.hard.w4b4_02",
+      "template": "P_lit",
+      "tier": "hard",
+      "band_target": 6,
+      "subtype": "Main purpose",
+      "passage": "The following text is from Alexander L. Kielland’s 1882 short story “Karen” (translated by R. L. Cassie in 1896). Karen serves the guests at Krarup Kro, a country inn in Denmark.\n\nKaren’s eyes were of that large gray sort which seem at once to look at one and to look far, far beyond, and her eyebrows were loftily arched, as if in wonder.\n\nTherefore strangers thought she did not rightly understand what they asked for. But she understood very well, and made no mistakes. There was only something strange about her, as if she were looking for something far away, or listening, or waiting, or dreaming.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To portray a young woman whose faraway manner leads strangers to misjudge her, though she does her work without fault",
+        "To show that Karen often misunderstands what guests ask for because her thoughts are elsewhere",
+        "To suggest that Karen longs to leave the inn and travel to some distant place she has imagined",
+        "To convey the strangers’ admiration for both Karen’s unusual appearance and her quiet efficiency"
+      ],
+      "answer_letter": "A",
+      "explanation": "Karen’s eyes “seem at once to look at one and to look far, far beyond,” so “strangers thought she did not rightly understand what they asked for.” The text then corrects them: “she understood very well, and made no mistakes,” though there remained “something strange about her, as if she were looking for something far away.” Choice A captures both halves: a distant manner that misleads strangers, and work done without error.",
+      "distractors": {
+        "B": {
+          "recipe": "first part plausible, outcome reversed (REV)",
+          "why_wrong": "This is what strangers wrongly believe; the text says “she understood very well, and made no mistakes.”"
+        },
+        "C": {
+          "recipe": "literalized image (LIT)",
+          "why_wrong": "The phrase “as if she were looking for something far away” describes how Karen seems, not a wish to leave the inn or travel anywhere."
+        },
+        "D": {
+          "recipe": "wrong holder of the feeling (SWAP)",
+          "why_wrong": "The strangers do not admire Karen; they think “she did not rightly understand what they asked for.”"
+        }
+      },
+      "models": [
+        "3.3",
+        "3.15",
+        "3.19"
+      ],
+      "sources": [
+        {
+          "what": "text copied from Project Gutenberg eBook #14593, Norse Tales and Sketches (Kielland, translated by R. L. Cassie, 1896), story “Karen”",
+          "url": "https://www.gutenberg.org/cache/epub/14593/pg14593.txt"
+        },
+        {
+          "what": "“Karen” appeared in Kielland’s 1882 collection To Novelletter fra Danmark (with “Trofast”)",
+          "url": "https://lokalhistoriewiki.no/wiki/Alexander_Lange_Kielland"
+        }
+      ],
+      "notes": "Literature (Norwegian short story in translation). Excerpt: two consecutive paragraphs copied exactly; Gutenberg double hyphens none here. Two-part trait in the key (band-6 literary purpose, like Brontë’s outward calm and inner restlessness). B reverses the outcome, C literalizes “far away,” D gives the feeling to the strangers. Kielland is not used in any official item or live item.",
+      "table": null,
+      "figure": null,
+      "word_count": 106,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Targeted 6. Two-part literary key (distant manner misleads strangers, flawless work) as in the Brontë band-6 item; B is the strangers’ mistaken belief, C literalizes “far away,” D gives a feeling to the strangers. Plain-register prose, so band 6, not 7."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "note": "Text checked word for word against Gutenberg #14593; footnotes there confirm Krarup Kro is a country inn and the tale is set in Denmark.",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Targeted 6. Two-part literary key (distant manner misleads strangers, flawless work) as in the Brontë band-6 item; B is the strangers’ mistaken belief, C literalizes “far away,” D gives a feeling to the strangers. Plain-register prose, so band 6, not 7."
+        }
+      }
     },
     {
-     "what": "critical perspectives: she kept staff notation and superimposed the theoretical framework designed for Western art music on Indigenous music; dissected and categorized the songs",
-     "url": "https://scalar.oberlincollegelibrary.org/decolonizing-ethnomusicology/critical-perspectives-on-densmores-m"
-    }
-   ],
-   "notes": "Area: humanities (ethnomusicology). Three-move structure; B and C keep the first moves and break move 3 (stance and invention), D is wholly wrong. The critique is given to unnamed scholars and is no stronger than the source.",
-   "table": null,
-   "figure": null,
-   "word_count": 92
-  },
-  {
-   "id": "text_structure_and_purpose.F_setup.hard.w4b4_07",
-   "template": "F_setup",
-   "tier": "hard",
-   "band_target": 7,
-   "subtype": "Function of an underlined part",
-   "passage": "The hidden flower (Guthriea capensis), native to the Drakensberg mountains of southern Africa, produces inconspicuous green blooms at ground level, concealed beneath its leaves, along with abundant nectar—<u>characteristics that led researchers to anticipate that small mammals would prove to be its pollinators</u>. When Ruth Cozien and colleagues positioned motion-triggered cameras near the plants, however, the visitors they recorded were Drakensberg crag lizards, which lapped nectar from the flowers, and when lizards were experimentally excluded from some of the plants, seed production declined by almost 95 percent.",
-   "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
-   "options": [
-    "It describes traits of a plant that suggested one kind of pollinator, an expectation the text later supports by noting that mammals avoided the plants once lizards were present.",
-    "It identifies features of a plant that attract lizards, which the text goes on to suggest evolved because mammals are scarce in the mountains where the plant grows.",
-    "It describes traits that researchers used to predict a plant’s pollinator, a prediction the text suggests was based on too few observations of the plant’s visitors.",
-    "It describes traits of a plant that pointed to a particular kind of pollinator, an expectation that the observations reported later in the text did not bear out."
-   ],
-   "answer_letter": "D",
-   "explanation": "The underlined portion says the plant’s characteristics “led researchers to anticipate that small mammals would prove to be its pollinators.” The text then turns (“however”): the cameras recorded lizards lapping nectar, and when lizards were excluded, “seed production declined by almost 95 percent.” So the portion sets up an expectation that the later observations overturn, as choice D says.",
-   "distractors": {
-    "A": {
-     "recipe": "first clause true, later clause invented (INV)",
-     "why_wrong": "The text never reports mammals avoiding the plants, and the later observations contradict rather than support the expectation of mammal pollination."
+      "id": "text_structure_and_purpose.F_example.hard.w4b4_03",
+      "template": "F_example",
+      "tier": "hard",
+      "band_target": 6,
+      "subtype": "Function of an underlined part",
+      "passage": "By the close of Japan’s Edo period (1603–1868), literacy had become remarkably widespread, an achievement usually credited to two kinds of institutions. Domain schools educated the children of samurai, while terakoya—small private academies operated by Buddhist priests, samurai, or ordinary townspeople, frequently in their own residences—instructed the children of commoners in reading, writing, and sometimes arithmetic. Found in metropolitan centers such as Edo and Osaka as well as in agricultural and coastal communities, terakoya became so popular that, <u>according to one estimate, roughly 70 percent of children in Edo attended them around 1800</u>.",
+      "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
+      "options": [
+        "It provides evidence that terakoya were more common in large cities than in the agricultural and coastal communities mentioned earlier in the text.",
+        "It indicates that terakoya had come to replace domain schools as the main source of education for the children of samurai.",
+        "It presents a statistic that the text uses to question how widespread literacy actually became during the Edo period.",
+        "It offers a figure that conveys how far the use of one kind of school had spread, supporting the text’s account of how literacy grew."
+      ],
+      "answer_letter": "D",
+      "explanation": "The text says literacy “had become remarkably widespread,” an achievement “usually credited to two kinds of institutions,” and that terakoya “became so popular that” roughly 70 percent of children in Edo attended them. The underlined figure shows how far the schools’ reach extended and so supports the text’s account of how literacy grew, as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "true first part, invented comparison (INV)",
+          "why_wrong": "The figure describes a large city, but the text gives no figure for villages and never says terakoya were less common there; it says they were found “as well as in agricultural and coastal communities.”"
+        },
+        "B": {
+          "recipe": "misattribution of the schools’ pupils (SWAP)",
+          "why_wrong": "The text says domain schools “educated the children of samurai” while terakoya “instructed the children of commoners”; nothing says terakoya replaced domain schools."
+        },
+        "C": {
+          "recipe": "stance flip (STANCE)",
+          "why_wrong": "The figure supports, rather than questions, the opening claim that literacy “had become remarkably widespread.”"
+        }
+      },
+      "models": [
+        "3.12",
+        "3.10",
+        "ac9a3a26"
+      ],
+      "sources": [
+        {
+          "what": "terakoya: private schools for commoners’ children, teachers were samurai, Buddhist priests or commoners, often in their own homes; common in Edo and Osaka and in rural and coastal regions; attendance reached 70% in Edo at the end of the 18th and start of the 19th century; with han schools, high literacy by the end of the Edo period",
+          "url": "https://en.wikipedia.org/wiki/Terakoya"
+        }
+      ],
+      "notes": "Area: history (education in Japan). Key D, a band-6 F_example on the 3.12 pattern (a figure that underscores extent), worded away from 3.12’s key. A is the near miss (true that the figure concerns a city, false comparison). Domain (han) schools as samurai schools is standard and simplified.",
+      "table": null,
+      "figure": null,
+      "word_count": 93,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Targeted 6. The figure’s job (extent, supporting the literacy account) needs the opening claim; A is a near miss (true that the figure is about a city, no comparison given), B swaps the schools’ pupils, C flips the stance."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "“Expanding from metropolitan centers such as Edo and Osaka into agricultural and coastal communities” became “Found in metropolitan centers such as Edo and Osaka as well as in agricultural and coastal communities”: the source says terakoya were common in both, not that they spread from one to the other; A’s why_wrong quote updated",
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Targeted 6. The figure’s job (extent, supporting the literacy account) needs the opening claim; A is a near miss (true that the figure is about a city, no comparison given), B swaps the schools’ pupils, C flips the stance."
+        }
+      }
     },
-    "B": {
-     "recipe": "wrong role of the span plus invented cause (REL/INV)",
-     "why_wrong": "The underlined features are presented as suggesting mammals, not as attracting lizards, and the text offers no explanation involving a scarcity of mammals."
-    },
-    "C": {
-     "recipe": "first clause true, invented reason for the error (INV)",
-     "why_wrong": "The text does not say the expectation rested on too few observations; it reports that new observations with cameras showed lizards, not mammals, visiting the flowers."
-    }
-   },
-   "models": [
-    "1f2d6173",
-    "a2f64e58",
-    "df45f0eb",
-    "3.14"
-   ],
-   "band7_moves": [
-    "the span is a means (an expectation), not the main claim, and a later sentence overturns it",
-    "key carries both halves (traits suggesting a pollinator; expectation not borne out)",
-    "two distractors (A, C) keep the key’s first clause and invent the later clause"
-   ],
-   "sources": [
     {
-     "what": "Cozien, van der Niet, Johnson, Steenhuisen (2019, Ecology), “Saurian surprise: lizards pollinate South Africa’s enigmatic hidden flower”; university release: green flowers at ground level beneath the leaves, nectar up to 1 ml per plant, “Everything about the plant made it look like it should be mammal-pollinated,” motion cameras recorded Drakensberg crag lizards dipping their snouts into flowers, excluding lizards cut seed production by almost 95%",
-     "url": "https://www.ufs.ac.za/templates/news-archive/research/2019/november/lizard-pollinates-plant-research-finding-a-first-for-continental-africa"
+      "id": "text_structure_and_purpose.P_view.hard.w4b4_04",
+      "template": "P_view",
+      "tier": "hard",
+      "band_target": 7,
+      "subtype": "Main purpose",
+      "passage": "Accounts of animals behaving strangely in the days preceding an earthquake have encouraged hopes that such behavior could function as a warning system, but those hopes rest on remarkably thin evidence. Reviewing 729 reports of unusual animal behavior associated with 160 earthquakes, geoscientist Heiko Woith and colleagues found that only 14 documented a series of observations made over time; nearly all described a single episode. Moreover, the reported behavior tended to coincide with foreshocks, suggesting that at least some of the animals may simply have been responding to seismic activity that was already under way.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "It discusses a review of reported animal behavior to argue that animals sense foreshocks well before people do and could therefore give early warning of earthquakes.",
+        "It draws on a review of reported animal behavior to suggest that the case for treating such behavior as a warning of earthquakes is weaker than it may seem.",
+        "It describes a review of reported animal behavior in order to establish that animals react to earthquakes only after seismic activity has already begun, never in advance of it.",
+        "It presents a review of reported animal behavior in order to recommend that earthquake warning systems monitor foreshocks instead of relying on observations of animals."
+      ],
+      "answer_letter": "B",
+      "explanation": "The first sentence says hopes that animal behavior could warn of earthquakes “rest on remarkably thin evidence.” The rest of the text supports that judgment: only 14 of 729 reports “documented a series of observations made over time,” and the behavior “tended to coincide with foreshocks,” suggesting that “at least some of the animals may simply have been responding to seismic activity that was already under way.” Choice B states this purpose: the review is used to show that the case is weaker than it seems.",
+      "distractors": {
+        "A": {
+          "recipe": "right review, stance flipped (STANCE)",
+          "why_wrong": "The text uses the foreshock finding to cast doubt on warning systems, since animals responding to activity “already under way” are not anticipating a quake; it never argues for early warning."
+        },
+        "C": {
+          "recipe": "right review, hedged point overstated (BROAD)",
+          "why_wrong": "The text uses the foreshock finding only to suggest that “at least some of the animals may” have been reacting to activity already under way, as one reason the evidence is thin; it does not establish that animals never sense an earthquake in advance."
+        },
+        "D": {
+          "recipe": "right review, invented recommendation (INV)",
+          "why_wrong": "Foreshocks appear only as an explanation for the reported behavior; the text recommends no warning system of any kind."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.16"
+      ],
+      "band7_moves": [
+        "hedged dual purpose (review used to show the evidence is weaker than it seems)",
+        "all three wrong options keep the true first half (a review of reported animal behavior) and invent the purpose",
+        "stance trap: A turns the foreshock finding into support for warnings"
+      ],
+      "sources": [
+        {
+          "what": "Woith, Petersen, Hainzl, Dahm (2018, Bulletin of the Seismological Society of America), “Can Animals Predict Earthquakes?”: 729 reports of abnormal animal behavior for 160 earthquakes; only 14 reports record a series of observations over time; foreshocks and abnormal behavior strongly cluster",
+          "url": "https://www.sciencedaily.com/releases/2018/04/180417115641.htm"
+        },
+        {
+          "what": "the paper",
+          "url": "https://doi.org/10.1785/0120170313"
+        }
+      ],
+      "notes": "Area: natural science (seismology and animal behavior). Band-7 P_view: evaluative opening (“rest on thin evidence”), then a review as the case. Key 31 words, not the longest. Architecture differs from 3.4 (no hypothesis-then-null; two weaknesses instead), and the key avoids 3.4’s “caution” wording. Woith works at the GFZ German Research Centre for Geosciences.",
+      "table": null,
+      "figure": null,
+      "word_count": 95,
+      "band7": {
+        "verdict": "band 7",
+        "why": "After hardening: hedged dual purpose (a review used to suggest the case is weaker than it seems) as in c61a7c4a; 29-word key, options 25 to 29 words; all three distractors keep the true first clause (the review) and fail on a later link that uses the passage’s own foreshock finding (A flips the stance, C drops the hedge, D invents a recommendation). The draft read band 6 because C and D both fell to one absent fact."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "“many of the animals may simply have been responding” softened to “at least some of the animals may simply have been responding”, as the source puts it (“at least some of the behaviors may be related to … a seismic event already underway”)",
+          "hardened C and D, each killed by one absent fact (species never mentioned): C now overstates the hedged foreshock point (“only after seismic activity has already begun, never in advance of it”), D invents a recommendation to monitor foreshocks; key trimmed (“a warning of earthquakes … weaker than it may seem”) so it is not the longest option; explanation and why_wrong rewritten",
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "After hardening: hedged dual purpose (a review used to suggest the case is weaker than it seems) as in c61a7c4a; 29-word key, options 25 to 29 words; all three distractors keep the true first clause (the review) and fail on a later link that uses the passage’s own foreshock finding (A flips the stance, C drops the hedge, D invents a recommendation). The draft read band 6 because C and D both fell to one absent fact."
+        }
+      }
     },
     {
-     "what": "the paper",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/30946483/"
+      "id": "text_structure_and_purpose.S12_critique_attempt.hard.w4b4_05",
+      "template": "S12_critique_attempt",
+      "tier": "hard",
+      "band_target": 6,
+      "subtype": "Overall structure",
+      "passage": "Over twenty-four years of teaching in rural New Zealand schools whose enrollment was predominantly Māori, educator Sylvia Ashton-Warner became convinced that the sanitized vocabulary of standard beginning readers was largely meaningless to her pupils: a child’s earliest reading vocabulary, she wrote, “must be words that are already part of a child’s being,” not words chosen because they were “pleasant” or “respectable.” Abandoning the required readers, Ashton-Warner instead invited each child to select a personally significant word every day, which she inscribed on a large card for that child to learn.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "The text presents Ashton-Warner’s objection to the reading materials her students were given and then explains how she revised those materials to use words that were easier to read.",
+        "The text presents Ashton-Warner’s criticism of the words in beginning readers and then describes a study she conducted to measure her students’ progress in reading.",
+        "The text presents Ashton-Warner’s view of what was wrong with the words her students were taught and then describes a practice she adopted in response.",
+        "The text describes a method of teaching reading that Ashton-Warner developed and then presents the objections it drew from her students’ families."
+      ],
+      "answer_letter": "C",
+      "explanation": "The first sentence gives Ashton-Warner’s criticism: the “sanitized vocabulary of standard beginning readers” was “largely meaningless to her pupils,” since early words “must be words that are already part of a child’s being.” The second sentence describes what she did instead: “Abandoning the required readers,” she had each child “select a personally significant word every day.” Choice C names both moves in order.",
+      "distractors": {
+        "A": {
+          "recipe": "first move right, second move bent (REV/INV)",
+          "why_wrong": "The text says that, “Abandoning the required readers,” she turned to a new practice instead of revising them, and her objection was that their words were “largely meaningless to her pupils,” not that they were hard to read."
+        },
+        "B": {
+          "recipe": "first move right, invented second move (INV)",
+          "why_wrong": "The last sentence describes a classroom practice, not a study measuring her students’ progress."
+        },
+        "D": {
+          "recipe": "wrong order and invented critics (ORDER/INV)",
+          "why_wrong": "The text gives Ashton-Warner’s criticism before her method, and it mentions no objections from families."
+        }
+      },
+      "models": [
+        "3.7"
+      ],
+      "sources": [
+        {
+          "what": "Ashton-Warner taught for 24 years in schools with all or mainly Māori enrolment; key vocabulary techniques; quotation “Pleasant words won’t do. Respectable words won’t do. … They must be words that are already part of a child’s being.” (the item quotes the last clause and the words “pleasant” and “respectable”)",
+          "url": "https://en.wikipedia.org/wiki/Sylvia_Ashton-Warner"
+        },
+        {
+          "what": "she replaced the traditional readers (inspectors objected that she was not using the required materials); children chose a word each day, written on a large card",
+          "url": "https://glli-us.org/2020/02/23/sylvia-ashton-warner-learning-to-read/"
+        }
+      ],
+      "notes": "Area: humanities (education). Key C; A and B keep move 1 and invent move 2 (hard-tier pattern), D is a wholly different template. The quotation is copied from Wikipedia’s quote section; “the first words children learn to read” is our framing of her “They.”",
+      "table": null,
+      "figure": null,
+      "word_count": 90,
+      "band7": {
+        "verdict": "band 6",
+        "why": "S12 has no band-7 official items. Strong band 6 after the fix: A and B keep move 1 and break move 2 (one by a near miss on the response, one by an invented study), D reverses the order and invents critics."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "hardened A, which was killed by an absent fact (school inspectors): it now keeps the objection and bends the response (“revised those materials to use words that were easier to read”), refuted by “Abandoning the required readers” and by what the objection was; why_wrong rewritten"
+        ],
+        "status": "fixed",
+        "note": "The Ashton-Warner quotation matches the Wikipedia quote section exactly (“They must be words that are already part of a child’s being”; “Pleasant words won’t do. Respectable words won’t do.”).",
+        "band7": {
+          "verdict": "band 6",
+          "why": "S12 has no band-7 official items. Strong band 6 after the fix: A and B keep move 1 and break move 2 (one by a near miss on the response, one by an invented study), D reverses the order and invents critics."
+        }
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S14_project_approach_critique.hard.w4b4_06",
+      "template": "S14_project_approach_critique",
+      "tier": "hard",
+      "band_target": 6,
+      "subtype": "Overall structure",
+      "passage": "Beginning in 1907, music teacher Frances Densmore spent five decades recording the songs of Native American peoples for the Smithsonian Institution’s Bureau of American Ethnology, collecting thousands of recordings among the Ojibwe, Mandan, Tohono O’odham, Seminole, and many other nations. Densmore captured performances on wax cylinders and then transcribed each song into Western staff notation, sorting and analyzing the songs by their musical features. Some scholars have since argued that this approach imposed on the songs a theoretical framework designed for European art music rather than one suited to the music itself.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It introduces a long-term effort to document a body of music, describes how the music was recorded and analyzed, and then notes a criticism of that approach.",
+        "It introduces a long-term effort to document a body of music, describes how the music was recorded and analyzed, and then explains how later scholars corrected the resulting transcriptions.",
+        "It introduces a researcher’s recordings of Native American songs, describes how the recordings were preserved, and then notes that scholars have praised their accuracy.",
+        "It describes a collection of Native American songs, explains how the songs were performed in ceremonies, and then presents a dispute over who should own the recordings."
+      ],
+      "answer_letter": "A",
+      "explanation": "The first sentence introduces Densmore’s decades-long project of “recording the songs of Native American peoples.” The second describes her method: she recorded “on wax cylinders and then transcribed each song into Western staff notation.” The last sentence gives a criticism: some scholars argue the approach “imposed on the songs a theoretical framework designed for European art music.” Choice A follows these three moves.",
+      "distractors": {
+        "B": {
+          "recipe": "moves 1 and 2 right, move 3 invented (INV)",
+          "why_wrong": "The final sentence reports a criticism of Densmore’s approach; it does not say that later scholars corrected her transcriptions."
+        },
+        "C": {
+          "recipe": "moves 1 and 2 roughly right, move 3 reversed (REV)",
+          "why_wrong": "The scholars mentioned in the text criticize the approach for imposing a framework on the music; they do not praise its accuracy."
+        },
+        "D": {
+          "recipe": "wholly different template (INV)",
+          "why_wrong": "The text does not describe how the songs were performed in ceremonies or any dispute over ownership of the recordings."
+        }
+      },
+      "models": [
+        "3.9"
+      ],
+      "sources": [
+        {
+          "what": "Densmore: music teacher, recorded for the Bureau of American Ethnology from 1907 for fifty-plus years, thousands of recordings on wax cylinders, among the Ojibwe, Mandan, Tohono O’odham, Seminole and others",
+          "url": "https://en.wikipedia.org/wiki/Frances_Densmore"
+        },
+        {
+          "what": "critical perspectives: she kept staff notation and superimposed the theoretical framework designed for Western art music on Indigenous music; dissected and categorized the songs",
+          "url": "https://scalar.oberlincollegelibrary.org/decolonizing-ethnomusicology/critical-perspectives-on-densmores-m"
+        }
+      ],
+      "notes": "Area: humanities (ethnomusicology). Three-move structure; B and C keep the first moves and break move 3 (stance and invention), D is wholly wrong. The critique is given to unnamed scholars and is no stronger than the source.",
+      "table": null,
+      "figure": null,
+      "word_count": 92,
+      "band7": {
+        "verdict": "band 6",
+        "why": "S14 has no band-7 official items. Three-move key; B and C keep moves 1 and 2 and break move 3 (correction, praise), D is wholly wrong."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "Densmore facts (1907, BAE, fifty-plus years, thousands of wax-cylinder recordings, the named nations) confirmed on Wikipedia. The Oberlin critique page in sources now returns 404 to direct fetches; its indexed text (search, 2026-10-27) says she carried “the theoretical framework and analytical values of Western art music” onto Indigenous music and kept staff notation developed for Western art music, which supports the critique as worded.",
+        "band7": {
+          "verdict": "band 6",
+          "why": "S14 has no band-7 official items. Three-move key; B and C keep moves 1 and 2 and break move 3 (correction, praise), D is wholly wrong."
+        }
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_setup.hard.w4b4_07",
+      "template": "F_setup",
+      "tier": "hard",
+      "band_target": 7,
+      "subtype": "Function of an underlined part",
+      "passage": "The hidden flower (Guthriea capensis), native to the Drakensberg mountains of southern Africa, produces inconspicuous green blooms at ground level, concealed beneath its leaves, along with abundant nectar—<u>characteristics that led researchers to anticipate that small mammals would prove to be its pollinators</u>. When Ruth Cozien and colleagues positioned motion-triggered cameras near the plants, however, the visitors they recorded were Drakensberg crag lizards, which lapped nectar from the flowers, and when lizards were experimentally excluded from some of the plants, seed production declined by almost 95 percent.",
+      "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
+      "options": [
+        "It describes traits of a plant that suggested one kind of pollinator, an expectation the text later qualifies by indicating that both mammals and lizards pollinate the plant.",
+        "It identifies features of a plant that attract lizards, which the text goes on to suggest evolved because mammals are scarce in the mountains where the plant grows.",
+        "It describes traits that researchers used to predict a plant’s pollinator, a prediction the text suggests was based on too few observations of the plant’s visitors.",
+        "It describes traits of a plant that pointed to a particular kind of pollinator, an expectation that the observations reported later in the text did not bear out."
+      ],
+      "answer_letter": "D",
+      "explanation": "The underlined portion says the plant’s characteristics “led researchers to anticipate that small mammals would prove to be its pollinators.” The text then turns (“however”): the cameras recorded lizards lapping nectar, and when lizards were excluded, “seed production declined by almost 95 percent.” So the portion sets up an expectation that the later observations overturn, as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "first clause true, later clause invented (INV)",
+          "why_wrong": "The cameras recorded lizards, and excluding them cut seed production “by almost 95 percent”; the text never says mammals pollinate the plant at all, so the expectation is overturned, not qualified."
+        },
+        "B": {
+          "recipe": "wrong role of the span plus invented cause (REL/INV)",
+          "why_wrong": "The underlined features are presented as suggesting mammals, not as attracting lizards, and the text offers no explanation involving a scarcity of mammals."
+        },
+        "C": {
+          "recipe": "first clause true, invented reason for the error (INV)",
+          "why_wrong": "The text does not say the expectation rested on too few observations; it reports that new observations with cameras showed lizards, not mammals, visiting the flowers."
+        }
+      },
+      "models": [
+        "1f2d6173",
+        "a2f64e58",
+        "df45f0eb",
+        "3.14"
+      ],
+      "band7_moves": [
+        "the span is a means (an expectation), not the main claim, and a later sentence overturns it",
+        "key carries both halves (traits suggesting a pollinator; expectation not borne out)",
+        "two distractors (A, C) keep the key’s first clause and invent the later clause"
+      ],
+      "sources": [
+        {
+          "what": "Cozien, van der Niet, Johnson, Steenhuisen (2019, Ecology), “Saurian surprise: lizards pollinate South Africa’s enigmatic hidden flower”; university release: green flowers at ground level beneath the leaves, nectar up to 1 ml per plant, “Everything about the plant made it look like it should be mammal-pollinated,” motion cameras recorded Drakensberg crag lizards dipping their snouts into flowers, excluding lizards cut seed production by almost 95%",
+          "url": "https://www.ufs.ac.za/templates/news-archive/research/2019/november/lizard-pollinates-plant-research-finding-a-first-for-continental-africa"
+        },
+        {
+          "what": "the paper",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/30946483/"
+        }
+      ],
+      "notes": "Area: natural science (pollination). Band-7 F_setup: the underlined expectation is overturned by the following sentences. Key 27 words. Ruth Cozien led the project (release). Species epithet as published.",
+      "table": null,
+      "figure": null,
+      "word_count": 86,
+      "band7": {
+        "verdict": "band 7",
+        "why": "Three-part key (traits, the expectation they raised, overturned by later observations) on the a2f64e58 pattern; the deciding sentence follows the span; A and C keep the key’s first clause and fail later (qualified rather than overturned; an invented reason for the error), B misnames the traits and invents a cause; options 26 to 28 words. A read band 6 in the draft, killed by the turn word alone."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "hardened A, which fell to “however” alone (“mammals avoided the plants once lizards were present”): it now keeps the true first clause and fails on what the evidence shows (“qualifies by indicating that both mammals and lizards pollinate the plant”), ruled out by the camera records and the 95 percent drop; why_wrong rewritten"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Three-part key (traits, the expectation they raised, overturned by later observations) on the a2f64e58 pattern; the deciding sentence follows the span; A and C keep the key’s first clause and fail later (qualified rather than overturned; an invented reason for the error), B misnames the traits and invents a cause; options 26 to 28 words. A read band 6 in the draft, killed by the turn word alone."
+        }
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_lit.medium.w4b4_08",
+      "template": "P_lit",
+      "tier": "medium",
+      "band_target": null,
+      "subtype": "Main purpose",
+      "passage": "The following text is adapted from Harriet Martineau’s 1839 novel Deerbrook. Two recently orphaned sisters, Hester and Margaret Ibbotson, have come to visit distant relatives, the Greys, in the English village of Deerbrook.\n\nAll Deerbrook had been informed of their expected arrival—as it always was of everything which concerned the Greys. The little Rowlands were walking with their mother when the chaise [carriage] came up the street; but being particularly desired not to look at it, they were not much benefited by the event. The stationer, the parish clerk, and the milliner [hatmaker] and her assistant, had obtained a passing view of sundry boxes, the face of an elderly woman, and the outline of two black bonnets,—all that they could boast of to repay them for the vigilance of a whole afternoon.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To show that the people of Deerbrook resent the attention that the Greys always receive",
+        "To convey how closely the village watches the sisters’ arrival and how little its watching reveals",
+        "To describe the boxes and other belongings that the sisters have brought with them to Deerbrook",
+        "To illustrate how strictly the parents in Deerbrook control what their young children are allowed to do"
+      ],
+      "answer_letter": "B",
+      "explanation": "The text opens by noting that “All Deerbrook had been informed of their expected arrival,” then shows the villagers trying to see it: the Rowland children are told not to look, and the stationer, the parish clerk, and the milliner manage only “a passing view of sundry boxes, the face of an elderly woman, and the outline of two black bonnets,—all that they could boast of to repay them for the vigilance of a whole afternoon.” Choice B captures both parts: the village watches closely, and its watching yields very little.",
+      "distractors": {
+        "A": {
+          "recipe": "word hook on “everything which concerned the Greys” (LIT)",
+          "why_wrong": "The text says the village is always informed of “everything which concerned the Greys,” but nothing suggests that anyone resents the family."
+        },
+        "C": {
+          "recipe": "literal reading of one detail (LIT)",
+          "why_wrong": "The “sundry boxes” are part of the little the onlookers manage to see; the text does not describe what the sisters brought."
+        },
+        "D": {
+          "recipe": "one sentence stretched to the whole village (PART, BROAD)",
+          "why_wrong": "Only the Rowland children are told not to look, and that detail serves the picture of the village’s curiosity; the text is not about how parents in Deerbrook raise children."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.7",
+        "2.9",
+        "2.19"
+      ],
+      "sources": [
+        {
+          "what": "text copied from Project Gutenberg eBook #24210, Deerbrook (Martineau), Chapter One, “All Deerbrook had been informed ...” paragraph (one sentence about Mrs Enderby omitted)",
+          "url": "https://www.gutenberg.org/cache/epub/24210/pg24210.txt"
+        },
+        {
+          "what": "Deerbrook (1839), one of Martineau’s most popular works of fiction",
+          "url": "https://en.wikipedia.org/wiki/Harriet_Martineau"
+        }
+      ],
+      "notes": "Literature (English novel). Adapted: the Mrs Enderby sentence between the Rowlands and the stationer is cut at sentence boundaries, two bracketed glosses added; Gutenberg double hyphens set as closed em dashes, the printed “,—” kept. Martineau’s Wikipedia page gives both 1838 and 1839; the novel appeared in April 1839, the usual date. Distractors: two word hooks and one partial; the key is a two-part purpose (watching, little reward), worded away from the passage.",
+      "table": null,
+      "figure": null,
+      "word_count": 132,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed",
+        "note": "Text checked against Gutenberg #24210: one sentence (Mrs Enderby) cut at sentence boundaries, two glosses added, the comma before the dash kept as printed; source line says adapted."
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_method.medium.w4b4_09",
+      "template": "F_method",
+      "tier": "medium",
+      "band_target": null,
+      "subtype": "Function of an underlined part",
+      "passage": "Sea cucumbers are harvested commercially in many regions of the world, yet scientists have lacked a reliable method for determining how old these animals are. Working with Psolus fabricii, a cold-water species, researcher Jiamin Sun and colleagues tested a possible solution. <u>The team extracted the oldest of the small plates embedded in the animal’s skin, then polished and dyed them, revealing layered rings that are not visible at first.</u> Studying juveniles raised in the laboratory, the researchers confirmed that a new layer forms each year, and they found that some wild individuals were several decades old.",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It describes how the researchers exposed markings that might reveal an animal’s age.",
+        "It explains why Psolus fabricii is more difficult to study than other sea cucumber species are.",
+        "It presents the evidence showing that the rings in the plates form at a rate of one per year.",
+        "It identifies a flaw in the method that scientists had previously used to estimate sea cucumber ages."
+      ],
+      "answer_letter": "A",
+      "explanation": "The text says scientists have lacked “a reliable method for determining how old these animals are.” The underlined sentence describes what the team did: they “extracted the oldest of the small plates,” then “polished and dyed them, revealing layered rings.” The next sentence shows that these rings track age (“a new layer forms each year”), so the underlined sentence describes how the researchers exposed markings that could reveal an animal’s age.",
+      "distractors": {
+        "B": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The text calls Psolus fabricii “a cold-water species” but never compares how hard it is to study with other species."
+        },
+        "C": {
+          "recipe": "content of the neighbouring sentence (PART)",
+          "why_wrong": "The confirmation that “a new layer forms each year” comes in the following sentence, from juveniles raised in the laboratory; the underlined sentence only reveals the rings."
+        },
+        "D": {
+          "recipe": "wrong label: problem with an earlier method (REL)",
+          "why_wrong": "The text says scientists “have lacked a reliable method” for determining age; it describes no earlier method, let alone a flaw in one."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.15",
+        "2.20"
+      ],
+      "sources": [
+        {
+          "what": "Sun, Hamel, Gianasi, Mercier (2019, Proc. R. Soc. B): holothuroids extensively fished, age hard to measure; Psolus fabricii, oldest dermal plates (largest dorsal ossicles) extracted, polished and dyed to reveal layered rings; lab-reared juveniles to 40 months confirmed one layer added annually; wild individuals several decades old. First author Jiamin Sun, Department of Ocean Sciences, Memorial University",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31288701/"
+        }
+      ],
+      "notes": "Area: natural science (marine biology). Key A, the shortest option, paraphrased (exposed markings, might reveal age). The underlined span is only the method; the confirmation and the finding sit in the next sentence, which C borrows. “Dermal plates” rendered as small plates embedded in the skin.",
+      "table": null,
+      "figure": null,
+      "word_count": 96,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_example.medium.w4b4_10",
+      "template": "F_example",
+      "tier": "medium",
+      "band_target": null,
+      "subtype": "Function of an underlined part",
+      "passage": "Most animal species are thought to originate when a single lineage divides in two, but in rare cases a new species may form through hybridization between two existing species. Few such cases have been documented in nature, particularly among birds. <u>Analyzing DNA from 751 sparrows, biologist Jo S. Hermansen and colleagues found that the Italian sparrow (Passer italiae) shows a clear genetic mix of house sparrow and Spanish sparrow ancestry throughout its breeding range.</u> The researchers propose that the species arose when a hybrid population became geographically isolated from both of its parent species.",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It describes a research method whose reliability is called into question in the following sentence.",
+        "It explains why hybrids between two species rarely survive long enough to reproduce.",
+        "It presents a finding that contradicts the commonly held view that most new species arise when a lineage splits.",
+        "It offers evidence that a particular bird is an instance of the uncommon process described earlier."
+      ],
+      "answer_letter": "D",
+      "explanation": "The text first says that “in rare cases a new species may form through hybridization” and that “few such cases have been documented in nature, particularly among birds.” The underlined sentence then reports that the Italian sparrow “shows a clear genetic mix of house sparrow and Spanish sparrow ancestry throughout its breeding range.” That evidence marks the Italian sparrow as one of the rare cases of a species formed by hybridization, as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong relation to the next sentence (REL, STANCE)",
+          "why_wrong": "The following sentence builds on the finding by proposing how the species arose; it does not question the analysis."
+        },
+        "B": {
+          "recipe": "invented cause (INV)",
+          "why_wrong": "The text never discusses whether hybrids survive or reproduce; it reports evidence of a hybrid origin."
+        },
+        "C": {
+          "recipe": "stance flip (STANCE)",
+          "why_wrong": "The text itself allows that hybrid species form “in rare cases,” so one such case fits the view that most species arise by splitting rather than contradicting it."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.12"
+      ],
+      "sources": [
+        {
+          "what": "Hermansen et al. (2011, Molecular Ecology), Hybrid speciation in sparrows I: 751 individuals genotyped; the Italian sparrow shows clear admixture between house and Spanish sparrows over its entire breeding range; few examples of homoploid hybrid speciation known; proposed origin with the hybrid lineage geographically isolated from its parental species",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/21771138/"
+        }
+      ],
+      "notes": "Area: natural science (evolution). Key D, worded away from 2.12’s key. C is the near miss: true that the case is unusual, wrong that it contradicts a view the text itself qualifies with “in rare cases.” The 751 birds include the parent species, so the text says “751 sparrows,” not 751 Italian sparrows. The general opening (most species from splitting) is standard background, not from the paper.",
+      "table": null,
+      "figure": null,
+      "word_count": 94,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S4_efforts_limit.medium.w4b4_11",
+      "template": "S4_efforts_limit",
+      "tier": "medium",
+      "band_target": null,
+      "subtype": "Overall structure",
+      "passage": "The following text is adapted from Archibald Lampman’s 1888 poem “Love-Wonder.” The speaker is describing the woman he loves.\n\nIf she’s sad, it is no cloud that lowers [threatens],\nRather a saint’s pale grace, whose golden hair\nGleams like a crown, whose eyes are like a prayer\nFrom some quiet window under minster [cathedral] towers.\nBut ah, Beloved, how shall I be taught\nTo tell this truth in any rhymed line?\nFor words and woven phrases fall to naught,\nLost in the silence of one dream divine,\nWrapped in the beating wonder of this thought:\nEven thou, who art so precious, thou art mine!",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "The speaker describes a beloved’s sadness and then explains why her sadness troubles him.",
+        "The speaker praises a beloved’s grace and then vows to write a poem that does her justice.",
+        "The speaker tries to characterize a beloved through a comparison and then admits that words cannot convey his wonder.",
+        "The speaker recalls a moment of happiness shared with a beloved and then expresses a fear that the moment will not last."
+      ],
+      "answer_letter": "C",
+      "explanation": "In the first four lines the speaker tries to capture the beloved through a comparison: her sadness is “no cloud that lowers” but “a saint’s pale grace,” with eyes “like a prayer / From some quiet window.” The speaker then asks, “how shall I be taught / To tell this truth in any rhymed line?” and admits that “words and woven phrases fall to naught” before the wonder that “thou art mine!” Choice C describes this attempt and the limit the speaker acknowledges.",
+      "distractors": {
+        "A": {
+          "recipe": "first move right, second invented (INV)",
+          "why_wrong": "The speaker does describe her sadness, but as “no cloud that lowers”; it is “a saint’s pale grace,” so it does not trouble him."
+        },
+        "B": {
+          "recipe": "first move right, second reversed (REV)",
+          "why_wrong": "The speaker does praise her grace, but far from vowing to write a worthy poem, he doubts that the truth can be told “in any rhymed line.”"
+        },
+        "D": {
+          "recipe": "wholly wrong template, hook on the child image (INV, LIT)",
+          "why_wrong": "The text describes the beloved rather than recalling a shared moment, and the speaker expresses wonder, not fear."
+        }
+      },
+      "models": [
+        "2.8"
+      ],
+      "sources": [
+        {
+          "what": "text copied from Project Gutenberg eBook #12413, Among the Millet and Other Poems (Lampman, 1888), sonnet “Love-Wonder,” lines 5 to 14 (a contiguous run; the opening “And” dropped and two bracketed glosses added, so “adapted”)",
+          "url": "https://www.gutenberg.org/cache/epub/12413/pg12413.txt"
+        },
+        {
+          "what": "Among the Millet and Other Poems, Lampman’s first book, published 1888",
+          "url": "https://en.wikipedia.org/wiki/Archibald_Lampman"
+        }
+      ],
+      "notes": "Literature (Canadian poem). Reviewer: the draft spliced lines 1 to 4 to lines 9 to 14; every checkable CB poem excerpt, adapted or not, is a contiguous run of lines (Rossetti, Shakespeare, Lowell checked), so the item now takes lines 5 to 14, dropping the opening “And” as CB’s adapted Lowell excerpt drops “And it is summer” to “It is summer.” Ten lines, inside CB’s poem lengths. Lampman also appears in TSP w3b1_03 with a different poem (The Poet’s Possession); CB repeats authors within this skill (Erdrich twice). Distractors: A and B keep move 1 and break move 2 (invented trouble; a vow for the admitted limit), D is a wholly different template.",
+      "table": null,
+      "figure": null,
+      "word_count": 104,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "the draft spliced lines 1 to 4 to lines 9 to 14 of the sonnet; CB poem excerpts, adapted or not, are contiguous runs of lines (Rossetti adbcbce0 lines 1 to 8, Shakespeare 16025337 lines 1 to 7, Lowell b11bb2a3 seven consecutive lines checked against Gutenberg #261), so the passage now takes lines 5 to 14 (85 body words, inside CB’s poem range), dropping the opening “And” as CB’s adapted Lowell excerpt does, with a context sentence and two one-word glosses",
+          "options A and B retuned to the new excerpt (each keeps a true first move: her sadness, her grace; and breaks the second), D’s why_wrong and the explanation requote the new lines; source and notes updated",
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S6_field_distinction.medium.w4b4_12",
+      "template": "S6_field_distinction",
+      "tier": "medium",
+      "band_target": null,
+      "subtype": "Overall structure",
+      "passage": "Star atlases such as Johann Bayer’s Uranometria (1603) and Johannes Hevelius’s Firmamentum Sobiescianum map the sky constellation by constellation, placing each star within an engraved figure such as a hunter or a bear. The star positions in these atlases, however, were measured without telescopes: Bayer relied on the catalog of the Danish astronomer Tycho Brahe, and Hevelius, regarded as the last astronomer to do major work without a telescope, used sighting instruments. The Atlas Coelestis, published in 1729 from John Flamsteed’s observations, was the first comprehensive star atlas based on observations made through a telescope.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It characterizes a kind of work through two examples and then explains how a later example differed.",
+        "It compares two well-known works and then explains why astronomers came to prefer one of them over the other.",
+        "It discusses how a kind of work was produced and then argues that later works of that kind were less accurate.",
+        "It introduces two works of a particular type and then describes a dispute about which of them appeared first."
+      ],
+      "answer_letter": "A",
+      "explanation": "The text first describes star atlases through two examples, Bayer’s Uranometria and Hevelius’s Firmamentum Sobiescianum, noting that both place stars within constellation figures and that their positions “were measured without telescopes.” It then presents the Atlas Coelestis, which differed from them as “the first comprehensive star atlas based on observations made through a telescope.” Choice A describes this structure.",
+      "distractors": {
+        "B": {
+          "recipe": "first move bent into a comparison, invented preference (INV)",
+          "why_wrong": "The text treats the two atlases as alike rather than comparing them, and it never says astronomers preferred either one."
+        },
+        "C": {
+          "recipe": "invented evaluation (STANCE, REV)",
+          "why_wrong": "The text says the later atlas was the first based on telescopic observations; it never argues that later atlases were less accurate."
+        },
+        "D": {
+          "recipe": "invented dispute (INV)",
+          "why_wrong": "No dispute is mentioned; the text gives Bayer’s date and simply calls the Atlas Coelestis the first comprehensive telescopic atlas."
+        }
+      },
+      "models": [
+        "2.11"
+      ],
+      "sources": [
+        {
+          "what": "Atlas Coelestis published 1729 from Flamsteed’s observations, the first stellar atlas based on telescopic observations; Flamsteed sought to correct Bayer’s Uranometria (1603) figures",
+          "url": "https://en.wikipedia.org/wiki/Atlas_Coelestis"
+        },
+        {
+          "what": "Hevelius’s star atlas Firmamentum Sobiescianum; he worked with quadrant and alidade and is considered the last astronomer to do major work without a telescope",
+          "url": "https://en.wikipedia.org/wiki/Johannes_Hevelius"
+        },
+        {
+          "what": "Bayer took the Uranometria star positions from Tycho Brahe’s catalog",
+          "url": "https://en.wikipedia.org/wiki/Uranometria"
+        }
+      ],
+      "notes": "Area: history of science (astronomy). Key A, worded away from 2.11 (no “more comprehensive”). Brahe’s catalog predates the telescope (he died 1601); “sighting instruments” renders quadrant and alidade. Hevelius’s atlas year left out (not on the fetched page). B and D keep two works as move 1 and break move 2; C is a stance flip.",
+      "table": null,
+      "figure": null,
+      "word_count": 95,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "“the first star atlas based on observations made through a telescope” became “the first comprehensive star atlas …”: the source calls it “the first comprehensive telescopic star catalogue and companion celestial atlas”; explanation and D’s why_wrong updated",
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S8_view_challenge.medium.w4b4_13",
+      "template": "S8_view_challenge",
+      "tier": "medium",
+      "band_target": null,
+      "subtype": "Overall structure",
+      "passage": "Archaeologists and historians have traditionally assumed that the peoples of ancient Mongolia, from the late second millennium BCE through the time of the Mongol Empire, lived by a highly specialized form of mobile herding that depended on horses. To test this view, archaeologist Shevan Wilkin and colleagues analyzed chemical traces of diet in the bones and teeth of 137 individuals buried in Mongolia between 4400 BCE and 1300 CE. They found that consumption of millet began to rise around 800 BCE, evidence that the region’s empires were supported by a mix of economic strategies rather than by herding alone.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It describes a debate among scholars about early Mongolian diets, then explains how a new dating method resolved it.",
+        "It outlines how the Mongol Empire expanded across the steppe, then identifies the crops that supplied its armies.",
+        "It presents a long-held assumption about ancient Mongolians, then describes evidence that they gave up herding after 800 BCE.",
+        "It describes a long-standing view of a region’s past, then a study indicating that the view is too simple."
+      ],
+      "answer_letter": "D",
+      "explanation": "The text opens with what scholars “have traditionally assumed”: that ancient Mongolians lived by “a highly specialized form of mobile herding.” It then describes a study whose evidence, a rise in millet eating from about 800 BCE, suggests that the empires “were supported by a mix of economic strategies rather than by herding alone.” Choice D describes this view and the study that complicates it.",
+      "distractors": {
+        "A": {
+          "recipe": "wholly wrong template: debate resolved (INV)",
+          "why_wrong": "The text describes a shared assumption, not a debate, and the study analyzed traces of diet; it is not presented as a new dating method."
+        },
+        "B": {
+          "recipe": "invented topic, hook on “empires” and “millet” (INV, LIT)",
+          "why_wrong": "The text does not describe how the Mongol Empire expanded or what fed its armies."
+        },
+        "C": {
+          "recipe": "first move right, second move overreaches (BROAD)",
+          "why_wrong": "The study found millet in the diet alongside herding (“rather than by herding alone”), not that people gave up herding."
+        }
+      },
+      "models": [
+        "2.17"
+      ],
+      "sources": [
+        {
+          "what": "Wilkin et al. (2020, Scientific Reports): Mongolian populations from the late second millennium BCE through the Mongol Empire traditionally assumed to practice highly specialized horse-facilitated mobile pastoralism; isotopes of bone collagen and enamel from 137 individuals, c. 4400 BCE to 1300 CE; C4 (millet) consumption rising from c. 800 BCE and escalating; empires supported by diversified economies rather than uniform pastoralism. First author in the Department of Archaeology, MPI Jena",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/32127564/"
+        }
+      ],
+      "notes": "Area: history (archaeology). Key D, short and abstract (structure keys carry about one content word in eight from the passage). C is the near miss: true first move, overreach in the second. “Chemical traces of diet” renders stable isotopes; “almost certainly indicative of millet” simplified to millet.",
+      "table": null,
+      "figure": null,
+      "word_count": 99,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S10_opinion_behaviors.medium.w4b4_14",
+      "template": "S10_opinion_behaviors",
+      "tier": "medium",
+      "band_target": null,
+      "subtype": "Overall structure",
+      "passage": "The following text is adapted from Eden Phillpotts’s 1899 short story “The Protest of the Wing Dormitory.” The narrator is a pupil at Merivale, a boarding school in England, where Thompson is the new mathematics teacher.\n\nTrelawny had called [Thompson] an “unholy bounder” [a rude person] the third day he was there, and that seemed to be a general opinion. He seemed to have read up boys like he read mathematics and stuff—from rotten books. He would say sometimes, “Now, you fellows, let’s ’ave a jolly game of leap-frog before the bell rings,” and things like that. Once he offered to show Trelawny how to make a kite, and he asked Chambers—Chambers, mind you, the Captain of the First Eleven at Cricket—whether he knew a shop where there were capital iron hoops for sale at a shilling each.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It presents one student’s harsh judgment of a teacher and then explains why most of the other students reject that judgment.",
+        "It reports an unflattering opinion of a teacher that many share and then gives examples of the conduct behind that opinion.",
+        "It describes a teacher’s low opinion of the older students and then lists the ways he tries to earn their respect.",
+        "It recounts how a teacher won the students’ admiration and then describes the events that caused him to lose it."
+      ],
+      "answer_letter": "B",
+      "explanation": "The text first reports that Trelawny called Thompson an “unholy bounder” and that “that seemed to be a general opinion.” It then shows the behavior that earned him this label: he “seemed to have read up boys like he read mathematics,” proposing “a jolly game of leap-frog,” offering to show Trelawny how to make a kite, and asking Chambers, “the Captain of the First Eleven at Cricket,” about iron hoops. Choice B describes this opinion followed by the conduct behind it.",
+      "distractors": {
+        "A": {
+          "recipe": "first move narrowed, second reversed (REV)",
+          "why_wrong": "Trelawny’s judgment is not his alone: the text says “that seemed to be a general opinion,” and nothing shows the other students rejecting it."
+        },
+        "C": {
+          "recipe": "opinion given to the wrong holder (SWAP)",
+          "why_wrong": "The low opinion is the students’ opinion of Thompson, not his of them, and his offers of games and toys are not shown as attempts to earn respect."
+        },
+        "D": {
+          "recipe": "wholly wrong template (INV)",
+          "why_wrong": "Thompson is called an “unholy bounder” from “the third day he was there”; the text describes no earlier admiration."
+        }
+      },
+      "models": [
+        "2.22"
+      ],
+      "sources": [
+        {
+          "what": "text copied from Project Gutenberg eBook #54270, The Human Boy (Phillpotts; Harper edition), story “The Protest of the Wing Dormitory” (sentences between the general-opinion line and the “read up boys” line, and “Boys never do play leap-frog except in books really,” omitted)",
+          "url": "https://www.gutenberg.org/cache/epub/54270/pg54270.txt"
+        },
+        {
+          "what": "The Human Boy, collection of schoolboy stories, 1899",
+          "url": "https://en.wikipedia.org/wiki/Eden_Phillpotts"
+        }
+      ],
+      "notes": "Literature (English school story). Adapted: six sentences cut at sentence boundaries (five between the general-opinion line and the “read up boys” line, plus the leap-frog aside), “him” replaced by a bracketed name, one gloss added; Gutenberg double hyphens set as closed em dashes, italics on the second “Chambers” dropped. The key says “many share,” not everyone (the story later notes the younger boys liked him; that line is not in the excerpt). A and C keep a judgment as move 1 and break it; D is a wholly different template.",
+      "table": null,
+      "figure": null,
+      "word_count": 138,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "gloss “[Thompson, a new teacher,]” cut to “[Thompson]” (CB brackets carry only the replacement) and the role moved into the context line (“where Thompson is the new mathematics teacher”)",
+          "notes corrected: six sentences are cut, not three (checked against Gutenberg #54270)",
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_profile.medium.w4b4_15",
+      "template": "P_profile",
+      "tier": "medium",
+      "band_target": null,
+      "subtype": "Main purpose",
+      "passage": "Hopi artist Ramona Sakiestewa taught herself to weave, studying prehistoric Pueblo techniques in books and adapting the upright looms traditionally used in the Southwest to a horizontal floor loom. Her abstract tapestries are frequently inspired by ceremonial objects or by the Southwestern landscape, and she wove a commissioned series of thirteen tapestries interpreting drawings by architect Frank Lloyd Wright. In 1994 Sakiestewa joined the architectural design team for a new Smithsonian museum devoted to Indigenous peoples of the Americas, developing a vocabulary of forms that shaped elements of the building, from its entrance doors to a copper screen wall.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To explain how Sakiestewa’s tapestries influenced the buildings designed by Frank Lloyd Wright",
+        "To argue that weaving deserves a more prominent place in the design of museums",
+        "To describe how a self-taught weaver’s work came to include designing parts of a national museum",
+        "To describe the traditional Pueblo weaving methods that Sakiestewa learned from her family as a child"
+      ],
+      "answer_letter": "C",
+      "explanation": "The text begins with how Sakiestewa “taught herself to weave,” describes her tapestries and a commission based on drawings by Frank Lloyd Wright, and ends with her work on the design team for a Smithsonian museum, where she developed “a vocabulary of forms that shaped elements of the building.” Choice C covers this whole account of her career.",
+      "distractors": {
+        "A": {
+          "recipe": "influence reversed (REV, SWAP)",
+          "why_wrong": "Sakiestewa wove tapestries “interpreting drawings by architect Frank Lloyd Wright”; the text never says her work influenced his buildings."
+        },
+        "B": {
+          "recipe": "neutral profile turned into an argument (STANCE)",
+          "why_wrong": "The text reports what Sakiestewa did; it makes no argument about the place of weaving in museum design."
+        },
+        "D": {
+          "recipe": "one sentence’s content, with an invented detail (PART, INV)",
+          "why_wrong": "Only the first sentence concerns her methods, and it says she “taught herself,” studying the techniques “in books,” not learning them from her family."
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "sources": [
+        {
+          "what": "Ramona Sakiestewa (born 1948), Hopi artist; self-taught weaver using prehistoric Pueblo techniques, taught herself by reading books; adapted upright continuous warp weaving to horizontal floor loom; abstract imagery inspired by ritual objects, ceremony or the Southwestern landscape; thirteen tapestries from Frank Lloyd Wright drawings in the late 1980s; joined the NMAI architectural design team in 1994, created a design vocabulary, designed the main entry doors and a 100-foot copper screen wall",
+          "url": "https://en.wikipedia.org/wiki/Ramona_Sakiestewa"
+        }
+      ],
+      "notes": "Area: arts (weaving and architecture). Key C, in the 2.5 overview frame but worded as a career arc, not “an overview of.” The museum (the Smithsonian’s National Museum of the American Indian) is described rather than named: its full name is a 6-word run shared with an official passage. Not Navajo weaving (a saturated theme); no live item pairs Hopi with weaving or tapestry (grep of satbank/rw).",
+      "table": null,
+      "figure": null,
+      "word_count": 99,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_qualify.medium.w4b4_16",
+      "template": "F_qualify",
+      "tier": "medium",
+      "band_target": null,
+      "subtype": "Function of an underlined part",
+      "passage": "The following text is from Rhoda Broughton’s 1873 novel Nancy. The narrator, Nancy, has been recalling for her husband, Roger, a series of events that occurred exactly one year earlier.\n\n“Stop!” he cries, interrupting me, with a voice and face equally full of disquiet and pain; “do not go on, where is the use?—I hate anniversaries.”\n\nI stop, quenched into silence; my poor little trickle of talk effectually dried. After a pause, he speaks.\n\n“What has made you think of all these dead trivialities?” he asks in a voice <u>more moved—or I think so</u>—less positively steady than his has been of late; “at your age, it is more natural to look on than to look back.”",
+      "stem": "Which choice best describes the function of the underlined phrase in the text as a whole?",
+      "options": [
+        "It suggests that the narrator doubts that Roger is truly interested in what she has been saying.",
+        "It indicates that the narrator regrets having interrupted Roger.",
+        "It emphasizes how much calmer the narrator is than Roger.",
+        "It shows that the narrator is unsure whether her impression of Roger’s voice is correct."
+      ],
+      "answer_letter": "D",
+      "explanation": "The narrator says that Roger speaks “in a voice more moved” and at once adds “or I think so” before describing the voice as “less positively steady than his has been of late.” The underlined phrase pairs her impression with that hedge, signaling that she is not certain her reading of his voice is accurate, as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "doubt attached to the wrong target (SWAP)",
+          "why_wrong": "Her uncertainty concerns how Roger’s voice sounds, not whether he is interested; he has in fact responded strongly, “full of disquiet and pain.”"
+        },
+        "B": {
+          "recipe": "roles reversed (REV)",
+          "why_wrong": "Roger interrupts the narrator (“he cries, interrupting me”), not the other way around."
+        },
+        "C": {
+          "recipe": "wrong label: contrast (REL)",
+          "why_wrong": "The phrase compares Roger’s voice with his own voice “of late,” not with the narrator; it says nothing about her own calm, and she has just been “quenched into silence.”"
+        }
+      },
+      "models": [
+        "2.4"
+      ],
+      "sources": [
+        {
+          "what": "text copied from Project Gutenberg eBook #12304, Nancy: A Novel (Broughton), the anniversaries conversation with Roger",
+          "url": "https://www.gutenberg.org/cache/epub/12304/pg12304.txt"
+        },
+        {
+          "what": "Nancy (1873) in the list of Broughton’s novels",
+          "url": "https://en.wikipedia.org/wiki/Rhoda_Broughton"
+        }
+      ],
+      "notes": "Literature (English novel). Three consecutive paragraphs copied exactly (double hyphens set as closed em dashes). Reviewer: the span was the 4-word hedge alone, under the 5-word floor of the official spans (2.4 “a soft kind of rock,” 5 words); it now runs from “more moved” through “or I think so,” the impression and its hedge, as CB’s band-7 F_qualify item 0f2933b9 underlines the hope with its hedge (from “I might be some allay” through “to think so”). The key does not reuse 2.4’s “qualifies an earlier description.” Roger is Nancy’s husband in the novel (“my husband” throughout).",
+      "table": null,
+      "figure": null,
+      "word_count": 116,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "underline extended from “or I think so” (4 words, under the official 5-word floor) to the impression and its hedge (from “more moved” through “or I think so”), as CB’s F_qualify item 0f2933b9 underlines the hope with its hedge (from “I might be some allay” through “to think so”); key D still exact; explanation, C’s why_wrong and notes updated",
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed",
+        "note": "Text checked word for word against Gutenberg #12304; the context line (her husband Roger, events of a year ago) matches the surrounding pages."
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_lit.easy.w4b4_17",
+      "template": "F_lit",
+      "tier": "easy",
+      "band_target": null,
+      "subtype": "Function of an underlined part",
+      "passage": "The following text is from Ethel C. Pedley’s 1899 novel Dot and the Kangaroo. Dot, a young girl, has wandered away from her family’s cottage and become lost in the Australian bush [uncultivated wilderness].\n\nDot does not know how long she was sobbing in loneliness and fear, with her head on her knees, and with her little hands covering her eyes so as not to see the cruel wild bush in which she was lost. It seemed a long time before she summoned up courage to uncover her weeping eyes, and look once more at the bare, dry earth, and <u>the wilderness of scrub and trees that seemed to close her in as if she were in a prison</u>.",
+      "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
+      "options": [
+        "It suggests that Dot feels safer now that she has stopped crying.",
+        "It emphasizes how trapped Dot feels in her surroundings.",
+        "It reveals that Dot is being kept in a prison as punishment for wandering away.",
+        "It describes the route that Dot plans to take to find her way home."
+      ],
+      "answer_letter": "B",
+      "explanation": "Dot has been sobbing “in loneliness and fear” in “the cruel wild bush in which she was lost.” When she looks up, the scrub and trees “seemed to close her in as if she were in a prison.” This comparison emphasizes how trapped Dot feels in the bush, as choice B says.",
+      "distractors": {
+        "A": {
+          "recipe": "opposite feeling (REV)",
+          "why_wrong": "The image of being closed in “as if she were in a prison” shows fear, not a feeling of safety."
+        },
+        "C": {
+          "recipe": "literal reading of the comparison (LIT)",
+          "why_wrong": "The scrub and trees only seem to close her in “as if” she were in a prison; she is not actually imprisoned or punished."
+        },
+        "D": {
+          "recipe": "invented plan (INV)",
+          "why_wrong": "The text describes what Dot sees and feels; it mentions no route or plan for getting home."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.20",
+        "1.21"
+      ],
+      "sources": [
+        {
+          "what": "text copied from Project Gutenberg eBook #18891, Dot and the Kangaroo (Pedley), Chapter I",
+          "url": "https://www.gutenberg.org/cache/epub/18891/pg18891.txt"
+        },
+        {
+          "what": "Dot and the Kangaroo, 1899 Australian children’s book by Ethel C. Pedley; Dot gets lost in the bush",
+          "url": "https://en.wikipedia.org/wiki/Dot_and_the_Kangaroo"
+        }
+      ],
+      "notes": "Literature (Australian novel). One paragraph copied exactly up to the end of its second sentence; gloss on “bush” added in the context line. The excerpt deliberately avoids the trees-as-arms image of 1.1 and underlines the prison image instead. Same first name as the official 1.20 character (Dot), a different work.",
+      "table": null,
+      "figure": null,
+      "word_count": 119,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_lit.easy.w4b4_18",
+      "template": "F_lit",
+      "tier": "easy",
+      "band_target": null,
+      "subtype": "Function of an underlined part",
+      "passage": "The following text is adapted from Myra Kelly’s 1910 short story “Bailey’s Babies.” A class of young students has just been promoted from Miss Bailey’s classroom to Miss Blake’s.\n\nMiss Blake found “Bailey’s Babies” astonishingly unmanageable. Miss Bailey, as has been said, was of the garden school. She regarded the children as plants, knowledge as water; her part in the scheme of things to understudy [imitate] the sunshine, and to coax the plants to absorb the water. Miss Blake was of the carpenter school. <u>She held that facts were hard and straight; minds not quite so hard, and never straight; her duty to saw and bore, sand-paper and file the minds until the facts could be smoothly glued upon them.</u>",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It conveys how forceful Miss Blake believes teaching must be.",
+        "It suggests that Miss Blake worked as a carpenter before she became a teacher.",
+        "It shows that Miss Blake and Miss Bailey agree about how children learn best.",
+        "It explains why the students prefer Miss Blake to Miss Bailey."
+      ],
+      "answer_letter": "A",
+      "explanation": "The text contrasts Miss Bailey, who would “coax the plants to absorb the water,” with Miss Blake, who “was of the carpenter school.” The underlined sentence develops that comparison: Miss Blake sees her duty as to “saw and bore, sand-paper and file the minds until the facts could be smoothly glued upon them.” These tools convey that she believes teaching requires force, as choice A says.",
+      "distractors": {
+        "B": {
+          "recipe": "literal reading of the comparison (LIT)",
+          "why_wrong": "The “carpenter school” is a way of describing her ideas about teaching; nothing says she ever worked as a carpenter."
+        },
+        "C": {
+          "recipe": "agreement for contrast (REV)",
+          "why_wrong": "Miss Bailey’s gentle “garden school” is set against Miss Blake’s “carpenter school”; the two teachers disagree."
+        },
+        "D": {
+          "recipe": "invented preference (INV, REV)",
+          "why_wrong": "The text says Miss Blake found the students “astonishingly unmanageable”; it never says they prefer her."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.7",
+        "1.20"
+      ],
+      "sources": [
+        {
+          "what": "text copied from Project Gutenberg eBook #32581, Little Aliens (Kelly, 1910), story “Bailey’s Babies” (one sentence omitted); the First Readers class is promoted from Miss Bailey to Miss Blake earlier in the story",
+          "url": "https://www.gutenberg.org/cache/epub/32581/pg32581.txt"
+        }
+      ],
+      "notes": "Literature (American short story; Kelly taught on New York’s Lower East Side). Adapted: “The difficulty lay in the different conception of the art of teaching held by these two exponents.” cut at sentence boundaries to keep the passage under the easy maximum, one gloss added. Copyright and publication date 1910 in the Gutenberg front matter. Key A is short and abstract; B literalizes the metaphor (easy LIT), C reverses the contrast.",
+      "table": null,
+      "figure": null,
+      "word_count": 120,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_profile.easy.w4b4_19",
+      "template": "P_profile",
+      "tier": "easy",
+      "band_target": null,
+      "subtype": "Main purpose",
+      "passage": "Susan La Flesche Picotte, a member of the Omaha tribe, is widely recognized as the first Indigenous woman to earn a medical degree. After completing her medical training, she served as physician to more than 1,200 people on the Omaha Reservation in eastern Nebraska, and she campaigned for public health measures, including the prevention and treatment of tuberculosis, a disease that was then incurable. In 1913 she founded a hospital in the reservation town of Walthill, the first privately funded hospital on a Native American reservation.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To explain why Picotte decided to study medicine instead of entering some other profession",
+        "To compare the hospital in Walthill with hospitals that were run by the government",
+        "To argue that Picotte’s work on tuberculosis was the most important part of her career",
+        "To describe the career of a doctor who devoted her work to her community’s health"
+      ],
+      "answer_letter": "D",
+      "explanation": "The text introduces Picotte as “the first Indigenous woman to earn a medical degree,” then describes her work as physician to “more than 1,200 people on the Omaha Reservation,” her campaigning for “public health measures,” and the hospital she founded in Walthill. Together these details describe the career of a doctor devoted to her community’s health, as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "invented motive (INV)",
+          "why_wrong": "The text never says why Picotte chose medicine."
+        },
+        "B": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The text says only that the Walthill hospital was “the first privately funded hospital on a Native American reservation”; it does not compare it with government hospitals."
+        },
+        "C": {
+          "recipe": "neutral overview turned into a ranking (STANCE, PART)",
+          "why_wrong": "The work on tuberculosis is one of several achievements the text lists; it does not argue that this work mattered most."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.6",
+        "1.10"
+      ],
+      "sources": [
+        {
+          "what": "Susan La Flesche Picotte (1865 to 1915), Omaha tribe, first Indigenous woman to earn a medical degree; physician to over 1,200 Omaha people on the reservation; campaigned for public health and tuberculosis prevention and treatment (no cure then); founded the Walthill Hospital in 1913, the first privately funded hospital on a Native American reservation",
+          "url": "https://en.wikipedia.org/wiki/Susan_La_Flesche_Picotte"
+        }
+      ],
+      "notes": "Area: history (medicine, Indigenous history). Key D. The La Flesche surname also appears in w2b4_17 (Francis La Flesche’s memoir, her half-brother), a different person and work. A and B are off-text inventions (easy pattern), C a stance near miss.",
+      "table": null,
+      "figure": null,
+      "word_count": 86,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_lit.easy.w4b4_20",
+      "template": "P_lit",
+      "tier": "easy",
+      "band_target": null,
+      "subtype": "Main purpose",
+      "passage": "The following text is from Giovanni Verga’s 1880 short story “Jeli, the Shepherd” (translated by Nathan Haskell Dole in 1896). Jeli, a thirteen-year-old boy, is responsible for a herd of horses on an estate in the Sicilian countryside.\n\nHe could do all sorts of things with the needle, and he had a heap of odds and ends in his canvas bag, in case of need, to mend his trousers or the sleeves of his jacket; he also knew how to braid horsehairs, and with the clay in the valley he used to wash out his own handkerchief which he wore around his neck when it was cold. In fact, provided he had his bag with him, he needed nothing in the world, whether he were in the woods of Resecone, or lost in the depths of the plain of Caltagirone.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To explain why Jeli would rather sew than take care of the horses",
+        "To describe the places where Jeli has gotten lost while tending the horses",
+        "To portray Jeli as a boy who can take care of himself wherever he goes",
+        "To suggest that Jeli depends on the people around him to supply what he needs"
+      ],
+      "answer_letter": "C",
+      "explanation": "The text lists what Jeli can do for himself: mend “his trousers or the sleeves of his jacket,” “braid horsehairs,” and “wash out his own handkerchief.” It then sums this up: “provided he had his bag with him, he needed nothing in the world,” wherever he was. The main purpose is to portray Jeli as a boy who can take care of himself, as choice C says.",
+      "distractors": {
+        "A": {
+          "recipe": "word hook on “the needle” (LIT, INV)",
+          "why_wrong": "Jeli’s skill “with the needle” is one example of his self-sufficiency; the text never says he would rather sew than tend the horses."
+        },
+        "B": {
+          "recipe": "literal reading of “lost in the depths of the plain” (LIT)",
+          "why_wrong": "The places are named only to show that he “needed nothing in the world” wherever he was; the text does not describe him getting lost."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the opposite: with his bag, Jeli “needed nothing in the world.”"
+        }
+      },
+      "models": [
+        "1.5",
+        "1.9",
+        "1.17"
+      ],
+      "sources": [
+        {
+          "what": "text copied from Project Gutenberg eBook #37979, Under the Shadow of Etna (Verga, translated by Nathan Haskell Dole, 1896), story “Jeli, the Shepherd”; Jeli “who had charge of the horses, was thirteen”",
+          "url": "https://www.gutenberg.org/cache/epub/37979/pg37979.txt"
+        },
+        {
+          "what": "“Jeli il pastore” in Verga’s collection Vita dei campi (1880)",
+          "url": "https://en.wikipedia.org/wiki/Giovanni_Verga"
+        }
+      ],
+      "notes": "Literature (Italian short story in translation). Two consecutive sentences copied exactly; the Gutenberg italics on gna do not occur in this span. Key C. A and B are word hooks (the needle, “lost”), D a reversal: the easy literary pattern. Verga is not used in any official item (the cb_api hit for “verga” is “advergames”).",
+      "table": null,
+      "figure": null,
+      "word_count": 140,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S2_person_work.easy.w4b4_21",
+      "template": "S2_person_work",
+      "tier": "easy",
+      "band_target": null,
+      "subtype": "Overall structure",
+      "passage": "Carrie Mae Weems is an American artist best known for her photographic work. Her Kitchen Table Series (1989–1990), photographed in her own home in western Massachusetts, consists of carefully staged scenes that all take place around the same kitchen table. Weems herself appears in every image as the central character, and through these domestic scenes the series investigates relationships between men and women, between women and their children, and between women and other women.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It describes a photography technique and then lists other artists who have used it.",
+        "It introduces an artist and then gives information about one of her best-known works.",
+        "It presents a criticism of an artist’s early work and then explains how she responded to it.",
+        "It compares two series of photographs and then explains why one is more famous than the other."
+      ],
+      "answer_letter": "B",
+      "explanation": "The first sentence introduces Carrie Mae Weems as “an American artist best known for her photographic work.” The rest of the text gives information about her Kitchen Table Series: where it was photographed, that Weems “appears in every image as the central character,” and the relationships it explores. Choice B describes this structure.",
+      "distractors": {
+        "A": {
+          "recipe": "wholly wrong template (INV)",
+          "why_wrong": "The text focuses on one artist and one series; it names no other artists."
+        },
+        "C": {
+          "recipe": "wholly wrong template (INV, STANCE)",
+          "why_wrong": "No criticism of Weems’s work appears in the text."
+        },
+        "D": {
+          "recipe": "wholly wrong template (INV)",
+          "why_wrong": "Only one series is described, and nothing is said about its fame compared with another."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.19"
+      ],
+      "sources": [
+        {
+          "what": "Carrie Mae Weems, American artist best known for photography; the Kitchen Table Series, completed over 1989 to 1990, shot in her home in Western Massachusetts, with Weems cast as the central character; her account of the work: relationships between men and women, between women and their children, and between women and other women; staged rather than documentary images",
+          "url": "https://en.wikipedia.org/wiki/Carrie_Mae_Weems"
+        }
+      ],
+      "notes": "Area: arts (photography). Easy structure item with three wholly wrong templates, as in 1.13 and 1.19. The three relationships are Weems’s own list (paraphrased from her statement on the page, not quoted). Key B worded away from 1.13 (no “common characteristics of well-known paintings”).",
+      "table": null,
+      "figure": null,
+      "word_count": 74,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_example.easy.w4b4_22",
+      "template": "F_example",
+      "tier": "easy",
+      "band_target": null,
+      "subtype": "Function of an underlined part",
+      "passage": "Cuban percussionist Chano Pozo played a central role in bringing the rhythms of Afro-Cuban music into jazz. Already celebrated in Havana as a drummer and composer, Pozo moved to New York in 1947 and joined trumpeter Dizzy Gillespie’s big band, becoming its first Latin percussionist. <u>Among the compositions Pozo co-wrote for the band was “Manteca,” whose layered, repeating rhythmic figures were drawn from Cuban music.</u> The piece became the first jazz standard rhythmically based on the clave, a fundamental Cuban rhythmic pattern.",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It offers an example of how Pozo brought elements of Cuban music into jazz.",
+        "It explains why Pozo decided to leave Havana and move to New York.",
+        "It identifies the musicians who first performed “Manteca” in public.",
+        "It suggests that Pozo’s music was more popular in Cuba than in the United States."
+      ],
+      "answer_letter": "A",
+      "explanation": "The text begins by saying that Pozo “played a central role in bringing the rhythms of Afro-Cuban music into jazz.” The underlined sentence names one piece he co-wrote for Gillespie’s band, “Manteca,” whose rhythmic figures “were drawn from Cuban music.” It offers an example of the contribution described in the first sentence, as choice A says.",
+      "distractors": {
+        "B": {
+          "recipe": "invented motive (INV)",
+          "why_wrong": "The text says Pozo moved to New York in 1947 but gives no reason for the move."
+        },
+        "C": {
+          "recipe": "invented detail (INV)",
+          "why_wrong": "The underlined sentence says Pozo co-wrote the piece; it does not name the musicians who first performed it."
+        },
+        "D": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The text says Pozo was “already celebrated in Havana,” but it never compares his popularity in the two countries."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.14"
+      ],
+      "sources": [
+        {
+          "what": "Chano Pozo (1915 to 1948), Cuban jazz percussionist, major role in founding Latin jazz; moved to New York in 1947; first Latin percussionist in Gillespie’s band; co-wrote “Manteca”",
+          "url": "https://en.wikipedia.org/wiki/Chano_Pozo"
+        },
+        {
+          "what": "“Manteca,” co-written by Gillespie, Pozo and Gil Fuller in 1947; Pozo composed the layered guajeos (Afro-Cuban ostinatos); the first tune rhythmically based on the clave to become a jazz standard",
+          "url": "https://en.wikipedia.org/wiki/Manteca_(song)"
+        }
+      ],
+      "notes": "Area: arts (music). Key A. “Among the compositions Pozo co-wrote” avoids implying he and Gillespie were the only writers (Gil Fuller also shares credit). “Guajeos (ostinatos)” rendered as layered, repeating rhythmic figures. Easy pattern: all three wrong options invent content.",
+      "table": null,
+      "figure": null,
+      "word_count": 82,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_study.easy.w4b4_23",
+      "template": "P_study",
+      "tier": "easy",
+      "band_target": null,
+      "subtype": "Main purpose",
+      "passage": "Many cultures have painful rituals, and researchers have long questioned what, if anything, participants gain from such ordeals. To explore this question, anthropologist Dimitrios Xygalatas and colleagues studied a Hindu festival in Mauritius. Some participants took part in a low-intensity ritual of collective prayer, while others had their skin pierced with needles and carried heavy structures for hours. Afterward, everyone was given the opportunity to donate money to a charitable organization. Those who had performed the painful ritual gave more than those who had only prayed.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "It explains why the festival in Mauritius has attracted more participants in recent years than it did in the past.",
+        "It compares the religious festivals held in Mauritius with those held in other countries.",
+        "It argues that painful rituals should be replaced with collective prayer.",
+        "It describes a study that linked taking part in a painful ritual with greater generosity."
+      ],
+      "answer_letter": "D",
+      "explanation": "The text opens with a question: researchers have “long questioned what, if anything, participants gain from such ordeals.” It then describes how Xygalatas and colleagues compared people who performed a painful ritual with people who “had only prayed” and found that those who “had performed the painful ritual gave more” to charity. Choice D states this purpose.",
+      "distractors": {
+        "A": {
+          "recipe": "invented trend (INV)",
+          "why_wrong": "The text says nothing about how many people attend the festival or how attendance has changed."
+        },
+        "B": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "Only one festival, in Mauritius, is discussed; no festivals in other countries are mentioned."
+        },
+        "C": {
+          "recipe": "invented argument (INV, STANCE)",
+          "why_wrong": "The text reports a study’s finding about generosity; it does not argue that any ritual should be replaced."
+        }
+      },
+      "models": [
+        "1.15"
+      ],
+      "sources": [
+        {
+          "what": "UConn Today (2015), “The Puzzle of Extreme Rituals”: Xygalatas studied Thaipusam in Mauritius; participants ranged from collective prayer to body piercing and carrying kavadi for five or more hours; after a paid survey they could donate to a charity; high-intensity performers (and observers) gave over twice as much as low-arousal ritual performers",
+          "url": "https://today.uconn.edu/2015/02/the-puzzle-of-extreme-rituals/"
+        },
+        {
+          "what": "the paper: Xygalatas et al. (2013), “Extreme Rituals Promote Prosociality,” Psychological Science 24(8)",
+          "url": "https://doi.org/10.1177/0956797612472910"
+        }
+      ],
+      "notes": "Area: social science (anthropology), the batch’s only social-science item. Reviewer replacement for the Kyoto cherry-bloom item: the Kyoto record drew wide press in 2021 (a topic-fame tell, and its distractor A leaned on that outside knowledge), and live TSP w3b1_02 already uses Japanese diaries for a P_study (the 1770 aurora over Kyoto). Built on 1.15: open question, researchers and method, finding. Key D paraphrased (generosity, not “gave more”), not the longest option; all three wrong options invent content, the easy pattern. Observers’ donations and the pain correlation left out for length.",
+      "table": null,
+      "figure": null,
+      "word_count": 86,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "replaced the subject: the Kyoto cherry-bloom record drew wide press in 2021 (a topic-fame tell; the draft’s distractor A leaned on that outside knowledge) and live TSP w3b1_02 already uses Japanese diaries for a P_study (the 1770 aurora over Kyoto); new passage on Xygalatas and colleagues’ Thaipusam study in Mauritius (painful ritual, larger donations), core claim confirmed on the UConn Today article, paper DOI added; options, explanation, distractors, sources and notes rewritten; Kyoto claim withdrawn and the new subject claimed in claims.txt (append-only)",
+          "name spelled “Dimitrios” and the low-intensity condition given as collective prayer only, as on the fetched UConn page",
+          "register: wording chosen so the easy tier keeps CB’s long-word share (check_rw flagged 10.0% on the first draft)",
+          "word_count recomputed as whole-passage words, the convention of the other TSP wave files"
+        ],
+        "status": "fixed",
+        "note": "Replacement written by the reviewer; blind answer D is for the replacement as well as the original (both keyed D)."
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_argue.easy.w4b4_24",
+      "template": "P_argue",
+      "tier": "easy",
+      "band_target": null,
+      "subtype": "Main purpose",
+      "passage": "Wasps have a poor public image: many people regard them as pointless pests whose only talent is stinging. That reputation is unfair. In a 2021 review, biologists Ryan Brock, Alessandro Cini, and Seirian Sumner assembled evidence that wasps provide numerous valuable services. As predators and parasites of other insects, they help control populations of pests that damage crops, and some species also pollinate plants or disperse seeds. Such contributions, the researchers argue, mean that wasps should be valued as highly as bees and other “useful” insects.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To explain why wasps sting people more often than bees do",
+        "To describe how farmers have begun replacing pesticides with wasps",
+        "To argue that wasps are more beneficial than their reputation suggests",
+        "To compare the ways in which wasps and bees pollinate plants"
+      ],
+      "answer_letter": "C",
+      "explanation": "The text states that wasps are seen as “pointless pests” and then declares, “That reputation is unfair.” It supports this view with the researchers’ evidence that wasps “help control populations of pests that damage crops” and that some “pollinate plants or disperse seeds.” The main purpose is to argue that wasps are more beneficial than their reputation suggests, as choice C says.",
+      "distractors": {
+        "A": {
+          "recipe": "word hook on “stinging,” invented comparison (LIT, INV)",
+          "why_wrong": "Stinging is mentioned only as part of the wasps’ poor reputation; the text never compares how often wasps and bees sting."
+        },
+        "B": {
+          "recipe": "overreach from the pest-control point (BROAD, INV)",
+          "why_wrong": "The text says wasps help control crop pests, not that farmers have begun replacing pesticides with them."
+        },
+        "D": {
+          "recipe": "comparison built from one detail (PART, INV)",
+          "why_wrong": "Pollination is one of several services listed, and bees are mentioned only in the final claim about how wasps should be valued."
+        }
+      },
+      "models": [
+        "1.22"
+      ],
+      "sources": [
+        {
+          "what": "Brock, Cini, Sumner (2021, Biological Reviews), Ecosystem services provided by aculeate wasps: public reputation as pointless pests; services as predators, parasites, pollinators, seed dispersers; overlooked value in natural pest management and biological control; argue for valuing wasps on a par with other useful insects such as bees",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33913243/"
+        }
+      ],
+      "notes": "Area: natural science (ecology). Explicit evaluative markers (“That reputation is unfair,” “should be valued”), so “To argue” is a fair key, as in 1.22. Built around the pest reputation and pest control, not the neglected-pollinator frame of the live hoverfly item in text_structure_and_purpose__b. The “stinging” clause is the passage’s own gloss on the reputation; “useful” is in quotation marks as in the review.",
+      "table": null,
+      "figure": null,
+      "word_count": 86,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_setup.easy.w4b4_25",
+      "template": "F_setup",
+      "tier": "easy",
+      "band_target": null,
+      "subtype": "Function of an underlined part",
+      "passage": "Chili peppers originated in the Americas. <u>Yet the peppers themselves rarely survive in archaeological deposits, so researchers have seldom been able to identify them among the plant remains recovered from ancient Mesoamerican sites.</u> Archaeologist Terry G. Powis and colleagues therefore looked for chemical traces instead. Analyzing residues from 13 types of pottery excavated at Chiapa de Corzo in southern Mexico, the team detected a compound produced by chili peppers in five of the types, evidence that people there were using chilies between 400 BCE and 300 CE.",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It presents a claim that the findings described later in the text show to be false.",
+        "It identifies an obstacle that the researchers described in the text worked around.",
+        "It defines a term that is used in the description of the researchers’ method.",
+        "It explains why the researchers decided to excavate at Chiapa de Corzo."
+      ],
+      "answer_letter": "B",
+      "explanation": "The underlined sentence says that chili peppers “rarely survive in archaeological deposits,” so they are seldom identified among plant remains. The next sentence says the researchers “therefore looked for chemical traces instead,” and the last sentence reports what those traces revealed. The underlined sentence thus identifies an obstacle that the researchers worked around, as choice B says.",
+      "distractors": {
+        "A": {
+          "recipe": "stance flip (STANCE)",
+          "why_wrong": "The findings come from chemical residues, not surviving peppers, so they do not show that the claim about rarely surviving peppers is false; the researchers’ approach depends on it."
+        },
+        "C": {
+          "recipe": "wrong label: defines a term (REL)",
+          "why_wrong": "The sentence describes a difficulty; it does not define any term."
+        },
+        "D": {
+          "recipe": "invented motive (INV)",
+          "why_wrong": "The text says the pottery was “excavated at Chiapa de Corzo” but gives no reason for choosing that site, and the underlined sentence does not mention it."
+        }
+      },
+      "models": [
+        "1.2"
+      ],
+      "sources": [
+        {
+          "what": "Powis et al. (2013, PLOS ONE): Capsicum New World in origin; peppers rarely identified in the paleoethnobotanical record in Meso- or South America; residues from 13 pottery types from Chiapa de Corzo, southern Mexico; five types showed peaks for Capsicum (dihydrocapsaicin); evidence of chili use 400 BCE to 300 CE. First author at Kennesaw State University",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/24236083/"
+        }
+      ],
+      "notes": "Area: history (archaeology). Same move as 1.2 (a prior limit, then a finding) but a different relation: the underlined sentence is an obstacle the method works around, and the key is worded away from 1.2’s “provides context that clarifies the significance.” The compound (dihydrocapsaicin) is left unnamed. A is the near miss: a contrast is present, but the findings do not refute the sentence.",
+      "table": null,
+      "figure": null,
+      "word_count": 87,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
     }
-   ],
-   "notes": "Area: natural science (pollination). Band-7 F_setup: the underlined expectation is overturned by the following sentences. Key 27 words. Ruth Cozien led the project (release). Species epithet as published.",
-   "table": null,
-   "figure": null,
-   "word_count": 86
-  }
- ]
+  ]
 }

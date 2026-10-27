@@ -100,6 +100,26 @@
       {
         "code": "S2_person_work",
         "name": "Introduces a person, then gives characteristics of their work"
+      },
+      {
+        "code": "S12_critique_attempt",
+        "name": "Presents someone’s critique, then an attempt to address the problem it identifies"
+      },
+      {
+        "code": "S14_project_approach_critique",
+        "name": "Three moves: introduces a project, details its approach, gives a critique it received"
+      },
+      {
+        "code": "S16_finding_pattern_exception",
+        "name": "Three moves: explains a finding, generalizes it to a pattern, explains an exception"
+      },
+      {
+        "code": "F_setup",
+        "name": "Function: set-up or context for what follows"
+      },
+      {
+        "code": "F_answer",
+        "name": "Function: answer to a question"
       }
     ]
   },
@@ -2984,6 +3004,1409 @@
         "notes": [
           "death-feigning also in live central_ideas_and_details w3b1_09 (moorland hawker dragonflies, Khelifa 2017): different animal, study and point"
         ]
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_study.hard.w4b3_01",
+      "template": "P_study",
+      "subtype": "Main purpose",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Nonnative plants are considered among the most serious threats to Antarctica’s ecosystems, yet the risk they pose had never been assessed for the continent as a whole. During the 2007–2008 season, ecologist Steven L. Chown and colleagues identified the seeds carried in by every category of visitor, from tourists to scientists. Scientists carried more seeds per person than tourists did, although tourists, who outnumbered scientists nearly five to one, narrowed that difference. Comparing each seed’s origin with Antarctic climates, the team concluded that nonnative species are currently most likely to become established on the western Antarctic Peninsula.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "It summarizes research that tracked how people unintentionally bring plant material to a remote region and concluded that tourists pose the greater threat because there are so many more of them.",
+        "It describes a study that compared the seeds carried by different groups of visitors in order to explain how nonnative plants have already spread across much of a remote region.",
+        "It summarizes research that examined how people unintentionally introduce plant material to a remote region and used the results to identify the area most vulnerable to it.",
+        "It describes a study that traced the seeds carried into a remote region back to their places of origin and used that information to forecast how the region’s climate will change."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that the risk from nonnative plants “had never been assessed for the continent as a whole,” then describes how researchers identified the seeds carried in by visitors and matched each seed’s origin to Antarctic climates. It ends with the team’s conclusion about where nonnative species are “currently most likely to become established.” Choice C names both parts: how people bring in plant material and the use of that information to find the most vulnerable area.",
+      "distractors": {
+        "A": {
+          "recipe": "first clause true, later clause overreaches (BROAD)",
+          "why_wrong": "The text does say the researchers tracked the seeds visitors carried in, but it never concludes that tourists pose the greater threat. Scientists carried more seeds per person, and the larger number of tourists only “narrowed that difference”; the study’s conclusion concerns where plants are likely to become established."
+        },
+        "B": {
+          "recipe": "first clause true, invented outcome (INV)",
+          "why_wrong": "The researchers did compare the seeds carried by tourists and scientists, but the text never says that nonnative plants have already spread across the region; the study assesses where they are likely to become established."
+        },
+        "D": {
+          "recipe": "first clause true, later clause swaps the role of the climate comparison (SWAP)",
+          "why_wrong": "The researchers did consider where each seed came from, but they compared those origins with Antarctic climates to judge where the plants could take hold; the text never says the study forecast how the region’s climate will change."
+        }
+      },
+      "models": [
+        "82cb7dda",
+        "3.1",
+        "3.2"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "Chown et al. (2012, PNAS): propagules carried by all categories of visitors in the 2007–2008 IPY season; scientists carry greater loads than tourists, tempered by tourists’ greater numbers (about 33,054 vs 7,085); establishment currently most likely on the Western Antarctic Peninsula",
+          "url": "https://europepmc.org/article/MED/22393003"
+        }
+      ],
+      "notes": "Area: natural science (ecology, invasive species). Key C. Key parts: 2 (how people introduce plant material; used to identify the most vulnerable area). Section 6 checks: key 27 words; options 26 to 31 words; distractors with a true first clause and a false later clause: A and B (2 of 3). Passage numbers rounded (33,054 vs 7,085 given as nearly five to one).",
+      "band7_moves": [
+        "dual, abstract purpose: the key joins the method (how plant material is introduced) and its use (finding the most vulnerable area) with no passage nouns (seeds, Antarctica, Peninsula)",
+        "A keeps the method and overreaches the tourists-versus-scientists detail into the study's conclusion; the text says only that tourist numbers narrowed the gap",
+        "B keeps the comparison of visitor groups and invents an outcome (plants already spread); D keeps the seed origins and swaps the climate comparison into a climate forecast"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "rebuilt D, a wholly wrong method killed at a glance, into a first-half-true option that turns the climate comparison into a climate forecast"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Drafted, it read band 6 (D wholly off). Now: dual purpose key (how visitors bring in plant material, then the use of the results to find the most vulnerable area), 27 words with no passage nouns; all three distractors open with a true account of the study and fail later (A overreads the tourist numbers, which only “narrowed that difference”; B invents spread already under way; D turns the climate comparison into a forecast). Same move as 82cb7dda."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "text_structure_and_purpose.P_lit.hard.w4b3_02",
+      "template": "P_lit",
+      "subtype": "Main purpose (literary)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The following text is adapted from Herman Melville’s 1849 novel Redburn. The narrator, a young sailor, recalls his first voyage to Liverpool, England.\n\nWhen I considered that my own father had used this very guide-book, and that thereby it had been thoroughly tested, and its fidelity proved beyond [doubt]; I could not but think that I was building myself up in an unerring knowledge of Liverpool; especially as I had familiarized myself with the map, and could turn sharp corners on it, with marvelous confidence and celerity.\n\nDear delusion!\n\nIt never occurred to my boyish thoughts, that though a guide-book, fifty years old, might have done good service in its day, yet it would prove but a miserable [guide] to a modern [traveler].",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "It looks back on a character’s trust in a source of information and suggests that he overlooked a serious limitation of that source.",
+        "It looks back on a character’s careful study of a source of information and explains how that study led him to doubt his father.",
+        "It recounts a character’s efforts to learn about a city before visiting it and the disappointment he felt on first arriving there.",
+        "It looks back on a character’s reliance on an old map and suggests that his youth kept him from reading that map correctly."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The narrator recalls believing that because his father “had used this very guide-book,” he was gaining “an unerring knowledge of Liverpool.” He then exclaims “Dear delusion!” and names what he had failed to consider: that a guidebook “fifty years old” would prove “but a miserable [guide] to a modern [traveler].” The text therefore looks back on the narrator’s trust in the guidebook and shows that he overlooked a serious limitation of it, its age, as choice A says.",
+      "distractors": {
+        "B": {
+          "recipe": "first clause true, invented later clause (INV)",
+          "why_wrong": "The narrator did study the guidebook closely, but nothing in the text suggests he came to doubt his father; the problem he identifies is the guidebook’s age, not his father’s judgment."
+        },
+        "C": {
+          "recipe": "first clause true, later clause not in the text (PART)",
+          "why_wrong": "The narrator did prepare by studying the guidebook and its map, but the excerpt never describes his arrival or any disappointment he felt there. “Dear delusion!” is the older narrator’s comment on his earlier confidence."
+        },
+        "D": {
+          "recipe": "first clause true, later clause misplaces the problem, hook on “boyish thoughts” (SWAP)",
+          "why_wrong": "The narrator mentions his “boyish thoughts,” but he never says he misread the map; he could “turn sharp corners on it, with marvelous confidence and celerity.” What he failed to see was that the guidebook was “fifty years old” and no longer a good guide."
+        }
+      },
+      "models": [
+        "b0f7541b",
+        "3.3",
+        "3.15"
+      ],
+      "word_count": 123,
+      "sources": [
+        {
+          "what": "Melville, Redburn (1849), chapter 31, checked against Gutenberg 8118: opening “In short,” dropped; the next paragraph (“In imagination, as I lay in my berth …”) omitted before “Dear delusion!”; “a peradventure” and “cicerone” replaced by bracketed glosses, [traveler] added",
+          "url": "https://www.gutenberg.org/ebooks/8118"
+        }
+      ],
+      "notes": "Literature (novel, 1849). Key A. Key parts: 2 (trust in a source of information; the trust was misplaced). Section 6 checks: key 19 words, options 19 to 24 words; distractors with a true first clause and a false later clause: B and C (2 of 3). Adapted: opening “In short,” dropped; “a peradventure” replaced by [doubt], “cicerone” by [guide], and [traveler] added after “modern”. Writer's own blind solve: A. Reviewer: the excerpt also omits the paragraph between “celerity.” and “Dear delusion!” (“In imagination, as I lay in my berth …”); recorded in sources.",
+      "band7_moves": [
+        "archaic, periodic prose (1849) with a two-word turn (“Dear delusion!”) that the key must fold in",
+        "abstract key: “a source of information” for the guidebook and “overlooked a serious limitation” for what the last sentence reveals (its age); no passage nouns",
+        "B, C and D keep a true first half (careful study; preparing for a visit; relying on the old map) and fail on a later clause (doubting his father; disappointment on arrival, which the excerpt never shows; misreading the map, a hook on “boyish thoughts”)"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "key reworded from “the trust was misplaced” (a direct gloss of “Dear delusion!”) to “he overlooked a serious limitation of that source,” which needs the last sentence",
+          "D rebuilt from a wholly-off word hook (pride in a possession) into a first-half-true option hooked on “boyish thoughts”",
+          "source note now records the omitted paragraph (“In imagination, as I lay in my berth …”) before “Dear delusion!” (checked against Gutenberg 8118)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Drafted, it read band 6 (key a direct gloss of “Dear delusion!”, D a wholly-off word hook). Now: archaic 1849 prose, an abstract key that needs the last sentence (what he overlooked: the book's age), and B, C and D each true in their first part and wrong later, D on a hook from “boyish thoughts”. Same template as b0f7541b."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "text_structure_and_purpose.F_example.hard.w4b3_03",
+      "template": "F_example",
+      "subtype": "Function of a part",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Synthetic fibers and fragments are documented throughout the ocean’s surface waters, but the depths at which marine organisms ingest such particles had remained uncertain. Alan Jamieson and colleagues found that more than 72 percent of the amphipods—small scavenging crustaceans—collected from six Pacific trenches, at depths of 7,000 to nearly 11,000 meters, contained at least one tiny particle, frequently plastic or other synthetic material. <u>Amphipods from the Mariana Trench, which contains the deepest point in any ocean, held more of these particles on average than those from any other trench.</u> The researchers conclude that such contaminants reach even the most remote regions of the ocean.",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It presents a result from the deepest site that the researchers then use to argue that this kind of contamination becomes steadily more severe as the ocean gets deeper.",
+        "It presents a result from a single site that the text then goes on to treat as an exception to the general pattern the researchers observed at the other five sites.",
+        "It offers a striking result from one trench that the researchers then use to explain why scavengers such as amphipods are especially likely to swallow such particles.",
+        "It provides an especially notable result that supports the researchers’ conclusion, stated in the following sentence, about how far a type of pollution has spread."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text reports that most of the amphipods collected from six deep trenches “contained at least one tiny particle.” The underlined sentence adds that animals from the Mariana Trench, “which contains the deepest point in any ocean,” held the most particles of all. This striking detail supports the final sentence’s conclusion that “such contaminants reach even the most remote regions of the ocean,” as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "first clause true, later clause overreaches (BROAD)",
+          "why_wrong": "The underlined sentence does give a result from the deepest trench, but the researchers’ conclusion is only that contaminants reach the most remote depths. The text gives no depths or counts for the other trenches and never claims that contamination rises steadily with depth."
+        },
+        "B": {
+          "recipe": "first clause true, stance flipped (STANCE)",
+          "why_wrong": "The sentence does describe one trench, but the text treats that result as the strongest example of the general finding, not as an exception to it."
+        },
+        "C": {
+          "recipe": "first clause true, later clause invented, hook on “scavenging” (INV)",
+          "why_wrong": "The text does call amphipods “small scavenging crustaceans,” but it never explains why they swallow particles; the conclusion that follows the underlined sentence concerns how far the contamination reaches."
+        }
+      },
+      "models": [
+        "2e744883",
+        "9b01bcf4",
+        "3.12"
+      ],
+      "word_count": 104,
+      "sources": [
+        {
+          "what": "Jamieson et al. (2019, Royal Society Open Science): Lysianassoid amphipods from six Pacific Rim trenches at 7,000 to 10,890 m; over 72% (65 of 90) contained at least one microparticle; mean per individual from 0.9 (New Hebrides) to 3.3 (Mariana); subsample identified as plastic and synthetic materials, plus semi-synthetic and natural fibres; microplastics occur in the very deepest reaches of the oceans",
+          "url": "https://europepmc.org/article/MED/30891254"
+        }
+      ],
+      "notes": "Area: natural science (marine pollution). Key D. Key parts: 2 (notable result; supports the conclusion stated in the following sentence about how far the pollution has spread). Section 6 checks: key 25 words; options 22 to 31 words; distractors with a true first clause and a false later clause: A and B (2 of 3). The span is a single extreme case whose job depends on the following sentence.",
+      "band7_moves": [
+        "span is an extreme case (extent), not the main claim; its role depends on the conclusion in the sentence after it",
+        "compound key: role of the span plus what the following sentence does with it, with no passage nouns (amphipods, trench, plastic)",
+        "A keeps the true first half (a result from the deepest site) and overreaches into a depth trend the text never states; B keeps the single site and flips it into an exception; C keeps the notable result and invents an explanation of why scavengers swallow particles"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "rebuilt C, a wholly invented sampling story, into a first-half-true option with a hook on “scavenging”"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "The span is an extreme case whose job depends on the conclusion in the next sentence (clue after the span); 25-word compound key with no passage nouns; A, B and the rebuilt C all describe the span correctly and fail later (a depth trend, an exception, an explanation of why scavengers swallow particles). Models 2e744883 and 9b01bcf4."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "text_structure_and_purpose.P_profile.hard.w4b3_04",
+      "template": "P_profile",
+      "subtype": "Main purpose",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Published in Paris in 1855, Ahmad Faris al-Shidyaq’s Leg over Leg follows “the Fariyaq,” the author’s fictional counterpart, on travels that closely parallel al-Shidyaq’s own. The narrative is often difficult to follow, however, because the narrator continually interrupts it with digressions and with long lists of near-synonyms taken from an Arabic dictionary, some occupying several pages. The book also grants the Fariyaq’s wife a voice almost equal to her husband’s, an unusual choice for its era. Perhaps unsurprisingly, readers have struggled to classify the work, describing it variously as a travelogue, an autobiography, and a comic novel.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To argue that a nineteenth-century Arabic book’s many digressions weaken what would otherwise be a gripping account of an author’s travels",
+        "To describe a nineteenth-century Arabic book whose unusual features help explain why readers have disagreed about what kind of work it is",
+        "To present a nineteenth-century Arabic travel narrative and explain how the journey it recounts led its author to reject the literary traditions of his homeland",
+        "To introduce an unusual nineteenth-century Arabic book and suggest that its portrayal of a marriage caused its first readers to dismiss it"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text describes Leg over Leg: a narrative that is “often difficult to follow” because of digressions and long word lists, and a wife who has “a voice almost equal to her husband’s.” It ends by noting that readers “have struggled to classify the work,” a result it introduces with “Perhaps unsurprisingly,” tying the difficulty to those features. Choice B states this purpose: the text describes an unusual book whose features help account for the disagreement about what kind of work it is.",
+      "distractors": {
+        "A": {
+          "recipe": "stance flip on a neutral profile (STANCE)",
+          "why_wrong": "The text says the digressions make the narrative difficult to follow, but it never judges them a weakness or calls the travel account gripping; it presents them as one reason the book is hard to classify."
+        },
+        "C": {
+          "recipe": "first part partly true, invented outcome (INV)",
+          "why_wrong": "The book does follow the Fariyaq on travels that parallel the author’s, but the text never claims the author rejected his literary traditions; the book in fact draws its word lists from an Arabic dictionary."
+        },
+        "D": {
+          "recipe": "first part true, invented reception (INV)",
+          "why_wrong": "The book is unusual, and the text calls the wife’s nearly equal voice unusual for its era, but it says nothing about how the first readers received the book; the disagreement it reports is about how to classify the work."
+        }
+      },
+      "models": [
+        "3.13",
+        "3.18"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "Leg Over Leg: published in Arabic in Paris in 1855; the Fariyaq as the author's alter ego; called unclassifiable (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Leg_Over_Leg"
+        },
+        {
+          "what": "review of the Davies translation: largely autobiographical, at its core a travelogue; dictionary lists of near-synonyms running up to a dozen pages; the wife's voice given nearly equal weight, a respect for women unexpected for its time",
+          "url": "https://www.musicandliterature.org/reviews/2014/6/16/ahmad-faris-al-shidyaqs-leg-over-leg"
+        }
+      ],
+      "notes": "Area: humanities (Arabic literature). Key B. Hard band 6 (P_profile has no band-7 officials, so band_target 6). Key needs two linked steps: the features described (digressions, lists, the wife's voice) and the final sentence on classification. Each wrong option uses a real element of the text (digressions, travels, the wife) and fails on a later link.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "P_profile has no band-7 official items, so a strong band 6: the key needs two linked steps (the unusual features, then “Perhaps unsurprisingly” tying them to the classification dispute), and each wrong option uses a real element (digressions, the travels, the wife's voice) and fails on a later link."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "text_structure_and_purpose.S12_critique_attempt.hard.w4b3_05",
+      "template": "S12_critique_attempt",
+      "subtype": "Overall structure",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In 1927, while studying in Berlin, Japanese philosopher Watsuji Tetsurō read Martin Heidegger’s newly published Being and Time. Watsuji concluded that Heidegger had analyzed human existence primarily in terms of temporality and the individual, largely neglecting space and the shared surroundings in which people actually live. In Fūdo (1935), usually translated as Climate and Culture, Watsuji set out to supply what he found missing, arguing that a people’s natural surroundings are not merely a backdrop but an integral part of how individuals understand themselves and one another.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It reports one thinker’s criticism of an influential book and then explains why that same thinker eventually concluded that the book’s original approach had been sound after all.",
+        "It presents a philosopher’s objection to another thinker’s account of human existence and then explains how that thinker revised his account in response to the objection.",
+        "It summarizes a long-running debate between two philosophers about the nature of time and then explains how a translator’s choices eventually helped to settle their disagreement.",
+        "It presents a philosopher’s objection to another thinker’s account of human existence and then describes the philosopher’s own attempt to address what that account left out."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text first presents Watsuji’s objection to Being and Time: that Heidegger had analyzed human existence “primarily in terms of temporality and the individual,” neglecting “space and the shared surroundings in which people actually live.” It then describes Fūdo, in which Watsuji “set out to supply what he found missing.” Choice D describes this structure: a critique followed by an attempt to address the problem the critique identified.",
+      "distractors": {
+        "A": {
+          "recipe": "first move right, second move reversed (REV)",
+          "why_wrong": "The text does report Watsuji’s criticism of Heidegger’s book, but it never says he later accepted Heidegger’s approach; instead he wrote Fūdo to supply what he found missing."
+        },
+        "B": {
+          "recipe": "first move right, second move given to the wrong thinker (SWAP)",
+          "why_wrong": "The text does present Watsuji’s objection to Heidegger’s account, but it never says Heidegger revised his book; it is Watsuji who, in Fūdo, “set out to supply what he found missing.”"
+        },
+        "C": {
+          "recipe": "invented debate and resolution (INV)",
+          "why_wrong": "The text presents one philosopher’s objection, not a debate between two, and it mentions an English title only in passing; no translator settles anything."
+        }
+      },
+      "models": [
+        "3.7"
+      ],
+      "word_count": 87,
+      "sources": [
+        {
+          "what": "Watsuji read Heidegger's Sein und Zeit among the very first; argued Heidegger's emphasis was on time and the individual and under-emphasized space; Fūdo: climate as an expression of human existence, not mere natural environment (Stanford Encyclopedia of Philosophy)",
+          "url": "https://plato.stanford.edu/entries/watsuji-tetsuro/"
+        }
+      ],
+      "notes": "Area: humanities (philosophy). Key D. Hard band 6 (S12 has no band-7 officials). Two-move structure as in 3.7; A keeps move 1 and reverses move 2; B and C invent. Fūdo dated by its 1935 book publication. Reviewer: B rebuilt (was wholly off) to keep move 1 and give the response to Heidegger; the key names the philosopher so its referent is clear.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "rebuilt B (wholly off) into a first-half-true option that gives the response to Heidegger; key reworded to “the philosopher’s own attempt” so its referent is unambiguous"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "S12 has no band-7 official items (model 3.7 is band 5). Drafted, B and C were wholly off and it read easier; B now keeps the true first move and gives the response to the wrong thinker, so A and B are both right in move 1 and wrong in move 2: a strong band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "text_structure_and_purpose.S14_project_approach_critique.hard.w4b3_06",
+      "template": "S14_project_approach_critique",
+      "subtype": "Overall structure",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Beginning in the 1980s, managers of the Oostvaardersplassen, a nature reserve on reclaimed land in the Netherlands, introduced Heck cattle, Konik horses, and red deer to its grasslands. The herbivores’ grazing was intended to keep the landscape open, recreating the kind of ecosystem thought to have existed in Europe before extensive human alteration. The animals were managed as wild populations: they received no supplemental food during winter, so their numbers would be regulated by available vegetation. After thousands of the animals died during the severe winter of 2017–2018, critics argued that confining herbivores behind fences and then withholding food amounted to neglect rather than natural regulation.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It introduces a conservation project, describes the principles that guided how the project was managed, and then presents a criticism the project faced after a setback.",
+        "It presents a conservation effort, outlines the reasoning behind the methods used, and then reports evidence that those methods produced exactly the kind of landscape its managers intended.",
+        "It describes a nature reserve, explains why its managers abandoned an earlier plan for the land, and then details a compromise that the managers and their critics eventually reached.",
+        "It describes a reserve created on reclaimed land, explains why grazing animals were introduced there, and then predicts how the landscape will change once the animals are removed."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text introduces the Oostvaardersplassen and the grazing animals released there, then explains the approach: the animals “were managed as wild populations” and “received no supplemental food during winter.” It ends with critics’ objection, raised after “thousands of the animals died,” that withholding food “amounted to neglect rather than natural regulation.” Choice A follows these three moves.",
+      "distractors": {
+        "B": {
+          "recipe": "first two moves right, third move reversed (REV)",
+          "why_wrong": "The text does present the project and the reasoning behind its methods, but it reports no evidence that the methods succeeded; it ends with a die-off and the criticism that followed."
+        },
+        "C": {
+          "recipe": "invented second and third moves (INV)",
+          "why_wrong": "The text mentions no earlier plan that was abandoned and no compromise between managers and critics."
+        },
+        "D": {
+          "recipe": "first two moves right, third move invented (INV)",
+          "why_wrong": "The text does describe the reserve and the purpose of the grazing animals, but it makes no prediction about the landscape and never mentions removing the animals; it ends with the criticism that followed the die-off."
+        }
+      },
+      "models": [
+        "3.9"
+      ],
+      "word_count": 106,
+      "sources": [
+        {
+          "what": "Oostvaardersplassen: polder reclaimed in 1968; Konik horses, red deer and Heck cattle introduced; no winter feeding, treated as wild; almost 3,300 animals died in winter 2017–2018, public protests (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Oostvaardersplassen"
+        }
+      ],
+      "notes": "Area: natural science and policy (conservation). Key A. Hard band 6 (S14 has no band-7 officials). Three moves as in 3.9; B and D keep moves 1 and 2 and fail on move 3 (B reverses it into success, D invents a prediction); C invents moves 2 and 3. Death toll given only as “thousands”; the herbivore introductions ran from 1983 into the 1990s, so “Beginning in the 1980s”.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "S14 has no band-7 official items (model 3.9 is band 5). B and D keep moves 1 and 2 true and fail on move 3 (success; a prediction), and the key states the three moves abstractly: band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "text_structure_and_purpose.S16_finding_pattern_exception.hard.w4b3_07",
+      "template": "S16_finding_pattern_exception",
+      "subtype": "Overall structure",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Comparing declassified images from Cold War reconnaissance satellites with modern satellite data, Joshua Maurer and colleagues found that glaciers across the Himalayas lost ice approximately twice as rapidly from 2000 to 2016 as from 1975 to 2000, an acceleration consistent with atmospheric warming. Glaciers in most of the world’s mountain ranges have been retreating for the same reason. Those of the Karakoram range, northwest of the Himalayas, constitute a notable exception: over the past two decades many have remained stable or even advanced, a pattern researchers have attributed partly to cooler summers and increased winter snowfall in the region.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It reports how researchers measured glacier change in one mountain range, notes that glaciers in other ranges have behaved similarly, and then calls for further research to confirm the measurements.",
+        "It reports a result along with a likely cause, notes that the result fits a broader trend, and then points to a departure from that trend and factors thought to contribute to it.",
+        "It reports a result along with a likely cause, notes that similar results have been found elsewhere, and then describes a case that casts doubt on the original explanation.",
+        "It contrasts an older way of measuring glacier change with a newer one, explains why the newer way is more reliable, and then applies it to a single mountain range."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text first reports that Himalayan glaciers lost ice “approximately twice as rapidly” after 2000 and links this to “atmospheric warming.” It then says glaciers in “most of the world’s mountain ranges” are retreating “for the same reason,” before calling the Karakoram “a notable exception” and naming cooler summers and greater snowfall as possible causes. Choice B describes this sequence.",
+      "distractors": {
+        "A": {
+          "recipe": "first two moves right, third move invented (INV)",
+          "why_wrong": "The text does report the Himalayan measurements and says most other ranges are losing ice too, but it does not call for further research; its last move is an exception to the trend, the Karakoram glaciers."
+        },
+        "C": {
+          "recipe": "first two moves right, third move a stance flip (STANCE)",
+          "why_wrong": "The text does give a result, its likely cause, and a broader trend, but the Karakoram case does not cast doubt on the warming explanation; the text attributes it to local conditions (cooler summers and more snowfall) in that region."
+        },
+        "D": {
+          "recipe": "method versus alternative method (INV)",
+          "why_wrong": "The researchers used old and new satellite images together; the text never weighs one method against the other or calls either more reliable."
+        }
+      },
+      "models": [
+        "3.17"
+      ],
+      "word_count": 99,
+      "sources": [
+        {
+          "what": "Maurer et al. (2019, Science Advances): Cold War spy-satellite film and modern imagery; Himalayan ice loss rate doubled in 2000–2016 vs 1975–2000; consistent with atmospheric warming",
+          "url": "https://europepmc.org/article/MED/31223649"
+        },
+        {
+          "what": "Farinotti et al. (2020, Nature Geoscience): global glacier shrinkage; Karakoram balanced to slightly positive budgets and stable to advancing termini over two decades; summer cooling and a slight increase in winter snowfall among proposed causes",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6949123/"
+        }
+      ],
+      "notes": "Area: earth science (glaciology). Key B. Hard band 6 (S16 has no band-7 officials). Three moves as in 3.17, with move 3 hedged as the source is (“linked partly”). A and C keep moves 1 and 2 and fail on move 3 (A invents a call for research, C flips the exception into doubt, the model's D recipe); D is a wholly wrong method-versus-method template. Replaced a claimed brood-parasite subject before drafting.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "S16 has no band-7 official items; built like band-6 model 3.17, with A and C keeping moves 1 and 2 and failing on move 3 (a call for research; the exception read as doubt on the warming cause): band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "text_structure_and_purpose.P_lit.medium.w4b3_08",
+      "template": "P_lit",
+      "subtype": "Main purpose (literary)",
+      "tier": "medium",
+      "passage": "The following text is from Charles W. Chesnutt’s 1900 novel The House Behind the Cedars. John Warwick, who now lives in South Carolina, has just returned to Patesville, the town where he grew up, after an absence of ten years.\n\nThe gentleman from South Carolina, walking down the street, glanced about him with an eager look, in which curiosity and affection were mingled with a touch of bitterness. He saw little that was not familiar, or that he had not seen in his dreams a hundred times during the past ten years. There had been some changes, it is true, some melancholy changes, but scarcely anything by way of addition or improvement to counterbalance them.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To describe a character’s first impressions of a town that he has often heard about but has never visited",
+        "To convey a character’s complicated feelings on seeing a familiar place again after a long absence",
+        "To explain why a character left his hometown and moved to another state ten years earlier",
+        "To show a character’s delight at the growth and improvement a town has undergone while he was away"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Warwick looks around Patesville “with an eager look, in which curiosity and affection were mingled with a touch of bitterness.” He sees “little that was not familiar,” notes “some melancholy changes,” and finds “scarcely anything by way of addition or improvement.” The text therefore conveys his mixed feelings on seeing his hometown again, as choice B says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal of the situation (REV)",
+          "why_wrong": "Warwick grew up in Patesville and has seen it “in his dreams a hundred times”; the town is familiar to him, not a place he has only heard about."
+        },
+        "C": {
+          "recipe": "invented cause (INV)",
+          "why_wrong": "The text mentions that Warwick has been away for ten years, but it gives no reason for his leaving."
+        },
+        "D": {
+          "recipe": "reversal of the feeling (REV)",
+          "why_wrong": "Warwick finds “scarcely anything by way of addition or improvement” and notices “melancholy changes,” so the text does not show delight at the town’s growth."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.9",
+        "2.19"
+      ],
+      "word_count": 115,
+      "sources": [
+        {
+          "what": "Chesnutt, The House Behind the Cedars (1900), chapter 1, text copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/472"
+        }
+      ],
+      "notes": "Literature (novel, 1900). Key B. Context line from chapter 1 (Warwick registered from Clarence, South Carolina; he grew up in Patesville and has been away ten years). Distractors: REV (first visit), INV (reason for leaving), REV (delight at improvement). Writer's own blind solve: B.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_method.medium.w4b3_09",
+      "template": "F_method",
+      "subtype": "Function of a part",
+      "tier": "medium",
+      "passage": "Many flowers that look plain to human eyes may appear quite different to bees. Plant scientist Edwina Moyroud and colleagues found that the petals of flowers from most major groups of flowering plants carry microscopic ridges. <u>Because these ridges vary irregularly in height and spacing, they scatter blue and ultraviolet light, producing a faint glow around the petals</u> that bees, which can see ultraviolet light, readily detect. In experiments with artificial flowers, bumblebees responded strongly to this glow, suggesting that it helps flowers attract pollinators.",
+      "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
+      "options": [
+        "It explains why bees prefer flowers that reflect ultraviolet light to flowers of any other color.",
+        "It identifies the reason that the researchers decided to build artificial flowers for their experiments.",
+        "It contrasts the way that humans see flowers with the way that bees see them.",
+        "It describes how a physical feature of certain petals creates a visual signal."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that many petals “carry microscopic ridges.” The underlined portion explains what these ridges do: because they “vary irregularly in height and spacing, they scatter blue and ultraviolet light, producing a faint glow around the petals.” It therefore describes how a physical feature of petals produces a visual signal, as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "invented preference (INV)",
+          "why_wrong": "The underlined portion explains how the glow is produced; it does not say bees prefer ultraviolet flowers to flowers of all other colors."
+        },
+        "B": {
+          "recipe": "wrong relation to the next sentence (REL)",
+          "why_wrong": "The artificial flowers appear in the following sentence, and the text never explains why the researchers chose to build them."
+        },
+        "C": {
+          "recipe": "partial: the first sentence's point (PART)",
+          "why_wrong": "The first sentence notes that flowers may look different to bees than to people, but the underlined portion explains how the ridges scatter light rather than comparing human and bee vision."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.15",
+        "2.20"
+      ],
+      "word_count": 85,
+      "sources": [
+        {
+          "what": "Moyroud et al. (2017, Nature): disordered floral nanostructures in most major angiosperm lineages scatter light at short wavelengths (ultraviolet and blue); artificial flowers with tailored disorder; signal highly salient to bumblebees",
+          "url": "https://europepmc.org/article/MED/29045384"
+        }
+      ],
+      "notes": "Area: natural science (botany, pollination). Key D. Medium F_method modelled on 2.15 (the span explains how a mechanism works). The press term “blue halo” left out (not in the abstract).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_example.medium.w4b3_10",
+      "template": "F_example",
+      "subtype": "Function of a part",
+      "tier": "medium",
+      "passage": "Musical instruments sometimes grow out of objects made for entirely different purposes. <u>The cajón, a box drum from the coast of Peru, is one such instrument.</u> It developed among Afro-Peruvian communities during the colonial era, possibly from the wooden crates used to carry fruit and other goods in coastal ports, and musicians play it by sitting on the box and striking its front panel with their hands. Once heard mostly in Afro-Peruvian music, the cajón was declared part of Peru’s national heritage in 2001 and is now played in many styles around the world.",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It introduces an example of the general claim in the previous sentence.",
+        "It presents a claim about the cajón that the rest of the text goes on to dispute.",
+        "It explains why the cajón later became popular in places outside of Peru.",
+        "It summarizes a finding that the following sentence calls into question."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence makes a general claim: “Musical instruments sometimes grow out of objects made for entirely different purposes.” The underlined sentence names the cajón as “one such instrument,” and the next sentence explains that it may have developed from wooden crates. The underlined sentence therefore introduces an example of the claim in the previous sentence, as choice A says.",
+      "distractors": {
+        "B": {
+          "recipe": "stance flip (STANCE)",
+          "why_wrong": "The rest of the text supports the underlined sentence by describing the cajón’s origins; nothing disputes it."
+        },
+        "C": {
+          "recipe": "partial: the last sentence's content (PART)",
+          "why_wrong": "The final sentence notes that the cajón is now played around the world, but it does not explain why, and the underlined sentence does not address the instrument’s spread."
+        },
+        "D": {
+          "recipe": "wrong label and relation (REL)",
+          "why_wrong": "The underlined sentence names an instrument as an example rather than reporting a finding, and the following sentence supports it by describing the cajón’s origins instead of questioning it."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.1"
+      ],
+      "word_count": 94,
+      "sources": [
+        {
+          "what": "Cajón: developed during slavery in coastal Peru; Susana Baca's mother called it the box of the people who carried fruit and worked in the ports; declared National Heritage by Peru's National Institute of Culture in 2001; taken into flamenco after 1977 (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Caj%C3%B3n"
+        }
+      ],
+      "notes": "Area: humanities (music). Key A. Modelled on 2.12 (span introduces an example supporting the previous general claim). Crate origin hedged (“possibly”) as the source is.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S3_discovery_importance.medium.w4b3_11",
+      "template": "S3_discovery_importance",
+      "subtype": "Overall structure",
+      "tier": "medium",
+      "passage": "In 2013, microbiologist Brent Christner and colleagues used a hot-water drill to bore through about 800 meters of ice in West Antarctica and collect water and sediment from Subglacial Lake Whillans, which lies beneath the ice sheet. The samples contained living microorganisms—a diverse community of bacteria and archaea that appear to get their energy from chemical reactions involving minerals rather than from sunlight. The study was the first to describe the microbial life of a buried Antarctic lake sampled directly, and it suggests that such hidden ecosystems may influence the chemistry of the surrounding ocean.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It explains how a drilling technique was developed, then describes the problems that kept researchers from using it.",
+        "It presents a hypothesis about life beneath ice sheets, then reports a study whose results failed to support it.",
+        "It recounts how scientists gathered samples and what they found in them, then considers why the finding matters.",
+        "It compares two lakes hidden beneath an ice sheet, then argues that only one of them is likely to contain life."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text first describes how researchers drilled through the ice to “collect water and sediment” from the lake and found that the samples “contained living microorganisms.” It then explains the finding’s significance: the study was “the first to describe the microbial life of a buried Antarctic lake sampled directly,” and such ecosystems “may influence the chemistry of the surrounding ocean.” Choice C describes this structure.",
+      "distractors": {
+        "A": {
+          "recipe": "invented problem (INV)",
+          "why_wrong": "The text mentions the hot-water drill only as the means of reaching the lake; it describes no problems that kept researchers from using it."
+        },
+        "B": {
+          "recipe": "reversal of outcome (REV)",
+          "why_wrong": "The study found living microorganisms in the lake, so it did not fail to support the idea that life exists beneath the ice."
+        },
+        "D": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The text discusses only one lake, Subglacial Lake Whillans, and makes no comparison."
+        }
+      },
+      "models": [
+        "2.2"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Christner et al. (2014, Nature): first geomicrobiological description of a directly sampled subglacial Antarctic lake; Lake Whillans under about 800 m of ice; metabolically active, chemosynthetically driven community of bacteria and archaea; may influence Southern Ocean geochemistry",
+          "url": "https://europepmc.org/article/MED/25143114"
+        }
+      ],
+      "notes": "Area: natural science (microbiology, Antarctica). Key C. Structure as in 2.2 (how a discovery was made, then its importance); key reworded away from 2.2's key. Sampling in January 2013 (WISSARD); hot-water drilling is the project's method.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S5_idea_influenced_work.medium.w4b3_12",
+      "template": "S5_idea_influenced_work",
+      "subtype": "Overall structure",
+      "tier": "medium",
+      "passage": "In his 1958 “Mouldiness Manifesto against Rationalism in Architecture,” Austrian artist Friedensreich Hundertwasser rejected the straight line and purely functional building design. He also argued that every tenant should have a “window right”: the freedom to lean out of a window and paint or reshape the outside wall as far as the tenant’s arm could reach. Decades later, Hundertwasser designed an apartment building in Vienna with architect Joseph Krawina. Completed in 1985, the Hundertwasserhaus has uneven, rolling floors, a patchwork of brightly colored sections on its facade, and trees growing inside its rooms, with branches extending out of the windows.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It describes an artist’s early career as a painter, then explains why he gave up painting in order to design buildings.",
+        "It summarizes criticism of a well-known building, then explains how the building’s designers responded to that criticism.",
+        "It argues that a style of architecture is impractical, then lists several buildings in Vienna that show its flaws.",
+        "It summarizes an artist’s ideas about architecture, then describes a later building in which those ideas are evident."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text first presents Hundertwasser’s ideas from his 1958 manifesto: he “rejected the straight line and purely functional building design” and argued for a tenant’s “window right.” It then describes the Hundertwasserhaus, completed decades later, with its “uneven, rolling floors,” colorful facade, and trees growing inside. Choice D captures this sequence of ideas followed by a building that reflects them.",
+      "distractors": {
+        "A": {
+          "recipe": "invented career change (INV)",
+          "why_wrong": "The text calls Hundertwasser an artist but says nothing about his early painting career or about his giving up painting."
+        },
+        "B": {
+          "recipe": "invented criticism (INV)",
+          "why_wrong": "The text describes no criticism of the Hundertwasserhaus and no response by its designers."
+        },
+        "C": {
+          "recipe": "stance flip (STANCE)",
+          "why_wrong": "The text reports Hundertwasser’s rejection of straight lines but does not itself argue that any style is impractical, and it describes only one building in Vienna."
+        }
+      },
+      "models": [
+        "2.10"
+      ],
+      "word_count": 100,
+      "sources": [
+        {
+          "what": "Hundertwasser: 1958 Mouldiness Manifesto against Rationalism in Architecture, rejected the straight line and functional architecture, first claimed the Window Right (lean out and paint within arm's reach) (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Friedensreich_Hundertwasser"
+        },
+        {
+          "what": "Hundertwasserhaus, Vienna, 1983–1985, with Joseph Krawina; undulating floors, trees growing from inside the rooms with limbs extending from windows, colourful facade (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Hundertwasserhaus"
+        }
+      ],
+      "notes": "Area: humanities (architecture). Key D. Structure as in 2.10 (a philosophy, then a work shaped by it); key worded away from 2.10's. Manifesto title kept in its English form.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S7_problem_approach.medium.w4b3_13",
+      "template": "S7_problem_approach",
+      "subtype": "Overall structure",
+      "tier": "medium",
+      "passage": "Seismologists map Earth’s interior by tracking how waves from distant earthquakes travel through it, but nearly all of their instruments sit on land, leaving the oceans, which cover most of the planet, largely unmonitored. In response, a team including geophysicists Guust Nolet and Frederik Simons developed MERMAIDs, robotic floats that drift far below the ocean’s surface and listen for earthquake waves with an underwater microphone. When a float detects a strong signal, it rises to the surface and sends its data by satellite. In 2019, data from floats near the Galápagos Islands helped reveal a hot plume of rock deep beneath the islands.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It explains why seismologists have stopped studying the deep ocean, then describes a land-based alternative that they now use instead.",
+        "It identifies a limitation in how certain scientists collect data, then describes a technology designed to address that limitation.",
+        "It describes a new kind of scientific instrument, then explains why that instrument has failed to replace older ones on land.",
+        "It compares how earthquake waves travel through rock and through water, then argues that water provides more accurate readings."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text first identifies a problem for seismologists: their instruments “sit on land,” leaving the oceans “largely unmonitored.” It then describes the MERMAID floats developed “In response” and an early result from them. Choice B describes this structure.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the oceans are largely unmonitored because instruments are on land; it does not say seismologists stopped studying the ocean, and the solution it describes works at sea."
+        },
+        "C": {
+          "recipe": "first move right, second move invented (INV)",
+          "why_wrong": "The text does describe a new instrument, but it says nothing about the floats failing to replace instruments on land; it reports a success near the Galápagos Islands."
+        },
+        "D": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The text never compares how waves travel through rock and water or judges which gives more accurate readings."
+        }
+      },
+      "models": [
+        "2.16"
+      ],
+      "word_count": 103,
+      "sources": [
+        {
+          "what": "Sukhovich, ..., Simons, Nolet (2015, Nature Communications): mantle imaging hampered by lack of seismic data in marine areas; floating submarine seismographs can fill the oceanic data gap",
+          "url": "https://europepmc.org/article/MED/26289598"
+        },
+        {
+          "what": "Nolet et al. (2019, Scientific Reports): nine floating seismometers near the Galápagos; deep, hot plume beneath the archipelago",
+          "url": "https://europepmc.org/article/MED/30718618"
+        }
+      ],
+      "notes": "Area: earth science (seismology). Key B. Structure as in 2.16 (a research problem, then an approach to it); key worded away from 2.16's. Hydrophone given as “underwater microphone”; the surfacing-and-satellite step is the floats' standard design. ",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S9_criticism_ambition.medium.w4b3_14",
+      "template": "S9_criticism_ambition",
+      "subtype": "Overall structure (literary)",
+      "tier": "medium",
+      "passage": "The following text is adapted from William Wordsworth’s 1798 poem “Expostulation and Reply.” In the poem, the speaker’s friend Matthew questions him, and the speaker replies.\n\n“Why William, on that old grey stone,\nThus for the length of half a day,\nWhy William, sit you thus alone,\nAnd dream your time away?\n\nWhere are your books? that light bequeath’d\nTo beings else forlorn and blind!\nUp! Up! and drink the spirit breath’d\nFrom dead men to their kind.”\n\n“The eye it cannot chuse but see,\nWe cannot bid the ear be still;\nOur bodies feel, where’er they be,\nAgainst, or with our will.\n\n—Then ask not wherefore, here, alone,\nConversing as I may,\nI sit upon this old grey stone,\nAnd dream my time away.”",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "The speaker presents a friend’s objection to how he spends his time, then explains why he will keep spending it that way.",
+        "The speaker describes the books that he and a friend once read together, then explains why he has since lost interest in them.",
+        "The speaker scolds a friend for paying too little attention to the natural world, then urges the friend to set his books aside.",
+        "The speaker admits that a friend’s criticism of his habits is fair, then resolves to return to his books and his studies."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "In the first two stanzas, Matthew asks why William would “sit you thus alone, / And dream your time away” instead of reading his books. In his reply, the speaker says that “The eye it cannot chuse but see” and then tells Matthew to “ask not wherefore” he chooses to “sit upon this old grey stone, / And dream my time away.” The speaker thus responds to a criticism of how he spends his time and declares he will go on as before, as choice A says.",
+      "distractors": {
+        "B": {
+          "recipe": "word hook on books (LIT)",
+          "why_wrong": "Matthew mentions books, but the poem says nothing about books the two once read together or about the speaker losing interest in them."
+        },
+        "C": {
+          "recipe": "roles swapped (SWAP)",
+          "why_wrong": "It is Matthew who criticizes the speaker, and Matthew urges him to read books, not to set them aside."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The speaker does not accept Matthew’s criticism; he ends by saying he will keep sitting on the stone and dreaming."
+        }
+      },
+      "models": [
+        "2.21"
+      ],
+      "word_count": 125,
+      "sources": [
+        {
+          "what": "Wordsworth and Coleridge, Lyrical Ballads (1798), “Expostulation and Reply,” stanzas 1, 2, 5 and 8 copied from the 1798 text (running quotation marks at line starts dropped)",
+          "url": "https://www.gutenberg.org/ebooks/9622"
+        }
+      ],
+      "notes": "Literature (poem, 1798). Key A. S9 shape as in 2.21 (a criticism of the speaker, then his commitment). The 1798 printing opens every line of speech with a quotation mark; only the opening and closing marks are kept. Spelling “chuse” kept as printed.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "key verb “recalls” changed to “presents”: the excerpt cuts the narrative stanza (“One morning thus, by Esthwaite lake”), so nothing in it shows the speaker recalling"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S11_question_answer.medium.w4b3_15",
+      "template": "S11_question_answer",
+      "subtype": "Overall structure",
+      "tier": "medium",
+      "passage": "Why do adult males of the long-billed hermit, a hummingbird found in the rainforests of Central America, have bills that end in sharp, dagger-like tips, while females and young males do not? Hummingbird bills are usually thought to be shaped mainly by the flowers the birds feed on. But studying the species in Costa Rica, Alejandro Rico-Guevara and Marcelo Araya-Salas watched males stab rivals in the throat during fights over territories at their mating grounds, and they found that males with longer, pointier bill tips tended to win. The tips, the researchers propose, may have evolved as weapons.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It describes a feature shared by male and female birds of one species, then explains how that feature helps the birds feed on flowers.",
+        "It poses a question about a bird’s feeding habits, then reports that researchers have so far been unable to answer it.",
+        "It asks why only some members of a species have a certain feature, then describes research that points to a possible reason.",
+        "It presents a common view about how hummingbirds choose their mates, then describes a study that confirmed that view."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text opens with a question: why do adult males have “sharp, dagger-like tips” on their bills “while females and young males do not?” It then describes research in which males were seen to “stab rivals in the throat” and males with pointier tips “tended to win,” leading the researchers to propose that the tips “may have evolved as weapons.” Choice C describes this question-and-answer structure.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the dagger-like tips are found in adult males, not in females, and links them to fighting rather than feeding."
+        },
+        "B": {
+          "recipe": "reversal of outcome (REV)",
+          "why_wrong": "The question concerns the shape of the males’ bills, not feeding habits, and the researchers do propose an answer."
+        },
+        "D": {
+          "recipe": "invented view and stance (INV)",
+          "why_wrong": "The common view the text mentions concerns how bills are shaped by flowers, not how hummingbirds choose mates, and the study points away from that view rather than confirming it."
+        }
+      },
+      "models": [
+        "2.24"
+      ],
+      "word_count": 98,
+      "sources": [
+        {
+          "what": "UConn Today on Rico-Guevara and Araya-Salas (Behavioral Ecology, 2014): long-billed hermit males develop longer, sharper, dagger-like bill tips as they mature; males seen stabbing rivals in the throat at leks; males with longer, pointier bills won more fights; first evidence of bills shaped by male-male combat",
+          "url": "https://today.uconn.edu/?p=98235"
+        }
+      ],
+      "notes": "Area: natural science (animal behavior). Key C. Structure as in 2.24 (a question, then a possible answer); key worded away from 2.24's. Different subject from the live boundaries item on hummingbird tongues (Rico-Guevara 2015).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_setup.medium.w4b3_16",
+      "template": "F_setup",
+      "subtype": "Function of a part",
+      "tier": "medium",
+      "passage": "<u>For most of their history, the societies near the northern shores of Lake Victoria, in what is now Uganda, kept no written records, and written descriptions of the region appear only in the nineteenth century.</u> To study how people there thought about motherhood between roughly 700 and 1900 CE, historian Rhiannon Stephens therefore turned to language itself. By comparing related words in the region’s Bantu languages, she reconstructed vocabulary that speakers used centuries ago and combined this evidence with oral traditions and other sources. Her work suggests that motherhood was central to political life there: queen mothers, for example, held powerful offices that helped legitimize kings’ rule.",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It presents a claim that the historian’s research ultimately shows to be mistaken in several respects.",
+        "It introduces the main finding about motherhood that the rest of the text then goes on to explain.",
+        "It explains why the historian chose to focus on the years after 1900 rather than on earlier centuries.",
+        "It identifies a gap in the evidence that helps explain the historian’s approach."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined sentence explains that for most of their history the societies near Lake Victoria “kept no written records.” The next sentence shows the consequence: Stephens “therefore turned to language itself,” reconstructing old vocabulary to study motherhood. The underlined sentence thus identifies a gap in the evidence that explains the historian’s approach, as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "stance flip (STANCE)",
+          "why_wrong": "Nothing in the text challenges the underlined sentence; the historian’s method responds to the lack of written records rather than disproving it."
+        },
+        "B": {
+          "recipe": "wrong label (REL)",
+          "why_wrong": "The finding about motherhood appears in the last sentence; the underlined sentence describes the available evidence, not a finding."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The historian studied the period from roughly 700 to 1900 CE, not the years after 1900."
+        }
+      },
+      "models": [
+        "2.13"
+      ],
+      "word_count": 107,
+      "sources": [
+        {
+          "what": "Stephens, A History of African Motherhood: The Case of Uganda, 700–1900 (2013): North Nyanzan societies of Uganda, c. 700 to 1900 CE; draws on historical linguistics, comparative ethnography, and oral traditions; motherhood central to political life; queen mothers legitimated kings (Columbia University Seminars book page)",
+          "url": "https://universityseminars.columbia.edu/books/a-history-of-african-motherhood-the-case-of-uganda-700-1900"
+        },
+        {
+          "what": "Buganda: Speke and Burton in 1862 were the first Europeans to enter the kingdom; earlier history known from Baganda and Banyoro oral traditions (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Buganda"
+        }
+      ],
+      "notes": "Area: history (historical linguistics). Key D. F_setup as in 2.13 (the span sets up what the following sentences do). The written-record gap: the first Europeans entered Buganda in 1862, and earlier history is known from oral traditions (Wikipedia, Buganda).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_lit.easy.w4b3_17",
+      "template": "F_lit",
+      "subtype": "Function of a part (literary)",
+      "tier": "easy",
+      "passage": "The following text is from Rose Cohen’s 1918 memoir Out of the Shadow. Cohen, who moved from Russia to New York City as a girl, has just begun working in a small shop where coats are sewn.\n\nThe next morning when I came into the shop at seven o’clock, I saw at once that all the people were there and working as steadily as if they had been at work a long while. I had just time to put away my coat and go over to the table, when the boss shouted gruffly, “Look here, girl, if you want to work here you better come in early. No office hours in my shop.” <u>It seemed very still in the room, even the machines stopped.</u> And his voice sounded dreadfully distinct.",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It emphasizes how noticeable the boss’s scolding feels to Cohen.",
+        "It shows that the other workers stopped working to complain about the boss.",
+        "It indicates that the shop is usually quiet early in the morning.",
+        "It suggests that Cohen is relieved to have arrived before the work began."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Just after the boss shouts at Cohen for arriving late, she says that “It seemed very still in the room, even the machines stopped,” and that his voice “sounded dreadfully distinct.” The underlined sentence emphasizes how exposed she feels as everyone seems to hear the scolding, as choice A says.",
+      "distractors": {
+        "B": {
+          "recipe": "image read literally (LIT)",
+          "why_wrong": "The room only “seemed” still to Cohen; nothing suggests the workers stopped to complain about the boss."
+        },
+        "C": {
+          "recipe": "invented routine (INV)",
+          "why_wrong": "Cohen says the workers were “working as steadily as if they had been at work a long while”; the stillness she describes follows the boss’s shout, not the usual morning quiet."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Cohen arrives after the others are already working and is scolded for it, so she is not relieved to be early."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.20",
+        "1.21"
+      ],
+      "word_count": 130,
+      "sources": [
+        {
+          "what": "Rose Cohen, Out of the Shadow (New York: George H. Doran, 1918), chapter 28, text copied from the scanned edition",
+          "url": "https://archive.org/details/outofshadow00cohe"
+        }
+      ],
+      "notes": "Literature (memoir, 1918). Key A. Easy literary-effect item as in 1.1 and 1.21. Context line: Cohen came from Russia to New York as a girl (about twelve) and worked in coat shops. Writer's own blind solve: A.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_lit.easy.w4b3_18",
+      "template": "F_lit",
+      "subtype": "Function of a part (literary)",
+      "tier": "easy",
+      "passage": "The following text is adapted from Louisa May Alcott’s 1875 novel Eight Cousins. Rose, whose father has recently died, has come to live with her great-aunts.\n\nRose sat all alone in the big best parlor, with her little handkerchief laid ready to catch the first tear, for she was thinking of her troubles, and a shower was expected. She had retired to this room as a good place in which to be miserable; for it was dark and still, full of ancient furniture, sombre curtains, and hung all around with portraits of solemn old gentlemen in wigs. It was an excellent place for woe; and <u>the fitful spring rain that pattered on the window-pane seemed to sob, “Cry away: I’m with you.”</u>",
+      "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
+      "options": [
+        "It shows that Rose is frightened by the storm outside the house.",
+        "It indicates that Rose wishes she could go outside to play.",
+        "It suggests that the weather matches Rose’s sad mood.",
+        "It reveals that the parlor is too dark for Rose to read in."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Rose has gone to the parlor “as a good place in which to be miserable,” expecting to cry. The underlined portion describes the rain as seeming to “sob,” as if it were saying, “Cry away: I’m with you.” It therefore suggests that the weather matches Rose’s sad mood, as choice C says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal of the feeling (REV)",
+          "why_wrong": "The rain is described as joining in Rose’s sadness, not as something that frightens her."
+        },
+        "B": {
+          "recipe": "invented wish (INV)",
+          "why_wrong": "Rose has chosen the parlor as a place to be miserable; nothing suggests she wants to go outside."
+        },
+        "D": {
+          "recipe": "partial: the room's darkness (PART)",
+          "why_wrong": "The text does call the room “dark and still,” but the underlined portion is about the rain, and nothing is said about reading."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.20",
+        "1.21"
+      ],
+      "word_count": 122,
+      "sources": [
+        {
+          "what": "Alcott, Eight Cousins (1875), chapter 1, opening paragraph; one list item cut at a comma (portraits of children and ladies)",
+          "url": "https://www.gutenberg.org/ebooks/2726"
+        }
+      ],
+      "notes": "Literature (novel, 1875). Key C. Text copied from Gutenberg except that the list of portraits is cut after “old gentlemen in wigs” (the original continues with ladies and children). Easy literary-effect item as in 1.1. Writer's own blind solve: C.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_profile.easy.w4b3_19",
+      "template": "P_profile",
+      "subtype": "Main purpose",
+      "tier": "easy",
+      "passage": "Born in Matanzas, Cuba, in 1836, José White Lafitte became an internationally celebrated violinist. While studying at the Paris Conservatory, he received the institution’s highest prize for violin in 1856, and the composer Gioachino Rossini praised his performances. White subsequently spent years in Brazil, where he directed the Imperial Conservatory in Rio de Janeiro and served as a court musician for Emperor Pedro II. He was also an accomplished composer: his energetic La bella cubana, written for two violins and orchestra, is still performed today.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To compare the music of Cuba with the music of Brazil in the 1800s",
+        "To give an overview of a musician’s achievements as a performer and composer",
+        "To argue that White’s compositions deserve more attention than Rossini’s",
+        "To explain why White chose to leave Cuba to study music in France"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text describes White’s prize at the Paris Conservatory, Rossini’s praise, his work as director of the Imperial Conservatory and as a court musician, and a composition that “is still performed today.” Together these details give an overview of his achievements as a performer and composer, as choice B says.",
+      "distractors": {
+        "A": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The text mentions Cuba and Brazil only as places in White’s life; it does not compare their music."
+        },
+        "C": {
+          "recipe": "stance flip (STANCE)",
+          "why_wrong": "Rossini appears only as someone who praised White’s playing; the text does not argue that White’s music deserves more attention than Rossini’s."
+        },
+        "D": {
+          "recipe": "invented motive (INV)",
+          "why_wrong": "The text says White studied at the Paris Conservatory but gives no reason for his leaving Cuba."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.6",
+        "1.10"
+      ],
+      "word_count": 85,
+      "sources": [
+        {
+          "what": "José White Lafitte: born 1836 in Matanzas; First Grand Prize at the Paris Conservatory in 1856; praised by Rossini; director of the Imperial Conservatory in Rio de Janeiro and court musician for Pedro II; La Bella Cubana, a habanera for two violins and orchestra (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Jos%C3%A9_White_Lafitte"
+        }
+      ],
+      "notes": "Area: humanities (music). Key B. Easy profile as in 1.4 (examples of a musician's importance). Parentage left out (sources disagree on his father's nationality).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_lit.easy.w4b3_20",
+      "template": "P_lit",
+      "subtype": "Main purpose (literary)",
+      "tier": "easy",
+      "passage": "The following text is adapted from Jacob Riis’s 1901 autobiography The Making of an American. Riis, a twenty-one-year-old carpenter from Denmark, describes arriving in New York City by ship in 1870.\n\nIt was a beautiful spring morning, and as I looked over the rail at the miles of straight streets, the green heights of Brooklyn, and the stir of ferryboats and pleasure craft on the river, my hopes rose high that somewhere in this teeming hive there would be a place for me. What kind of a place I had myself no clear notion of. I would let that work out as it could. The love of change belongs to youth, and I meant to take a hand in things as they came along.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To explain why the narrator decided to give up his work as a carpenter",
+        "To describe the hardships the narrator faced during his long voyage",
+        "To compare New York with the town where the narrator grew up",
+        "To convey the narrator’s hopeful outlook as he arrives in a new country"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Looking at New York from the ship, the narrator says “my hopes rose high that somewhere in this teeming hive there would be a place for me.” Although he has “no clear notion” of what that place will be, he means “to take a hand in things as they came along.” The text conveys his hopeful outlook on arriving, as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "invented motive (INV)",
+          "why_wrong": "The context line says Riis was a carpenter, but the excerpt never explains any decision to give up that work."
+        },
+        "B": {
+          "recipe": "invented content (INV)",
+          "why_wrong": "The excerpt begins as the ship arrives on “a beautiful spring morning”; it does not describe the voyage or any hardships."
+        },
+        "C": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The narrator describes only what he sees of New York and Brooklyn; he never mentions or compares the town where he grew up."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.9",
+        "1.17"
+      ],
+      "word_count": 124,
+      "sources": [
+        {
+          "what": "Riis, The Making of an American (1901), chapter 2 (“I Land in New York”), opening paragraph, adapted by cutting sentences",
+          "url": "https://www.gutenberg.org/ebooks/6125"
+        }
+      ],
+      "notes": "Literature (autobiography, 1901). Key D. Adapted: the excerpt starts at “It was a beautiful spring morning” and drops one sentence (“Of course I had my trade to fall back on, …”) before “The love of change.” Riis was born in 1849 and arrived on the Iowa at Whitsunday 1870. Writer's own blind solve: D.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.S2_person_work.easy.w4b3_21",
+      "template": "S2_person_work",
+      "subtype": "Overall structure",
+      "tier": "easy",
+      "passage": "Fela Sowande was a Nigerian composer and organist. Born in 1905 in Abeokuta, he moved to London in 1934 to study music and later became a fellow of the Royal College of Organists. Sowande’s compositions combine African and European musical traditions. His organ pieces, for example, borrow the style of English church music while incorporating the five-note melodies of traditional Yoruba songs. His African Suite, composed for string orchestra, similarly combines European forms with African rhythms and harmonies.",
+      "stem": "Which choice best describes the overall structure of the text?",
+      "options": [
+        "It describes a disagreement between two musicians and then explains how it was settled.",
+        "It explains a musical technique and then lists several composers who use it.",
+        "It introduces a composer and then describes some qualities of his music.",
+        "It compares two composers and then argues that one of them was more influential."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text first introduces Fela Sowande, giving his birthplace and training. It then describes his compositions, which “combine African and European musical traditions,” with examples from his organ pieces and his African Suite. Choice C describes this structure.",
+      "distractors": {
+        "A": {
+          "recipe": "invented debate (INV)",
+          "why_wrong": "The text discusses only Sowande and describes no disagreement."
+        },
+        "B": {
+          "recipe": "reversed focus (INV)",
+          "why_wrong": "The text is about one composer, not a technique used by several composers."
+        },
+        "D": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "No second composer is mentioned, and the text makes no argument about influence."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.19"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "Fela Sowande: born 1905 in Abeokuta; went to London in 1934; Fellow of the Royal College of Organists (1943); Western and African ideas in his music; organ works combine Anglican church music with Yoruba pentatonic melodies; African Suite for string orchestra; orchestral works show African rhythmic and harmonic characteristics (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Fela_Sowande"
+        }
+      ],
+      "notes": "Area: humanities (music). Key C. Easy structure as in 1.13 and 1.19 (a person, then characteristics of the work).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_example.easy.w4b3_22",
+      "template": "F_example",
+      "subtype": "Function of a part",
+      "tier": "easy",
+      "passage": "Historians studying slavery frequently have few sources written from the perspective of enslaved people themselves. Court records can help fill that gap. <u>In her 2019 book Voices of the Enslaved, for example, historian Sophie White examines testimony that enslaved men and women delivered before the Superior Council, the highest court of French colonial Louisiana, during the 1700s.</u> Because court clerks documented these statements in considerable detail, they preserve individuals’ own descriptions of their work, their relationships, and their aspirations.",
+      "stem": "Which choice best describes the function of the underlined sentence?",
+      "options": [
+        "It gives an example of a historian using the type of source named in the previous sentence.",
+        "It explains why many of the court records from French colonial Louisiana were later lost.",
+        "It argues that court records are more reliable sources than the letters or diaries of the period.",
+        "It describes a problem that the rest of the text then tries to solve."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The previous sentence says that “Court records can help fill that gap.” The underlined sentence gives an example: Sophie White’s book “examines testimony that enslaved men and women delivered before the Superior Council.” The underlined sentence therefore provides an example of a historian using court records, as choice A says.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the clerks’ records “preserve individuals’ own descriptions” of their lives; it says nothing about records being lost."
+        },
+        "C": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The text never compares court records with letters or diaries."
+        },
+        "D": {
+          "recipe": "wrong label (REL)",
+          "why_wrong": "The problem, a shortage of sources, appears in the first sentence; the underlined sentence gives an example of a way around it."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.14"
+      ],
+      "word_count": 79,
+      "sources": [
+        {
+          "what": "Frederick Douglass Book Prize committee on Sophie White's Voices of the Enslaved: trial records from the Louisiana Superior Council, French New Orleans; enslaved people telling their own stories in court",
+          "url": "https://americanstudies.nd.edu/news-and-events/news/professor-sophie-white-named-2020-prestigious-frederick-douglass-book-award-finalist/"
+        }
+      ],
+      "notes": "Area: history. Key A. Easy example item as in 1.3 (sources, then one such source). Published 2019 by the Omohundro Institute and UNC Press; testimony from 1723 to 1769 survives.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_study.easy.w4b3_23",
+      "template": "P_study",
+      "subtype": "Main purpose",
+      "tier": "easy",
+      "passage": "Many tarantulas display a vivid blue coloration, which is puzzling because these spiders perceive color poorly and do not perform visual displays when courting. To investigate, Bor-Kai Hsiung and colleagues examined the hairs of blue tarantulas representing many branches of the group’s evolutionary tree. They discovered that the blue is produced by microscopic structures in the hairs rather than by pigment, and that these structures differ considerably among species. Yet the shade of blue is remarkably consistent, suggesting that the coloration evolved independently many times and probably serves some function other than attracting mates.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "It describes an experiment testing whether tarantulas can see the color blue.",
+        "It presents a study that addresses a puzzling feature of some spiders.",
+        "It explains how tarantulas use their blue color to attract mates.",
+        "It compares the colors of tarantulas with the colors of other spiders."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text begins with a puzzle: many tarantulas are blue even though they “perceive color poorly.” It then describes how Hsiung and colleagues studied the hairs of blue tarantulas and what they found about where the color comes from and how it evolved. Choice B states this purpose.",
+      "distractors": {
+        "A": {
+          "recipe": "invented experiment (INV)",
+          "why_wrong": "The text states that tarantulas perceive color poorly, but the study it describes examined the spiders’ hairs, not their vision."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The researchers concluded that the coloration probably serves “some function other than attracting mates.”"
+        },
+        "D": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The text compares blue tarantula species with one another, not tarantulas with other spiders."
+        }
+      },
+      "models": [
+        "1.15"
+      ],
+      "word_count": 94,
+      "sources": [
+        {
+          "what": "Hsiung et al. (2015, Science Advances): blue in phylogenetically distant tarantulas peaks in a narrow band near 450 nm; produced by different nanostructures (quasi-ordered and multilayer); poor color perception and no conspicuous courtship display argue the color is not sexually selected; convergence",
+          "url": "https://europepmc.org/article/MED/26702433"
+        }
+      ],
+      "notes": "Area: natural science (biology). Key B. Easy study item as in 1.15 (an open question, a study, its finding). “Evolved many separate times” is the paper's convergence finding stated plainly.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.P_argue.easy.w4b3_24",
+      "template": "P_argue",
+      "subtype": "Main purpose",
+      "tier": "easy",
+      "passage": "When a tree dies in a managed forest, it is frequently removed to keep the woodland tidy. That practice deserves reconsideration. Dead wood is far from useless: by some estimates, up to 40 percent of forest animals depend on it. Woodpeckers and other birds nest in hollow trunks, mosses and fungi colonize fallen logs, and decomposing wood returns nutrients to the soil while retaining moisture during droughts. Leaving dead trees where they fall is one of the simplest ways to maintain a healthy forest.",
+      "stem": "Which choice best states the main purpose of the text?",
+      "options": [
+        "To describe how woodpeckers build their nests inside dead trees",
+        "To explain how forest managers decide which trees to cut down",
+        "To argue that dead trees should be left in forests",
+        "To compare the health of managed forests with that of wild forests"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that the practice of removing dead trees “deserves reconsideration” and lists the ways dead wood supports forest life. It ends by saying that “Leaving dead trees where they fall is one of the simplest ways to maintain a healthy forest.” The text therefore argues that dead trees should be left in forests, as choice C says.",
+      "distractors": {
+        "A": {
+          "recipe": "partial: one example (PART)",
+          "why_wrong": "The text mentions that birds nest in hollow trunks only as one example of how dead wood is used; it does not describe how woodpeckers build nests."
+        },
+        "B": {
+          "recipe": "invented process (INV)",
+          "why_wrong": "The text says dead trees are frequently removed but never explains how managers choose which trees to cut."
+        },
+        "D": {
+          "recipe": "invented comparison (INV)",
+          "why_wrong": "The text does not compare managed forests with wild ones."
+        }
+      },
+      "models": [
+        "1.22"
+      ],
+      "word_count": 84,
+      "sources": [
+        {
+          "what": "Coarse woody debris: up to forty percent of forest fauna dependent on it; a third of woodland birds nest in cavities of dead trunks; mosses, lichens and ferns on logs; nutrient recycling; slows evaporation of soil moisture; managed woods hold less fallen debris; leaving dead wood considered best practice (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Coarse_woody_debris"
+        }
+      ],
+      "notes": "Area: natural science (forest ecology). Key C. Explicit argument with evaluative language (“deserves to change”), as in 1.22. The 40 percent figure is hedged (“by some estimates”) as the source gives it (“up to”).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_answer.easy.w4b3_25",
+      "template": "F_answer",
+      "subtype": "Function of a part",
+      "tier": "easy",
+      "passage": "Are whale sharks, the largest fish in the ocean, exclusively carnivorous? <u>A 2022 study led by marine biologist Mark Meekan suggests they are not.</u> Whale sharks feed by filtering enormous volumes of water, and scientists had assumed that any seaweed they swallowed along with the tiny animals they consume simply passed through their bodies undigested. But chemical analyses of tissue from whale sharks off Western Australia revealed that the sharks were digesting a floating seaweed called Sargassum. The researchers concluded that whale sharks are omnivores, making them the largest known omnivores on Earth.",
+      "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+      "options": [
+        "It introduces a claim that the researchers’ findings later contradict.",
+        "It provides an answer to the question in the previous sentence.",
+        "It describes the method the researchers used to study the sharks’ diet.",
+        "It explains why whale sharks need to eat such large amounts of food."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence asks whether whale sharks are “exclusively carnivorous.” The underlined sentence answers it: a 2022 study “suggests they are not.” The rest of the text explains the evidence for that answer. Choice B describes this function.",
+      "distractors": {
+        "A": {
+          "recipe": "stance flip (STANCE)",
+          "why_wrong": "The findings described later support the underlined sentence; they show that the sharks digest seaweed."
+        },
+        "C": {
+          "recipe": "wrong part: the method comes later (PART)",
+          "why_wrong": "The method, chemical analysis of tissue, is described two sentences later, not in the underlined sentence."
+        },
+        "D": {
+          "recipe": "invented explanation (INV)",
+          "why_wrong": "The text never explains why whale sharks need large amounts of food."
+        }
+      },
+      "models": [
+        "1.18"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Meekan et al. (2022, Ecology), “The world's largest omnivore is a fish”: whale shark trophic level consistent with omnivory (amino acid isotopes); fatty acids show floating Sargassum and its epibionts as a significant food source",
+          "url": "https://europepmc.org/article/MED/35852891"
+        }
+      ],
+      "notes": "Area: natural science (marine biology). Key B. Easy F_answer as in 1.18 (a question, then the underlined answer). The study used whale sharks at Ningaloo Reef, Western Australia.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
       }
     }
   ]

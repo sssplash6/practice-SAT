@@ -1,0 +1,1464 @@
+{
+ "skill": "Command of Evidence",
+ "slug": "command_of_evidence",
+ "part": "w4b7",
+ "domain": "Information and Ideas",
+ "plan": {
+  "templates": [
+   {
+    "code": "T1_single",
+    "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+   },
+   {
+    "code": "T1_compete",
+    "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+   },
+   {
+    "code": "Q2_P8_multipart",
+    "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+   },
+   {
+    "code": "Q2_P4_trend",
+    "name": "Data description: trend or change over time supports a conclusion"
+   },
+   {
+    "code": "Q1_P1_lookup",
+    "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+   },
+   {
+    "code": "Q1_P2_extreme",
+    "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+   },
+   {
+    "code": "Q1_P3_pairwise",
+    "name": "Data completion: pairwise comparison (one or two comparisons)"
+   },
+   {
+    "code": "T2_lit_quote",
+    "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+   },
+   {
+    "code": "Q2_P5_control",
+    "name": "Data description: condition vs control or group comparison supports a conclusion"
+   },
+   {
+    "code": "Q2_P8_quantifier",
+    "name": "Data description: quantified claim (for each, all except one)"
+   },
+   {
+    "code": "T3_person_quote",
+    "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+   },
+   {
+    "code": "Q1_P5_control",
+    "name": "Data completion: condition vs control"
+   }
+  ],
+  "skipped": []
+ },
+ "done": true,
+ "items": [
+  {
+   "id": "command_of_evidence.T1_single.hard.w4b7_01",
+   "template": "T1_single",
+   "subtype": "Hypothetical finding supports a causal attribution over a rival (the key supplies the unstated premise that the paired plots started out alike)",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Male Carpetan rock lizards (Iberolacerta cyreni) scent-mark rocks in their territories with secretions from glands on their thighs, and in laboratory experiments, females are attracted to secretions with high concentrations of the steroid ergosterol. Field studies of other lizard species, however, suggest that females may simply settle wherever conditions such as sun, shelter, and food are most favorable, with territorial males merely defending those locations. In twelve areas of Spain’s Guadarrama Mountains, José Martín and Pilar López applied ergosterol to the rocks of one plot and a control solution to a paired plot. By the third day, more females were being observed in the ergosterol plots, which the researchers attribute to the scent itself rather than to plot quality.",
+   "stem": "Which finding from Martín and López’s experiment, if true, would most directly support the researchers’ explanation of the result?",
+   "options": [
+    "Males in the ergosterol plots were seen close to at least one female far more often than males in the control plots were, giving those males more chances to mate.",
+    "The ergosterol plots happened to contain more rocks in full sun and more crevices for shelter than the control plots did, and females were most often seen in such sunny, sheltered spots.",
+    "Before any rocks were treated, each ergosterol plot and its paired control plot had similar vegetation and rock cover and were used by about the same number of females.",
+    "In both the ergosterol plots and the control plots, fewer females were active on cool, cloudy mornings than on warm, sunny ones, when females basked on the rocks."
+   ],
+   "answer_letter": "C",
+   "explanation": "The researchers attribute the extra females “to the scent itself rather than to plot quality.” That explanation holds only if the two plots in each pair were alike before the treatment, so that the ergosterol is the only difference between them. Choice C supplies that missing premise: before treatment, the paired plots had similar vegetation and rock cover and were used by about the same number of females, so the later surplus of females in the ergosterol plots cannot be credited to better sites.",
+   "distractors": {
+    "A": {
+     "recipe": "TRAP: consistent with both explanations",
+     "why_wrong": "More females in a plot would lead to more male-female encounters whatever drew the females there, so this finding does not show whether the scent or the quality of the site attracted them."
+    },
+    "B": {
+     "recipe": "OPP: fits the rival explanation",
+     "why_wrong": "If the ergosterol plots also had more sun and shelter, the rival view in the text (females settle where conditions “such as sun, shelter, and food are most favorable”) could explain the result, which weakens the researchers’ explanation."
+    },
+    "D": {
+     "recipe": "TRAP: a factor that affects both groups equally",
+     "why_wrong": "Weather lowered female activity in both kinds of plots alike, so it says nothing about why the ergosterol plots drew more females than the control plots."
+    }
+   },
+   "models": [
+    "3.28",
+    "3.36",
+    "3.39",
+    "3.42"
+   ],
+   "sources": [
+    {
+     "what": "Martín and López 2012, PLoS ONE 7(1): e30108: Iberolacerta cyreni, Guadarrama Mountains (Alto del Telégrafo, 1,900 m), ergosterol added to rocks of experimental plots in males’ territories, control solution in paired plots (12 areas); females in lab prefer ergosterol-rich male scent; some field studies suggest females settle by microhabitat, food or refuges; habitat variables did not differ between paired plots; female numbers equal before treatment (P = 0.96) and higher in experimental plots on days 3 and 4; males near females 38.2% vs 18.5%",
+     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0030108"
+    }
+   ],
+   "notes": "Band-7 moves: the key supplies the unstated premise (baseline equivalence of the paired plots rules out site quality, the rival named in the passage); stem names the study and the claimant (19 words); A TRAP consistent with both (a real result of the study), D TRAP affecting both groups equally, B OPP (fits the rival). The passage does not mention the habitat survey or the pre-treatment count, so the key restates nothing. Steps: (1) see that the rival is a pre-existing site difference, (2) see that only matched starting conditions rule it out, (3) recognise C as that match. Key matches the real design (habitat GLMs n.s.; initial female counts n.s.). Paper says the control and experimental plots were paired within each area; 'twelve areas' from the F(1,11) tests.",
+   "table": null,
+   "figure": null,
+   "word_count": 119
+  },
+  {
+   "id": "command_of_evidence.T1_single.hard.w4b7_02",
+   "template": "T1_single",
+   "subtype": "Hypothetical finding supports a claim that a deterrent redirects rather than removes a threat (two linked observations)",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "Around Nairobi National Park in Kenya, pastoralists keep their livestock overnight in thornbush or wooden enclosures called bomas, which lions venturing beyond the park’s boundaries sometimes raid, provoking retaliatory killings. In recent years, many owners have equipped their bomas with LED bulbs that flash intermittently around the fence after dark, powered by a solar-charged battery. Interviewing 80 boma owners and comparing their reports with wildlife-service records, Francis Lesilau and colleagues found that bomas were attacked far less frequently once the lights were installed. The researchers suggest, however, that lions deterred by the lights have turned to livestock that the lights do not protect.",
+   "stem": "Which finding, if true, would most directly support the researchers’ suggestion?",
+   "options": [
+    "As more bomas acquired lights, lion attacks took place increasingly far from the park, near bomas still without lights, and a growing share of attacks occurred during the day.",
+    "Owners who installed lights reported fewer attacks on their bomas in the years afterward than in the years before, whether or not their neighbors also had lights.",
+    "In the years after the lights became common, lions killed fewer cattle, goats, and sheep each year across the whole area surrounding the park than they had killed in earlier years.",
+    "Bomas with lights and bomas without lights were both attacked more often in dry years, when the wild prey that lions hunt inside the park was scarce."
+   ],
+   "answer_letter": "A",
+   "explanation": "The researchers suggest that “lions deterred by the lights have turned to livestock that the lights do not protect.” The lights protect only the bomas that have them, and they flash only “after dark.” Choice A reports a shift toward both kinds of unprotected livestock: attacks moved toward bomas still without lights, and more attacks happened in daytime, when the lights offer no protection.",
+   "distractors": {
+    "B": {
+     "recipe": "partial: shows the lights protect, not where lions went",
+     "why_wrong": "This shows only that lit bomas were attacked less, which the text already reports; it says nothing about lions turning to other livestock."
+    },
+    "C": {
+     "recipe": "OPP: points the other way",
+     "why_wrong": "A drop in the total number of livestock killed would suggest that the lights reduced the threat overall rather than redirecting it, so this would tend to weaken the suggestion."
+    },
+    "D": {
+     "recipe": "TRAP: a factor that affects both groups equally",
+     "why_wrong": "Dry years raising attacks on lit and unlit bomas alike says nothing about whether lions deterred by the lights shifted to unprotected livestock."
+    }
+   },
+   "models": [
+    "3.7",
+    "3.25",
+    "3.31",
+    "3.12"
+   ],
+   "sources": [
+    {
+     "what": "Lesilau et al. 2018, PLoS ONE 13(1): e0190898: interviews with 80 boma owners (43 with, 37 without LED flashlights) around Nairobi National Park, checked against KWS records, 2007-2016; attacks far less frequent at bomas with flashlights; after installation, attacks took place further from the park edge, towards bomas without flashlights; shift from nocturnal to more diurnal predation; lights powered by a solar-charged car battery and flicker at night",
+     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0190898"
+    }
+   ],
+   "notes": "Band 6. Two linked steps: the key needs the passage's limits on what the lights protect (only lit bomas, only after dark) and matches both halves (unlit bomas farther out; daytime). Key matches the study's real findings. B true-but-partial, C OPP (hypothetical), D TRAP (hypothetical rainfall effect on both groups; the paper found rainfall a significant factor but the option is offered only as an 'if true' finding).",
+   "table": null,
+   "figure": null,
+   "word_count": 103
+  },
+  {
+   "id": "command_of_evidence.T1_compete.hard.w4b7_03",
+   "template": "T1_compete",
+   "subtype": "Hypothetical finding favors a role-model explanation over a public-services explanation (dose comparison across one and two terms)",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "Since 1998, a rotating quota in the Indian state of West Bengal has reserved the leadership of randomly selected village councils for women, one five-year term at a time, so by 2007 a village might have had female leadership for one term, two terms, or none. Surveying households in 495 villages, economist Lori Beaman and colleagues found that the gap between parents’ aspirations for their sons and for their daughters was smaller in villages with two terms of female leadership. Female leaders often invest in infrastructure such as drinking-water facilities, which can reduce girls’ household responsibilities, but the researchers argue that the women changed families’ aspirations by serving as role models.",
+   "stem": "Which finding, if true, would most directly support the researchers’ argument?",
+   "options": [
+    "Girls in villages with two terms of female leadership spent less time each day on household chores, such as fetching water and gathering firewood, than did girls in villages that never had a female leader.",
+    "Parents’ hopes for their sons were about the same in villages with no female leader, in villages with one term of female leadership, and in villages with two terms.",
+    "Most of the women who led the reserved councils had never held any public office before the quota required that a woman be chosen to lead the council.",
+    "Villages with one term of female leadership had gained about as much in services like drinking water as villages with two terms had, yet only in the latter had the gap in parents’ hopes narrowed."
+   ],
+   "answer_letter": "D",
+   "explanation": "The text sets two explanations side by side: female leaders’ investment in “infrastructure such as drinking-water facilities, which can reduce girls’ household responsibilities,” and the researchers’ view that the women acted as role models. Choice D separates them. If villages with one term of female leadership gained just as much in services but showed no narrowing of the gap, the services cannot account for the change, while a role-model effect that builds over two terms of seeing women lead can.",
+   "distractors": {
+    "A": {
+     "recipe": "OPP: fits the rival explanation",
+     "why_wrong": "Less time spent on chores like fetching water is exactly what the services explanation predicts, so this finding does not favor the role-model argument."
+    },
+    "B": {
+     "recipe": "TRAP: consistent with both explanations",
+     "why_wrong": "Both explanations concern daughters, so unchanged hopes for sons fit either one and cannot decide between them."
+    },
+    "C": {
+     "recipe": "OFF: an irrelevant property of the same leaders",
+     "why_wrong": "The leaders’ lack of earlier experience in office says nothing about whether families changed their hopes because of the leaders’ example or because of the services they provided."
+    }
+   },
+   "models": [
+    "3.10",
+    "3.15",
+    "3.8",
+    "3.14"
+   ],
+   "sources": [
+    {
+     "what": "Beaman, Duflo, Pande and Topalova 2012, Science 335: 582-586 (PMC author manuscript): West Bengal reservation by rotation from 1998, councils reserved once (1998 or 2003), twice, or never by 2007; 8,453 surveys in 495 villages; gender gap in parents' aspirations closed by about 25% (abstract text) in twice-reserved villages; effects start in the second cycle, once-reserved coefficients near zero; infrastructure investment (especially water) occurs in the first cycle and in the second cycle there is no discernible difference in infrastructure across once- and twice-reserved villages; authors attribute the change to a role model effect; aspirations for boys unchanged",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3394179/"
+    }
+   ],
+   "notes": "Band 6. Key matches the paper's own argument (timing: services come in the first term, the aspiration change only after two). Rival in the passage is services easing chores; A fits the rival (the paper does report less chore time for girls, 18 minutes), B fits both (hopes for sons unchanged in the paper), C off-target. Passage does not state the once-reserved result or the timing of investment.",
+   "table": null,
+   "figure": null,
+   "word_count": 111
+  },
+  {
+   "id": "command_of_evidence.T2_lit_quote.hard.w4b7_04",
+   "template": "T2_lit_quote",
+   "subtype": "Literary quotation illustrates a two-part claim stated with an indirect verb (translated verse drama; the key is figurative)",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "The Death of Wallenstein is a 1799 play by Friedrich Schiller; Samuel Taylor Coleridge’s English translation appeared in 1800. After learning that his messenger to the emperor’s enemies has been captured, the imperial general Wallenstein reflects that musings he never intended to act on have nonetheless cut off any possibility of retreat: ______",
+   "stem": "Which quotation from a translation of The Death of Wallenstein most effectively illustrates the claim?",
+   "options": [
+    "“By the great God of Heaven! it was not / My serious meaning, it was ne’er resolved. / I but amused myself with thinking of it.”",
+    "“No road, no track behind me, but a wall, / Impenetrable, insurmountable, / Rises obedient to the spells I muttered / And meant not—my own doings tower behind me.”",
+    "“The equivocal demeanor of my life / Bears witness on my prosecutor’s party. / And even my purest acts from purest motives / Suspicion poisons with malicious gloss.”",
+    "“’Tis a foe invisible / The which I fear—a fearful enemy, / Which in the human heart opposes me, / By its coward fear alone made fearful to me.”"
+   ],
+   "answer_letter": "B",
+   "explanation": "The claim has two parts: Wallenstein never intended to act on his musings, and they have nonetheless cut off any possibility of retreat. In choice B, “the spells I muttered / And meant not” are the musings he never intended to carry out, and the “wall, / Impenetrable, insurmountable” that rises where there is “No road, no track behind me” shows that those musings have closed off any way back.",
+   "distractors": {
+    "A": {
+     "recipe": "HALF: only the first part of the claim",
+     "why_wrong": "Wallenstein insists that he never seriously intended the plot and was only amusing himself, but he says nothing here about being unable to turn back."
+    },
+    "C": {
+     "recipe": "OFF: nearby emotion (feeling misjudged by others)",
+     "why_wrong": "Wallenstein complains that his conduct makes him look guilty and that suspicion twists even his honest acts; this concerns how others see him, not a retreat his own musings have closed."
+    },
+    "D": {
+     "recipe": "OFF: nearby emotion (fear of an unseen opponent)",
+     "why_wrong": "Wallenstein describes his fear of an invisible enemy within the human heart, which has nothing to do with musings he never meant to act on."
+    }
+   },
+   "models": [
+    "3.37",
+    "3.17",
+    "3.34",
+    "3.11"
+   ],
+   "sources": [
+    {
+     "what": "Schiller, The Death of Wallenstein, translated by S. T. Coleridge (1800), Project Gutenberg ebook 6787: Act I, Scene IV soliloquy after the capture of Sesina, the go-between with the Swedes; all four quotations checked as exact substrings (straight apostrophes made curly, double hyphen as em dash)",
+     "url": "https://www.gutenberg.org/ebooks/6787"
+    }
+   ],
+   "notes": "Band-7 moves: indirect claim verb ('reflects that ... have nonetheless cut off'), translated verse drama, all four options from one soliloquy of the same speaker; A is a strong half-match (never intended), C and D nearby emotions; the key reads only through its figures (spells muttered and meant not; a wall where the road behind should be). Schiller's Mary Stuart is used in w3b4_06; this is a different play. Avoided as an option the more literal line 'Because I toyed too freely with the thought!' (Act I, Scene III), which would compete with the key.",
+   "table": null,
+   "figure": null,
+   "word_count": 53
+  },
+  {
+   "id": "command_of_evidence.Q2_P8_multipart.hard.w4b7_05",
+   "template": "Q2_P8_multipart",
+   "subtype": "Data description (interaction read through a passage relation: the dark-versus-white gap must be smallest where sun is least)",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Many Australian bat species roost in wooden boxes mounted on trees, and these artificial hollows are typically painted to protect the wood. Because darker paint absorbs more solar radiation than lighter paint does, ecologist Stephen R. Griffiths and colleagues hypothesized that color could render some boxes dangerously hot for their occupants. In reserves around Melbourne, they attached dark-green, light-green, and white bat boxes to tree trunks facing north, east, south, and west and recorded internal temperatures from February to April. In the Southern Hemisphere, where Melbourne is located, south-facing surfaces receive the least direct sunlight. The researchers concluded that the additional heat a dark color contributed to a box depended on the box’s exposure to direct sunlight.",
+   "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+   "options": [
+    "Dark-green boxes facing north or west reached higher average maximum temperatures than dark-green boxes facing east or south did.",
+    "White boxes facing every one of the four directions reached average maximum temperatures within about 1°C of the average maximum temperature of the outside air.",
+    "Dark-green boxes were hotter than white boxes in every direction, but by a smaller margin when facing south than when facing any other direction.",
+    "Dark-green boxes were hotter than white boxes by a larger margin when facing east than when facing north or when facing west."
+   ],
+   "answer_letter": "C",
+   "table": {
+    "title": "Average Daily Maximum Temperature inside Bat Boxes (°C), by Box Color and Direction Faced",
+    "columns": [
+     "Box color",
+     "North-facing",
+     "East-facing",
+     "South-facing",
+     "West-facing"
+    ],
+    "rows": [
+     [
+      "Dark green",
+      "32.5",
+      "28.9",
+      "26.6",
+      "32.5"
+     ],
+     [
+      "Light green",
+      "27.7",
+      "25.3",
+      "24.9",
+      "27.3"
+     ],
+     [
+      "White",
+      "24.2",
+      "23.5",
+      "23.9",
+      "24.6"
+     ],
+     [
+      "Outside air",
+      "23.7",
+      "23.7",
+      "23.7",
+      "23.7"
+     ]
+    ],
+    "note": null
+   },
+   "explanation": "The conclusion is about how much extra heat the dark color added, so the support must compare dark boxes with paler ones and show that the difference shrinks where sunlight is weaker. The text says that south-facing surfaces “receive the least direct sunlight.” According to the table, dark-green boxes were hotter than white boxes by 8.3°C facing north, 5.4°C facing east, 7.9°C facing west, but only 2.7°C facing south (26.6°C versus 23.9°C), the smallest gap, which is what choice C states.",
+   "distractors": {
+    "A": {
+     "recipe": "TRAP / PART: accurate, but dark boxes only",
+     "why_wrong": "This is accurate (32.5°C facing north and west versus 28.9°C and 26.6°C), but white boxes also ran warmer facing north and west, so without a comparison to paler boxes it does not show that the extra heat from the dark color varied."
+    },
+    "B": {
+     "recipe": "IRREL: accurate, but about white boxes and the air",
+     "why_wrong": "This is accurate (23.5°C to 24.6°C against 23.7°C), but it says nothing about the extra heat a dark color added or how that varied with sun."
+    },
+    "D": {
+     "recipe": "INACC: the gaps misread, proxy turned the wrong way",
+     "why_wrong": "The gap between dark-green and white boxes facing east (5.4°C) was smaller, not larger, than the gaps facing north (8.3°C) and west (7.9°C)."
+    }
+   },
+   "models": [
+    "3.16",
+    "3.26",
+    "3.18"
+   ],
+   "sources": [
+    {
+     "what": "Griffiths, Rowland, Briscoe, Lentini, Handasyde, Lumsden and Robert 2017, PLoS ONE 12(5): e0176951: bat boxes painted dark-green, light-green and white mounted on tree trunks facing north, east, south and west at five reserves in greater Melbourne, temperatures logged hourly February-April 2015; Table 2 TboxMAX (mean of daily maximum, °C): dark-green 32.5/28.9/26.6/32.5, light-green 27.7/25.3/24.9/27.3, white 24.2/23.5/23.9/24.6, ambient 23.7 (N/E/S/W); extremes most pronounced for boxes facing north and west, the orientations that receive the greatest solar exposure; interaction of color and orientation had a strong effect",
+     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0176951"
+    }
+   ],
+   "notes": "Band-7 moves: the passage relation (south-facing gets the least direct sun) must be applied to the display before the key follows; the key is a cross-cell comparison (difference of differences); A and B are accurate but insufficient readings in the key's frame, D is the gap turned the wrong way. Operations: compute four dark-minus-white gaps, find the minimum, match it to the sun relation (3+). Means shown are means of daily maxima (TboxMAX), rounded as in the paper. Conclusion phrased about the dark color's extra heat so that B (white near ambient) cannot count. North and west dark-green values tie (32.5); no option depends on ordering them.",
+   "figure": null,
+   "word_count": 117
+  },
+  {
+   "id": "command_of_evidence.Q2_P5_control.hard.w4b7_06",
+   "template": "Q2_P5_control",
+   "subtype": "Data description, weaken polarity (four conditions grouped two against two; within-group comparisons as traps)",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "At Zoomarine, a marine park in southern Portugal, Gabby Salazar, João Neves, and colleagues positioned a donation box beside a poster soliciting contributions for a marine conservation organization. The poster’s wording remained constant, but its photograph changed: over 91 days, it displayed dolphins, assorted ocean wildlife, children, or people staring out at the viewer, each during several randomly assigned three-day periods. Because previous studies had linked generosity to images of children and to the sensation of being watched, a student hypothesized that the posters depicting people would collect more money per visitor than the posters depicting animals.",
+   "stem": "Which choice best describes data from the table that weaken the student’s hypothesis?",
+   "options": [
+    "The average donation per visitor was lower for both posters showing people than for either poster showing animals.",
+    "The average donation per visitor was exactly the same when the poster showed dolphins as when it showed assorted ocean wildlife.",
+    "The average donation per visitor was higher when the poster showed children than when it showed people staring out at the viewer.",
+    "The poster showing people staring out at the viewer was displayed during more three-day periods than any of the three other posters was."
+   ],
+   "answer_letter": "A",
+   "table": {
+    "title": "Donations at Zoomarine by Poster Image",
+    "columns": [
+     "Poster image",
+     "Number of three-day periods",
+     "Average donation per visitor (euros)"
+    ],
+    "rows": [
+     [
+      "Dolphins",
+      "7",
+      "0.060"
+     ],
+     [
+      "Ocean wildlife",
+      "7",
+      "0.060"
+     ],
+     [
+      "Children",
+      "8",
+      "0.041"
+     ],
+     [
+      "People staring out",
+      "7",
+      "0.036"
+     ]
+    ],
+    "note": null
+   },
+   "explanation": "The student hypothesized that the posters depicting people would collect more money per visitor than the posters depicting animals. According to the table, the two posters showing people (children, €0.041; people staring out, €0.036) both raised less per visitor than the two posters showing animals (dolphins and ocean wildlife, €0.060 each), which is the opposite of what the hypothesis predicts.",
+   "distractors": {
+    "B": {
+     "recipe": "IRREL: accurate, but compares two animal posters",
+     "why_wrong": "This is accurate, but it compares the two animal posters with each other and says nothing about how the posters showing people did."
+    },
+    "C": {
+     "recipe": "IRREL: accurate, but compares two people posters",
+     "why_wrong": "This is accurate (€0.041 versus €0.036), but it compares the two posters showing people with each other rather than with the posters showing animals."
+    },
+    "D": {
+     "recipe": "INACC: wrong column misread",
+     "why_wrong": "The poster of people staring out was displayed for 7 periods, fewer than the children poster (8 periods); the number of periods also has no bearing on the hypothesis."
+    }
+   },
+   "models": [
+    "3.1",
+    "3.5",
+    "3.43"
+   ],
+   "sources": [
+    {
+     "what": "Salazar, Neves, Alves, Silva and Veríssimo 2021, PLoS ONE 16(6): e0251882: donation box and poster in the Dolphin Emotions lounge at Zoomarine, southern Portugal; constant text, four image conditions (dolphins, ocean wildlife, children, watching eyes: people staring out from the poster), each shown for at least seven randomly assigned three-day periods over 91 days; Table 1 mean donation per visitor per 3-day period: 0.060, 0.060, 0.041, 0.036 euros (n = 7, 7, 8, 7); differences not statistically significant",
+     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0251882"
+    }
+   ],
+   "notes": "Band 6. Weaken polarity, as in 3.1. Design wrinkle: four conditions that must be grouped two against two; B and C are accurate within-group comparisons, D a false reading of the other column. The hypothesis is a student's (the researchers asked an open question); the study found no significant differences, and the item asks only which data weaken the hypothesis, which the observed means do.",
+   "figure": null,
+   "word_count": 97
+  },
+  {
+   "id": "command_of_evidence.Q1_P5_control.hard.w4b7_07",
+   "template": "Q1_P5_control",
+   "subtype": "Data completion (one-directional effect: one condition differs from control, the other matches it; long compound options)",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Documentaries often pair footage of sharks with ominous music, and marine biologist Andrew P. Nosal and colleagues wondered whether such soundtracks shape viewers’ attitudes. Online participants watched the same one-minute clip of swimming sharks set to ominous music, set to uplifting music, or in silence and then rated how well negative words (scary, dangerous, vicious) and positive words (peaceful, graceful, beautiful) described sharks. Participants who heard only the music, without the video, rated sharks similarly whichever music they heard, so the differences reflect the pairing of music with footage. Notably, the soundtrack’s influence appears to have run in only one direction: ______",
+   "stem": "Which choice most effectively uses data from the table to complete the statement?",
+   "options": [
+    "viewers who heard uplifting music rated sharks more positively than viewers who heard ominous music did, and viewers who watched in silence rated sharks less negatively than viewers who heard ominous music did.",
+    "viewers who watched in silence rated the negative words more highly than viewers who heard ominous music did but rated the positive words lower than viewers who heard uplifting music did.",
+    "viewers who heard ominous music gave higher average ratings to the negative words than to the positive ones, whereas viewers in each of the other two groups gave higher average ratings to the positive words than to the negative ones.",
+    "viewers who heard ominous music rated sharks more negatively and less positively than did viewers in either other group, while viewers who heard uplifting music rated sharks about the same as viewers who watched in silence."
+   ],
+   "answer_letter": "D",
+   "table": {
+    "title": "Average Ratings of Sharks after Watching a One-Minute Shark Video",
+    "columns": [
+     "Soundtrack",
+     "Rating of negative words (scale of 1–7)",
+     "Rating of positive words (scale of 1–7)"
+    ],
+    "rows": [
+     [
+      "Ominous music",
+      "5.07",
+      "4.43"
+     ],
+     [
+      "Uplifting music",
+      "4.33",
+      "5.11"
+     ],
+     [
+      "Silence",
+      "4.43",
+      "5.08"
+     ]
+    ],
+    "note": null
+   },
+   "explanation": "To show that the soundtrack’s influence ran “in only one direction,” the data must show that one kind of music moved viewers’ ratings away from those of the silent group while the other kind did not move them the opposite way. According to the table, viewers who heard ominous music rated the negative words higher (5.07) and the positive words lower (4.43) than viewers who heard uplifting music (4.33 and 5.11) or silence (4.43 and 5.08), but viewers who heard uplifting music gave ratings nearly identical to those of the silent group. Ominous music made sharks seem worse; uplifting music did not make them seem better.",
+   "distractors": {
+    "A": {
+     "recipe": "PART: accurate comparisons that never test the uplifting group against silence",
+     "why_wrong": "Both comparisons are accurate (5.11 versus 4.43; 4.43 versus 5.07), but neither compares uplifting music with silence, so they cannot show whether uplifting music also shifted ratings in the opposite direction."
+    },
+    "B": {
+     "recipe": "INACC: one false clause",
+     "why_wrong": "Viewers who watched in silence rated the negative words lower (4.43), not higher, than viewers who heard ominous music (5.07); the second clause is accurate but cannot rescue the first."
+    },
+    "C": {
+     "recipe": "IRREL: accurate, but within-group comparisons",
+     "why_wrong": "This is accurate, but it compares each group’s ratings of negative and positive words with each other rather than comparing the groups, so it says nothing about the direction of the soundtrack’s influence."
+    }
+   },
+   "models": [
+    "3.38",
+    "3.4"
+   ],
+   "sources": [
+    {
+     "what": "Nosal, Keenan, Hastings and Gneezy 2016, PLoS ONE 11(8): e0159279: online participants (Amazon Mechanical Turk) saw a 60-second clip of swimming sharks set to ominous music, uplifting music or silence, or heard audio only; rated how well scary, dangerous, vicious and peaceful, graceful, beautiful describe sharks (1-7). Experiment 1 means: negative 5.07 (ominous), 4.33 (uplifting), 4.43 (silence); positive 4.43, 5.11, 5.08; uplifting vs silence not significantly different; no differences among audio-only treatments, ruling out the music alone",
+     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0159279"
+    }
+   ],
+   "notes": "Band-7 moves: a surprise relative to the expected symmetric effect (uplifting music does not help), the blank concludes about the soundtrack's influence rather than restating numbers, compound options of 29 to 36 words (mean about 32), the passage carries the audio-only control so the table can show video groups only. Operations: compare ominous with both other groups on both columns, then uplifting with silence on both columns (4+). A is the near-miss: accurate but omits the uplifting-silence comparison. Data are Experiment 1 of three; Experiments 2 and 3 replicated the ominous effect.",
+   "figure": null,
+   "word_count": 102
+  },
+  {
+   "id": "command_of_evidence.Q2_P8_quantifier.hard.w4b7_08",
+   "template": "Q2_P8_quantifier",
+   "subtype": "Data description (quantified claim: each of three measures exceeds a benchmark row named in the passage)",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "In a catchment-scale experiment at the Neal Smith National Wildlife Refuge in Iowa, Lisa Schulte and colleagues compared small catchments planted entirely in corn and soybeans with catchments in which 10% of the cropland had been converted to strips of native prairie vegetation running across the slopes. If the strips had worked only by reducing the volume of water flowing off the fields, the quantities of sediment and nutrients transported in that runoff should have declined by approximately the same factor as the runoff itself. A student argues, however, that the strips also intercepted much of the sediment and nutrients in the water that continued to flow through them.",
+   "stem": "Which choice best describes data from the table that support the student’s argument?",
+   "options": [
+    "The volume of surface runoff was about 1.6 times lower in catchments with prairie strips than in catchments planted entirely in crops.",
+    "Sediment, phosphorus, and nitrogen in surface runoff were each lower by a greater factor than the volume of surface runoff was.",
+    "Nitrate in groundwater was lower by a greater factor than phosphorus in runoff was, and both were lower by a greater factor than sediment was.",
+    "In catchments with prairie strips, nitrate in groundwater was lower by a greater factor than nitrogen in surface runoff was."
+   ],
+   "answer_letter": "B",
+   "table": {
+    "title": "Losses from Catchments with Prairie Strips Compared with All-Crop Catchments",
+    "columns": [
+     "Measure",
+     "Times lower in catchments with prairie strips"
+    ],
+    "rows": [
+     [
+      "Volume of surface runoff",
+      "1.6"
+     ],
+     [
+      "Sediment in surface runoff",
+      "20"
+     ],
+     [
+      "Phosphorus in surface runoff",
+      "4.3"
+     ],
+     [
+      "Nitrogen in surface runoff",
+      "3.3"
+     ],
+     [
+      "Nitrate in groundwater",
+      "3.6"
+     ]
+    ],
+    "note": null
+   },
+   "explanation": "According to the text, if the strips only reduced runoff, sediment and nutrient losses would have declined “by approximately the same factor as the runoff itself.” The table shows that runoff was 1.6 times lower, but sediment was 20 times lower, phosphorus 4.3 times lower, and nitrogen 3.3 times lower. Because each of these losses fell by more than the runoff did, the strips must have removed soil and nutrients from the water as well, which is what choice B states.",
+   "distractors": {
+    "A": {
+     "recipe": "PART: accurate, but the benchmark alone",
+     "why_wrong": "This is accurate, but it reports only the drop in runoff; without comparing the soil and nutrient losses with it, it cannot show that the strips did more than reduce runoff."
+    },
+    "C": {
+     "recipe": "INACC: order misread",
+     "why_wrong": "Nitrate in groundwater (3.6 times lower) fell by less than phosphorus (4.3 times lower), and sediment (20 times lower) fell by more than either."
+    },
+    "D": {
+     "recipe": "IRREL: accurate, but compares two nutrient measures",
+     "why_wrong": "This is accurate (3.6 versus 3.3), but it compares two nitrogen measures with each other rather than with the drop in runoff, so it does not bear on the argument."
+    }
+   },
+   "models": [
+    "3.20",
+    "3.23",
+    "3.24"
+   ],
+   "sources": [
+    {
+     "what": "Schulte et al. 2017, PNAS 114(42): 11247-11252 (PMC5651729): STRIPS catchment experiment at Neal Smith National Wildlife Refuge, Iowa; 10% of cropland in contour or footslope prairie strips vs 100% corn-soybean; sediment loss reduced 20-fold, total phosphorus 4.3 times lower, total nitrogen in surface water 3.3 times lower, nitrate-nitrogen in groundwater 3.6 times lower, coincident with 1.6 times less water runoff (37% less)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5651729/"
+    }
+   ],
+   "notes": "Band 6. Quantifier ('each') over three rows against a benchmark row; the passage supplies the benchmark logic. The argument is a student's inference from the paper's figures (the paper reports retention of 20 times more soil and 4.3 times more phosphorus with only 1.6 times less runoff). Nitrogen's interval in the paper is wide (0.9 to 12); the item uses the point estimates as published.",
+   "figure": null,
+   "word_count": 109
+  },
+  {
+   "id": "command_of_evidence.Q2_P4_trend.hard.w4b7_09",
+   "template": "Q2_P4_trend",
+   "subtype": "Data description (two-part claim about rates of change, read through a passage definition)",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Patent offices record whether each application comes from a resident of the country, such as a domestic company, university, or individual inventor, or from a nonresident, typically a foreign firm seeking protection for a product it intends to sell there. Because nonresident filings mainly reflect foreign firms’ interest in a market, resident filings are often used as an indicator of a country’s own inventive activity. Using World Bank data on patent applications filed in India, a student claims that although foreign firms still accounted for most applications in 2019, inventive activity within India grew considerably faster than foreign firms’ filings there during the 2010s.",
+   "stem": "Which choice best describes data from the graph that support the student’s claim?",
+   "options": [
+    "In every year shown, nonresidents filed more patent applications in India than residents did, and in each of those years the gap between the two groups exceeded 4,000 applications.",
+    "From 2000 to 2010, the number of applications filed by nonresidents grew by more than the number filed by residents did.",
+    "By 2019, residents filed more patent applications in India than nonresidents did, after trailing them in every earlier year shown.",
+    "Nonresidents still filed more applications than residents did in 2019, but from 2010 to 2019 resident filings more than doubled while nonresident filings rose only slightly."
+   ],
+   "answer_letter": "D",
+   "figure": {
+    "kind": "line graph",
+    "title": "Patent Applications Filed in India by Residents and Nonresidents, 2000–2019",
+    "x_axis": "Year",
+    "y_axis": "Number of applications",
+    "description": "Two lines at 2000, 2005, 2010, 2015 and 2019; y-axis 0 to 40,000 in steps of 5,000. Nonresidents: about 6,300 in 2000, 19,700 in 2005, 30,900 in 2010, 33,100 in 2015 and 34,200 in 2019. Residents: about 2,200 in 2000, 4,700 in 2005, 8,900 in 2010, 12,600 in 2015 and 19,500 in 2019. The nonresident line stays above the resident line throughout, rising steeply to 2010 and then leveling off, while the resident line climbs more steeply after 2010.",
+    "data": [
+     {
+      "series": "Nonresidents",
+      "points": [
+       [
+        "2000",
+        6332
+       ],
+       [
+        "2005",
+        19661
+       ],
+       [
+        "2010",
+        30909
+       ],
+       [
+        "2015",
+        33079
+       ],
+       [
+        "2019",
+        34173
+       ]
+      ]
+     },
+     {
+      "series": "Residents",
+      "points": [
+       [
+        "2000",
+        2206
+       ],
+       [
+        "2005",
+        4721
+       ],
+       [
+        "2010",
+        8853
+       ],
+       [
+        "2015",
+        12579
+       ],
+       [
+        "2019",
+        19454
+       ]
+      ]
+     }
+    ]
+   },
+   "explanation": "The text says that resident filings indicate “a country’s own inventive activity,” while nonresident filings reflect foreign firms. The claim has two parts: foreign firms still accounted for most applications in 2019, and resident filings grew much faster during the 2010s. Choice D covers both: in 2019 nonresidents filed about 34,200 applications and residents about 19,500, but from 2010 to 2019 resident applications rose from about 8,900 to about 19,500, more than doubling, while nonresident applications rose only from about 30,900 to about 34,200.",
+   "distractors": {
+    "A": {
+     "recipe": "HALF: levels only",
+     "why_wrong": "This is accurate, but it shows only that foreign firms filed most applications; it says nothing about which kind of filing grew faster in the 2010s."
+    },
+    "B": {
+     "recipe": "IRREL / CONTRA: wrong period",
+     "why_wrong": "This is accurate for 2000 to 2010, but the claim concerns the 2010s, and faster foreign growth in the earlier decade does not show domestic filings outpacing foreign ones later."
+    },
+    "C": {
+     "recipe": "INACC: misread crossing",
+     "why_wrong": "The resident line never rises above the nonresident line; in 2019 residents filed about 19,500 applications and nonresidents about 34,200."
+    }
+   },
+   "models": [
+    "3.40",
+    "3.13"
+   ],
+   "sources": [
+    {
+     "what": "World Bank WDI (WIPO data), IP.PAT.RESD and IP.PAT.NRES for India: residents 2,206 (2000), 4,721 (2005), 8,853 (2010), 12,579 (2015), 19,454 (2019); nonresidents 6,332, 19,661, 30,909, 33,079, 34,173 (API values read 2026-10-27)",
+     "url": "https://data.worldbank.org/indicator/IP.PAT.RESD?locations=IN"
+    }
+   ],
+   "notes": "Band-7 moves: the trend matters only through the passage definition (resident filings = domestic inventive activity; nonresident = foreign firms), the key is a contrast in rates plus a level, A is the level-only half, B the right comparison in the wrong period, C a misread crossing in the key's frame. Operations: read 2019 levels, compute two 2010-2019 changes, compare (3+). The passage's 'often used as an indicator' is a general framing, not attributed to a named source.",
+   "table": null,
+   "word_count": 104
+  },
+  {
+   "id": "command_of_evidence.T2_lit_quote.medium.w4b7_10",
+   "template": "T2_lit_quote",
+   "subtype": "Literary quotation illustrates a contrast claim (blames her own temperament rather than her circumstances)",
+   "tier": "medium",
+   "band_target": null,
+   "passage": "The Daughters of Danaus is an 1894 novel by Mona Caird. Hadria Fullerton, a gifted composer, finds her days consumed by obligations to her family. One night, contemplating her neglected manuscripts, Hadria blames her own temperament rather than her circumstances for how little she has accomplished: ______",
+   "stem": "Which quotation from The Daughters of Danaus most effectively illustrates the claim?",
+   "options": [
+    "“Yes, it is I who am weak, not circumstance that is strong. If I could keep my mind unmoved by the irritations...then I should, to some extent, triumph over my circumstances.”",
+    "“People are surprised that women have never done anything noteworthy in music. People are so intelligent!”",
+    "“But I haven’t all the day, or any part of it, for certain.”",
+    "“My composing is a very mild affair. I suppose you are more fortunate.”"
+   ],
+   "answer_letter": "A",
+   "explanation": "The claim contrasts two possible causes and says that Hadria blames her own temperament rather than her circumstances. In choice A she says, “it is I who am weak, not circumstance that is strong,” and adds that if she could keep her “mind unmoved by the irritations,” she could “triumph over my circumstances,” placing the fault in herself.",
+   "distractors": {
+    "B": {
+     "recipe": "OPP: sarcasm that blames society",
+     "why_wrong": "Hadria mocks people who wonder why women have achieved little in music, which implies that women’s conditions, not their weakness, are to blame; that is the opposite of blaming herself."
+    },
+    "C": {
+     "recipe": "OPP / HALF: points to her circumstances",
+     "why_wrong": "Hadria complains that none of her day is reliably her own, which blames her circumstances rather than her temperament."
+    },
+    "D": {
+     "recipe": "LURE: mentions her composing, but only modestly",
+     "why_wrong": "Hadria plays down her composing in conversation; she neither explains why she has accomplished little nor blames her temperament."
+    }
+   },
+   "models": [
+    "2.26",
+    "2.36",
+    "2.10",
+    "2.37"
+   ],
+   "sources": [
+    {
+     "what": "Mona Caird, The Daughters of Danaus (London: Bliss, Sands and Foster, 1894), Project Gutenberg ebook 21858: Hadria's reflections over her fallen manuscripts (A, B, Chapter XII), her reply to her mother (C), and to Professor Fortescue's friend Temperley (D); all quotations checked as exact substrings (straight quotes made curly; A trims at an ellipsis and ends at a semicolon in the source, given a period)",
+     "url": "https://www.gutenberg.org/ebooks/21858"
+    }
+   ],
+   "notes": "Medium, contrast claim (self versus circumstance). B and C both point to circumstances, the opposite cause; D a keyword lure on composing. Replaces a Fauset draft withdrawn because an official item uses There Is Confusion.",
+   "table": null,
+   "figure": null,
+   "word_count": 47
+  },
+  {
+   "id": "command_of_evidence.T2_lit_quote.medium.w4b7_11",
+   "template": "T2_lit_quote",
+   "subtype": "Literary quotation illustrates a two-part claim (declines marriage because it would make her care an obligation)",
+   "tier": "medium",
+   "band_target": null,
+   "passage": "“Miggles” is an 1869 short story by Bret Harte. For six years, Miggles has devoted herself to caring for Jim, a man who is paralyzed. When stranded travelers ask why she has not married him, she suggests that marriage would transform her freely given care into an obligation: ______",
+   "stem": "Which quotation from “Miggles” most effectively illustrates the claim?",
+   "options": [
+    "“I was pretty lonely until I picked up Joaquin in the woods yonder one day, when he wasn’t so high, and taught him to beg for his dinner.”",
+    "“Sometimes I bring him flowers, and he looks at ’em just as natural as if he knew ’em; and times, when we’re sitting alone, I read him those things on the wall.”",
+    "“It would be playing it rather low down on Jim to take advantage of his being so helpless. And then, too, if we were man and wife, now, we’d both know that I was bound to do what I do now of my own accord.”",
+    "“They advised me to send him to Frisco to the hospital, for he was no good to any one and would be a baby all his life. Perhaps it was something in Jim’s eye, perhaps it was that I never had a baby, but I said ‘No.’”"
+   ],
+   "answer_letter": "C",
+   "explanation": "The claim is that Miggles has not married Jim because marriage would transform her freely given care into an obligation. In choice C she says that if they “were man and wife,” they would “both know that I was bound to do what I do now of my own accord,” which is exactly that reason.",
+   "distractors": {
+    "A": {
+     "recipe": "OFF: loneliness and a pet",
+     "why_wrong": "Miggles describes being lonely and taming Joaquin; she says nothing about marrying Jim."
+    },
+    "B": {
+     "recipe": "HALF: shows her devoted care only",
+     "why_wrong": "This shows how tenderly Miggles cares for Jim, but it gives no reason for not marrying him."
+    },
+    "D": {
+     "recipe": "HALF: shows she chose to care for him, not why she will not marry",
+     "why_wrong": "Miggles explains why she refused to send Jim to a hospital, which shows her choice to care for him, but it says nothing about marriage making that care an obligation."
+    }
+   },
+   "models": [
+    "2.11",
+    "2.20",
+    "2.26",
+    "2.10"
+   ],
+   "sources": [
+    {
+     "what": "Bret Harte, “Miggles” (Overland Monthly 1869), in The Luck of Roaring Camp and Other Tales, Project Gutenberg ebook 6373: Miggles's account of Jim and her answer to the Judge; all quotations checked as exact substrings (C begins 'it would be' after 'said Miggles,' capitalized here; italic 'bound' set in roman)",
+     "url": "https://www.gutenberg.org/ebooks/6373"
+    }
+   ],
+   "notes": "Medium, two-part claim (not marrying plus the reason). B and D are near half-matches (devotion; the choice to keep Jim).",
+   "table": null,
+   "figure": null,
+   "word_count": 49
+  },
+  {
+   "id": "command_of_evidence.T1_single.medium.w4b7_12",
+   "template": "T1_single",
+   "subtype": "Hypothetical finding supports an interpretive claim about an archaeological find (ritual rather than everyday food)",
+   "tier": "medium",
+   "band_target": null,
+   "passage": "At Stillfried an der March, a Late Bronze Age hillfort in present-day Austria, inhabitants stored grain in roughly 100 underground pits. One pit, which had been filled in a single episode rather than gradually with refuse, contained fourteen clay rings, probably used as loom weights, together with three ring-shaped objects made from barley and wheat. Examining the charred cereal rings microscopically, Andreas G. Heiss and colleagues determined that they had been shaped from a finely ground, moistened grain mixture and apparently dried rather than baked. The researchers suggest that the cereal rings were not ordinary food but were deliberately made to be deposited in the pit during a ritual.",
+   "stem": "Which finding, if true, would most directly support the researchers’ suggestion?",
+   "options": [
+    "Charred loaves recovered from the remains of Bronze Age lakeshore villages in the region were also made mainly from barley and wheat.",
+    "Cereal rings like these have turned up at other Bronze Age sites only in deliberately filled pits or graves, never among household food waste.",
+    "Many of the other storage pits at Stillfried still contained traces of barley and wheat grains when archaeologists excavated them decades later.",
+    "The clay rings found in the same pit had been fired only at a low temperature, like the many other loom weights recovered elsewhere at the site."
+   ],
+   "answer_letter": "B",
+   "explanation": "The researchers suggest that the cereal rings “were deliberately made to be deposited in the pit during a ritual” rather than eaten as ordinary food. If similar rings turn up only in deliberate deposits such as specially filled pits or graves and never among household food waste, that pattern indicates they were made for such deposits, as choice B states.",
+   "distractors": {
+    "A": {
+     "recipe": "OFF: shared ingredients",
+     "why_wrong": "Everyday loaves made of the same grains would, if anything, link the rings to ordinary food; the finding says nothing about a ritual use."
+    },
+    "C": {
+     "recipe": "OFF: other pits",
+     "why_wrong": "Grain traces in other storage pits show what the pits were used for, not what the cereal rings in this one pit were made for."
+    },
+    "D": {
+     "recipe": "OFF: the clay rings, not the cereal rings",
+     "why_wrong": "This concerns how the clay loom weights were made and says nothing about the purpose of the cereal rings."
+    }
+   },
+   "models": [
+    "2.1",
+    "2.6",
+    "2.43",
+    "2.16"
+   ],
+   "sources": [
+    {
+     "what": "Heiss et al. 2019, PLoS ONE 14(6): e0216907, The Hoard of the Rings: Late Urnfield hillfort of Stillfried an der March (Lower Austria), about 100 storage pits; three charred annular cereal objects found with 14 clay rings (probably loom weights) in a secondarily filled silo pit, a singular deposition event; hulled barley and a wheat species, finely ground, shaped from a wet cereal mixture and dried without baking; intentional (ritual) deposition as working hypothesis",
+     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0216907"
+    }
+   ],
+   "notes": "Medium. The key is hypothetical (an 'if true' pattern across sites). 'Apparently dried rather than baked' follows the paper's hedge (dried without baking is discussed as indicated).",
+   "table": null,
+   "figure": null,
+   "word_count": 109
+  },
+  {
+   "id": "command_of_evidence.Q1_P3_pairwise.medium.w4b7_13",
+   "template": "Q1_P3_pairwise",
+   "subtype": "Data completion (two comparisons between named rows; only one option both true and illustrative)",
+   "tier": "medium",
+   "band_target": null,
+   "passage": "Tourism is a leading source of income for many countries around the Indian Ocean, but a country’s earnings from tourism depend on more than the number of international visitors it attracts: visitors to some destinations stay longer or spend considerably more per day than visitors elsewhere. Examining World Bank data for 2019, a student identified a clear example of this pattern: ______",
+   "stem": "Which choice most effectively uses data from the table to complete the example?",
+   "options": [
+    "Kenya received more visitors than Tanzania did and also earned more from tourism.",
+    "Mauritius received fewer visitors than Tanzania did and also earned less from tourism than Tanzania did.",
+    "Seychelles received fewer visitors than Mauritius did but earned more from tourism.",
+    "the Maldives received fewer visitors than Kenya did but earned nearly twice as much from tourism."
+   ],
+   "answer_letter": "D",
+   "table": {
+    "title": "International Tourism in Five Indian Ocean Countries, 2019",
+    "columns": [
+     "Country",
+     "International visitor arrivals (thousands)",
+     "Tourism receipts (millions of US dollars)"
+    ],
+    "rows": [
+     [
+      "Kenya",
+      "2,049",
+      "1,762"
+     ],
+     [
+      "Maldives",
+      "1,703",
+      "3,171"
+     ],
+     [
+      "Mauritius",
+      "1,418",
+      "2,024"
+     ],
+     [
+      "Seychelles",
+      "428",
+      "618"
+     ],
+     [
+      "Tanzania",
+      "1,527",
+      "2,625"
+     ]
+    ],
+    "note": null
+   },
+   "explanation": "The example must show a country that drew fewer visitors than another yet earned more from them. According to the table, the Maldives received fewer visitors than Kenya (1,703,000 versus 2,049,000) but earned $3,171 million from tourism, nearly twice Kenya’s $1,762 million.",
+   "distractors": {
+    "A": {
+     "recipe": "INACC: second comparison false",
+     "why_wrong": "Kenya did receive more visitors than Tanzania, but it earned less from tourism ($1,762 million versus $2,625 million), not more."
+    },
+    "B": {
+     "recipe": "IRREL: accurate, but does not illustrate the pattern",
+     "why_wrong": "This is accurate, but fewer visitors bringing in less money is what one would expect if visitor numbers did determine earnings, so it is not an example of the pattern."
+    },
+    "C": {
+     "recipe": "INACC: second comparison false",
+     "why_wrong": "Seychelles received fewer visitors than Mauritius, but it also earned less ($618 million versus $2,024 million)."
+    }
+   },
+   "models": [
+    "2.27",
+    "2.24",
+    "2.28"
+   ],
+   "sources": [
+    {
+     "what": "World Bank WDI, international tourism arrivals (ST.INT.ARVL) and receipts in current US$ (ST.INT.RCPT.CD), 2019: Kenya 2,049,000 / $1,762 million; Maldives 1,703,000 / $3,171 million; Mauritius 1,418,000 / $2,024 million; Seychelles 428,000 / $618 million; Tanzania 1,527,000 / $2,624.5 million (API values read 2026-10-27)",
+     "url": "https://data.worldbank.org/indicator/ST.INT.ARVL"
+    }
+   ],
+   "notes": "Medium. Tanzania's receipts rounded to 2,625. Only D is both accurate and an instance of the pattern (Tanzania and Mauritius against Kenya would also be instances, but no option states them). Theme note: other live items use tourist arrivals (Georgia vs Armenia, w4b3_22; Pacific islands, w4b6); this one pairs arrivals with receipts for Indian Ocean countries.",
+   "figure": null,
+   "word_count": 62
+  },
+  {
+   "id": "command_of_evidence.Q1_P5_control.medium.w4b7_14",
+   "template": "Q1_P5_control",
+   "subtype": "Data completion (two treatments against a no-device control; combined treatment as a check)",
+   "tier": "medium",
+   "band_target": null,
+   "passage": "Radar and ultrasound have both been proposed as methods for deterring bats from locations where they face danger, such as wind turbines. At 14 river and canal sites in England and Wales, Lia R. V. Gilmour and colleagues filmed foraging bats at night under four treatments in succession: an ultrasonic speaker, a radar unit, both devices together, and neither device. The video recordings suggest that only the ultrasound discouraged bats: ______",
+   "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+   "options": [
+    "fewer than 150 bat passes were recorded whenever the ultrasonic speaker was on, with or without radar, but more than 800 were recorded with radar alone, compared with 570 when neither device was used.",
+    "the radar unit used alone reduced the number of bat passes recorded by more than half compared with the number recorded when neither device was used.",
+    "the number of bat passes recorded with the ultrasonic speaker alone was about the same as the number recorded with both devices together.",
+    "more bat passes were recorded with the radar unit alone than with any other treatment, including the treatment in which neither device was used."
+   ],
+   "answer_letter": "A",
+   "figure": {
+    "kind": "bar graph",
+    "title": "Bat Passes Recorded on Video at 14 Sites, by Treatment",
+    "x_axis": "Treatment",
+    "y_axis": "Total number of bat passes",
+    "description": "Four bars; y-axis 0 to 1,000 in steps of 100. Neither device: 570. Radar only: 862. Ultrasound only: 137. Ultrasound and radar: 141. The two bars with ultrasound are far shorter than the bar for neither device, while the radar-only bar is the tallest.",
+    "data": [
+     {
+      "series": "Bat passes",
+      "points": [
+       [
+        "Neither device",
+        570
+       ],
+       [
+        "Radar only",
+        862
+       ],
+       [
+        "Ultrasound only",
+        137
+       ],
+       [
+        "Ultrasound and radar",
+        141
+       ]
+      ]
+     }
+    ]
+   },
+   "explanation": "The statement claims that only the ultrasound discouraged bats, so the data must show fewer bats whenever ultrasound was used and no such drop with radar alone. According to the graph, 137 and 141 bat passes were recorded with ultrasound alone and with both devices, far fewer than the 570 recorded with neither device, while radar alone brought no drop at all (862 passes). Choice A states both parts.",
+   "distractors": {
+    "B": {
+     "recipe": "INACC: misread bar",
+     "why_wrong": "More bat passes were recorded with radar alone (862) than with neither device (570), so radar did not reduce them by half."
+    },
+    "C": {
+     "recipe": "IRREL: accurate, but compares two ultrasound treatments",
+     "why_wrong": "This is accurate (137 versus 141), but it compares the two ultrasound treatments with each other rather than with the treatment that used neither device, so it does not show that ultrasound kept bats away."
+    },
+    "D": {
+     "recipe": "HALF: shows only that radar failed",
+     "why_wrong": "This is accurate (862 passes), but it shows only that radar did not keep bats away; it says nothing about whether the ultrasound did."
+    }
+   },
+   "models": [
+    "2.5",
+    "2.19",
+    "2.14"
+   ],
+   "sources": [
+    {
+     "what": "Gilmour, Holderied, Pickering and Jones 2020, PLoS ONE 15(2): e0228668: ultrasonic speakers and radar tested at riparian foraging sites on the England-Wales border (Herefordshire, Shropshire, Powys) and at canal sites; four treatments (control, radar, ultrasound, ultrasound and radar) in time blocks at each site, filmed with near-infrared video; ultrasound cut bat activity by about 80% alone and with radar, radar alone had no effect; S1 Table bat pass counts by site and treatment for 14 sites (totals computed: control 570, radar 862, ultrasound 137, ultrasound and radar 141)",
+     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0228668"
+    }
+   ],
+   "notes": "Medium. Totals summed from the paper's S1 Table (video counts at 14 sites; the main text reports 3,668 video passes, which apparently counts differently; the S1 counts reproduce the reported pattern, about 76% fewer passes with ultrasound). Radar alone's higher count was not statistically significant, so no option claims radar attracted bats.",
+   "table": null,
+   "word_count": 71
+  },
+  {
+   "id": "command_of_evidence.Q2_P4_trend.medium.w4b7_15",
+   "template": "Q2_P4_trend",
+   "subtype": "Data description (change over time: one country rises past or level with neighbors)",
+   "tier": "medium",
+   "band_target": null,
+   "passage": "Under Myanmar’s former military government, a SIM card for a mobile phone could cost more than a thousand dollars, and few residents had one. In 2013, the government licensed two international companies, Telenor and Ooredoo, to construct competing networks, and by 2014 SIM cards were available for less than two dollars. A student claims that mobile phone use in Myanmar subsequently expanded so rapidly that the country soon caught up with neighboring countries where mobile phones had long been commonplace.",
+   "stem": "Which choice best describes data from the graph that support the student’s claim?",
+   "options": [
+    "In 2010, Myanmar had only about 1 mobile phone subscription per 100 people, whereas Cambodia and Lao PDR each already had more than 50 subscriptions per 100 people.",
+    "The number of subscriptions per 100 people in Myanmar rose more from 2010 to 2012 than it did from 2014 to 2016.",
+    "Myanmar had far fewer subscriptions per 100 people than Cambodia and Lao PDR did in 2012, but by 2018 it had more than Lao PDR and nearly as many as Cambodia.",
+    "In every year shown from 2012 to 2018, Cambodia had more mobile phone subscriptions per 100 people than Lao PDR had."
+   ],
+   "answer_letter": "C",
+   "figure": {
+    "kind": "line graph",
+    "title": "Mobile Phone Subscriptions per 100 People in Three Southeast Asian Countries, 2010–2018",
+    "x_axis": "Year",
+    "y_axis": "Subscriptions per 100 people",
+    "description": "Three lines at 2010, 2012, 2014, 2016 and 2018; y-axis 0 to 140 in steps of 20. Myanmar: about 1, 7, 57, 98, 117. Cambodia: about 56, 128, 133, 126, 119. Lao PDR: about 63, 66, 69, 57, 51. Myanmar starts far below the other two, rises steeply after 2012, passes Lao PDR by 2016 and nearly meets Cambodia in 2018.",
+    "data": [
+     {
+      "series": "Myanmar",
+      "points": [
+       [
+        "2010",
+        1
+       ],
+       [
+        "2012",
+        7
+       ],
+       [
+        "2014",
+        57
+       ],
+       [
+        "2016",
+        98
+       ],
+       [
+        "2018",
+        117
+       ]
+      ]
+     },
+     {
+      "series": "Cambodia",
+      "points": [
+       [
+        "2010",
+        56
+       ],
+       [
+        "2012",
+        128
+       ],
+       [
+        "2014",
+        133
+       ],
+       [
+        "2016",
+        126
+       ],
+       [
+        "2018",
+        119
+       ]
+      ]
+     },
+     {
+      "series": "Lao PDR",
+      "points": [
+       [
+        "2010",
+        63
+       ],
+       [
+        "2012",
+        66
+       ],
+       [
+        "2014",
+        69
+       ],
+       [
+        "2016",
+        57
+       ],
+       [
+        "2018",
+        51
+       ]
+      ]
+     }
+    ]
+   },
+   "explanation": "The student claims that Myanmar “soon caught up with neighboring countries where mobile phones had long been commonplace.” Showing that requires Myanmar well behind the neighbors before the change and level with or ahead of them afterward. Choice C does this: in 2012 Myanmar had about 7 subscriptions per 100 people against about 128 in Cambodia and 66 in Lao PDR, but by 2018 it had about 117, more than Lao PDR (about 51) and nearly as many as Cambodia (about 119).",
+   "distractors": {
+    "A": {
+     "recipe": "PART: accurate, but one year only",
+     "why_wrong": "This is accurate, but it describes only 2010, before the new companies arrived, so it shows how far behind Myanmar was, not that it caught up."
+    },
+    "B": {
+     "recipe": "INACC: misread change",
+     "why_wrong": "Myanmar rose by only about 6 per 100 people from 2010 to 2012, but by about 41 from 2014 to 2016."
+    },
+    "D": {
+     "recipe": "IRREL: accurate, but about two other countries",
+     "why_wrong": "This is accurate, but it compares Cambodia with Lao PDR and says nothing about Myanmar."
+    }
+   },
+   "models": [
+    "2.22",
+    "2.2",
+    "2.12"
+   ],
+   "sources": [
+    {
+     "what": "World Bank WDI indicator IT.CEL.SETS.P2 (ITU), mobile cellular subscriptions per 100 people: Myanmar 2010-2018 about 1.2, 7, 57, 98, 117; Cambodia 56, 128, 133, 126, 119; Lao PDR 63, 66, 69, 57, 51 (API values, rounded)",
+     "url": "https://data.worldbank.org/indicator/IT.CEL.SETS.P2?locations=MM-KH-LA"
+    },
+    {
+     "what": "Telecommunications in Myanmar: Telenor and Ooredoo won the two licences (June 2013) and entered the market in 2014; Ooredoo sold SIM cards for US$1.50 in August 2014; before 2012, under military rule, SIM cards cost about US$1,500",
+     "url": "https://en.wikipedia.org/wiki/Telecommunications_in_Myanmar"
+    }
+   ],
+   "notes": "Medium. Values read from the World Bank API on 2026-10-27 and rounded; the graph uses 'about'. Thailand left out to keep three lines.",
+   "table": null,
+   "word_count": 80
+  },
+  {
+   "id": "command_of_evidence.T3_person_quote.medium.w4b7_16",
+   "template": "T3_person_quote",
+   "subtype": "Quotation from a critic supports a claim about an artist's purpose (documents as records she contests, not mere surfaces)",
+   "tier": "medium",
+   "band_target": null,
+   "passage": "Since about 2017, Dominican-born artist Firelei Báez has painted directly onto archival materials such as historical maps and architectural renderings, frequently covering them with lush female figures drawn from Caribbean folklore. In an essay about Báez’s work, a student claims that Báez treats these documents not merely as surfaces to paint on but as records whose account of the past she deliberately challenges.",
+   "stem": "Which quotation from an art critic would be the most effective evidence for the student to include in support of this claim?",
+   "options": [
+    "“Báez has long favored paper that does not absorb paint, since it allows her to build up thin, glowing layers of color, and she brings that habit to her work on maps.”",
+    "“When Báez sprawls a figure across an old map, the figure blots out the borders and place-names its makers drew, as if insisting that the land holds stories their survey never recorded.”",
+    "“Báez chooses old maps and drawings mainly for their faded colors and fine lines, which give her bold, vivid figures a delicate, antique backdrop that sets them off especially beautifully.”",
+    "“A figure from Dominican folklore, a woman whose feet face backward, appears again and again in Báez’s work, in paintings on canvas as well as on paper.”"
+   ],
+   "answer_letter": "B",
+   "explanation": "The student claims that Báez treats old documents as records whose account of the past she challenges. In choice B the critic says that Báez’s figures blot out “the borders and place-names its makers drew,” as if insisting that the land “holds stories their survey never recorded,” which presents the map as a record that her painting contests.",
+   "distractors": {
+    "A": {
+     "recipe": "OFF: materials and technique",
+     "why_wrong": "This explains why Báez likes certain papers for building up color, which concerns technique, not any challenge to what the documents record."
+    },
+    "C": {
+     "recipe": "OPP: documents as mere backdrop",
+     "why_wrong": "This presents the maps and drawings as attractive backgrounds chosen for their look, which is the view the student argues against."
+    },
+    "D": {
+     "recipe": "OFF: a recurring motif",
+     "why_wrong": "This identifies a figure that recurs in Báez’s work but says nothing about how she treats the documents she paints on."
+    }
+   },
+   "models": [
+    "2.23",
+    "2.29"
+   ],
+   "sources": [
+    {
+     "what": "Firelei Báez: born 1981 in Santiago de los Caballeros, Dominican Republic, New York-based; since around 2017 paints directly onto archival materials such as maps and architectural renderings; recurring ciguapa figures from Dominican folklore; art focuses on untold stories and unheard voices",
+     "url": "https://en.wikipedia.org/wiki/Firelei_B%C3%A1ez"
+    }
+   ],
+   "notes": "Medium. Quotations are from an unnamed, invented critic, as in the official T3 items; the subject facts (archival maps, folklore figures, nonabsorbent paper, ciguapas) are from the source. A ciguapa has backward-facing feet (Dominican folklore).",
+   "table": null,
+   "figure": null,
+   "word_count": 63
+  },
+  {
+   "id": "command_of_evidence.Q1_P1_lookup.easy.w4b7_17",
+   "template": "Q1_P1_lookup",
+   "subtype": "Data completion (lookup of one named row)",
+   "tier": "easy",
+   "band_target": null,
+   "passage": "Alongside Spanish, Mexico’s government recognizes dozens of Indigenous languages as national languages, and the country’s census asks residents aged three and older whether they speak one. A student researching the results of the 2020 census finds that Nahuatl, a Uto-Aztecan language, was the most widely spoken, with more than 1.6 million speakers. Mixtec, an Oto-Manguean language spoken mainly in the states of Oaxaca, Puebla, and Guerrero, had ______",
+   "stem": "Which choice most effectively uses data from the table to complete the statement?",
+   "options": [
+    "774,755 speakers.",
+    "589,144 speakers.",
+    "550,274 speakers.",
+    "526,593 speakers."
+   ],
+   "answer_letter": "D",
+   "table": {
+    "title": "Speakers of Five Indigenous Languages in Mexico, 2020",
+    "columns": [
+     "Language",
+     "Number of speakers (aged 3 and older)"
+    ],
+    "rows": [
+     [
+      "Nahuatl",
+      "1,651,958"
+     ],
+     [
+      "Yucatec Maya",
+      "774,755"
+     ],
+     [
+      "Tseltal",
+      "589,144"
+     ],
+     [
+      "Tsotsil",
+      "550,274"
+     ],
+     [
+      "Mixtec",
+      "526,593"
+     ]
+    ],
+    "note": null
+   },
+   "explanation": "The statement needs the number of Mixtec speakers. According to the table, Mixtec had 526,593 speakers in 2020.",
+   "distractors": {
+    "A": {
+     "recipe": "WGRP: neighboring row",
+     "why_wrong": "774,755 is the number of Yucatec Maya speakers, not Mixtec speakers."
+    },
+    "B": {
+     "recipe": "WGRP: neighboring row",
+     "why_wrong": "589,144 is the number of Tseltal speakers, not Mixtec speakers."
+    },
+    "C": {
+     "recipe": "WGRP: neighboring row",
+     "why_wrong": "550,274 is the number of Tsotsil speakers, not Mixtec speakers."
+    }
+   },
+   "models": [
+    "1.44",
+    "1.38",
+    "1.37",
+    "1.33"
+   ],
+   "sources": [
+    {
+     "what": "Languages of Mexico, table of Indigenous languages by speakers (INEGI, Censo de Población y Vivienda 2020, speakers aged 3 and older): Nahuatl 1,651,958; Yucatec Maya 774,755; Tzeltal 589,144; Tzotzil 550,274; Mixtec 526,593; Mixtec spoken in Oaxaca, Puebla and Guerrero (Mixtec language article)",
+     "url": "https://en.wikipedia.org/wiki/Languages_of_Mexico"
+    }
+   ],
+   "notes": "Easy lookup, value-only options from the other rows. Spellings Tseltal and Tsotsil follow current usage (INEGI writes tseltal, tsotsil).",
+   "figure": null,
+   "word_count": 68
+  },
+  {
+   "id": "command_of_evidence.T1_single.easy.w4b7_18",
+   "template": "T1_single",
+   "subtype": "Hypothetical finding supports a hypothesis about change over time (habituation), one step",
+   "tier": "easy",
+   "band_target": null,
+   "passage": "Birdwatchers often play a recording of a bird’s song to attract the bird into view, a practice known as playback. In the Andes of Ecuador, biologists Berton Harris and David Haskell played recorded duets to groups of plain-tailed wrens, birds that sing elaborate duets to defend their territories, and observed that the wrens responded vigorously. Harris and Haskell hypothesized that wrens hearing playback every day would gradually grow used to it.",
+   "stem": "Which finding, if true, would most directly support Harris and Haskell’s hypothesis?",
+   "options": [
+    "Wren groups that heard a recording once a day for 20 days approached the speaker less closely and responded more slowly as the days went on.",
+    "Wren groups sang more duets in the hour after hearing a recording than in the hour after hearing recorded background noise.",
+    "Rufous antpittas, which live in the same mountain forests as the wrens, sang more songs after hearing a recording than after hearing only background noise.",
+    "Wrens gave their quiet contact calls about as often after hearing a recording as after hearing background noise."
+   ],
+   "answer_letter": "A",
+   "explanation": "Harris and Haskell hypothesized that wrens hearing playback every day “would gradually grow used to it.” Choice A describes exactly that: wrens given playback daily for 20 days responded less and less, approaching the speaker less closely and more slowly as the days passed.",
+   "distractors": {
+    "B": {
+     "recipe": "OFF: a single response, not change over time",
+     "why_wrong": "This shows that wrens respond to one playback, which the text already says, not that their response fades with daily playback."
+    },
+    "C": {
+     "recipe": "SUBJ: wrong species",
+     "why_wrong": "This is about rufous antpittas, not wrens, and it describes a response to one playback rather than a change over days."
+    },
+    "D": {
+     "recipe": "OFF: a different call, one playback",
+     "why_wrong": "This concerns a single playback and a call the wrens did not increase; it says nothing about whether daily playback made them respond less over time."
+    }
+   },
+   "models": [
+    "1.1",
+    "1.41",
+    "1.45",
+    "1.5"
+   ],
+   "sources": [
+    {
+     "what": "Harris and Haskell 2013, PLoS ONE 8(10): e77902: simulated birdwatchers' playback to plain-tailed wrens and rufous antpittas in Ecuador; wrens sang more duets after playback but not more contact calls; antpittas more vocalizations except trills; repeated daily five-minute playback to five wren groups over 20 days: responses strong at first, hardly detectable by day 12 (closeness of approach and latency of response declined)",
+     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0077902"
+    }
+   ],
+   "notes": "Easy, one step. The study tested daily playback to measure habituation; the passage frames that as the researchers' hypothesis. B, C and D are real single-bout results of the same study used as off-target options.",
+   "table": null,
+   "figure": null,
+   "word_count": 71
+  },
+  {
+   "id": "command_of_evidence.Q1_P2_extreme.easy.w4b7_19",
+   "template": "Q1_P2_extreme",
+   "subtype": "Data completion (minimum in one column)",
+   "tier": "easy",
+   "band_target": null,
+   "passage": "Ethiopia’s Rift Valley, a section of the East African Rift, contains a chain of lakes that occupy basins created as tectonic forces gradually pulled the landscape apart. These lakes vary considerably in surface area and in elevation above sea level. Examining data on five of them, a geography student determines that the lake with the smallest surface area is ______",
+   "stem": "Which choice most effectively uses data from the table to complete the statement?",
+   "options": [
+    "Lake Abaya.",
+    "Lake Chamo.",
+    "Lake Hawassa.",
+    "Lake Langano."
+   ],
+   "answer_letter": "C",
+   "table": {
+    "title": "Five Lakes in Ethiopia’s Rift Valley",
+    "columns": [
+     "Lake",
+     "Surface area (square kilometers)",
+     "Elevation (meters above sea level)"
+    ],
+    "rows": [
+     [
+      "Abaya",
+      "1,162",
+      "1,285"
+     ],
+     [
+      "Chamo",
+      "317",
+      "1,110"
+     ],
+     [
+      "Zway",
+      "440",
+      "1,636"
+     ],
+     [
+      "Langano",
+      "230",
+      "1,585"
+     ],
+     [
+      "Hawassa",
+      "129",
+      "1,686"
+     ]
+    ],
+    "note": null
+   },
+   "explanation": "The statement asks for the lake with the smallest surface area. According to the table, Lake Hawassa covers 129 square kilometers, less than any of the other four lakes.",
+   "distractors": {
+    "A": {
+     "recipe": "wrong extreme",
+     "why_wrong": "Lake Abaya, at 1,162 square kilometers, has the largest surface area of the five, not the smallest."
+    },
+    "B": {
+     "recipe": "wrong column (lowest elevation)",
+     "why_wrong": "Lake Chamo lies at the lowest elevation (1,110 meters), but its surface area (317 square kilometers) is larger than Lake Hawassa’s."
+    },
+    "D": {
+     "recipe": "near miss (second smallest)",
+     "why_wrong": "Lake Langano covers 230 square kilometers, more than Lake Hawassa’s 129 square kilometers."
+    }
+   },
+   "models": [
+    "1.9",
+    "1.21",
+    "1.23",
+    "1.31"
+   ],
+   "sources": [
+    {
+     "what": "List of lakes of Ethiopia: area and elevation, Abaya 1,162 km2 / 1,285 m; Chamo 317 / 1,110; Zway 440 / 1,636; Langano 230 / 1,585; Hawassa 129 / 1,686",
+     "url": "https://en.wikipedia.org/wiki/List_of_lakes_of_Ethiopia"
+    }
+   ],
+   "notes": "Easy extreme (minimum). Areas as given in the Wikipedia list (other sources give Chamo larger, which does not affect the key).",
+   "figure": null,
+   "word_count": 60
+  },
+  {
+   "id": "command_of_evidence.T3_person_quote.easy.w4b7_20",
+   "template": "T3_person_quote",
+   "subtype": "Quotation from a participant illustrates a single claim",
+   "tier": "easy",
+   "band_target": null,
+   "passage": "In 2012, Ole Kassow began offering rides to residents of a Copenhagen nursing home in a trishaw, a bicycle with a passenger seat at the front. His idea grew into Cycling Without Age, a group whose volunteer “pilots” now give free rides to older adults in dozens of countries. After talking with passengers, a researcher claims that the rides help residents feel connected again to the neighborhoods around them.",
+   "stem": "Which quotation from a passenger would best illustrate the researcher’s claim?",
+   "options": [
+    "“My pilot is a university student, and she tells me all about her classes while we ride.”",
+    "“On our rides we pass the bakery and the harbor where I used to walk, and people wave to me as if I were part of the street again.”",
+    "“The trishaw is very comfortable, and the blanket keeps me warm even on windy days.”",
+    "“I was nervous the first time because the trishaw seemed so fast, but now I look forward to every ride.”"
+   ],
+   "answer_letter": "B",
+   "explanation": "The researcher claims that the rides help residents feel connected again to their neighborhoods. In choice B the passenger describes passing familiar places “where I used to walk” and being greeted “as if I were part of the street again,” which illustrates that feeling.",
+   "distractors": {
+    "A": {
+     "recipe": "OFF: bond with the pilot",
+     "why_wrong": "This describes conversation with the pilot, not a renewed connection to the neighborhood."
+    },
+    "C": {
+     "recipe": "OFF: comfort",
+     "why_wrong": "This describes how comfortable the ride is, not any sense of being connected again to the neighborhood."
+    },
+    "D": {
+     "recipe": "OFF: enjoyment over time",
+     "why_wrong": "This shows that the passenger has come to enjoy the rides, but it says nothing about the neighborhood."
+    }
+   },
+   "models": [
+    "1.13",
+    "1.32",
+    "1.20",
+    "1.19"
+   ],
+   "sources": [
+    {
+     "what": "Cycling Without Age: nonprofit founded in Copenhagen in 2012 by Ole Kassow; free trishaw rides for older adults piloted by volunteers ('pilots'), chapters usually serving a specific nursing home; rides let seniors with limited mobility explore their neighbourhood; by 2020 active in 50 countries",
+     "url": "https://en.wikipedia.org/wiki/Cycling_Without_Age"
+    }
+   ],
+   "notes": "Easy. The researcher and passenger quotations are invented and unnamed, as in the official T3 items; the program facts are from the source.",
+   "table": null,
+   "figure": null,
+   "word_count": 69
+  },
+  {
+   "id": "command_of_evidence.Q1_P3_pairwise.easy.w4b7_21",
+   "template": "Q1_P3_pairwise",
+   "subtype": "Data completion (two comparisons, full factorial options)",
+   "tier": "easy",
+   "band_target": null,
+   "passage": "Formed by volcanic eruptions, the Canary Islands lie in the Atlantic Ocean off the coast of Morocco. Fuerteventura, geologically the oldest island in the group, has been worn down by erosion for considerably longer than its neighbors, so its mountains are remarkably low for an island of its size. For example, compared with neighboring Gran Canaria, Fuerteventura has ______",
+   "stem": "Which choice most effectively uses data from the table to complete the example?",
+   "options": [
+    "a larger area and a higher highest point.",
+    "a smaller area and a lower highest point.",
+    "a smaller area but a higher highest point.",
+    "a larger area but a lower highest point."
+   ],
+   "answer_letter": "D",
+   "table": {
+    "title": "Area and Highest Point of Four Canary Islands",
+    "columns": [
+     "Island",
+     "Area (square kilometers)",
+     "Elevation of highest point (meters)"
+    ],
+    "rows": [
+     [
+      "Tenerife",
+      "2,034",
+      "3,715"
+     ],
+     [
+      "Fuerteventura",
+      "1,660",
+      "807"
+     ],
+     [
+      "Gran Canaria",
+      "1,560",
+      "1,949"
+     ],
+     [
+      "Lanzarote",
+      "846",
+      "670"
+     ]
+    ],
+    "note": null
+   },
+   "explanation": "The example must show that Fuerteventura’s mountains are low for an island of its size, compared with Gran Canaria. According to the table, Fuerteventura has a larger area than Gran Canaria (1,660 versus 1,560 square kilometers) but a lower highest point (807 versus 1,949 meters).",
+   "distractors": {
+    "A": {
+     "recipe": "WDIR: second comparison reversed",
+     "why_wrong": "Fuerteventura’s highest point (807 meters) is lower, not higher, than Gran Canaria’s (1,949 meters)."
+    },
+    "B": {
+     "recipe": "WDIR: first comparison reversed",
+     "why_wrong": "Fuerteventura’s area (1,660 square kilometers) is larger, not smaller, than Gran Canaria’s (1,560 square kilometers)."
+    },
+    "C": {
+     "recipe": "WDIR: both comparisons reversed",
+     "why_wrong": "Both parts are reversed: Fuerteventura is larger than Gran Canaria and has a lower highest point."
+    }
+   },
+   "models": [
+    "1.3",
+    "1.4",
+    "1.27",
+    "1.7"
+   ],
+   "sources": [
+    {
+     "what": "Canary Islands: island areas (Tenerife 2,034.38, Fuerteventura 1,660, Gran Canaria 1,560.1, Lanzarote 845.94 km2); highest points Teide 3,715 m, Pico de las Nieves 1,949 m, Peñas del Chache 670 m; Fuerteventura is the oldest of the islands, more eroded, highest point Pico de la Zarza 807 m",
+     "url": "https://en.wikipedia.org/wiki/Canary_Islands"
+    }
+   ],
+   "notes": "Easy, full 2x2 factorial options as in 1.3. Pico de la Zarza is given as 807 m in the island section and 812 m in the mountain table; 807 used. Subject is island size and height, not the dog etymology of the name used in a Rhetorical Synthesis item.",
+   "figure": null,
+   "word_count": 59
+  }
+ ]
+}

@@ -1,1108 +1,1428 @@
 {
- "skill": "Inferences",
- "slug": "inferences",
- "part": "w4b3",
- "domain": "Information and Ideas",
- "plan": {
-  "templates": [
-   {
-    "code": "S1",
-    "name": "Controlled comparison of two groups"
-   },
-   {
-    "code": "S2",
-    "name": "Principle plus case leads to consequence (S10 trade-off folded in)"
-   },
-   {
-    "code": "S3",
-    "name": "Rule or timeline plus observation rejects a premise"
-   },
-   {
-    "code": "S4",
-    "name": "Elimination of alternatives"
-   },
-   {
-    "code": "S5",
-    "name": "Undercut leads to a hedged conclusion"
-   },
-   {
-    "code": "S6",
-    "name": "X but not Y, so Z"
-   },
-   {
-    "code": "S7",
-    "name": "Two cases or two accounts lead to a conditional or a common ground"
-   },
-   {
-    "code": "S8",
-    "name": "Co-occurrence or repeated pattern leads to a link"
-   },
-   {
-    "code": "S9",
-    "name": "Behaviour, design or content reveals a motive or belief (S12 example folded in)"
-   },
-   {
-    "code": "S11",
-    "name": "Received view plus counterevidence leads to revision"
-   }
-  ]
- },
- "items": [
-  {
-   "id": "inferences.S2.hard.w4b3_01",
-   "template": "S2",
-   "subtype": "T3 consequence: a daily defense rhythm that survives harvest, applied to when stored cabbage is eaten",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "In plants such as Arabidopsis thaliana, a circadian clock set by daily cycles of light and darkness raises chemical defenses in anticipation of the hours when leaf-eating insects feed most actively, and in edible crops, some of the defensive compounds that fluctuate in this way have also shown anticancer properties. Investigating whether a vegetable’s clock stops at harvest, plant biologist Janet Braam and colleagues found that cabbage stored under alternating light and darkness continued to keep time, which made it more resistant to insects. These findings suggest that, for cabbage stored under such conditions, ______",
-   "options": [
-    "the defensive compounds may build up only after insects have begun to feed on the leaves.",
-    "how much of certain potentially beneficial compounds a serving provides may depend on the hour at which the cabbage is eaten.",
-    "resistance to insects may depend more on the time of day the cabbage was harvested than on the light it receives in storage afterward.",
-    "insects feeding on the cabbage would probably shift their feeding to the hours when its defenses are weakest."
-   ],
-   "answer_letter": "B",
-   "explanation": "The text says that the plant clock makes defensive compounds rise and fall over the day (“compounds that fluctuate in this way”) and that some of them “have also shown anticancer properties” in edible crops. Because cabbage “stored under alternating light and darkness continued to keep time,” those compounds would keep fluctuating after harvest, so the amount a person gets from the cabbage could depend on when it is eaten, as B says.",
-   "distractors": {
-    "A": {
-     "recipe": "timing reversed (MIX)",
-     "why_wrong": "The defenses are linked to insects, but the text says the clock raises them “in anticipation of the hours when leaf-eating insects feed most actively,” not only after feeding has begun."
-    },
-    "C": {
-     "recipe": "wrong variable (MIX)",
-     "why_wrong": "The text never discusses the time of harvest; it says that cabbage “stored under alternating light and darkness continued to keep time, which made it more resistant to insects.”"
-    },
-    "D": {
-     "recipe": "speculative consequence (OUT)",
-     "why_wrong": "The text describes the cabbage’s timing, not any change in the insects’ behavior, so there is no basis for predicting that insects would move their feeding to other hours."
-    }
-   },
-   "models": [
-    "3.8",
-    "3.18",
-    "3.33"
-   ],
-   "sources": [
-    {
-     "what": "Goodspeed, Liu, Chehab, Sheng, Francisco, Kliebenstein, Braam 2013, Current Biology: circadian clock of postharvest cabbage is entrainable by light-dark cycles and results in enhanced herbivore resistance; entrainment causes cyclical accumulation of defense metabolites that in edible crops also have potent anticancer properties (the anticipation of insect feeding is from Goodspeed et al. 2012, PNAS, PMID 22331878, same lab)",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/23791724/"
-    }
-   ],
-   "notes": "Area: natural science (plant biology) with nutrition. S2 hard, T3: the clock principle (defenses rise and fall daily; some compounds have anticancer properties) plus the case (stored cabbage keeps time) gives the consequence for when the cabbage is eaten. Two steps: compounds cycle daily; stored cabbage keeps cycling, so dose depends on the hour. Distractors: A keeps the insect link but reverses the timing; C keeps resistance but swaps in harvest time; D keeps the daily rhythm but jumps to insect behavior. Searched cabbage, circadian, postharvest, Goodspeed, Braam in claims and every bank: only an unrelated skunk-cabbage item and a Braam touch-response (thigmomorphogenesis) TSP item, a different study.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 95
+  "skill": "Inferences",
+  "slug": "inferences",
+  "part": "w4b3",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1",
+        "name": "Controlled comparison of two groups"
+      },
+      {
+        "code": "S2",
+        "name": "Principle plus case leads to consequence (S10 trade-off folded in)"
+      },
+      {
+        "code": "S3",
+        "name": "Rule or timeline plus observation rejects a premise"
+      },
+      {
+        "code": "S4",
+        "name": "Elimination of alternatives"
+      },
+      {
+        "code": "S5",
+        "name": "Undercut leads to a hedged conclusion"
+      },
+      {
+        "code": "S6",
+        "name": "X but not Y, so Z"
+      },
+      {
+        "code": "S7",
+        "name": "Two cases or two accounts lead to a conditional or a common ground"
+      },
+      {
+        "code": "S8",
+        "name": "Co-occurrence or repeated pattern leads to a link"
+      },
+      {
+        "code": "S9",
+        "name": "Behaviour, design or content reveals a motive or belief (S12 example folded in)"
+      },
+      {
+        "code": "S11",
+        "name": "Received view plus counterevidence leads to revision"
+      }
+    ]
   },
-  {
-   "id": "inferences.S2.hard.w4b3_02",
-   "template": "S2",
-   "subtype": "T3 consequence: elastic recoil resists cold while muscle slows, applied to a chameleon's tongue on a cool morning",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "In cold-blooded animals, muscles contract more slowly as body temperature falls: sprinting, swimming, and jumping performance in such animals typically declines by at least a third with a drop of 10 degrees Celsius. Biologists Christopher Anderson and Stephen Deban proposed that movements powered by the recoil of stretched elastic tissue, which stores energy before releasing it, should be far less sensitive to temperature. Chameleons project their sticky tongues toward insect prey by such recoil but retract them using muscle alone. On this reasoning, a chameleon hunting on a cool morning would most likely ______",
-   "options": [
-    "be unable to capture prey until the sun had warmed its tongue muscles to their usual temperature.",
-    "lose about as much speed when projecting its tongue toward prey as when pulling it back in.",
-    "project its tongue more slowly than on a warm afternoon, since elastic tissue stiffens in the cold.",
-    "extend its tongue nearly as fast as on a warm day but pull it back in more slowly."
-   ],
-   "answer_letter": "D",
-   "explanation": "The text says that muscles “contract more slowly as body temperature falls” but that movements powered by elastic recoil “should be far less sensitive to temperature.” Since chameleons “project their sticky tongues toward insect prey by such recoil but retract them using muscle alone,” on a cool morning the projection should stay fast while the muscle-powered retraction slows, as D says.",
-   "distractors": {
-    "A": {
-     "recipe": "overreach from the muscle half (EXT)",
-     "why_wrong": "Cold does slow the muscles that retract the tongue, but projection relies on elastic recoil, which the text says is “far less sensitive to temperature,” so nothing suggests the chameleon could not catch prey at all."
-    },
-    "B": {
-     "recipe": "half the principle (PART)",
-     "why_wrong": "Retraction would lose speed, but projection is powered by recoil, which the text expects to be “far less sensitive to temperature,” so the two would not slow by the same amount."
-    },
-    "C": {
-     "recipe": "invented mechanism (CAUSE)",
-     "why_wrong": "The text never says elastic tissue stiffens in the cold; it proposes that recoil-powered movements are the ones that hold up best as temperature falls."
-    }
-   },
-   "models": [
-    "3.9",
-    "3.13",
-    "3.33"
-   ],
-   "sources": [
+  "items": [
     {
-     "what": "Anderson, Deban 2010, PNAS 107(12):5495, Ballistic tongue projection in chameleons maintains high performance at low temperature: ectotherm sprinting, swimming and jumping performance drops by at least 33 percent over a 10 C drop; authors propose that ballistic movements powered by elastic recoil are less thermally dependent; tongue projection keeps high performance (10-19 percent decline per 10 C) while muscle-powered retraction declines by more than 42 percent",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/20212130/"
-    }
-   ],
-   "notes": "Area: natural science (biomechanics, herpetology). S2 hard, T3: a principle (elastic recoil is less temperature-dependent than muscle) applied to a two-part case (recoil-powered projection, muscle-powered retraction). The measured result is held back for the key. Two steps: sort the two movements by power source, then apply the principle to each. Distractors: A overextends the muscle slowdown, B ignores the elastic half, C invents a cold-stiffening mechanism. Replaces a bumblebee item withdrawn because live inferences w3b3_19 makes the same just-visited-flower inference. Searched chameleon, elastic recoil, Anderson, Deban: other chameleon items (nano-chameleon, color-changing nanocrystals) are different topics in other skills.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 94
-  },
-  {
-   "id": "inferences.S2.hard.w4b3_03",
-   "template": "S2",
-   "subtype": "T3 consequence: stretch tuning follows inharmonicity, applied to a short piano with thick bass strings",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Ideally, the overtones accompanying a piano note would be exact multiples of its fundamental frequency, but the stiffness of actual piano wire raises them slightly, a phenomenon called inharmonicity that intensifies in shorter, thicker strings. Physicist O. L. Railsback discovered in the 1930s that pianos tuned by ear deviate from the theoretical scale in a consistent pattern, which he attributed not to imprecision but to inharmonicity: tuners adjust each successive note to agree with the overtones of notes already tuned. Consequently, on a small upright piano, whose bass strings are short and thick, a tuner working by ear would most likely ______",
-   "options": [
-    "set the lowest notes farther from their theoretical pitches than on a large grand piano.",
-    "set the bass notes closer to the theoretical scale, since the piano’s shorter strings vibrate more rapidly.",
-    "tighten the bass strings until their overtones become exact multiples of their fundamental frequencies.",
-    "leave the bass at its theoretical pitches and depart from the scale only in the highest notes."
-   ],
-   "answer_letter": "A",
-   "explanation": "The text says that inharmonicity “intensifies in shorter, thicker strings” and that tuners “adjust each successive note to agree with the overtones of notes already tuned,” which is why pianos tuned by ear “deviate from the theoretical scale.” On a small upright, whose bass strings “are short and thick,” the overtones involved in tuning the bass are pushed higher than on a grand, so matching them pulls those notes farther from their theoretical pitches, as A says.",
-   "distractors": {
-    "B": {
-     "recipe": "reversal with an invented reason (REV)",
-     "why_wrong": "Short, thick strings have more inharmonicity, not less, so the bass would move farther from the theoretical scale; the text says nothing about vibration speed bringing notes closer to it."
-    },
-    "C": {
-     "recipe": "fix aimed at the wrong cause (MIX)",
-     "why_wrong": "The text attributes inharmonicity to “the stiffness of actual piano wire,” a property of the string, so a tuner cannot make the overtones exact multiples by tightening the strings."
-    },
-    "D": {
-     "recipe": "half the pattern (PART)",
-     "why_wrong": "The text gives no reason the bass would stay at its theoretical pitches; the short, thick bass strings are exactly where inharmonicity is greatest."
-    }
-   },
-   "models": [
-    "3.9",
-    "3.13",
-    "3.33"
-   ],
-   "sources": [
-    {
-     "what": "Piano acoustics (Wikipedia): stiffness raises the overtones (inharmonicity), which is greater with thicker, shorter strings; designers of short pianos must use thick bass strings and accept greater inharmonicity; Railsback (1930s) found pianos tuned to be pleasing depart from equal temperament because of inharmonicity, not imprecision; tuners set pitches relative to the sharpened overtones of notes already tuned",
-     "url": "https://en.wikipedia.org/wiki/Piano_acoustics"
-    }
-   ],
-   "notes": "Area: humanities (music, instrument making) with physics. S2 hard, T3, two linked principles: short thick strings are more inharmonic; tuning by ear follows overtones, so stretch follows inharmonicity; applied to a short upright. Key is neutral on direction ('farther from'), so it does not need the student to know whether bass notes go flat. Distractors: B reversal, C attacks the wrong cause (tension instead of stiffness), D keeps a stretched pattern but drops the bass. Searched inharmonic, Railsback, stretched tuning, piano tun: no item; piano subjects in the bank are Nancarrow, Lockwood, Welte-Mignon rolls, all different.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 102
-  },
-  {
-   "id": "inferences.S2.hard.w4b3_04",
-   "template": "S2",
-   "subtype": "T3 consequence: payment depreciation applied to yearly versus monthly billing",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Consumers who have prepaid for something, such as a subscription to a concert series, often feel obligated to use it so that their money will not be wasted. Marketing researchers John Gourville and Dilip Soman determined that this obligation diminishes over time: as the interval since a payment lengthens, consumers gradually adapt to the expense, so it influences their decisions about using what they purchased less and less, a phenomenon the researchers call payment depreciation. Compared with a health club that bills its members monthly, a club that bills them annually would therefore most likely experience ______",
-   "options": [
-    "fewer renewals, since a single yearly bill is larger than any one monthly bill.",
-    "higher attendance overall, since members who pay more at one time feel more obligated to use the club.",
-    "visits that drop off more sharply as the months since members last paid add up.",
-    "steady attendance all year, since members will already have paid for every month in advance."
-   ],
-   "answer_letter": "C",
-   "explanation": "The text says that “as the interval since a payment lengthens, consumers gradually adapt to the expense, so it influences their decisions about using what they purchased less and less.” Members billed annually go many months without paying, so the obligation to use the club would fade further than for members who pay monthly, and their visits would fall off more as the months pass, as C says.",
-   "distractors": {
-    "A": {
-     "recipe": "off-topic outcome (OUT)",
-     "why_wrong": "The text is about whether people use what they have paid for, not whether they choose to pay again, so it gives no basis for a claim about renewals."
-    },
-    "B": {
-     "recipe": "half the principle (PART)",
-     "why_wrong": "Prepaying does create an obligation to use the club, but the text says that “this obligation diminishes over time,” so a single large payment would not keep attendance high all year."
-    },
-    "D": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "Having paid in advance is exactly the situation in which, according to the text, consumers “gradually adapt to the expense,” so attendance would not be expected to stay steady."
-    }
-   },
-   "models": [
-    "3.2",
-    "3.11",
-    "3.31"
-   ],
-   "sources": [
-    {
-     "what": "Gourville, Soman 1998, Journal of Consumer Research 25(2), Payment depreciation: consumers gradually adapt to a historic cost with the passage of time, decreasing its sunk-cost impact on consumption of a prepaid benefit (abstract read via the OpenAlex record)",
-     "url": "https://api.openalex.org/works/doi:10.1086/209533"
-    }
-   ],
-   "notes": "Area: social science (consumer behavior, economics). S2 hard, T3: the principle (sunk-cost pressure fades with time since payment) applied to yearly versus monthly billing. Two steps: yearly billing means long gaps since payment; the fading pressure then lowers use more as the gap grows. The health club is a hypothetical case in the blank, not a reported finding, since the fetched abstract states only the general effect. Distractors: B keeps the prepayment pressure and drops the fading; D reverses; A changes the outcome to renewal. Searched Gourville, Soman, payment depreciation, gym: only an unrelated gym-incentive item (Charness, Gneezy).",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 97
-  },
-  {
-   "id": "inferences.S2.hard.w4b3_05",
-   "template": "S2",
-   "subtype": "T3 consequence: drained peat compacts and decays, applied to a thousand years of drainage in coastal lowlands",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Peat, a soil made of partially decayed plant matter, accumulates only where waterlogging excludes the oxygen that decomposing microorganisms require; once peat is drained, it compacts and, exposed to air, gradually decomposes. Beginning roughly a millennium ago, farmers in the coastal lowlands of what is now the Netherlands, much of which lay only slightly above sea level, dug ditches to drain peatlands for cultivation, and geoscientist Gilles Erkens and colleagues have reconstructed the long-term consequences of this practice. Given how peat forms and breaks down, the reconstruction most likely showed that the drainage had ______",
-   "options": [
-    "gradually lowered the land, leaving much of the coastal plain below sea level.",
-    "lowered the surface at first, but only until the drained peat had dried into a firm, stable layer.",
-    "lowered the land only where peat was also dug out for fuel, leaving fields that were merely drained at their original height.",
-    "built up new peat in the drained fields as the remains of harvested crops decayed in the soil."
-   ],
-   "answer_letter": "A",
-   "explanation": "The text says that once peat is drained, “it compacts and, exposed to air, gradually decomposes.” A millennium of drainage would therefore have made the peat shrink and waste away, lowering land that already lay “only slightly above sea level”; this is the outcome in A.",
-   "distractors": {
-    "B": {
-     "recipe": "right start, wrong end (REV)",
-     "why_wrong": "The land would sink at first, but the text says drained peat, “exposed to air, gradually decomposes,” a process that continues as long as the peat stays drained; nothing suggests it settles into a stable layer."
-    },
-    "C": {
-     "recipe": "cause moved to the wrong practice (MIX)",
-     "why_wrong": "Digging out peat would lower the land, but the text says drainage alone makes peat compact and decompose, so drained fields would sink as well."
-    },
-    "D": {
-     "recipe": "rule applied to the wrong conditions (MIX)",
-     "why_wrong": "According to the text, peat “accumulates only where waterlogging excludes the oxygen that decomposing microorganisms require,” so new peat would not build up in fields that had been drained."
-    }
-   },
-   "models": [
-    "3.18",
-    "3.13",
-    "3.28"
-   ],
-   "sources": [
-    {
-     "what": "Erkens, van der Meulen, Middelkoop 2016, Hydrogeology Journal, Double trouble: drainage of Dutch coastal peatlands over the past millennium; compaction and oxidation of drained peat caused subsidence that lowered the coastal plain by 1.9 m on average, bringing most of it below sea level; at least 66 percent of the volume loss from drainage (abstract read via the Semantic Scholar record; open access at Springer)",
-     "url": "https://link.springer.com/article/10.1007/s10040-016-1380-4"
-    }
-   ],
-   "notes": "Area: history (medieval land use) with earth science. S2 hard, T3: the principle (peat forms only when waterlogged; drained peat compacts and decays) applied to centuries of drainage in coastal lowlands. Two steps: drainage makes the peat shrink, so the land sinks; land that starts near sea level ends below it. Peat cutting for fuel (about a third of the loss in the study) is left out; the key credits only drainage, as the passage does. Distractors: B keeps the initial sinking and invents a stopping point; C keeps 'removing peat lowers land' but credits only peat cutting (the study found about a third of the loss came from cutting); D applies the formation rule to drained fields. Searched polder, peat, subsidence, Erkens: peat appears only as palsas, bog butter and zombie fires, none about drainage subsidence.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 95
-  },
-  {
-   "id": "inferences.S9.hard.w4b3_06",
-   "template": "S9",
-   "subtype": "T2 what the behavior reveals: flies respond to female wasps but not to males",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Certain parasitoid wasps deposit their eggs inside fruit fly larvae, and the developing wasps eventually devour their hosts from within, but fly larvae feeding on alcohol-laden food are considerably less likely to be successfully parasitized. Biologists Balint Kacsoh, Todd Schlenke, and colleagues found that female Drosophila melanogaster flies that could see female wasps of these species switched from ordinary food to alcohol-laden food for laying their eggs, a preference that persisted long after the wasps were removed; flies exposed to male wasps, however, showed no such change. The flies’ behavior suggests that they ______",
-   "options": [
-    "can tell female wasps from male wasps by sight but do not connect either sex with any danger to their larvae.",
-    "respond to the sight of any wasp by laying their eggs where the alcohol will protect the larvae.",
-    "react to the sight of wasps that threaten their offspring rather than to the presence of wasps in general.",
-    "favor alcohol-laden food only while wasps remain in view, since the danger ends once the wasps leave."
-   ],
-   "answer_letter": "C",
-   "explanation": "The text explains that the wasps “deposit their eggs inside fruit fly larvae” and that larvae “feeding on alcohol-laden food are considerably less likely to be successfully parasitized.” Flies that saw female wasps switched to laying eggs in that food, but “flies exposed to male wasps, however, showed no such change.” Since only female wasps lay the eggs that endanger fly larvae, the flies were responding to the wasps that threaten their offspring, not to wasps as such, as C says.",
-   "distractors": {
-    "A": {
-     "recipe": "right piece, broken link (PART)",
-     "why_wrong": "The flies do distinguish the sexes, but their response to female wasps was a shift to food that protects their larvae, which shows they do connect those wasps with a danger to their young."
-    },
-    "B": {
-     "recipe": "half the evidence (PART)",
-     "why_wrong": "The alcohol does protect larvae, but “flies exposed to male wasps, however, showed no such change,” so the flies did not respond to just any wasp."
-    },
-    "D": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "The text says the preference “persisted long after the wasps were removed,” so it did not end when the wasps left."
-    }
-   },
-   "models": [
-    "3.22",
-    "3.19",
-    "3.6"
-   ],
-   "sources": [
-    {
-     "what": "Kacsoh, Lynch, Mortimer, Schlenke 2013, Science, Fruit flies medicate offspring after seeing parasites: when flies see wasps they switch to laying eggs in alcohol-laden food that protects hatched larvae from infection; the change is retained long after wasps are removed; flies respond to female larval endoparasitoids but not to males",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/23430653/"
-    }
-   ],
-   "notes": "Area: natural science (animal behavior). S9 hard, T2: the behavior reveals what the flies respond to. Two steps: alcohol protects larvae from egg-laying wasps; flies respond to females, not males, so they respond to the threat to their young. Pupal parasitoids (also ignored in the study) are left out to keep the passage short. Distractors: A keeps the flies' ability to tell the sexes apart but denies the protective link; B keeps the protective link but ignores the male-wasp control; D reverses the persistence. Searched Kacsoh, Drosophila, fruit flies, parasitoid, ethanol: no fly item; ethanol hits are crucian carp and alcohol taxes.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 94
-  },
-  {
-   "id": "inferences.S9.hard.w4b3_07",
-   "template": "S9",
-   "subtype": "T2 assumption revealed by design: patient rooms planned around a reclining patient",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Completed in 1933, the Paimio Sanatorium in Finland was designed by architects Alvar and Aino Aalto for tuberculosis patients, whose treatment then depended largely on prolonged rest, and Alvar Aalto described the building itself as a “medical instrument.” In each patient room, the Aaltos positioned the lighting so that no lamp would appear within the field of vision of someone lying in bed, painted the ceilings a subdued grayish green to diminish glare, and even contoured the washbasins to minimize the noise of running water. These design choices suggest that the Aaltos assumed that ______",
-   "options": [
-    "patients would need bright light in their rooms, provided that no lamp was directly in their line of sight.",
-    "patients would spend long hours lying in their rooms, where even minor glare or noise could disturb them.",
-    "patients would spend most of their days on the building’s sun terraces rather than in their own rooms.",
-    "glare would disturb a resting patient more than noise would, so lighting deserved the most attention."
-   ],
-   "answer_letter": "B",
-   "explanation": "The text says that treatment “depended largely on prolonged rest” and that the Aaltos kept lamps out of “the field of vision of someone lying in bed,” chose a ceiling color “to diminish glare,” and contoured washbasins “to minimize the noise of running water.” Each choice protects a person resting in bed from small disturbances, which suggests the Aaltos expected patients to spend long hours lying in their rooms, as B says.",
-   "distractors": {
-    "A": {
-     "recipe": "right detail, wrong goal (REV)",
-     "why_wrong": "The Aaltos did keep lamps out of view, but they also chose a ceiling color “to diminish glare,” which points to softening light, not to a need for bright light."
-    },
-    "C": {
-     "recipe": "wrong setting (OUT)",
-     "why_wrong": "The text never mentions terraces, and the care taken over lamps, ceilings and washbasins in the patient rooms would make little sense if patients spent their days elsewhere."
-    },
-    "D": {
-     "recipe": "unsupported ranking (CMP)",
-     "why_wrong": "The Aaltos addressed both glare and noise, even reshaping washbasins to quiet them; the text never ranks one disturbance above the other."
-    }
-   },
-   "models": [
-    "3.6",
-    "3.7",
-    "3.19"
-   ],
-   "sources": [
-    {
-     "what": "Paimio Sanatorium (Wikipedia): designed by Alvar and Aino Aalto, completed 1933, for tuberculosis treatment that relied heavily on rest; lighting positioned so patients lying in bed would not have a lamp in their field of vision; ceilings painted a muted greyish-green to reduce glare; washbasins shaped to reduce noise",
-     "url": "https://en.wikipedia.org/wiki/Paimio_Sanatorium"
-    }
-   ],
-   "notes": "Area: humanities (architecture, design). S9 hard, T2: design choices reveal the designers' assumption about the patient's position and needs. Two steps: treatment by rest plus three features aimed at someone lying in bed. Distractors: A keeps the lamp placement but reverses its aim, C moves patients out of the rooms (the sanatorium did have sun terraces, but the passage gives no reason to expect patients mostly there), D ranks two disturbances the text treats alike. Searched Aalto, Paimio, sanatorium: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 95
-  },
-  {
-   "id": "inferences.S6.hard.w4b3_08",
-   "template": "S6",
-   "subtype": "X but not Y: negative reviews appear on the open site but not the verified one",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "On the travel website Expedia, only customers who have actually booked accommodations can review a hotel, whereas TripAdvisor permits anyone to post reviews. Economists Dina Mayzlin, Yaniv Dover, and Judith Chevalier, reasoning that independently owned hotels stand to benefit more from fabricated reviews than chain hotels do, compared the two sites and found that hotels located near an independent hotel received disproportionately negative reviews on TripAdvisor relative to Expedia, suggesting that ______",
-   "options": [
-    "travelers who stay near independent hotels tend to judge hotels more harshly than other travelers do, whichever site they use.",
-    "Expedia may remove some negative reviews of hotels that are located near independent hotels.",
-    "independent hotels themselves receive more negative reviews on TripAdvisor than they do on Expedia.",
-    "some negative TripAdvisor reviews of those hotels may have been posted by competitors rather than by guests."
-   ],
-   "answer_letter": "D",
-   "explanation": "Only customers “who have actually booked accommodations” can review on Expedia, while TripAdvisor “permits anyone to post reviews.” The extra negative reviews for hotels “located near an independent hotel” show up on TripAdvisor “relative to Expedia,” the site open to non-guests, and independently owned hotels “stand to benefit more from fabricated reviews.” Together these facts suggest that rival hotels wrote some of the negative reviews, as D says.",
-   "distractors": {
-    "A": {
-     "recipe": "half the evidence (PART)",
-     "why_wrong": "If nearby guests were simply harsher, their reviews would be negative on both sites; the text says the negative reviews were disproportionate on TripAdvisor “relative to Expedia.”"
-    },
-    "B": {
-     "recipe": "rival mechanism (CAUSE)",
-     "why_wrong": "The text gives no sign that Expedia removes reviews; the difference it describes lies in who is allowed to post on each site."
-    },
-    "C": {
-     "recipe": "entity swap (MIX)",
-     "why_wrong": "The finding concerns hotels “located near an independent hotel,” not the independent hotels themselves, which the text presents as the ones with something to gain."
-    }
-   },
-   "models": [
-    "3.20",
-    "3.25",
-    "3.29"
-   ],
-   "sources": [
-    {
-     "what": "Mayzlin, Dover, Chevalier 2014, American Economic Review 104(8), Promotional Reviews: Expedia (only customers can post) vs TripAdvisor (anyone can post); gains from promotional reviewing highest for independent hotels; hotel neighbors of hotels with a high incentive to fake have more negative reviews on TripAdvisor relative to Expedia (abstract read via the OpenAlex record)",
-     "url": "https://api.openalex.org/works/doi:10.1257/aer.104.8.2421"
-    }
-   ],
-   "notes": "Area: social science (economics, online markets). S6 hard: the negative reviews appear on the open site but not on the verified one, so they likely come from non-guests with a motive. Two steps: the site difference rules out real guests' harshness; the independent-neighbor pattern points to competitors. Distractors: A ignores the site comparison, B invents a removal policy, C moves the finding to the independent hotels. Hedged 'may' kept in two options so the hedge does not mark the key. Searched TripAdvisor, Expedia, Mayzlin, review manipulation: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 72
-  },
-  {
-   "id": "inferences.S11.hard.w4b3_09",
-   "template": "S11",
-   "subtype": "T4 revision: chromium traced to lacquer and unrelated to preservation",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "For decades, the excellent condition of the bronze weapons buried with China’s Terracotta Army, together with traces of chromium on their surfaces, was interpreted as evidence that Qin-dynasty metalworkers had deliberately applied a chromium coating to prevent corrosion. Analyzing weapons, lacquer, and soil from the mausoleum, archaeologist Marcos Martinón-Torres and colleagues found that the lacquer coating the clay warriors and some weapon components is rich in chromium and that chromium-bearing weapons are no better preserved than others, suggesting that ______",
-   "options": [
-    "the chromium most likely came from nearby lacquer and is not what kept the bronze from corroding.",
-    "Qin metalworkers applied chromium only to weapons that were to be buried near lacquered objects.",
-    "a chromium coating protected the weapons until the surrounding soil wore it away from some of them.",
-    "the lacquer, rather than any chromium coating, is what protected the bronze from corrosion."
-   ],
-   "answer_letter": "A",
-   "explanation": "The text reports two findings: the lacquer on the warriors and “some weapon components is rich in chromium,” and “chromium-bearing weapons are no better preserved than others.” The first offers a source for the chromium other than a deliberate coating, and the second shows that the chromium did not account for the weapons’ condition, which together give the conclusion in A.",
-   "distractors": {
-    "B": {
-     "recipe": "rescue of the received view (REV)",
-     "why_wrong": "This keeps the idea of a deliberate coating, but the text shows chromium-bearing weapons are “no better preserved,” so it gives no support for any purposeful anti-corrosion treatment."
-    },
-    "C": {
-     "recipe": "rescue of the received view (REV)",
-     "why_wrong": "The text never mentions a coating wearing away; and if chromium had protected the weapons, those still bearing it would be better preserved, which the study did not find."
-    },
-    "D": {
-     "recipe": "right piece, wrong role (MIX)",
-     "why_wrong": "The lacquer explains where the chromium came from, but the text says nothing about lacquer protecting bronze from corrosion."
-    }
-   },
-   "models": [
-    "3.10",
-    "3.24",
-    "3.26"
-   ],
-   "sources": [
-    {
-     "what": "Martinon-Torres et al. 2019, Scientific Reports 9:5289, Surface chromium on Terracotta Army bronze weapons is neither an ancient anti-rust treatment nor the reason for their good preservation: chromium presence uncorrelated with preservation; lacquer covering warriors and certain weapon parts is rich in chromium; chromium on the metal is contamination from nearby lacquer; the anti-rust theory should be abandoned",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/30948737/"
-    }
-   ],
-   "notes": "Area: history and archaeology (with materials science). S11 hard: a received view and the two findings that overturn it; the key must honor both (source of the chromium, and no link to preservation). Soil chemistry, the study's own explanation for the preservation, is left out so the key does not need it. Distractors: B and C rescue the old view, D gives the lacquer the protective role. Famous object, specific 2019 study. Searched Terracotta Army, chromium, Martinon-Torres: chromium appears only in an official NiCoCr alloy item; terracotta hits are other works.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 80
-  },
-  {
-   "id": "inferences.S3.hard.w4b3_10",
-   "template": "S3",
-   "subtype": "rule rejects a premise: plants and sunlit grains under the ice mean the ice is not ancient",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "In 1966, engineers at Camp Century, a US military base in northwestern Greenland, drilled through about 1.4 kilometers of glacial ice and recovered the sediment lying beneath it. Decades later, geoscientist Andrew Christ and colleagues found fossilized plant remains in that sediment and used luminescence dating, which reveals when mineral grains were last exposed to sunlight, to determine that the uppermost sediment, derived from local material, had been deposited by flowing water roughly 416,000 years ago. Since plants cannot grow, and sunlight cannot penetrate, beneath an ice sheet, the researchers concluded that ______",
-   "options": [
-    "the plants preserved in the sediment had grown beneath the ice, nourished by the flowing water that deposited it.",
-    "the ice now covering Camp Century must have formed within roughly the past few thousand years.",
-    "the ice now covering Camp Century has not lain there continuously for the past million years.",
-    "the plant remains had washed in from ice-free land elsewhere and reveal little about conditions at Camp Century."
-   ],
-   "answer_letter": "C",
-   "explanation": "The text says that “plants cannot grow, and sunlight cannot penetrate, beneath an ice sheet,” yet the sediment holds “fossilized plant remains” and its local grains were exposed to sunlight before being deposited “roughly 416,000 years ago.” So about 416,000 years ago the site was free of ice, which means the ice there now cannot have been in place without a break for the past million years, as C says.",
-   "distractors": {
-    "A": {
-     "recipe": "contradicts the rule (REV)",
-     "why_wrong": "Flowing water did deposit the sediment, but the text states that “plants cannot grow” beneath an ice sheet, so the plants must have grown when no ice covered the site."
-    },
-    "B": {
-     "recipe": "overreach (EXT)",
-     "why_wrong": "The evidence shows only that the site was free of ice about 416,000 years ago; it says nothing about when, in the long period since, the present ice formed."
-    },
-    "D": {
-     "recipe": "rescue of the received view (REV)",
-     "why_wrong": "The text says the sediment was “derived from local material” and that its grains had been exposed to sunlight, so it does record conditions at Camp Century itself."
-    }
-   },
-   "models": [
-    "3.5",
-    "3.27",
-    "3.32"
-   ],
-   "sources": [
-    {
-     "what": "Christ et al. 2023, Science 381:330, Deglaciation of northwestern Greenland during Marine Isotope Stage 11: luminescence dating shows sediment just beneath the ice at Camp Century was deposited by flowing water in an ice-free environment 416 +/- 38 thousand years ago; reworked from local materials",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/37471537/"
+      "id": "inferences.S2.hard.w4b3_01",
+      "template": "S2",
+      "subtype": "T3 consequence: a daily defense rhythm that survives harvest, applied to when stored cabbage is eaten",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In plants such as Arabidopsis thaliana, a circadian clock set by daily cycles of light and darkness raises chemical defenses in anticipation of the hours when leaf-eating insects feed most actively, and in edible crops, some of the defensive compounds that fluctuate in this way have also shown anticancer properties. Investigating whether a vegetable’s clock stops at harvest, plant biologist Danielle Goodspeed and colleagues found that cabbage stored under alternating light and darkness continued to keep time, which made it more resistant to insects. These findings suggest that, for cabbage stored under such conditions, ______",
+      "options": [
+        "the defensive compounds may build up only after insects have begun to feed on the leaves.",
+        "how much of certain potentially beneficial compounds a serving provides may depend on the hour at which the cabbage is eaten.",
+        "resistance to insects may depend more on the time of day the cabbage was harvested than on the light it receives in storage afterward.",
+        "insects feeding on the cabbage would probably shift their feeding to the hours when its defenses are weakest."
+      ],
+      "answer_letter": "B",
+      "explanation": "The text says that the plant clock makes defensive compounds rise and fall over the day (“compounds that fluctuate in this way”) and that some of them “have also shown anticancer properties” in edible crops. Because cabbage “stored under alternating light and darkness continued to keep time,” those compounds would keep fluctuating after harvest, so the amount a person gets from the cabbage could depend on when it is eaten, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "timing reversed (MIX)",
+          "why_wrong": "The defenses are linked to insects, but the text says the clock raises them “in anticipation of the hours when leaf-eating insects feed most actively,” not only after feeding has begun."
+        },
+        "C": {
+          "recipe": "wrong variable (MIX)",
+          "why_wrong": "The text never discusses the time of harvest; it says that cabbage “stored under alternating light and darkness continued to keep time, which made it more resistant to insects.”"
+        },
+        "D": {
+          "recipe": "speculative consequence (OUT)",
+          "why_wrong": "The text describes the cabbage’s timing, not any change in the insects’ behavior, so there is no basis for predicting that insects would move their feeding to other hours."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.18",
+        "3.33"
+      ],
+      "sources": [
+        {
+          "what": "Goodspeed, Liu, Chehab, Sheng, Francisco, Kliebenstein, Braam 2013, Current Biology: circadian clock of postharvest cabbage is entrainable by light-dark cycles and results in enhanced herbivore resistance; entrainment causes cyclical accumulation of defense metabolites that in edible crops also have potent anticancer properties (the anticipation of insect feeding is from Goodspeed et al. 2012, PNAS, PMID 22331878, same lab)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/23791724/"
+        }
+      ],
+      "notes": "Area: natural science (plant biology) with nutrition. S2 hard, T3: the clock principle (defenses rise and fall daily; some compounds have anticancer properties) plus the case (stored cabbage keeps time) gives the consequence for when the cabbage is eaten. Two steps: compounds cycle daily; stored cabbage keeps cycling, so dose depends on the hour. Distractors: A keeps the insect link but reverses the timing; C keeps resistance but swaps in harvest time; D keeps the daily rhythm but jumps to insect behavior. Searched cabbage, circadian, postharvest, Goodspeed, Braam in claims and every bank: only an unrelated skunk-cabbage item and a Braam touch-response (thigmomorphogenesis) TSP item, a different study. Reviewer 2026-10-27: researcher named as Danielle Goodspeed (first author), since Braam leads a TSP w3b2 study.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 95,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "named the first author, plant biologist Danielle Goodspeed, instead of Janet Braam, who already leads a different study in live TSP w3b2 (same researcher twice is a tell)"
+        ],
+        "status": "fixed",
+        "facts": "PubMed 23791724 abstract: postharvest cabbage clock entrained by light-dark cycles, enhanced herbivore resistance, cycling defense metabolites with anticancer properties in edible crops; PubMed 22331878: anticipation of insect feeding"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (defensive compounds cycle with the clock; stored cabbage keeps the clock, so the dose depends on the hour). Key paraphrased (“potentially beneficial compounds”); C keeps storage and resistance but swaps in harvest time, A keeps the insect link and reverses the timing. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
     {
-     "what": "Christ et al. 2021, PNAS, sediment beneath 1.4 km of ice at Camp Century (core collected 1966) contains plant macrofossils and biomarkers from earlier interglacials",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/33723012/"
-    }
-   ],
-   "notes": "Area: natural science (glaciology, climate). S3 hard: two rules (no plants and no sunlight under an ice sheet) plus the dated observation reject the premise of an ice sheet in place for a million years or more. Negative key with a loose bound (one million years, well beyond 416,000 plus or minus 38,000), so it needs no exact arithmetic. Distractors: A keeps the flowing water and breaks the rule, B overreaches on when the ice formed, D tries to save the old view by moving the plants' origin, which the 'local material' detail rules out. Searched Camp Century, Greenland ice, luminescence: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 93
-  },
-  {
-   "id": "inferences.S4.hard.w4b3_11",
-   "template": "S4",
-   "subtype": "elimination over four candidate stone sources (local, Vienna Basin, Czech site, Italy versus Ukraine)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "The roughly 30,000-year-old Venus of Willendorf, found in Austria, is carved from oolite, a grainy limestone absent in and around Willendorf. Its excavator suspected limestone from the neighboring Vienna Basin, but anthropologist Gerhard Weber and colleagues identified fossilized shell fragments demonstrating that the figurine’s oolite is far older than the Vienna Basin’s limestones, and they excluded a Czech source proposed more recently, whose grains are considerably larger. Comparing oolite samples from throughout Europe, they identified a near-perfect match near Lake Garda, Italy, and a weaker resemblance in Ukraine, suggesting that ______",
-   "options": [
-    "the stone most likely came from the Vienna Basin, the closest limestone deposit to Willendorf.",
-    "the figurine, or the stone used to make it, was most likely brought to Willendorf from northern Italy.",
-    "the people at Willendorf favored the larger grains of the Czech stone for carving figurines.",
-    "the stone most likely came from Ukraine, since oolite found there also resembles the figurine’s."
-   ],
-   "answer_letter": "B",
-   "explanation": "The text eliminates each nearer source: oolite is “absent in and around Willendorf,” the figurine’s stone is “far older than the Vienna Basin’s limestones,” and the Czech source has grains that “are considerably larger.” Of the remaining candidates, the match “near Lake Garda, Italy,” was “near-perfect” while Ukraine’s was only a “weaker resemblance,” so the stone, or the finished figurine, most likely traveled from northern Italy, as B says.",
-   "distractors": {
-    "A": {
-     "recipe": "eliminated candidate (REV)",
-     "why_wrong": "The Vienna Basin is near Willendorf, but the shell fragments show the figurine’s oolite is “far older than the Vienna Basin’s limestones,” which rules that source out."
+      "id": "inferences.S2.hard.w4b3_02",
+      "template": "S2",
+      "subtype": "T3 consequence: elastic recoil resists cold while muscle slows, applied to a chameleon's tongue on a cool morning",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In cold-blooded animals, muscles contract more slowly as body temperature falls: sprinting, swimming, and jumping performance in such animals typically declines by at least a third with a drop of 10 degrees Celsius. Biologists Christopher Anderson and Stephen Deban proposed that movements powered by the recoil of stretched elastic tissue, which stores energy before releasing it, should be far less sensitive to temperature. Chameleons project their sticky tongues toward insect prey by such recoil but retract them using muscle alone. On this reasoning, a chameleon hunting on a cool morning would most likely ______",
+      "options": [
+        "project its tongue and pull it back in nearly as quickly as on a warm afternoon, since its strike is powered by elastic recoil.",
+        "lose about as much speed when projecting its tongue toward prey as when pulling it back in.",
+        "project its tongue more slowly than on a warm afternoon, since elastic tissue stiffens in the cold.",
+        "extend its tongue nearly as fast as on a warm day but pull it back in more slowly."
+      ],
+      "answer_letter": "D",
+      "explanation": "The text says that muscles “contract more slowly as body temperature falls” but that movements powered by elastic recoil “should be far less sensitive to temperature.” Since chameleons “project their sticky tongues toward insect prey by such recoil but retract them using muscle alone,” on a cool morning the projection should stay fast while the muscle-powered retraction slows, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "right half, dropped half (PART)",
+          "why_wrong": "Projection does rely on recoil and should hold its speed, but the text says chameleons “retract them using muscle alone,” and muscles “contract more slowly as body temperature falls,” so pulling the tongue back in would slow."
+        },
+        "B": {
+          "recipe": "half the principle (PART)",
+          "why_wrong": "Retraction would lose speed, but projection is powered by recoil, which the text expects to be “far less sensitive to temperature,” so the two would not slow by the same amount."
+        },
+        "C": {
+          "recipe": "invented mechanism (CAUSE)",
+          "why_wrong": "The text never says elastic tissue stiffens in the cold; it proposes that recoil-powered movements are the ones that hold up best as temperature falls."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.13",
+        "3.33"
+      ],
+      "sources": [
+        {
+          "what": "Anderson, Deban 2010, PNAS 107(12):5495, Ballistic tongue projection in chameleons maintains high performance at low temperature: ectotherm sprinting, swimming and jumping performance drops by at least 33 percent over a 10 C drop; authors propose that ballistic movements powered by elastic recoil are less thermally dependent; tongue projection keeps high performance (10-19 percent decline per 10 C) while muscle-powered retraction declines by more than 42 percent",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/20212130/"
+        }
+      ],
+      "notes": "Area: natural science (biomechanics, herpetology). S2 hard, T3: a principle (elastic recoil is less temperature-dependent than muscle) applied to a two-part case (recoil-powered projection, muscle-powered retraction). The measured result is held back for the key. Two steps: sort the two movements by power source, then apply the principle to each. Distractors: A overextends the muscle slowdown, B ignores the elastic half, C invents a cold-stiffening mechanism. Replaces a bumblebee item withdrawn because live inferences w3b3_19 makes the same just-visited-flower inference. Searched chameleon, elastic recoil, Anderson, Deban: other chameleon items (nano-chameleon, color-changing nanocrystals) are different topics in other skills. Reviewer 2026-10-27: A is now the right-half option (fast strike kept, retraction slowdown dropped), replacing the overreach.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 94,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "read easier than band 6 (all three wrong options contradicted the stated principle): A rebuilt as the right half (projection holds its speed) with the dropped half (muscle-powered retraction slows), so it fails only on the retraction link; re-solved, D only"
+        ],
+        "status": "fixed",
+        "facts": "PubMed 20212130 abstract: at least 33 percent drop per 10 C, recoil proposal, projection maintained, retraction down more than 42 percent"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "After the fix: two steps (sort the movements by power source, apply the principle to each). A now keeps the fast, recoil-powered strike and fails only on muscle retraction; B and C each deny half the principle. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "eliminated candidate (REV)",
-     "why_wrong": "The Czech site was “excluded” because its grains “are considerably larger” than the figurine’s, so the figurine is not made of that stone."
-    },
-    "D": {
-     "recipe": "weaker candidate preferred (MIX)",
-     "why_wrong": "Ukrainian oolite did resemble the figurine’s, but the text calls it a “weaker resemblance” than the “near-perfect match” near Lake Garda, so it is the less likely source."
-    }
-   },
-   "models": [
-    "3.1",
-    "3.23"
-   ],
-   "sources": [
     {
-     "what": "Weber et al. 2022, Scientific Reports 12:2926, The microstructure and the origin of the Venus from Willendorf: oolitic limestones completely absent in and around Willendorf; Mesozoic shell fragments exclude Miocene Vienna Basin oolites (suggested by the discoverer); Stranska Skala (Czech Republic) excluded, much larger ooids; Sega di Ala near Lake Garda virtually indistinguishable, Isjum (Ukraine) second but clearly less close",
-     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8885675/"
-    }
-   ],
-   "notes": "Area: history and archaeology (Paleolithic art) with geology. S4 hard, permutation set over the four candidate sources the study weighs, each wrong option a real candidate with the fact that sinks it. Key allows either the figurine or the raw stone to have traveled, as the authors do. The figurine is famous; the 2022 sourcing study is not. Searched Willendorf, oolite, Weber: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 91
-  },
-  {
-   "id": "inferences.S11.medium.w4b3_12",
-   "template": "S11",
-   "subtype": "received explanation (chemical residue) undercut by controls, so the adult memory is real",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Because metamorphosis drastically restructures an insect’s body, some researchers have proposed that when adult insects appear to recall larval experiences, they are actually responding to chemical residues from the larval environment that cling to them. Biologist Douglas Blackiston and colleagues trained tobacco hornworm caterpillars to avoid an odor by pairing it with mild electric shocks, and the adult moths also avoided it. Washing the pupae did not change this response, and exposing untrained pupae to the odor did not produce it, suggesting that ______",
-   "options": [
-    "the odor alone, even without the shocks, was enough to make the caterpillars avoid it.",
-    "chemical residues on the pupae, rather than learning, caused the adult moths to avoid the odor.",
-    "moths generally learn to avoid odors more readily than caterpillars do.",
-    "what the caterpillars had learned was retained through their transformation into moths."
-   ],
-   "answer_letter": "D",
-   "explanation": "Some researchers think apparent larval memories are really responses to “chemical residues from the larval environment that cling to them.” But “Washing the pupae did not change this response,” and “exposing untrained pupae to the odor did not produce it,” so residues cannot explain the moths’ behavior. The avoidance must instead come from the training the caterpillars received, as D says.",
-   "distractors": {
-    "A": {
-     "recipe": "wrong variable (MIX)",
-     "why_wrong": "The caterpillars were trained by “pairing it with mild electric shocks,” and the text says “exposing untrained pupae to the odor did not produce” avoidance, so the odor alone did not cause it."
+      "id": "inferences.S2.hard.w4b3_03",
+      "template": "S2",
+      "subtype": "T3 consequence: stretch tuning follows inharmonicity, applied to a short piano with thick bass strings",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Ideally, the overtones accompanying a piano note would be exact multiples of its fundamental frequency, but the stiffness of actual piano wire raises them slightly, a phenomenon called inharmonicity that intensifies in shorter, thicker strings. Physicist O. L. Railsback discovered in the 1930s that pianos tuned by ear deviate from the theoretical scale in a consistent pattern, which he attributed not to imprecision but to inharmonicity: tuners adjust each successive note to agree with the overtones of notes already tuned. Consequently, on a small upright piano, whose bass strings are short and thick, a tuner working by ear would most likely ______",
+      "options": [
+        "set the lowest notes farther from their theoretical pitches than on a large grand piano.",
+        "set the bass notes closer to the theoretical scale, since the piano’s shorter strings vibrate more rapidly.",
+        "tighten the bass strings until their overtones become exact multiples of their fundamental frequencies.",
+        "leave the bass at its theoretical pitches and depart from the scale only in the highest notes."
+      ],
+      "answer_letter": "A",
+      "explanation": "The text says that inharmonicity “intensifies in shorter, thicker strings” and that tuners “adjust each successive note to agree with the overtones of notes already tuned,” which is why pianos tuned by ear “deviate from the theoretical scale.” On a small upright, whose bass strings “are short and thick,” the overtones involved in tuning the bass are pushed higher than on a grand, so matching them pulls those notes farther from their theoretical pitches, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal with an invented reason (REV)",
+          "why_wrong": "Short, thick strings have more inharmonicity, not less, so the bass would move farther from the theoretical scale; the text says nothing about vibration speed bringing notes closer to it."
+        },
+        "C": {
+          "recipe": "fix aimed at the wrong cause (MIX)",
+          "why_wrong": "The text attributes inharmonicity to “the stiffness of actual piano wire,” a property of the string, so a tuner cannot make the overtones exact multiples by tightening the strings."
+        },
+        "D": {
+          "recipe": "half the pattern (PART)",
+          "why_wrong": "The text gives no reason the bass would stay at its theoretical pitches; the short, thick bass strings are exactly where inharmonicity is greatest."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.13",
+        "3.33"
+      ],
+      "sources": [
+        {
+          "what": "Piano acoustics (Wikipedia): stiffness raises the overtones (inharmonicity), which is greater with thicker, shorter strings; designers of short pianos must use thick bass strings and accept greater inharmonicity; Railsback (1930s) found pianos tuned to be pleasing depart from equal temperament because of inharmonicity, not imprecision; tuners set pitches relative to the sharpened overtones of notes already tuned",
+          "url": "https://en.wikipedia.org/wiki/Piano_acoustics"
+        }
+      ],
+      "notes": "Area: humanities (music, instrument making) with physics. S2 hard, T3, two linked principles: short thick strings are more inharmonic; tuning by ear follows overtones, so stretch follows inharmonicity; applied to a short upright. Key is neutral on direction ('farther from'), so it does not need the student to know whether bass notes go flat. Distractors: B reversal, C attacks the wrong cause (tension instead of stiffness), D keeps a stretched pattern but drops the bass. Searched inharmonic, Railsback, stretched tuning, piano tun: no item; piano subjects in the bank are Nancarrow, Lockwood, Welte-Mignon rolls, all different.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 102,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Piano acoustics: Railsback 1930s, stretch due to inharmonicity not imprecision, tuners conform new pitches to sharpened overtones of tuned notes, short pianos need thick bass strings and accept greater inharmonicity"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two linked principles (short, thick strings are more inharmonic; tuning by ear follows the overtones) applied to an unstated case; B and D are partly right. Physics content keeps it hard without ambiguity. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "B": {
-     "recipe": "polarity trap (POL)",
-     "why_wrong": "This is the received view that the experiment tested; the washing and exposure results count against it rather than supporting it."
-    },
-    "C": {
-     "recipe": "unsupported comparison (CMP)",
-     "why_wrong": "The study trained only caterpillars and did not compare how readily moths and caterpillars learn."
-    }
-   },
-   "models": [
-    "2.4",
-    "2.2",
-    "2.13"
-   ],
-   "sources": [
     {
-     "what": "Blackiston, Silva Casey, Weiss 2008, PLoS ONE 3(3):e1736, Retention of memory through metamorphosis: fifth-instar Manduca sexta caterpillars trained with shock paired with an odor avoided it as adults; not chemical carryover, since applying odorants to naive pupae and washing pupae of trained caterpillars did not change behavior; chemical carryover vs memory named as the two candidate mechanisms",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/18320055/"
-    }
-   ],
-   "notes": "Area: natural science (insect learning). S11 medium: a received explanation (chemical residue, the 'chemical legacy' idea named in the paper as one candidate mechanism) and the controls that undercut it. Third-instar results left out. Distractors: B is the polarity trap (the view the evidence undercuts), A and C misread the method. Searched Blackiston, metamorphosis, Manduca, hornworm: metamorphosis appears only in unrelated items (salamander eyelids, ant trophallaxis).",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 84
-  },
-  {
-   "id": "inferences.S11.medium.w4b3_13",
-   "template": "S11",
-   "subtype": "received view (internet drives polarization) undercut by age-group pattern",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Many commentators have blamed the internet and social media for the widening political divide in the United States. Economists Levi Boxell, Matthew Gentzkow, and Jesse Shapiro tested this idea by combining eight separate measures of political polarization into a single index and comparing its growth across age groups. Polarization had increased most among Americans over 65, the group least likely to use the internet or social media, and less among those aged 18 to 39, suggesting that ______",
-   "options": [
-    "factors other than internet use probably account for much of the recent rise in polarization.",
-    "older Americans have recently become heavier users of social media than younger Americans.",
-    "polarization among younger Americans will soon catch up with that among older Americans.",
-    "internet use has made the Americans who rely on it most less politically divided than before."
-   ],
-   "answer_letter": "A",
-   "explanation": "If the internet were driving polarization, the divide should have grown most among heavy users. Instead it grew most among “Americans over 65, the group least likely to use the internet or social media,” and “less among those aged 18 to 39.” This suggests that much of the increase has causes other than internet use, as A says.",
-   "distractors": {
-    "B": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "The text describes Americans over 65 as “the group least likely to use the internet or social media,” the opposite of heavier use."
+      "id": "inferences.S2.hard.w4b3_04",
+      "template": "S2",
+      "subtype": "T3 consequence: payment depreciation applied to yearly versus monthly billing",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Consumers who have prepaid for something, such as a subscription to a concert series, often feel obligated to use it so that their money will not be wasted. Marketing researchers John Gourville and Dilip Soman determined that this obligation diminishes over time: as the interval since a payment lengthens, consumers gradually adapt to the expense, so it influences their decisions about using what they purchased less and less, a phenomenon the researchers call payment depreciation. Compared with a health club that bills its members monthly, a club that bills them annually would therefore most likely experience ______",
+      "options": [
+        "fewer renewals, since a single yearly bill is larger than any one monthly bill.",
+        "higher attendance overall, since members who pay more at one time feel more obligated to use the club.",
+        "visits that drop off more sharply as the months since members last paid add up.",
+        "steady attendance all year, since members will already have paid for every month in advance."
+      ],
+      "answer_letter": "C",
+      "explanation": "The text says that “as the interval since a payment lengthens, consumers gradually adapt to the expense, so it influences their decisions about using what they purchased less and less.” Members billed annually go many months without paying, so the obligation to use the club would fade further than for members who pay monthly, and their visits would fall off more as the months pass, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "off-topic outcome (OUT)",
+          "why_wrong": "The text is about whether people use what they have paid for, not whether they choose to pay again, so it gives no basis for a claim about renewals."
+        },
+        "B": {
+          "recipe": "half the principle (PART)",
+          "why_wrong": "Prepaying does create an obligation to use the club, but the text says that “this obligation diminishes over time,” so a single large payment would not keep attendance high all year."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Having paid in advance is exactly the situation in which, according to the text, consumers “gradually adapt to the expense,” so attendance would not be expected to stay steady."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.11",
+        "3.31"
+      ],
+      "sources": [
+        {
+          "what": "Gourville, Soman 1998, Journal of Consumer Research 25(2), Payment depreciation: consumers gradually adapt to a historic cost with the passage of time, decreasing its sunk-cost impact on consumption of a prepaid benefit (abstract read via the OpenAlex record)",
+          "url": "https://api.openalex.org/works/doi:10.1086/209533"
+        }
+      ],
+      "notes": "Area: social science (consumer behavior, economics). S2 hard, T3: the principle (sunk-cost pressure fades with time since payment) applied to yearly versus monthly billing. Two steps: yearly billing means long gaps since payment; the fading pressure then lowers use more as the gap grows. The health club is a hypothetical case in the blank, not a reported finding, since the fetched abstract states only the general effect. Distractors: B keeps the prepayment pressure and drops the fading; D reverses; A changes the outcome to renewal. Searched Gourville, Soman, payment depreciation, gym: only an unrelated gym-incentive item (Charness, Gneezy).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 97,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex abstract: payment depreciation, gradual adaptation to a historic cost lowers its sunk-cost pull on consumption"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (yearly billing means long gaps since payment; the obligation fades with the gap). B keeps the prepayment pressure and drops the fading, a near miss. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "speculative future (FUT)",
-     "why_wrong": "The study compared past growth across age groups; the text offers nothing about how polarization will change among younger Americans."
-    },
-    "D": {
-     "recipe": "overreach (EXT)",
-     "why_wrong": "Polarization grew less among younger Americans, but it still grew; the text gives no evidence that internet use reduced polarization."
-    }
-   },
-   "models": [
-    "2.2",
-    "2.4",
-    "2.15"
-   ],
-   "sources": [
     {
-     "what": "Boxell, Gentzkow, Shapiro 2017, PNAS 114(40):10612, Greater Internet use is not associated with faster growth in political polarization among US demographic groups: index of eight measures; polarization increased most among groups least likely to use the internet and social media; greater increases for those older than 65 than for those aged 18-39; internet explains a small share of the growth",
-     "url": "https://pubmed.ncbi.nlm.nih.gov/28928150/"
-    }
-   ],
-   "notes": "Area: social science (political economy, media). S11 medium: a common belief and an age-group pattern that runs against it. Neutral on party; no political content beyond the measure. Distractors: REV on usage, FUT, EXT (less growth read as a reduction). Searched Boxell, Gentzkow, polarization: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 78
-  },
-  {
-   "id": "inferences.S2.medium.w4b3_14",
-   "template": "S2",
-   "subtype": "T3 consequence: film blind to red and oversensitive to blue, applied to a blue sky",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "In the early decades of cinema, many motion pictures were photographed on orthochromatic film, which is sensitive to blue and green light but insensitive to red. Consequently, the film rendered red objects considerably darker than they appear to the eye and blue objects considerably lighter: performers’ red lips could look nearly black on screen, and blue eyes almost white. A scene filmed outdoors on a cloudless afternoon beneath a deep blue sky would therefore most likely have shown ______",
-   "options": [
-    "a sky that looked nearly black, since the film was insensitive to many of the colors in outdoor scenes.",
-    "a sky that appeared darker on screen than the performers’ red lips did.",
-    "a pale sky that looked much as an overcast one would.",
-    "a sky whose tone closely matched how bright it looked to people on the set."
-   ],
-   "answer_letter": "C",
-   "explanation": "The text says the film rendered “blue objects considerably lighter” than they appear to the eye, so that even “blue eyes” looked “almost white.” A deep blue sky would likewise appear very light on screen, resembling the pale sky of an overcast day, as C says.",
-   "distractors": {
-    "A": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "The film “is sensitive to blue and green light,” so a blue sky would be recorded as very light, not nearly black; it is red that the film rendered dark."
+      "id": "inferences.S2.hard.w4b3_05",
+      "template": "S2",
+      "subtype": "T3 consequence: drained peat compacts and decays, applied to a thousand years of drainage in coastal lowlands",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Peat, a soil made of partially decayed plant matter, accumulates only where waterlogging excludes the oxygen that decomposing microorganisms require; once peat is drained, it compacts and, exposed to air, gradually decomposes. Beginning roughly a millennium ago, farmers in the coastal lowlands of what is now the Netherlands, much of which lay only slightly above sea level, dug ditches to drain peatlands for cultivation, and geoscientist Gilles Erkens and colleagues have reconstructed the long-term consequences of this practice. Given how peat forms and breaks down, the reconstruction most likely showed that the drainage had ______",
+      "options": [
+        "gradually lowered the land, leaving much of the coastal plain below sea level.",
+        "lowered the surface at first, but only until the drained peat had dried into a firm, stable layer.",
+        "lowered the land only where peat was also dug out for fuel, leaving fields that were merely drained at their original height.",
+        "built up new peat in the drained fields as the remains of harvested crops decayed in the soil."
+      ],
+      "answer_letter": "A",
+      "explanation": "The text says that once peat is drained, “it compacts and, exposed to air, gradually decomposes.” A millennium of drainage would therefore have made the peat shrink and waste away, lowering land that already lay “only slightly above sea level”; this is the outcome in A.",
+      "distractors": {
+        "B": {
+          "recipe": "right start, wrong end (REV)",
+          "why_wrong": "The land would sink at first, but the text says drained peat, “exposed to air, gradually decomposes,” a process that continues as long as the peat stays drained; nothing suggests it settles into a stable layer."
+        },
+        "C": {
+          "recipe": "cause moved to the wrong practice (MIX)",
+          "why_wrong": "Digging out peat would lower the land, but the text says drainage alone makes peat compact and decompose, so drained fields would sink as well."
+        },
+        "D": {
+          "recipe": "rule applied to the wrong conditions (MIX)",
+          "why_wrong": "According to the text, peat “accumulates only where waterlogging excludes the oxygen that decomposing microorganisms require,” so new peat would not build up in fields that had been drained."
+        }
+      },
+      "models": [
+        "3.18",
+        "3.13",
+        "3.28"
+      ],
+      "sources": [
+        {
+          "what": "Erkens, van der Meulen, Middelkoop 2016, Hydrogeology Journal, Double trouble: drainage of Dutch coastal peatlands over the past millennium; compaction and oxidation of drained peat caused subsidence that lowered the coastal plain by 1.9 m on average, bringing most of it below sea level; at least 66 percent of the volume loss from drainage (abstract read via the Semantic Scholar record; open access at Springer)",
+          "url": "https://link.springer.com/article/10.1007/s10040-016-1380-4"
+        }
+      ],
+      "notes": "Area: history (medieval land use) with earth science. S2 hard, T3: the principle (peat forms only when waterlogged; drained peat compacts and decays) applied to centuries of drainage in coastal lowlands. Two steps: drainage makes the peat shrink, so the land sinks; land that starts near sea level ends below it. Peat cutting for fuel (about a third of the loss in the study) is left out; the key credits only drainage, as the passage does. Distractors: B keeps the initial sinking and invents a stopping point; C keeps 'removing peat lowers land' but credits only peat cutting (the study found about a third of the loss came from cutting); D applies the formation rule to drained fields. Searched polder, peat, subsidence, Erkens: peat appears only as palsas, bog butter and zombie fires, none about drainage subsidence.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 95,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex abstract: millennium of drainage, compaction and oxidation, plain lowered 1.9 m on average, most of it below sea level, at least 66 percent from drainage"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (drained peat shrinks and decays, so the land sinks; land barely above sea level ends below it). B keeps the initial sinking, C keeps peat removal; D is plainer. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "B": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "Red lips “could look nearly black,” while blue objects looked “considerably lighter,” so the sky would appear lighter than the lips, not darker."
-    },
-    "D": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "The text says the film rendered blue objects “considerably lighter” than “they appear to the eye,” so the sky’s tone on screen would not match what people saw."
-    }
-   },
-   "models": [
-    "2.3",
-    "2.12",
-    "2.22"
-   ],
-   "sources": [
     {
-     "what": "Panchromatic film (Wikipedia): orthochromatic film was not sensitive to red; it proved troublesome for motion pictures, rendering blue skies as perpetually overcast, blond hair washed-out, blue eyes nearly white and red lips nearly black; partly corrected with makeup, filters and lighting (see also Orthochromasia: sensitive to blue and green but not red)",
-     "url": "https://en.wikipedia.org/wiki/Panchromatic_film"
-    }
-   ],
-   "notes": "Area: humanities (film history) with photographic chemistry. S2 medium, T3: the film's color response applied to a case the passage does not state (the source's 'blue skies as perpetually overcast' is held back for the key). Distractors are three reversals of the light-dark mapping, the medium mix. Searched orthochromatic, panchromatic, silent film makeup: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 79
-  },
-  {
-   "id": "inferences.S3.medium.w4b3_15",
-   "template": "S3",
-   "subtype": "dating rejects an identification: an Iron Age body cannot be a tenth-century queen",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "In 1835, laborers excavating peat in Jutland, Denmark, uncovered the remarkably well-preserved body of a woman in a bog. Because a medieval Scandinavian saga recounts that Queen Gunnhild of Norway was drowned in a bog at the command of the Danish king Harald Bluetooth in the tenth century, the body was promptly identified as the queen’s, and King Frederick VI commissioned an elaborately carved sarcophagus for it. In 1977, however, radiocarbon analysis established that the woman had died around 490 BCE, indicating that ______",
-   "options": [
-    "the saga’s account of how Gunnhild died must be inaccurate.",
-    "the woman found in the bog could not have been Gunnhild.",
-    "Gunnhild was most likely drowned in a different bog in Jutland.",
-    "bodies preserved in peat yield earlier radiocarbon dates than other remains do."
-   ],
-   "answer_letter": "B",
-   "explanation": "The saga places Gunnhild’s death “in the tenth century,” but radiocarbon analysis established that the woman in the bog “had died around 490 BCE,” well over a thousand years earlier. The woman therefore could not have been Gunnhild, as B says.",
-   "distractors": {
-    "A": {
-     "recipe": "overreach (EXT)",
-     "why_wrong": "The dating shows only that this body is not Gunnhild’s; it says nothing about whether the saga’s account of her death is true."
+      "id": "inferences.S9.hard.w4b3_06",
+      "template": "S9",
+      "subtype": "T2 what the behavior reveals: flies respond to female wasps but not to males",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Certain parasitoid wasps deposit their eggs inside fruit fly larvae, and the developing wasps eventually devour their hosts from within, but fly larvae feeding on alcohol-laden food are considerably less likely to be successfully parasitized. Biologists Balint Kacsoh, Todd Schlenke, and colleagues found that female Drosophila melanogaster flies that could see female wasps of these species switched from ordinary food to alcohol-laden food for laying their eggs, a preference that persisted long after the wasps were removed; flies exposed to male wasps, however, showed no such change. The flies’ behavior suggests that they ______",
+      "options": [
+        "can tell female wasps from male wasps by sight but do not connect either sex with any danger to their larvae.",
+        "respond to the sight of any wasp by laying their eggs where the alcohol will protect the larvae.",
+        "react to the sight of wasps that threaten their offspring rather than to the presence of wasps in general.",
+        "favor alcohol-laden food only while wasps remain in view, since the danger ends once the wasps leave."
+      ],
+      "answer_letter": "C",
+      "explanation": "The text explains that the wasps “deposit their eggs inside fruit fly larvae” and that larvae “feeding on alcohol-laden food are considerably less likely to be successfully parasitized.” Flies that saw female wasps switched to laying eggs in that food, but “flies exposed to male wasps, however, showed no such change.” Since only female wasps lay the eggs that endanger fly larvae, the flies were responding to the wasps that threaten their offspring, not to wasps as such, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "right piece, broken link (PART)",
+          "why_wrong": "The flies do distinguish the sexes, but their response to female wasps was a shift to food that protects their larvae, which shows they do connect those wasps with a danger to their young."
+        },
+        "B": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "The alcohol does protect larvae, but “flies exposed to male wasps, however, showed no such change,” so the flies did not respond to just any wasp."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the preference “persisted long after the wasps were removed,” so it did not end when the wasps left."
+        }
+      },
+      "models": [
+        "3.22",
+        "3.19",
+        "3.6"
+      ],
+      "sources": [
+        {
+          "what": "Kacsoh, Lynch, Mortimer, Schlenke 2013, Science, Fruit flies medicate offspring after seeing parasites: when flies see wasps they switch to laying eggs in alcohol-laden food that protects hatched larvae from infection; the change is retained long after wasps are removed; flies respond to female larval endoparasitoids but not to males",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/23430653/"
+        }
+      ],
+      "notes": "Area: natural science (animal behavior). S9 hard, T2: the behavior reveals what the flies respond to. Two steps: alcohol protects larvae from egg-laying wasps; flies respond to females, not males, so they respond to the threat to their young. Pupal parasitoids (also ignored in the study) are left out to keep the passage short. Distractors: A keeps the flies' ability to tell the sexes apart but denies the protective link; B keeps the protective link but ignores the male-wasp control; D reverses the persistence. Searched Kacsoh, Drosophila, fruit flies, parasitoid, ethanol: no fly item; ethanol hits are crucian carp and alcohol taxes.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 94,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 23430653 abstract: flies that see wasps switch to alcohol food, retained long after removal, respond to female larval endoparasitoids but not males"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Key needs the unstated link that only females lay eggs in larvae; A keeps the sex discrimination and breaks the protective link. D dies to “persisted”. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "speculation (OUT)",
-     "why_wrong": "The text gives no information about where Gunnhild may have died once this body is ruled out."
-    },
-    "D": {
-     "recipe": "rival explanation (CAUSE)",
-     "why_wrong": "The text treats the radiocarbon result as reliable and says nothing about peat making dates come out earlier."
-    }
-   },
-   "models": [
-    "2.5",
-    "2.16"
-   ],
-   "sources": [
     {
-     "what": "Haraldskaer Woman (Wikipedia): found by peat workers in 1835 near Vejle, Jutland; early theories identified her as Queen Gunnhild of Norway, said in the Jomsvikinga Saga to have been drowned in a bog on Harald Bluetooth's orders; Frederick VI commanded a carved sarcophagus; radiocarbon dating in 1977 placed her death around 490 BCE",
-     "url": "https://en.wikipedia.org/wiki/Haraldsk%C3%A6r_Woman"
-    }
-   ],
-   "notes": "Area: history and archaeology. S3 medium (2.5 Vinland pattern): a date rejects an identification. Worsaae's 1842 doubt is left out to keep the passage at the models' length. Distractors: EXT (the saga itself), OUT, CAUSE. Searched Haraldskaer, Gunnhild, bog body: no item; the Tollense, bog butter and peat items are different subjects.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 84
-  },
-  {
-   "id": "inferences.S5.medium.w4b3_16",
-   "template": "S5",
-   "subtype": "evidence plus a rival explanation (referee bias), so the claim is not established",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "In 2005, anthropologists Russell Hill and Robert Barton reported that in combat sports such as tae kwon do and wrestling, competitors wearing red won more often than those wearing blue, and they proposed that wearing red confers a competitive advantage. Sport psychologist Norbert Hagemann and colleagues, however, found that tae kwon do referees awarded more points to competitors dressed in red than to those dressed in blue even when the performances were identical. Competitors’ greater success in red therefore ______",
-   "options": [
-    "is mainly the result of referees’ judgments rather than of anything the competitors do.",
-    "would be difficult to explain if red did not affect how the competitors themselves perform.",
-    "shows that red affects competitors only in sports in which referees award points.",
-    "is not conclusive evidence that wearing red affects the competitors themselves."
-   ],
-   "answer_letter": "D",
-   "explanation": "Hill and Barton took the higher win rate in red as a sign that “wearing red confers a competitive advantage.” But Hagemann’s team found that referees “awarded more points to competitors dressed in red” even “when the performances were identical,” so the win rate could reflect the referees rather than the competitors. The win rate alone therefore does not settle the question, as D says.",
-   "distractors": {
-    "A": {
-     "recipe": "overreach (EXT)",
-     "why_wrong": "The referee study shows that referees can favor red, not how much of the win rate that bias explains, so it does not establish that referees account for most of it."
+      "id": "inferences.S9.hard.w4b3_07",
+      "template": "S9",
+      "subtype": "T2 assumption revealed by design: patient rooms planned around a reclining patient",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Completed in 1933, the Paimio Sanatorium in Finland was designed by architects Alvar and Aino Aalto for tuberculosis patients, whose treatment then depended largely on prolonged rest, and Alvar Aalto described the building itself as a “medical instrument.” In each patient room, the Aaltos positioned the lighting so that no lamp would appear within the field of vision of someone lying in bed, painted the ceilings a subdued grayish green to diminish glare, and even contoured the washbasins to minimize the noise of running water. These design choices suggest that the Aaltos assumed that ______",
+      "options": [
+        "patients would need bright light in their rooms, provided that no lamp was directly in their line of sight.",
+        "even small discomforts in a room could disturb the rest on which a patient’s recovery depended.",
+        "patients would spend most of their days on the building’s sun terraces rather than in their own rooms.",
+        "patients would spend long hours lying in bed, where what they saw would matter more to them than what they heard."
+      ],
+      "answer_letter": "B",
+      "explanation": "The text says that treatment “depended largely on prolonged rest” and that the Aaltos kept lamps out of “the field of vision of someone lying in bed,” chose a ceiling color “to diminish glare,” and “even contoured the washbasins to minimize the noise of running water.” Each choice removes a small source of disturbance for a resting patient, which suggests the Aaltos assumed that minor discomforts could interfere with the rest that recovery required, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "right detail, wrong goal (REV)",
+          "why_wrong": "The Aaltos did keep lamps out of view, but they also chose a ceiling color “to diminish glare,” which points to softening light, not to a need for bright light."
+        },
+        "C": {
+          "recipe": "wrong setting (OUT)",
+          "why_wrong": "The text never mentions terraces, and the care taken over lamps, ceilings and washbasins in the patient rooms would make little sense if patients spent their days elsewhere."
+        },
+        "D": {
+          "recipe": "right premise, unsupported ranking (CMP)",
+          "why_wrong": "The Aaltos did design for patients lying in bed, but they also “even contoured the washbasins to minimize the noise of running water,” so the text gives no reason to think sights mattered more to them than sounds."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7",
+        "3.19"
+      ],
+      "sources": [
+        {
+          "what": "Paimio Sanatorium (Wikipedia): designed by Alvar and Aino Aalto, completed 1933, for tuberculosis treatment that relied heavily on rest; lighting positioned so patients lying in bed would not have a lamp in their field of vision; ceilings painted a muted greyish-green to reduce glare; washbasins shaped to reduce noise",
+          "url": "https://en.wikipedia.org/wiki/Paimio_Sanatorium"
+        }
+      ],
+      "notes": "Area: humanities (architecture, design). S9 hard, T2: design choices reveal the designers' assumption about the patient's position and needs. Two steps: treatment by rest plus three features aimed at someone lying in bed. Distractors: A keeps the lamp placement but reverses its aim, C moves patients out of the rooms (the sanatorium did have sun terraces, but the passage gives no reason to expect patients mostly there), D ranks two disturbances the text treats alike. Searched Aalto, Paimio, sanatorium: no item. Reviewer 2026-10-27: key now states the assumption (small discomforts disturb the rest recovery depends on); D is the bed-rest reading with a sight-over-sound ranking, replacing the glare-over-noise option.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 95,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "read easier than band 6 (key restated “lying in bed” and “prolonged rest”; D died to one phrase): key paraphrased to the assumption that small discomforts could disturb the rest recovery depended on; D rebuilt as the old bed-rest reading plus an unsupported sight-over-sound ranking, killed by the washbasins; explanation and why_wrong rewritten; re-solved, B only"
+        ],
+        "status": "fixed",
+        "facts": "Wikipedia Paimio Sanatorium: Alvar and Aino Aalto, 1933, treatment relied on rest, “medical instrument”, lamps out of view of a patient in bed, greyish-green ceilings against glare, washbasins shaped to reduce noise"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "After the fix the key no longer echoes “lying in bed” and needs treatment-by-rest plus the three details; D is the old bed-rest reading with an unsupported ranking, A keeps the lamp placement. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "B": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "The referee finding offers exactly such an explanation: competitors in red could win more because referees score them higher."
-    },
-    "C": {
-     "recipe": "unsupported restriction (EXT)",
-     "why_wrong": "The text does not compare sports with and without referees, so it gives no basis for limiting the effect to refereed sports."
-    }
-   },
-   "models": [
-    "2.18",
-    "2.11",
-    "2.20"
-   ],
-   "sources": [
     {
-     "what": "Hagemann, Strauss, Leissing 2008, Psychological Science 19(8):769, When the referee sees red: Hill and Barton (2005) found red attire associated with winning in combat sports such as tae kwon do and wrestling and proposed a psychological effect on the wearer or opponent; new experiment found referees assign more points to tae kwon do competitors in red than in blue even when performance is identical; effects may have been confounded (abstract read via the OpenAlex record; Hill and Barton 2005 is PubMed 15902246)",
-     "url": "https://api.openalex.org/works/doi:10.1111/j.1467-9280.2008.02155.x"
-    }
-   ],
-   "notes": "Area: social science (sport psychology). S5 medium (2.18 pattern): a claim, its evidence, and a rival explanation that the evidence cannot rule out. Lead-in worded differently from 2.18. Distractors: EXT (referees as the main cause), REV ('difficult to account for'), EXT (refereed sports only). Hill and Barton is a popular result; the item turns on the less-known referee study. Searched red, Hill, Barton, Hagemann, tae kwon do, referee: referee items in the bank are NBA race bias and COVID home advantage, different studies.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 80
-  },
-  {
-   "id": "inferences.S7.medium.w4b3_17",
-   "template": "S7",
-   "subtype": "two cases with opposite outcomes, so the benefit depends on density",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "When jewelweed plants (Impatiens capensis) grow among dense neighbors, they detect the change in light filtered through surrounding leaves and respond by producing taller, more spindly stems. To test whether this response is beneficial, biologists Susan Dudley and Johanna Schmitt manipulated the light that seedlings received, producing some plants with elongated stems and others with short stems, and then transplanted both kinds into a natural population at either high or low density. Elongated plants fared better than short ones at high density, whereas short plants fared better than elongated ones at low density. The researchers therefore concluded that whether stem elongation benefits I. capensis ______",
-   "options": [
-    "depends mainly on how much light the seedlings received before they were transplanted.",
-    "does not vary with the number of neighbors, since all of the plants compete for light.",
-    "depends on how crowded the plant’s surroundings are.",
-    "depends more on the age at which a plant is transplanted than on the density around it."
-   ],
-   "answer_letter": "C",
-   "explanation": "The text reports opposite outcomes in the two settings: “Elongated plants fared better than short ones at high density, whereas short plants fared better than elongated ones at low density.” Since the same trait helped in one setting and hurt in the other, its benefit depends on how crowded the plants are, as C says.",
-   "distractors": {
-    "A": {
-     "recipe": "method mistaken for the variable (MIX)",
-     "why_wrong": "The light treatment was how the researchers produced the two stem forms; the outcome that differed was linked to the density each plant was placed in."
+      "id": "inferences.S6.hard.w4b3_08",
+      "template": "S6",
+      "subtype": "X but not Y: negative reviews appear on the open site but not the verified one",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "On the travel website Expedia, only customers who have actually booked accommodations can review a hotel, whereas TripAdvisor permits anyone to post reviews. Economists Dina Mayzlin, Yaniv Dover, and Judith Chevalier, reasoning that independently owned hotels stand to benefit more from fabricated reviews than chain hotels do, compared the two sites and found that hotels located near an independent hotel received disproportionately negative reviews on TripAdvisor relative to Expedia, suggesting that ______",
+      "options": [
+        "travelers who stay near independent hotels tend to judge hotels more harshly than other travelers do, whichever site they use.",
+        "Expedia may remove some negative reviews of hotels that are located near independent hotels.",
+        "independent hotels themselves receive more negative reviews on TripAdvisor than they do on Expedia.",
+        "some negative TripAdvisor reviews of those hotels may have been posted by competitors rather than by guests."
+      ],
+      "answer_letter": "D",
+      "explanation": "Only customers “who have actually booked accommodations” can review on Expedia, while TripAdvisor “permits anyone to post reviews.” The extra negative reviews for hotels “located near an independent hotel” show up on TripAdvisor “relative to Expedia,” the site open to non-guests, and independently owned hotels “stand to benefit more from fabricated reviews.” Together these facts suggest that rival hotels wrote some of the negative reviews, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "If nearby guests were simply harsher, their reviews would be negative on both sites; the text says the negative reviews were disproportionate on TripAdvisor “relative to Expedia.”"
+        },
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text gives no sign that Expedia removes reviews; the difference it describes lies in who is allowed to post on each site."
+        },
+        "C": {
+          "recipe": "entity swap (MIX)",
+          "why_wrong": "The finding concerns hotels “located near an independent hotel,” not the independent hotels themselves, which the text presents as the ones with something to gain."
+        }
+      },
+      "models": [
+        "3.20",
+        "3.25",
+        "3.29"
+      ],
+      "sources": [
+        {
+          "what": "Mayzlin, Dover, Chevalier 2014, American Economic Review 104(8), Promotional Reviews: Expedia (only customers can post) vs TripAdvisor (anyone can post); gains from promotional reviewing highest for independent hotels; hotel neighbors of hotels with a high incentive to fake have more negative reviews on TripAdvisor relative to Expedia (abstract read via the OpenAlex record)",
+          "url": "https://api.openalex.org/works/doi:10.1257/aer.104.8.2421"
+        }
+      ],
+      "notes": "Area: social science (economics, online markets). S6 hard: the negative reviews appear on the open site but not on the verified one, so they likely come from non-guests with a motive. Two steps: the site difference rules out real guests' harshness; the independent-neighbor pattern points to competitors. Distractors: A ignores the site comparison, B invents a removal policy, C moves the finding to the independent hotels. Hedged 'may' kept in two options so the hedge does not mark the key. Searched TripAdvisor, Expedia, Mayzlin, review manipulation: no item.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 72,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex abstract: Expedia customers only vs TripAdvisor anyone; neighbors of high-incentive (independent) hotels get more negative TripAdvisor reviews relative to Expedia"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (only TripAdvisor is open to non-guests; independents gain from fakes, so their neighbors get fake negatives). C (entity swap to the independents) is a close trap; A dies to “relative to Expedia”. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "B": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "The text shows the benefit reversing between high and low density, so it does vary with the number of neighbors."
-    },
-    "D": {
-     "recipe": "wrong variable (VAR)",
-     "why_wrong": "The text does not mention transplanting plants at different ages; density is the only condition it says was varied."
-    }
-   },
-   "models": [
-    "2.14",
-    "2.8"
-   ],
-   "sources": [
     {
-     "what": "Dudley, Schmitt 1996, American Naturalist 147(3), Testing the adaptive plasticity hypothesis: stem elongation in response to vegetation shade; elongated and nonelongated Impatiens capensis produced by manipulating the red to far-red light cue, transplanted at high and low density in a natural population; elongated plants more fit at high density, suppressed plants more fit at low density (abstract read via the OpenAlex record)",
-     "url": "https://api.openalex.org/works/doi:10.1086/285860"
-    }
-   ],
-   "notes": "Area: natural science (plant ecology, evolution). S7 medium (the 'depends on' variant): opposite outcomes in two conditions give a conditional conclusion. 'Fared better' stands for the paper's 'more fit'. Distractors: MIX (the light manipulation taken as the cause), REV, VAR. The key is the shortest option, as in the official S7 items. Searched Impatiens, jewelweed, Dudley, Schmitt, shade avoidance: no study item (shade avoidance appears only as a concept in an official RS item).",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 105
-  },
-  {
-   "id": "inferences.S1.medium.w4b3_18",
-   "template": "S1",
-   "subtype": "natural experiment: repeal of Sunday shopping bans and religious attendance",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Through much of the 1900s, many US states enforced “blue laws” that prohibited most retail businesses from opening on Sundays, partly to protect the day for worship. Because states repealed these laws in different years, economists Jonathan Gruber and Daniel Hungerman recognized that they could use several national surveys to compare religious participation within each state before and after repeal. They found that attendance at religious services declined once stores were permitted to open on Sundays and that donations to churches fell as well. The declines did not begin before the laws changed, and membership in nonreligious organizations showed no comparable drop. These findings suggest that ______",
-   "options": [
-    "the new opportunity to shop on Sundays drew some people away from religious services.",
-    "people who stopped attending religious services also withdrew from other kinds of organizations.",
-    "religious participation had already been falling in these states before their blue laws were repealed.",
-    "states that kept their blue laws had higher religious attendance than states that never adopted them."
-   ],
-   "answer_letter": "A",
-   "explanation": "Attendance and donations “declined once stores were permitted to open on Sundays,” and because the declines “did not begin before the laws changed,” they are tied to the repeal itself. Since nonreligious organizations “showed no comparable drop,” the change was not a general withdrawal from organizations, so the new chance to shop on Sundays most likely drew some people away from religious services, as A says.",
-   "distractors": {
-    "B": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "The text says membership in nonreligious organizations “showed no comparable drop,” so there is no sign of a broader withdrawal."
+      "id": "inferences.S11.hard.w4b3_09",
+      "template": "S11",
+      "subtype": "T4 revision: belief that old window glass flows undercut by a viscosity estimate",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Panes in some medieval cathedral windows are said to be thicker at the bottom than at the top, and this has long been cited as evidence that glass flows, very slowly, at ordinary temperatures. Materials scientist Edgar Zanotto tested this idea by using the viscosity, or resistance to flow, of several ancient and modern glass compositions to estimate how long glass would take to deform noticeably at room temperature. He found that the time required would far exceed the whole span of human history, suggesting that ______",
+      "options": [
+        "any difference in thickness between the tops and bottoms of such panes most likely dates from when the panes were made.",
+        "no solid material, glass included, can change shape at room temperature, however much time passes.",
+        "medieval glassmakers made each pane thicker along one edge on purpose, so that the glass would not sag over time.",
+        "the thickness of a pane’s lower part reveals roughly how long ago its window was installed."
+      ],
+      "answer_letter": "A",
+      "explanation": "The text says that the panes’ uneven thickness “has long been cited as evidence that glass flows,” but Zanotto found that the time glass would need “to deform noticeably at room temperature” would “far exceed the whole span of human history.” Medieval panes are only centuries old, so they cannot have sagged into their present shape, and any difference in thickness most likely dates from when they were made, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Zanotto studied only glass, and even for glass he found that noticeable deformation would take a time that would “far exceed the whole span of human history,” not that it could never happen; the text says nothing about other solids."
+        },
+        "C": {
+          "recipe": "right premise, invented motive (MIX)",
+          "why_wrong": "The panes may well have been uneven from the start, but the text says nothing about what glassmakers intended, and since the glass does not sag noticeably over centuries, there was no sagging for a thicker edge to prevent."
+        },
+        "D": {
+          "recipe": "rescue of the received view (REV)",
+          "why_wrong": "This assumes that the glass has flowed since the windows were installed, which is the idea Zanotto’s estimate counts against: glass would need far longer than human history to deform noticeably."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.24",
+        "3.26"
+      ],
+      "sources": [
+        {
+          "what": "Zanotto 1998, American Journal of Physics 66(5):392, Do cathedral glasses flow?: a general belief that glass flows at ambient temperature rests mostly on stories that medieval cathedral stained-glass windows are thicker in their lower parts; viscosity curves for several modern and ancient glass compositions give flow and deformation times that exceed the limits of human history (abstract read via the Crossref and OpenAlex records)",
+          "url": "https://doi.org/10.1119/1.19026"
+        }
+      ],
+      "notes": "Area: humanities with physical science (medieval architecture, materials science). Reviewer replacement for the Terracotta Army chromium item (the Terracotta Army is a round-1 subject flagged as famous). S11 hard: a received view (thick-bottomed panes show that glass flows) and a calculation that undercuts it. Two steps: no noticeable flow within human history; so the panes’ shape dates from when they were made. The abstract states the belief, its basis in the cathedral stories and the conclusion; the manufacturing origin is the inference the blank asks for, not a claim put on the source. Distractors: C keeps the key’s first step and adds an unsupported motive, B overreaches to all solids (and to never), D rescues the received view. Searched cathedral glass, glass flow, window glass, Zanotto, viscosity, stained glass, supercooled: no item on glass flow (float glass RS w4b3_24 is a different subject).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 87,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "subject replaced: the Terracotta Army is a round-1 subject flagged as famous (round1/tells.json) and was already swapped out of live boundaries; new S11 hard item on the belief that medieval cathedral glass flows, undercut by Zanotto’s viscosity estimate; claimed in claims.txt with a WITHDRAWN line for the Terracotta claim; source confirmed from the Crossref abstract; re-solved, A only"
+        ],
+        "status": "fixed",
+        "facts": "Crossref/OpenAlex abstract of Zanotto 1998: belief that glass flows at ambient temperature rests on stories of cathedral windows thicker at the bottom; flow times for ancient and modern compositions exceed human history",
+        "note": "blind solve (A, agreed) was of the original Terracotta Army item; the replacement was solved again after writing, A only"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "New item. Two steps (no noticeable flow within human history; so the panes were uneven when made). C shares the key’s first step and fails on an invented motive; B overreaches to all solids and to never; D rescues the old view. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "The text says the declines “did not begin before the laws changed.”"
-    },
-    "D": {
-     "recipe": "unsupported comparison (CMP)",
-     "why_wrong": "The study compared each state before and after its own repeal; the text says nothing about states that never had blue laws."
-    }
-   },
-   "models": [
-    "2.6",
-    "2.10"
-   ],
-   "sources": [
     {
-     "what": "Gruber, Hungerman 2008, Quarterly Journal of Economics 123(2):831, The Church versus the Mall: states repealed Sunday retail bans (blue laws) at different times; after repeal religious attendance falls and church donations and spending fall; not driven by declines before the law change; no comparable declines in membership in or giving to nonreligious organizations (abstract read via the OpenAlex record)",
-     "url": "https://api.openalex.org/works/doi:10.1162/qjec.2008.123.2.831"
-    }
-   ],
-   "notes": "Area: social science (economics of religion). S1 medium: before and after repeal within each state, with two controls (no pre-trend, no drop in other organizations). The drinking and drug-use results are left out. Distractors: two REVs, each contradicted by one control, and a CMP. Searched blue laws, Gruber, Hungerman, Sunday shopping: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 107
-  },
-  {
-   "id": "inferences.S8.medium.w4b3_19",
-   "template": "S8",
-   "subtype": "co-occurrence: price effects line up with number meanings and with Chinese neighborhoods",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "In Cantonese and Mandarin, the word for “four” is nearly identical in pronunciation to the word for “death,” whereas the word for “eight” resembles the word for “prosperity.” Analyzing nearly 117,000 residential sales in a North American metropolitan area with a substantial immigrant population, economists Nicole Fortin, Andrew Hill, and Jeff Huang found that houses whose address numbers end in 4 sold at an average discount of 2.2 percent, whereas those ending in 8 sold at a premium of 2.5 percent. These price effects emerged in neighborhoods with an above-average proportion of Chinese residents, suggesting that ______",
-   "options": [
-    "houses with addresses ending in 4 tend to be smaller or older than other houses in the same neighborhoods.",
-    "cultural associations attached to particular numbers can influence how much buyers will pay for a home.",
-    "houses in neighborhoods with many Chinese residents generally sell for more than houses elsewhere in the area.",
-    "most buyers in the area avoid purchasing any house whose address contains the number 4."
-   ],
-   "answer_letter": "B",
-   "explanation": "Houses ending in 4, a number that sounds like “death,” sold at “an average discount of 2.2 percent,” while those ending in 8, which resembles “prosperity,” sold at “a premium of 2.5 percent,” and the effects “emerged in neighborhoods with an above-average proportion of Chinese residents.” The match between the numbers’ meanings, the direction of the price differences and where they occurred suggests that these cultural associations affect what buyers will pay, as B says.",
-   "distractors": {
-    "A": {
-     "recipe": "rival cause (CAUSE)",
-     "why_wrong": "The text gives no information about the size or age of the houses, and a difference in quality would not explain why the effects follow the meanings of 4 and 8."
+      "id": "inferences.S3.hard.w4b3_10",
+      "template": "S3",
+      "subtype": "rule rejects a premise: plants and sunlit grains under the ice mean the ice is not ancient",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In 1966, engineers at Camp Century, a US military base in northwestern Greenland, drilled through about 1.4 kilometers of glacial ice and recovered the sediment lying beneath it. Decades later, geoscientist Andrew Christ and colleagues found fossilized plant remains in that sediment and used luminescence dating, which reveals when mineral grains were last exposed to sunlight, to determine that the uppermost sediment, derived from local material, had been deposited by flowing water roughly 416,000 years ago. Since plants cannot grow, and sunlight cannot penetrate, beneath an ice sheet, the researchers concluded that ______",
+      "options": [
+        "the plants preserved in the sediment had grown beneath the ice, nourished by the flowing water that deposited it.",
+        "the ice now covering Camp Century must have formed within roughly the past few thousand years.",
+        "the ice now covering Camp Century has not lain there continuously for the past million years.",
+        "the plant remains had washed in from ice-free land elsewhere and reveal little about conditions at Camp Century."
+      ],
+      "answer_letter": "C",
+      "explanation": "The text says that “plants cannot grow, and sunlight cannot penetrate, beneath an ice sheet,” yet the sediment holds “fossilized plant remains” and its local grains were exposed to sunlight before being deposited “roughly 416,000 years ago.” So about 416,000 years ago the site was free of ice, which means the ice there now cannot have been in place without a break for the past million years, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "contradicts the rule (REV)",
+          "why_wrong": "Flowing water did deposit the sediment, but the text states that “plants cannot grow” beneath an ice sheet, so the plants must have grown when no ice covered the site."
+        },
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The evidence shows only that the site was free of ice about 416,000 years ago; it says nothing about when, in the long period since, the present ice formed."
+        },
+        "D": {
+          "recipe": "rescue of the received view (REV)",
+          "why_wrong": "The text says the sediment was “derived from local material” and that its grains had been exposed to sunlight, so it does record conditions at Camp Century itself."
+        }
+      },
+      "models": [
+        "3.5",
+        "3.27",
+        "3.32"
+      ],
+      "sources": [
+        {
+          "what": "Christ et al. 2023, Science 381:330, Deglaciation of northwestern Greenland during Marine Isotope Stage 11: luminescence dating shows sediment just beneath the ice at Camp Century was deposited by flowing water in an ice-free environment 416 +/- 38 thousand years ago; reworked from local materials",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/37471537/"
+        },
+        {
+          "what": "Christ et al. 2021, PNAS, sediment beneath 1.4 km of ice at Camp Century (core collected 1966) contains plant macrofossils and biomarkers from earlier interglacials",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33723012/"
+        }
+      ],
+      "notes": "Area: natural science (glaciology, climate). S3 hard: two rules (no plants and no sunlight under an ice sheet) plus the dated observation reject the premise of an ice sheet in place for a million years or more. Negative key with a loose bound (one million years, well beyond 416,000 plus or minus 38,000), so it needs no exact arithmetic. Distractors: A keeps the flowing water and breaks the rule, B overreaches on when the ice formed, D tries to save the old view by moving the plants' origin, which the 'local material' detail rules out. Searched Camp Century, Greenland ice, luminescence: no item.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 93,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 37471537 abstract: sediment under Camp Century deposited by flowing water in an ice-free environment 416 +/- 38 ka, reworked from local materials; PubMed 33723012: plant macrofossils, 1966 core, 1.4 km of ice"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Weak negative key (not continuous for a million years) beside a tempting overreach (B, ice only a few thousand years old); two rules plus a date. D dies to “local material”. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "unsupported comparison (CMP)",
-     "why_wrong": "The study compared addresses ending in different numbers, not overall prices in different neighborhoods."
-    },
-    "D": {
-     "recipe": "overreach (EXT)",
-     "why_wrong": "A 2.2 percent discount means houses ending in 4 still sold, only at a lower price, and the text does not discuss addresses that merely contain a 4."
-    }
-   },
-   "models": [
-    "2.19",
-    "2.21"
-   ],
-   "sources": [
     {
-     "what": "Fortin, Hill, Huang 2014, Economic Inquiry 52(3):974, Superstition in the Housing Market: close to 117,000 house sales in a North American market with a large immigrant population; address numbers ending in 4 sold at a 2.2 percent discount and ending in 8 at a 2.5 percent premium; effects found in neighborhoods with a higher than average percentage of Chinese residents (or in repeated transactions)",
-     "url": "https://doi.org/10.1111/ecin.12066"
-    }
-   ],
-   "notes": "Area: social science (economics, culture). S8 medium: a price pattern lines up with number meanings and with neighborhood makeup. The city (Greater Vancouver in the paper) is left unnamed because the fetched abstract does not name it; the sound-alikes for four and eight are common knowledge, not from the source. The repeated-transaction (speculation) result is left out. Abstract text confirmed from the Crossref record of the DOI. Searched superstition, house number, Fortin: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 97
-  },
-  {
-   "id": "inferences.S9.medium.w4b3_20",
-   "template": "S9",
-   "subtype": "choices of price and outlet reveal the intended readership",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "In 1935, British publisher Allen Lane launched Penguin Books, paperback editions of well-regarded novels and nonfiction priced at sixpence, the cost of a pack of cigarettes. At the time, paperbacks were associated mainly with pulp fiction, and many traditional booksellers resisted Lane’s venture, but the variety-store chain Woolworths ordered 63,000 copies, a purchase that made the project viable. Lane, who recalled once finding nothing worth reading for sale at a railway station, sold his books through such shops as well as through bookstores. These decisions suggest that Lane ______",
-   "options": [
-    "expected his paperbacks to sell mainly to readers who already owned hardcover editions of the same titles.",
-    "believed that pulp fiction would sell better at sixpence than serious books would.",
-    "hoped that variety stores would eventually replace bookstores as the main sellers of books.",
-    "aimed to make good books available to people who seldom bought them in bookstores."
-   ],
-   "answer_letter": "D",
-   "explanation": "Lane priced “well-regarded novels and nonfiction” at sixpence, “the cost of a pack of cigarettes,” and sold them through variety stores such as Woolworths “as well as through bookstores,” after finding “nothing worth reading for sale at a railway station.” These choices put serious books where everyday shoppers would see them and at a price they could easily pay, suggesting the aim in D.",
-   "distractors": {
-    "A": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "A low price and sales in variety stores point to new buyers, not to readers who already owned the books in hardcover; the text never mentions such readers."
+      "id": "inferences.S4.hard.w4b3_11",
+      "template": "S4",
+      "subtype": "elimination over four candidate stone sources (local, Vienna Basin, Czech site, Italy versus Ukraine)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The roughly 30,000-year-old Venus of Willendorf, found in Austria, is carved from oolite, a grainy limestone absent in and around Willendorf. Its excavator suspected limestone from the neighboring Vienna Basin, but anthropologist Gerhard Weber and colleagues identified fossilized shell fragments demonstrating that the figurine’s oolite is far older than the Vienna Basin’s limestones, and they excluded a Czech source proposed more recently, whose grains are considerably larger. Comparing oolite samples from throughout Europe, they identified a near-perfect match near Lake Garda in northern Italy and a weaker resemblance in Ukraine, suggesting that ______",
+      "options": [
+        "the stone most likely came from the Vienna Basin, the closest limestone deposit to Willendorf.",
+        "the figurine, or the stone used to make it, was most likely brought to Willendorf from northern Italy.",
+        "the oolite could have come from either northern Italy or Ukraine, since the comparison did not clearly favor one of these sources over the other.",
+        "the stone most likely came from Ukraine, since oolite found there also resembles the figurine’s."
+      ],
+      "answer_letter": "B",
+      "explanation": "The text eliminates each nearer source: oolite is “absent in and around Willendorf,” the figurine’s stone is “far older than the Vienna Basin’s limestones,” and the Czech source has grains that “are considerably larger.” Of the remaining candidates, the match “near Lake Garda in northern Italy” was “near-perfect” while Ukraine’s was only a “weaker resemblance,” so the stone, or the finished figurine, most likely traveled from northern Italy, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "eliminated candidate (REV)",
+          "why_wrong": "The Vienna Basin is near Willendorf, but the shell fragments show the figurine’s oolite is “far older than the Vienna Basin’s limestones,” which rules that source out."
+        },
+        "C": {
+          "recipe": "both candidates kept, comparison ignored (PART)",
+          "why_wrong": "Both sites did resemble the figurine’s stone, but the text calls the Italian sample a “near-perfect match” and the Ukrainian one only a “weaker resemblance,” so the comparison did favor northern Italy."
+        },
+        "D": {
+          "recipe": "weaker candidate preferred (MIX)",
+          "why_wrong": "Ukrainian oolite did resemble the figurine’s, but the text calls it a “weaker resemblance” than the “near-perfect match” near Lake Garda, so it is the less likely source."
+        }
+      },
+      "models": [
+        "3.1",
+        "3.23"
+      ],
+      "sources": [
+        {
+          "what": "Weber et al. 2022, Scientific Reports 12:2926, The microstructure and the origin of the Venus from Willendorf: oolitic limestones completely absent in and around Willendorf; Mesozoic shell fragments exclude Miocene Vienna Basin oolites (suggested by the discoverer); Stranska Skala (Czech Republic) excluded, much larger ooids; Sega di Ala near Lake Garda virtually indistinguishable, Isjum (Ukraine) second but clearly less close",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8885675/"
+        }
+      ],
+      "notes": "Area: history and archaeology (Paleolithic art) with geology. S4 hard, permutation set over the four candidate sources the study weighs, each wrong option a real candidate with the fact that sinks it. Key allows either the figurine or the raw stone to have traveled, as the authors do. The figurine is famous; the 2022 sourcing study is not. Searched Willendorf, oolite, Weber: no item. Reviewer 2026-10-27: C is now both sites kept with the comparison ignored, replacing the Czech grain preference; passage says \"in northern Italy\".",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 93,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "read easier than band 6 (C, a preference for the excluded Czech stone, died to one word): C rebuilt as partly right (both sites resemble the stone) failing on the comparison; “in northern Italy” added after Lake Garda so the key does not lean on geography; explanation quote updated; re-solved, B only"
+        ],
+        "status": "fixed",
+        "facts": "Europe PMC full text of Weber et al. 2022: oolite absent around Willendorf, Szombathy suspected the Vienna Basin, Miocene Vienna oolites excluded by Mesozoic shells, Stránská Skála ooids much larger, Sega di Ala near Lake Garda almost perfect, Isjum (Ukraine) second and clearly less close"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Elimination template, as official 3.23 (band 6). After the fix C keeps both resembling sites and ignores the comparison; A and D are named candidates sunk by stated facts, so it stays at the low end of band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "B": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "Lane chose to publish “well-regarded novels and nonfiction” even though paperbacks were associated “mainly with pulp fiction,” which suggests he expected serious books to sell."
-    },
-    "C": {
-     "recipe": "overreach (EXT)",
-     "why_wrong": "Lane sold his books in variety stores “as well as through bookstores,” so nothing suggests he hoped bookstores would be replaced."
-    }
-   },
-   "models": [
-    "2.9",
-    "2.1"
-   ],
-   "sources": [
     {
-     "what": "Penguin Books (Wikipedia): founded 1935 by Allen Lane; inexpensive paperbacks sold through Woolworths and other shops for sixpence, the same as a packet of cigarettes, bringing high-quality fiction and non-fiction to the mass market; paperbacks then associated mainly with pulp fiction; resistance from the traditional book trade; Woolworths' purchase of 63,000 books paid for the project; Lane's experience of poor reading material at Exeter St Davids railway station",
-     "url": "https://en.wikipedia.org/wiki/Penguin_Books"
-    }
-   ],
-   "notes": "Area: humanities (publishing history). S9 medium: price and outlets reveal the intended readers. 'Made the project viable' simplifies 'paid for the project outright'. Distractors: two REVs and an EXT. Searched Penguin Books, Allen Lane, Woolworths, sixpence: only Armed Services Editions paperbacks (a different subject) and Maugham's novel title.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 89
-  },
-  {
-   "id": "inferences.S9.easy.w4b3_21",
-   "template": "S9",
-   "subtype": "action reveals purpose: stagehands change costume color to match the scene",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "In kabuki, a traditional form of Japanese theater, stagehands called kuroko rearrange scenery, deliver props, and assist performers with costume changes, often while the audience is watching. Kuroko ordinarily dress all in black. In a scene set during a snowstorm, however, they wear white clothing, and in a scene set at sea, they wear blue. Kuroko most likely change the color of their clothing in these situations so that they ______",
-   "options": [
-    "blend in with the scene and are easy for the audience to ignore.",
-    "can be told apart from the performers they are helping on stage.",
-    "can take on the roles of the main characters in those particular scenes.",
-    "can show the audience which scene will come next in the play."
-   ],
-   "answer_letter": "A",
-   "explanation": "Kuroko wear white “In a scene set during a snowstorm” and blue “in a scene set at sea,” so their clothing changes to match the color of the scene behind them. Since they work “while the audience is watching,” the most likely reason is to blend in so that the audience can overlook them, as A says.",
-   "distractors": {
-    "B": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "Matching the color of the scene makes the kuroko harder to notice, not easier to tell apart from anyone."
+      "id": "inferences.S11.medium.w4b3_12",
+      "template": "S11",
+      "subtype": "received explanation (chemical residue) undercut by controls, so the adult memory is real",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Because metamorphosis drastically restructures an insect’s body, some researchers have proposed that when adult insects appear to recall larval experiences, they are actually responding to chemical residues from the larval environment that cling to them. Biologist Douglas Blackiston and colleagues trained caterpillars of the hawkmoth Manduca sexta to avoid an odor by pairing it with mild electric shocks, and the adult moths also avoided it. Washing the pupae did not change this response, and exposing untrained pupae to the odor did not produce it, suggesting that ______",
+      "options": [
+        "the odor alone, even without the shocks, was enough to make the caterpillars avoid it.",
+        "chemical residues on the pupae, rather than learning, caused the adult moths to avoid the odor.",
+        "moths generally learn to avoid odors more readily than caterpillars do.",
+        "what the caterpillars had learned was retained through their transformation into moths."
+      ],
+      "answer_letter": "D",
+      "explanation": "Some researchers think apparent larval memories are really responses to “chemical residues from the larval environment that cling to them.” But “Washing the pupae did not change this response,” and “exposing untrained pupae to the odor did not produce it,” so residues cannot explain the moths’ behavior. The avoidance must instead come from the training the caterpillars received, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong variable (MIX)",
+          "why_wrong": "The caterpillars were trained by “pairing it with mild electric shocks,” and the text says “exposing untrained pupae to the odor did not produce” avoidance, so the odor alone did not cause it."
+        },
+        "B": {
+          "recipe": "polarity trap (POL)",
+          "why_wrong": "This is the received view that the experiment tested; the washing and exposure results count against it rather than supporting it."
+        },
+        "C": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The study trained only caterpillars and did not compare how readily moths and caterpillars learn."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.2",
+        "2.13"
+      ],
+      "sources": [
+        {
+          "what": "Blackiston, Silva Casey, Weiss 2008, PLoS ONE 3(3):e1736, Retention of memory through metamorphosis: fifth-instar Manduca sexta caterpillars trained with shock paired with an odor avoided it as adults; not chemical carryover, since applying odorants to naive pupae and washing pupae of trained caterpillars did not change behavior; chemical carryover vs memory named as the two candidate mechanisms",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/18320055/"
+        }
+      ],
+      "notes": "Area: natural science (insect learning). S11 medium: a received explanation (chemical residue, the 'chemical legacy' idea named in the paper as one candidate mechanism) and the controls that undercut it. Third-instar results left out. Distractors: B is the polarity trap (the view the evidence undercuts), A and C misread the method. Searched Blackiston, metamorphosis, Manduca, hornworm: metamorphosis appears only in unrelated items (salamander eyelids, ant trophallaxis). Reviewer 2026-10-27: species named as the hawkmoth Manduca sexta, not tobacco hornworm (CID w3b1_01).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 87,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "“tobacco hornworm caterpillars” changed to “caterpillars of the hawkmoth Manduca sexta” (the source species), since live CID w3b1_01 already uses tobacco hornworm larvae"
+        ],
+        "status": "fixed",
+        "facts": "PubMed 18320055 abstract: Manduca sexta caterpillars trained with shock and odor avoided it as adults; not chemical carryover, since odorants on naive pupae and washing pupae changed nothing"
+      }
     },
-    "C": {
-     "recipe": "off-topic claim (OUT)",
-     "why_wrong": "The text says kuroko “rearrange scenery, deliver props, and assist performers with costume changes”; it never says they play main characters."
-    },
-    "D": {
-     "recipe": "off-topic claim (OUT)",
-     "why_wrong": "Their clothing matches the scene being performed, not the next one, and the text says nothing about signaling what comes next."
-    }
-   },
-   "models": [
-    "1.8",
-    "1.11",
-    "1.9"
-   ],
-   "sources": [
     {
-     "what": "Kuroko (Wikipedia): kabuki stagehands who move scenery and props and aid costume changes; they wear all black to imply that they are invisible; they wear white in a scene set in a snowstorm or blue in a scene set at sea to blend in with the background (yukigo, namigo)",
-     "url": "https://en.wikipedia.org/wiki/Kuroko"
-    }
-   ],
-   "notes": "Area: humanities (theater). S9 easy (1.8 pattern): an action and its likely purpose. The convention that black means 'not there' is left implicit; the color changes alone carry the inference. Second kabuki subject in the bank (the other is the 1629 ban on women and onnagata, transitions w1b4_18), a different topic. Searched kuroko, stagehand: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 71
-  },
-  {
-   "id": "inferences.S1.easy.w4b3_22",
-   "template": "S1",
-   "subtype": "controlled comparison: hot versus cool soil, then boots versus no boots",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "Some dung beetles in South Africa shape animal dung into balls and roll them across the ground. While rolling a ball, a beetle occasionally climbs on top of it. A research team led by Jochen Smolka observed that the beetles climbed their balls more often at midday. In controlled experiments, beetles crossing hot soil climbed their balls about seven times as often as beetles crossing cooler soil. The researchers then fitted some beetles with small, cool silicone boots on their front legs. Beetles wearing the boots climbed their balls less frequently than beetles without boots did. These results suggest that the beetles climb their balls in order to ______",
-   "options": [
-    "look for other piles of dung that are far away.",
-    "keep other beetles from taking their dung balls.",
-    "cool their legs after walking on hot ground.",
-    "rest after pushing a heavy ball for a long time."
-   ],
-   "answer_letter": "C",
-   "explanation": "Beetles crossing “hot soil climbed their balls about seven times as often” as beetles crossing cooler soil, and beetles with “cool silicone boots on their front legs” climbed less frequently. Both results tie the climbing to the heat of the ground on the beetles’ legs, so the beetles most likely climb their balls to cool off, as C says.",
-   "distractors": {
-    "A": {
-     "recipe": "off-topic claim (OUT)",
-     "why_wrong": "The text says nothing about searching for other dung, and finding dung would not explain why the beetles climb more on hot soil."
+      "id": "inferences.S11.medium.w4b3_13",
+      "template": "S11",
+      "subtype": "received view (internet drives polarization) undercut by age-group pattern",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Many commentators have blamed the internet and social media for the widening political divide in the United States. Economists Levi Boxell, Matthew Gentzkow, and Jesse Shapiro tested this idea by combining eight separate measures of political polarization into a single index and comparing its growth across age groups. Polarization had increased most among Americans over 65, the group least likely to use the internet or social media, and less among those aged 18 to 39, suggesting that ______",
+      "options": [
+        "factors other than internet use probably account for much of the recent rise in polarization.",
+        "older Americans have recently become heavier users of social media than younger Americans.",
+        "polarization among younger Americans will soon catch up with that among older Americans.",
+        "internet use has made the Americans who rely on it most less politically divided than before."
+      ],
+      "answer_letter": "A",
+      "explanation": "If the internet were driving polarization, the divide should have grown most among heavy users. Instead it grew most among “Americans over 65, the group least likely to use the internet or social media,” and “less among those aged 18 to 39.” This suggests that much of the increase has causes other than internet use, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text describes Americans over 65 as “the group least likely to use the internet or social media,” the opposite of heavier use."
+        },
+        "C": {
+          "recipe": "speculative future (FUT)",
+          "why_wrong": "The study compared past growth across age groups; the text offers nothing about how polarization will change among younger Americans."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Polarization grew less among younger Americans, but it still grew; the text gives no evidence that internet use reduced polarization."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.4",
+        "2.15"
+      ],
+      "sources": [
+        {
+          "what": "Boxell, Gentzkow, Shapiro 2017, PNAS 114(40):10612, Greater Internet use is not associated with faster growth in political polarization among US demographic groups: index of eight measures; polarization increased most among groups least likely to use the internet and social media; greater increases for those older than 65 than for those aged 18-39; internet explains a small share of the growth",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/28928150/"
+        }
+      ],
+      "notes": "Area: social science (political economy, media). S11 medium: a common belief and an age-group pattern that runs against it. Neutral on party; no political content beyond the measure. Distractors: REV on usage, FUT, EXT (less growth read as a reduction). Searched Boxell, Gentzkow, polarization: no item.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 78,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 28928150 abstract: eight measures combined, largest increases among groups least likely to use the internet, greater for over-65 than 18-39"
+      }
     },
-    "B": {
-     "recipe": "off-topic claim (OUT)",
-     "why_wrong": "The text never mentions other beetles, and protecting a ball would not depend on how hot the soil is."
-    },
-    "D": {
-     "recipe": "rival cause (CAUSE)",
-     "why_wrong": "Boots that kept the legs cool reduced climbing, which points to heat rather than tiredness; the boots would not make pushing a ball any easier."
-    }
-   },
-   "models": [
-    "1.1",
-    "1.4",
-    "1.14"
-   ],
-   "sources": [
     {
-     "what": "ScienceDaily summary of Smolka, Baird, Byrne, el Jundi, Warrant, Dacke 2012, Current Biology 22(20):R863, Dung beetles use their dung ball as a mobile thermal refuge: beetles climbed their balls more often at midday; beetles on hot soil climbed seven times as often as those on cooler ground; beetles fitted with cool silicone boots on their front legs climbed less often (paper abstract: PubMed 23098590)",
-     "url": "https://www.sciencedaily.com/releases/2012/10/121022122054.htm"
-    }
-   ],
-   "notes": "Area: natural science (insect behavior). S1 easy: two comparisons point to one factor. The orientation dance on the ball is left out so option A stays plainly unsupported. Third dung-beetle-related subject in the bank (others: burrowing owls baiting with dung, seeds mimicking dung), both different topics. Searched Smolka, dung ball, thermal refuge: no item.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 109
-  },
-  {
-   "id": "inferences.S6.easy.w4b3_23",
-   "template": "S6",
-   "subtype": "X but not Y: patterned wares for any buyer, coats of arms for one family",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "In the 1700s, potters in China manufactured enormous quantities of porcelain for buyers in Europe. Many pieces were decorated with Chinese landscapes or patterns and could be sold to any buyer. Other pieces, known as armorial porcelain, were painted with a coat of arms, a design that represented one particular family. To obtain these pieces, a European family sent a drawing of its coat of arms to China. There, painters copied the design onto a complete set of plates and dishes, which was then shipped back to Europe. Armorial porcelain was therefore most likely ______",
-   "options": [
-    "less expensive than porcelain decorated with Chinese landscapes.",
-    "made to order for a particular customer rather than for sale to anyone.",
-    "sold mainly to buyers in China rather than in Europe.",
-    "painted by European artists who traveled to China."
-   ],
-   "answer_letter": "B",
-   "explanation": "Pieces with Chinese landscapes “could be sold to any buyer,” but armorial porcelain bore “a design that represented one particular family,” painted after the family “sent a drawing of its coat of arms to China.” Each set was therefore made for the family that ordered it, as B says.",
-   "distractors": {
-    "A": {
-     "recipe": "unsupported comparison (CMP)",
-     "why_wrong": "The text never mentions the price of either kind of porcelain."
+      "id": "inferences.S2.medium.w4b3_14",
+      "template": "S2",
+      "subtype": "T3 consequence: film blind to red and oversensitive to blue, applied to a blue sky",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In the early decades of cinema, many motion pictures were photographed on orthochromatic film, which is sensitive to blue and green light but insensitive to red. Consequently, the film rendered red objects considerably darker than they appear to the eye and blue objects considerably lighter: performers’ red lips could look nearly black on screen, and blue eyes almost white. A scene filmed outdoors on a cloudless afternoon beneath a deep blue sky would therefore most likely have shown ______",
+      "options": [
+        "a sky that looked nearly black, since the film was insensitive to many of the colors in outdoor scenes.",
+        "a sky that appeared darker on screen than the performers’ red lips did.",
+        "a pale sky that looked much as an overcast one would.",
+        "a sky whose tone closely matched how bright it looked to people on the set."
+      ],
+      "answer_letter": "C",
+      "explanation": "The text says the film rendered “blue objects considerably lighter” than they appear to the eye, so that even “blue eyes” looked “almost white.” A deep blue sky would likewise appear very light on screen, resembling the pale sky of an overcast day, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The film “is sensitive to blue and green light,” so a blue sky would be recorded as very light, not nearly black; it is red that the film rendered dark."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Red lips “could look nearly black,” while blue objects looked “considerably lighter,” so the sky would appear lighter than the lips, not darker."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the film rendered blue objects “considerably lighter” than “they appear to the eye,” so the sky’s tone on screen would not match what people saw."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.12",
+        "2.22"
+      ],
+      "sources": [
+        {
+          "what": "Panchromatic film (Wikipedia): orthochromatic film was not sensitive to red; it proved troublesome for motion pictures, rendering blue skies as perpetually overcast, blond hair washed-out, blue eyes nearly white and red lips nearly black; partly corrected with makeup, filters and lighting (see also Orthochromasia: sensitive to blue and green but not red)",
+          "url": "https://en.wikipedia.org/wiki/Panchromatic_film"
+        }
+      ],
+      "notes": "Area: humanities (film history) with photographic chemistry. S2 medium, T3: the film's color response applied to a case the passage does not state (the source's 'blue skies as perpetually overcast' is held back for the key). Distractors are three reversals of the light-dark mapping, the medium mix. Searched orthochromatic, panchromatic, silent film makeup: no item.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 79,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Panchromatic film: orthochromatic film rendered blue skies as perpetually overcast, blue eyes nearly white, red lips nearly black"
+      }
     },
-    "C": {
-     "recipe": "reversal (REV)",
-     "why_wrong": "The text says the finished set “was then shipped back to Europe” to the family that ordered it."
-    },
-    "D": {
-     "recipe": "entity swap (MIX)",
-     "why_wrong": "The text says painters in China copied the design from a drawing sent from Europe; it says nothing about European artists traveling there."
-    }
-   },
-   "models": [
-    "1.10",
-    "1.12"
-   ],
-   "sources": [
     {
-     "what": "Chinese export porcelain (Wikipedia): around 1700 the demand for armorial porcelain increased; thousands of services were ordered with drawings of individuals' coats of arms sent to China to be copied and shipped back to Europe; armorial porcelain made largely or entirely for export",
-     "url": "https://en.wikipedia.org/wiki/Chinese_export_porcelain"
+      "id": "inferences.S3.medium.w4b3_15",
+      "template": "S3",
+      "subtype": "dating rejects an identification: an Iron Age body cannot be a tenth-century queen",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In 1835, laborers excavating peat in Jutland, Denmark, uncovered the remarkably well-preserved body of a woman in a bog. Because a medieval Scandinavian saga recounts that Queen Gunnhild of Norway was drowned in a bog at the command of the Danish king Harald Bluetooth in the tenth century, the body was promptly identified as the queen’s, and King Frederick VI commissioned an elaborately carved sarcophagus for it. In 1977, however, radiocarbon analysis established that the woman had died around 490 BCE, indicating that ______",
+      "options": [
+        "the saga’s account of how Gunnhild died must be inaccurate.",
+        "the woman found in the bog could not have been Gunnhild.",
+        "Gunnhild was most likely drowned in a different bog in Jutland.",
+        "bodies preserved in peat yield earlier radiocarbon dates than other remains do."
+      ],
+      "answer_letter": "B",
+      "explanation": "The saga places Gunnhild’s death “in the tenth century,” but radiocarbon analysis established that the woman in the bog “had died around 490 BCE,” well over a thousand years earlier. The woman therefore could not have been Gunnhild, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The dating shows only that this body is not Gunnhild’s; it says nothing about whether the saga’s account of her death is true."
+        },
+        "C": {
+          "recipe": "speculation (OUT)",
+          "why_wrong": "The text gives no information about where Gunnhild may have died once this body is ruled out."
+        },
+        "D": {
+          "recipe": "rival explanation (CAUSE)",
+          "why_wrong": "The text treats the radiocarbon result as reliable and says nothing about peat making dates come out earlier."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.16"
+      ],
+      "sources": [
+        {
+          "what": "Haraldskaer Woman (Wikipedia): found by peat workers in 1835 near Vejle, Jutland; early theories identified her as Queen Gunnhild of Norway, said in the Jomsvikinga Saga to have been drowned in a bog on Harald Bluetooth's orders; Frederick VI commanded a carved sarcophagus; radiocarbon dating in 1977 placed her death around 490 BCE",
+          "url": "https://en.wikipedia.org/wiki/Haraldsk%C3%A6r_Woman"
+        }
+      ],
+      "notes": "Area: history and archaeology. S3 medium (2.5 Vinland pattern): a date rejects an identification. Worsaae's 1842 doubt is left out to keep the passage at the models' length. Distractors: EXT (the saga itself), OUT, CAUSE. Searched Haraldskaer, Gunnhild, bog body: no item; the Tollense, bog butter and peat items are different subjects.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 84,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Haraldskær Woman: found 1835 by peat workers, identified as Queen Gunnhild (Jomsvikinga Saga, Harald Bluetooth), Frederick VI ordered a carved sarcophagus, 1977 radiocarbon about 490 BCE"
+      }
+    },
+    {
+      "id": "inferences.S5.medium.w4b3_16",
+      "template": "S5",
+      "subtype": "evidence plus a rival explanation (referee bias), so the claim is not established",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In 2005, anthropologists Russell Hill and Robert Barton reported that in combat sports such as tae kwon do and wrestling, competitors wearing red won more often than those wearing blue, and they proposed that wearing red confers a competitive advantage. Sport psychologist Norbert Hagemann and colleagues, however, found that tae kwon do referees awarded more points to competitors dressed in red than to those dressed in blue even when the performances were identical. Competitors’ greater success in red therefore ______",
+      "options": [
+        "is mainly the result of referees’ judgments rather than of anything the competitors do.",
+        "would be difficult to explain if red did not affect how the competitors themselves perform.",
+        "shows that red affects competitors only in sports in which referees award points.",
+        "is not conclusive evidence that wearing red affects the competitors themselves."
+      ],
+      "answer_letter": "D",
+      "explanation": "Hill and Barton took the higher win rate in red as a sign that “wearing red confers a competitive advantage.” But Hagemann’s team found that referees “awarded more points to competitors dressed in red” even “when the performances were identical,” so the win rate could reflect the referees rather than the competitors. The win rate alone therefore does not settle the question, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The referee study shows that referees can favor red, not how much of the win rate that bias explains, so it does not establish that referees account for most of it."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The referee finding offers exactly such an explanation: competitors in red could win more because referees score them higher."
+        },
+        "C": {
+          "recipe": "unsupported restriction (EXT)",
+          "why_wrong": "The text does not compare sports with and without referees, so it gives no basis for limiting the effect to refereed sports."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.11",
+        "2.20"
+      ],
+      "sources": [
+        {
+          "what": "Hagemann, Strauss, Leissing 2008, Psychological Science 19(8):769, When the referee sees red: Hill and Barton (2005) found red attire associated with winning in combat sports such as tae kwon do and wrestling and proposed a psychological effect on the wearer or opponent; new experiment found referees assign more points to tae kwon do competitors in red than in blue even when performance is identical; effects may have been confounded (abstract read via the OpenAlex record; Hill and Barton 2005 is PubMed 15902246)",
+          "url": "https://api.openalex.org/works/doi:10.1111/j.1467-9280.2008.02155.x"
+        }
+      ],
+      "notes": "Area: social science (sport psychology). S5 medium (2.18 pattern): a claim, its evidence, and a rival explanation that the evidence cannot rule out. Lead-in worded differently from 2.18. Distractors: EXT (referees as the main cause), REV ('difficult to account for'), EXT (refereed sports only). Hill and Barton is a popular result; the item turns on the less-known referee study. Searched red, Hill, Barton, Hagemann, tae kwon do, referee: referee items in the bank are NBA race bias and COVID home advantage, different studies.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 80,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex abstract of Hagemann et al. 2008: referees give more points to red tae kwon do competitors for identical performances; PubMed 15902246: Hill and Barton, Durham evolutionary anthropology, red linked to winning"
+      }
+    },
+    {
+      "id": "inferences.S7.medium.w4b3_17",
+      "template": "S7",
+      "subtype": "two cases with opposite outcomes, so the benefit depends on density",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "When jewelweed plants (Impatiens capensis) grow among dense neighbors, they detect the change in light filtered through surrounding leaves and respond by producing taller, more spindly stems. To test whether this response is beneficial, biologists Susan Dudley and Johanna Schmitt manipulated the light that seedlings received, producing some plants with elongated stems and others with short stems, and then transplanted both kinds into a natural population at either high or low density. Elongated plants fared better than short ones at high density, whereas short plants fared better than elongated ones at low density. The researchers therefore concluded that whether stem elongation benefits I. capensis ______",
+      "options": [
+        "depends mainly on how much light the seedlings received before they were transplanted.",
+        "does not vary with the number of neighbors, since all of the plants compete for light.",
+        "depends on how crowded the plant’s surroundings are.",
+        "depends more on the age at which a plant is transplanted than on the density around it."
+      ],
+      "answer_letter": "C",
+      "explanation": "The text reports opposite outcomes in the two settings: “Elongated plants fared better than short ones at high density, whereas short plants fared better than elongated ones at low density.” Since the same trait helped in one setting and hurt in the other, its benefit depends on how crowded the plants are, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "method mistaken for the variable (MIX)",
+          "why_wrong": "The light treatment was how the researchers produced the two stem forms; the outcome that differed was linked to the density each plant was placed in."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text shows the benefit reversing between high and low density, so it does vary with the number of neighbors."
+        },
+        "D": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The text does not mention transplanting plants at different ages; density is the only condition it says was varied."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.8"
+      ],
+      "sources": [
+        {
+          "what": "Dudley, Schmitt 1996, American Naturalist 147(3), Testing the adaptive plasticity hypothesis: stem elongation in response to vegetation shade; elongated and nonelongated Impatiens capensis produced by manipulating the red to far-red light cue, transplanted at high and low density in a natural population; elongated plants more fit at high density, suppressed plants more fit at low density (abstract read via the OpenAlex record)",
+          "url": "https://api.openalex.org/works/doi:10.1086/285860"
+        }
+      ],
+      "notes": "Area: natural science (plant ecology, evolution). S7 medium (the 'depends on' variant): opposite outcomes in two conditions give a conditional conclusion. 'Fared better' stands for the paper's 'more fit'. Distractors: MIX (the light manipulation taken as the cause), REV, VAR. The key is the shortest option, as in the official S7 items. Searched Impatiens, jewelweed, Dudley, Schmitt, shade avoidance: no study item (shade avoidance appears only as a concept in an official RS item).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 105,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex abstract of Dudley and Schmitt 1996: elongated and suppressed Impatiens capensis made by the light cue, elongated fitter at high density, suppressed at low"
+      }
+    },
+    {
+      "id": "inferences.S1.medium.w4b3_18",
+      "template": "S1",
+      "subtype": "natural experiment: repeal of Sunday shopping bans and religious attendance",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Through much of the 1900s, many US states enforced “blue laws” that prohibited most retail businesses from opening on Sundays, partly to protect the day for worship. Because states repealed these laws in different years, economists Jonathan Gruber and Daniel Hungerman recognized that they could use several national surveys to compare religious participation within each state before and after repeal. They found that attendance at religious services declined once stores were permitted to open on Sundays and that donations to churches fell as well. The declines did not begin before the laws changed, and membership in nonreligious organizations showed no comparable drop. These findings suggest that ______",
+      "options": [
+        "the new opportunity to shop on Sundays drew some people away from religious services.",
+        "people who stopped attending religious services also withdrew from other kinds of organizations.",
+        "religious participation had already been falling in these states before their blue laws were repealed.",
+        "states that kept their blue laws had higher religious attendance than states that never adopted them."
+      ],
+      "answer_letter": "A",
+      "explanation": "Attendance and donations “declined once stores were permitted to open on Sundays,” and because the declines “did not begin before the laws changed,” they are tied to the repeal itself. Since nonreligious organizations “showed no comparable drop,” the change was not a general withdrawal from organizations, so the new chance to shop on Sundays most likely drew some people away from religious services, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says membership in nonreligious organizations “showed no comparable drop,” so there is no sign of a broader withdrawal."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the declines “did not begin before the laws changed.”"
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The study compared each state before and after its own repeal; the text says nothing about states that never had blue laws."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.10"
+      ],
+      "sources": [
+        {
+          "what": "Gruber, Hungerman 2008, Quarterly Journal of Economics 123(2):831, The Church versus the Mall: states repealed Sunday retail bans (blue laws) at different times; after repeal religious attendance falls and church donations and spending fall; not driven by declines before the law change; no comparable declines in membership in or giving to nonreligious organizations (abstract read via the OpenAlex record)",
+          "url": "https://api.openalex.org/works/doi:10.1162/qjec.2008.123.2.831"
+        }
+      ],
+      "notes": "Area: social science (economics of religion). S1 medium: before and after repeal within each state, with two controls (no pre-trend, no drop in other organizations). The drinking and drug-use results are left out. Distractors: two REVs, each contradicted by one control, and a CMP. Searched blue laws, Gruber, Hungerman, Sunday shopping: no item.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 107,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex abstract of Gruber and Hungerman 2008: attendance and donations fall after repeal, no prior decline, no comparable drop in nonreligious organizations"
+      }
+    },
+    {
+      "id": "inferences.S8.medium.w4b3_19",
+      "template": "S8",
+      "subtype": "co-occurrence: price effects line up with number meanings and with Chinese neighborhoods",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In Cantonese and Mandarin, the word for “four” is nearly identical in pronunciation to the word for “death,” whereas the word for “eight” resembles the word for “prosperity.” Analyzing nearly 117,000 residential sales in a North American metropolitan area with a substantial immigrant population, economists Nicole Fortin, Andrew Hill, and Jeff Huang found that houses whose address numbers end in 4 sold at an average discount of 2.2 percent, whereas those ending in 8 sold at a premium of 2.5 percent. These price effects emerged in neighborhoods with an above-average proportion of Chinese residents, suggesting that ______",
+      "options": [
+        "houses with addresses ending in 4 tend to be smaller or older than other houses in the same neighborhoods.",
+        "cultural associations attached to particular numbers can influence how much buyers will pay for a home.",
+        "houses in neighborhoods with many Chinese residents generally sell for more than houses elsewhere in the area.",
+        "most buyers in the area avoid purchasing any house whose address contains the number 4."
+      ],
+      "answer_letter": "B",
+      "explanation": "Houses ending in 4, a number that sounds like “death,” sold at “an average discount of 2.2 percent,” while those ending in 8, which resembles “prosperity,” sold at “a premium of 2.5 percent,” and the effects “emerged in neighborhoods with an above-average proportion of Chinese residents.” The match between the numbers’ meanings, the direction of the price differences and where they occurred suggests that these cultural associations affect what buyers will pay, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "rival cause (CAUSE)",
+          "why_wrong": "The text gives no information about the size or age of the houses, and a difference in quality would not explain why the effects follow the meanings of 4 and 8."
+        },
+        "C": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The study compared addresses ending in different numbers, not overall prices in different neighborhoods."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "A 2.2 percent discount means houses ending in 4 still sold, only at a lower price, and the text does not discuss addresses that merely contain a 4."
+        }
+      },
+      "models": [
+        "2.19",
+        "2.21"
+      ],
+      "sources": [
+        {
+          "what": "Fortin, Hill, Huang 2014, Economic Inquiry 52(3):974, Superstition in the Housing Market: close to 117,000 house sales in a North American market with a large immigrant population; address numbers ending in 4 sold at a 2.2 percent discount and ending in 8 at a 2.5 percent premium; effects found in neighborhoods with a higher than average percentage of Chinese residents (or in repeated transactions)",
+          "url": "https://doi.org/10.1111/ecin.12066"
+        }
+      ],
+      "notes": "Area: social science (economics, culture). S8 medium: a price pattern lines up with number meanings and with neighborhood makeup. The city (Greater Vancouver in the paper) is left unnamed because the fetched abstract does not name it; the sound-alikes for four and eight are common knowledge, not from the source. The repeated-transaction (speculation) result is left out. Abstract text confirmed from the Crossref record of the DOI. Searched superstition, house number, Fortin: no item.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 97,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Crossref abstract of Fortin, Hill and Huang: close to 117,000 sales, 4 at 2.2 percent discount, 8 at 2.5 percent premium, in neighborhoods with above-average Chinese share (or in repeat sales; the passage narrows to the first)"
+      }
+    },
+    {
+      "id": "inferences.S9.medium.w4b3_20",
+      "template": "S9",
+      "subtype": "choices of price and outlet reveal the intended readership",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In 1935, British publisher Allen Lane launched Penguin Books, paperback editions of well-regarded novels and nonfiction priced at sixpence, the cost of a pack of cigarettes. At the time, paperbacks were associated mainly with pulp fiction, and many traditional booksellers resisted Lane’s venture, but the variety-store chain Woolworths ordered 63,000 copies, a purchase that made the project viable. Lane, who recalled once finding little worth reading for sale at a railway station, sold his books through such shops as well as through bookstores. These decisions suggest that Lane ______",
+      "options": [
+        "expected his paperbacks to sell mainly to readers who already owned hardcover editions of the same titles.",
+        "believed that pulp fiction would sell better at sixpence than serious books would.",
+        "hoped that variety stores would eventually replace bookstores as the main sellers of books.",
+        "aimed to make good books available to people who seldom bought them in bookstores."
+      ],
+      "answer_letter": "D",
+      "explanation": "Lane priced “well-regarded novels and nonfiction” at sixpence, “the cost of a pack of cigarettes,” and sold them through variety stores such as Woolworths “as well as through bookstores,” after finding “little worth reading for sale at a railway station.” These choices put serious books where everyday shoppers would see them and at a price they could easily pay, suggesting the aim in D.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "A low price and sales in variety stores point to new buyers, not to readers who already owned the books in hardcover; the text never mentions such readers."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Lane chose to publish “well-regarded novels and nonfiction” even though paperbacks were associated “mainly with pulp fiction,” which suggests he expected serious books to sell."
+        },
+        "C": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Lane sold his books in variety stores “as well as through bookstores,” so nothing suggests he hoped bookstores would be replaced."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.1"
+      ],
+      "sources": [
+        {
+          "what": "Penguin Books (Wikipedia): founded 1935 by Allen Lane; inexpensive paperbacks sold through Woolworths and other shops for sixpence, the same as a packet of cigarettes, bringing high-quality fiction and non-fiction to the mass market; paperbacks then associated mainly with pulp fiction; resistance from the traditional book trade; Woolworths' purchase of 63,000 books paid for the project; Lane's experience of poor reading material at Exeter St Davids railway station",
+          "url": "https://en.wikipedia.org/wiki/Penguin_Books"
+        }
+      ],
+      "notes": "Area: humanities (publishing history). S9 medium: price and outlets reveal the intended readers. 'Made the project viable' simplifies 'paid for the project outright'. Distractors: two REVs and an EXT. Searched Penguin Books, Allen Lane, Woolworths, sixpence: only Armed Services Editions paperbacks (a different subject) and Maugham's novel title.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 89,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "“nothing worth reading” softened to “little worth reading”, as the source has only poor reading material at the station; explanation quote updated"
+        ],
+        "status": "fixed",
+        "facts": "Wikipedia Penguin Books: 1935, sixpence like a packet of cigarettes, paperbacks associated with pulp fiction, trade resistance, Woolworths bought 63,000 copies, Exeter station anecdote"
+      }
+    },
+    {
+      "id": "inferences.S9.easy.w4b3_21",
+      "template": "S9",
+      "subtype": "action reveals purpose: stagehands change costume color to match the scene",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "In kabuki, a traditional form of Japanese theater, stagehands called kuroko rearrange scenery, deliver props, and assist performers with costume changes, often while the audience is watching. Kuroko ordinarily dress all in black. In a scene set during a snowstorm, however, they wear white clothing, and in a scene set at sea, they wear blue. Kuroko most likely change the color of their clothing in these situations so that they ______",
+      "options": [
+        "blend in with the scene and are easy for the audience to ignore.",
+        "can be told apart from the performers they are helping on stage.",
+        "can take on the roles of the main characters in those particular scenes.",
+        "can show the audience which scene will come next in the play."
+      ],
+      "answer_letter": "A",
+      "explanation": "Kuroko wear white “In a scene set during a snowstorm” and blue “in a scene set at sea,” so their clothing changes to match the color of the scene behind them. Since they work “while the audience is watching,” the most likely reason is to blend in so that the audience can overlook them, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Matching the color of the scene makes the kuroko harder to notice, not easier to tell apart from anyone."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says kuroko “rearrange scenery, deliver props, and assist performers with costume changes”; it never says they play main characters."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "Their clothing matches the scene being performed, not the next one, and the text says nothing about signaling what comes next."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.11",
+        "1.9"
+      ],
+      "sources": [
+        {
+          "what": "Kuroko (Wikipedia): kabuki stagehands who move scenery and props and aid costume changes; they wear all black to imply that they are invisible; they wear white in a scene set in a snowstorm or blue in a scene set at sea to blend in with the background (yukigo, namigo)",
+          "url": "https://en.wikipedia.org/wiki/Kuroko"
+        }
+      ],
+      "notes": "Area: humanities (theater). S9 easy (1.8 pattern): an action and its likely purpose. The convention that black means 'not there' is left implicit; the color changes alone carry the inference. Second kabuki subject in the bank (the other is the 1629 ban on women and onnagata, transitions w1b4_18), a different topic. Searched kuroko, stagehand: no item.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 71,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Kuroko: black to seem invisible, white in a snowstorm scene and blue at sea to blend in"
+      }
+    },
+    {
+      "id": "inferences.S1.easy.w4b3_22",
+      "template": "S1",
+      "subtype": "controlled comparison: hot versus cool soil, then boots versus no boots",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Some dung beetles in South Africa shape animal dung into balls and roll them across the ground. While rolling a ball, a beetle occasionally climbs on top of it. A research team led by Jochen Smolka observed that the beetles climbed their balls more often at midday. In controlled experiments, beetles crossing hot soil climbed their balls about seven times as often as beetles crossing cooler soil. The researchers then fitted some beetles with small, cool silicone boots on their front legs. Beetles wearing the boots climbed their balls less frequently than beetles without boots did. These results suggest that the beetles climb their balls in order to ______",
+      "options": [
+        "look for other piles of dung that are far away.",
+        "keep other beetles from taking their dung balls.",
+        "cool their legs after walking on hot ground.",
+        "rest after pushing a heavy ball for a long time."
+      ],
+      "answer_letter": "C",
+      "explanation": "Beetles crossing “hot soil climbed their balls about seven times as often” as beetles crossing cooler soil, and beetles with “cool silicone boots on their front legs” climbed less frequently. Both results tie the climbing to the heat of the ground on the beetles’ legs, so the beetles most likely climb their balls to cool off, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about searching for other dung, and finding dung would not explain why the beetles climb more on hot soil."
+        },
+        "B": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text never mentions other beetles, and protecting a ball would not depend on how hot the soil is."
+        },
+        "D": {
+          "recipe": "rival cause (CAUSE)",
+          "why_wrong": "Boots that kept the legs cool reduced climbing, which points to heat rather than tiredness; the boots would not make pushing a ball any easier."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.4",
+        "1.14"
+      ],
+      "sources": [
+        {
+          "what": "ScienceDaily summary of Smolka, Baird, Byrne, el Jundi, Warrant, Dacke 2012, Current Biology 22(20):R863, Dung beetles use their dung ball as a mobile thermal refuge: beetles climbed their balls more often at midday; beetles on hot soil climbed seven times as often as those on cooler ground; beetles fitted with cool silicone boots on their front legs climbed less often (paper abstract: PubMed 23098590)",
+          "url": "https://www.sciencedaily.com/releases/2012/10/121022122054.htm"
+        }
+      ],
+      "notes": "Area: natural science (insect behavior). S1 easy: two comparisons point to one factor. The orientation dance on the ball is left out so option A stays plainly unsupported. Third dung-beetle-related subject in the bank (others: burrowing owls baiting with dung, seeds mimicking dung), both different topics. Searched Smolka, dung ball, thermal refuge: no item.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 109,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 23098590 abstract: beetles climb the ball to cool down on hot soil; ScienceDaily summary: midday, seven times as often on hot soil, cool silicone boots reduced climbing"
+      }
+    },
+    {
+      "id": "inferences.S6.easy.w4b3_23",
+      "template": "S6",
+      "subtype": "X but not Y: patterned wares for any buyer, coats of arms for one family",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "In the 1700s, potters in China manufactured enormous quantities of porcelain for buyers in Europe. Many pieces were decorated with Chinese landscapes or patterns and could be sold to any buyer. Other pieces, known as armorial porcelain, were painted with a coat of arms, a design that represented one particular family. To obtain these pieces, a European family sent a drawing of its coat of arms to China. There, painters copied the design onto a complete set of plates and dishes, which was then shipped back to Europe. Armorial porcelain was therefore most likely ______",
+      "options": [
+        "less expensive than porcelain decorated with Chinese landscapes.",
+        "made to order for a particular customer rather than for sale to anyone.",
+        "sold mainly to buyers in China rather than in Europe.",
+        "painted by European artists who traveled to China."
+      ],
+      "answer_letter": "B",
+      "explanation": "Pieces with Chinese landscapes “could be sold to any buyer,” but armorial porcelain bore “a design that represented one particular family,” painted after the family “sent a drawing of its coat of arms to China.” Each set was therefore made for the family that ordered it, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text never mentions the price of either kind of porcelain."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the finished set “was then shipped back to Europe” to the family that ordered it."
+        },
+        "D": {
+          "recipe": "entity swap (MIX)",
+          "why_wrong": "The text says painters in China copied the design from a drawing sent from Europe; it says nothing about European artists traveling there."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.12"
+      ],
+      "sources": [
+        {
+          "what": "Chinese export porcelain (Wikipedia): around 1700 the demand for armorial porcelain increased; thousands of services were ordered with drawings of individuals' coats of arms sent to China to be copied and shipped back to Europe; armorial porcelain made largely or entirely for export",
+          "url": "https://en.wikipedia.org/wiki/Chinese_export_porcelain"
+        }
+      ],
+      "notes": "Area: history (trade, decorative arts). S6 easy: one kind of ware could go to any buyer, the other carried one family's arms, so it was made to order. Easy distractors: CMP, REV, MIX. Searched armorial, coat of arms, export porcelain: coat-of-arms hits are Pictish symbols and a different RS item; porcelain hits are Joseon moon jars and Roberto Lugo.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 95,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Chinese export porcelain: drawings of coats of arms sent to China, copied and shipped back to Europe, armorial ware made for export"
+      }
     }
-   ],
-   "notes": "Area: history (trade, decorative arts). S6 easy: one kind of ware could go to any buyer, the other carried one family's arms, so it was made to order. Easy distractors: CMP, REV, MIX. Searched armorial, coat of arms, export porcelain: coat-of-arms hits are Pictish symbols and a different RS item; porcelain hits are Joseon moon jars and Roberto Lugo.",
-   "stem": "Which choice most logically completes the text?",
-   "table": null,
-   "figure": null,
-   "word_count": 95
-  }
- ],
- "done": true
+  ],
+  "done": true
 }

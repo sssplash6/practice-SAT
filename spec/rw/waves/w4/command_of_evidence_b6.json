@@ -1,0 +1,1556 @@
+{
+ "skill": "Command of Evidence",
+ "slug": "command_of_evidence",
+ "part": "w4b6",
+ "domain": "Information and Ideas",
+ "plan": {
+  "templates": [
+   {
+    "code": "T1_single",
+    "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+   },
+   {
+    "code": "T1_compete",
+    "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+   },
+   {
+    "code": "T2_lit_quote",
+    "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+   },
+   {
+    "code": "Q2_P8_multipart",
+    "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+   },
+   {
+    "code": "Q2_P5_control",
+    "name": "Data description: condition vs control or group comparison supports a conclusion"
+   },
+   {
+    "code": "T3_person_quote",
+    "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+   },
+   {
+    "code": "Q2_P8_quantifier",
+    "name": "Data description: quantified claim (for each, all except one)"
+   },
+   {
+    "code": "Q1_P67_criterion",
+    "name": "Data completion: passage criterion or presence/absence combined with the display"
+   },
+   {
+    "code": "Q1_P3_pairwise",
+    "name": "Data completion: pairwise comparison (one or two comparisons)"
+   },
+   {
+    "code": "Q1_P5_control",
+    "name": "Data completion: condition vs control"
+   },
+   {
+    "code": "Q2_P4_trend",
+    "name": "Data description: trend or change over time supports a conclusion"
+   },
+   {
+    "code": "Q1_P1_lookup",
+    "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+   },
+   {
+    "code": "Q1_P2_extreme",
+    "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+   }
+  ],
+  "skipped": []
+ },
+ "items": [
+  {
+   "id": "command_of_evidence.T1_single.hard.w4b6_01",
+   "template": "T1_single",
+   "subtype": "Hypothetical finding supports a claim about a population-level bias (needs the right baseline)",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "Producers in genres such as hip-hop frequently construct new tracks around drum breaks sampled from earlier recordings, and some artists deliberately avoid breaks that others have already popularized. To determine whether a preference for novelty shapes sampling across the musical community, researcher Mason Youngblood analyzed three decades of sampling events documented in the online database WhoSampled. He compared the observed turnover of the most popular breaks with the turnover expected if each artist selected a break with a probability proportional to that break’s share of all previous uses. Youngblood concluded that, at the level of the entire population of artists, sampling has instead reflected a bias toward conformity.",
+   "stem": "Which finding, if true, would most directly support Youngblood’s conclusion?",
+   "options": [
+    "Drum breaks that had been sampled only a handful of times were taken up by new artists more often than their small share of earlier uses would suggest, while the most popular breaks were taken up less often.",
+    "Drum breaks that ranked among the most sampled in one decade generally stayed near the top in the next, gaining new uses at roughly the pace their earlier popularity alone would lead one to expect.",
+    "When a drum break was already among the most widely sampled, each new artist was more likely to choose it than its share of all previous uses would indicate.",
+    "Artists who had collaborated with one another were more likely to sample the same drum breaks than were artists who had never worked together."
+   ],
+   "answer_letter": "C",
+   "table": null,
+   "figure": null,
+   "explanation": "Youngblood measured sampling against a baseline in which each artist “selected a break with a probability proportional to that break’s share of all previous uses,” and he concluded that sampling “reflected a bias toward conformity.” A conformity bias means popular breaks are favored beyond that baseline. Choice C describes exactly this: already popular breaks were chosen more often “than its share of all previous uses would indicate.”",
+   "distractors": {
+    "A": {
+     "recipe": "OPP: the rival (novelty) prediction",
+     "why_wrong": "Rarely used breaks gaining more than their share, and popular breaks less, is what a preference for novelty would produce, so this finding would weaken Youngblood’s conclusion."
+    },
+    "B": {
+     "recipe": "TRAP: matches the unbiased baseline",
+     "why_wrong": "Popular breaks staying popular at the pace “their earlier popularity alone” predicts is the unbiased copying the passage describes as the comparison point; it shows no bias toward conformity."
+    },
+    "D": {
+     "recipe": "OFF: route of transmission, not frequency bias",
+     "why_wrong": "Shared samples among collaborators show how breaks spread between artists, not whether artists favor breaks in proportion to, or beyond, their popularity."
+    }
+   },
+   "models": [
+    "3.25",
+    "3.12",
+    "3.39",
+    "3.36"
+   ],
+   "word_count": 108,
+   "sources": [
+    {
+     "what": "Youngblood 2019, R. Soc. Open Sci. 6: 191149: three decades of sampling events (drum breaks, from WhoSampled), turnover of popular samples compared with neutral evolution, anecdotes of artists avoiding popular samples, population-level patterns most consistent with conformity bias",
+     "url": "https://doi.org/10.1098/rsos.191149"
+    }
+   ],
+   "notes": "Band 6. The key needs the baseline in sentence 3: conformity means more than proportional copying. B is the neutral prediction (looks like popularity favored), A the novelty rival, D a transmission route (the paper notes samples pass between collaborators)."
+  },
+  {
+   "id": "command_of_evidence.T1_single.hard.w4b6_02",
+   "template": "T1_single",
+   "subtype": "Hypothetical finding supplies a missing premise for a hypothesis about a colony’s origin",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Adélie penguins breed on ice-free Antarctic beaches and depend on nearby open water for the foraging trips that sustain their chicks. Cape Adare, at the northwestern entrance to the Ross Sea, currently supports the species’ largest colony, approximately 338,000 breeding pairs. By radiocarbon dating penguin remains at occupied and abandoned nesting sites there, Steven Emslie and colleagues established that the colony was founded roughly 2,000 years ago. They hypothesize that it formed after fast ice—sea ice attached to the shoreline—began preventing breeding penguins from reaching open water along the Scott Coast, hundreds of kilometers farther south, during a cooling period at that time.",
+   "stem": "Which finding, if true, would most directly support the hypothesis about the origin of the Cape Adare colony presented by Emslie and colleagues?",
+   "options": [
+    "When persistent fast ice keeps Adélie penguins from their usual breeding beaches, the birds tend to settle at other sites that still offer access to open water rather than give up breeding.",
+    "Along the Scott Coast, fast ice has been breaking up noticeably earlier in the summer in recent decades than it did during most of the twentieth century, reopening beaches to penguins.",
+    "Adélie penguins that are cut off from open water by fast ice typically skip breeding until the ice clears, returning to the same beaches in later years.",
+    "The penguin remains recovered from the oldest layers at Cape Adare include fragments of eggshell and feathers as well as the bones of both adults and chicks."
+   ],
+   "answer_letter": "A",
+   "table": null,
+   "figure": null,
+   "explanation": "The hypothesis links two places: the colony at Cape Adare “formed after fast ice … began preventing breeding penguins from reaching open water along the Scott Coast.” That link holds only if penguins shut out of one coast would breed somewhere else. Choice A supplies that missing step: blocked penguins “tend to settle at other sites that still offer access to open water,” so birds displaced from the Scott Coast could have founded the colony at Cape Adare.",
+   "distractors": {
+    "B": {
+     "recipe": "TRAP: wrong time window",
+     "why_wrong": "Recent changes in fast ice say nothing about what happened along the Scott Coast about 2,000 years ago, when the colony at Cape Adare was established."
+    },
+    "C": {
+     "recipe": "OPP: reversed behavior",
+     "why_wrong": "If blocked penguins stopped breeding and waited to return to the same beaches, displaced Scott Coast birds would not have founded a new colony elsewhere, so this finding would weaken the hypothesis."
+    },
+    "D": {
+     "recipe": "OFF: property of the same remains",
+     "why_wrong": "The kinds of remains found at Cape Adare do not bear on why the colony formed or where its first birds came from."
+    }
+   },
+   "models": [
+    "4987f743",
+    "ebe1eabd",
+    "124fdcd7",
+    "3.28"
+   ],
+   "band7_moves": [
+    "missing premise: the hypothesis needs displaced penguins to relocate rather than stop breeding; the key supplies that behavior, which the passage never states",
+    "the fact the key depends on (penguins depend on nearby open water) sits in sentence 1, away from the claim",
+    "stem names the claimants and narrows the claim (22 words)",
+    "distractors: one OPP (blocked birds skip breeding), one TRAP (recent fast-ice change, wrong time window), one OFF"
+   ],
+   "word_count": 103,
+   "sources": [
+    {
+     "what": "Emslie, McKenzie and Patterson 2018, R. Soc. Open Sci. 5: 172032: Cape Adare colony first established about 2000 BP, currently the largest with about 338,000 breeding pairs; radiocarbon dates on active and abandoned colonies; hypothesis that it formed after fast ice blocked open-water access to the Scott Coast during a cooling period about 2000 BP; fast ice dissipating earlier each summer now",
+     "url": "https://doi.org/10.1098/rsos.172032"
+    }
+   ],
+   "notes": "Band 7 target. B's premise (fast ice now dissipating earlier) is itself reported in the paper, which keeps it plausible but irrelevant to 2,000 years ago."
+  },
+  {
+   "id": "command_of_evidence.T1_compete.hard.w4b6_03",
+   "template": "T1_compete",
+   "subtype": "Finding discriminates between two explanations of a past range (support the second)",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "The water deer (Hydropotes inermis), a small, antlerless deer of marshes and grasslands, is today native only to eastern China and the Korean Peninsula. But Christopher Stimpson and colleagues have identified water deer jaw and canine fragments from Hang Thung Binh 1, a cave in the Tràng An World Heritage Site in northern Vietnam, in deposits dated to between 13,000 and 16,000 years ago, when conditions there were apparently cooler than today’s. The team considers two explanations. The fragments may come from a population that lived in the region only during that cooler phase of the Pleistocene and later disappeared, or they may reveal a previously unrecognized southern range that persisted long afterward.",
+   "stem": "Which finding, if true, would most directly support the second of the two explanations that Stimpson and colleagues consider?",
+   "options": [
+    "Other caves in Tràng An with deposits dated to between 13,000 and 16,000 years ago also contain the remains of water deer.",
+    "No water deer remains have been found in Vietnamese deposits younger than about 12,000 years, even though such deposits at Tràng An contain abundant remains of other deer.",
+    "The canine fragments from Hang Thung Binh 1 closely match, in shape and size, the canines of present-day water deer from eastern China.",
+    "Water deer bones are among the food remains discarded at a site in northern Vietnam that people occupied about 2,000 years ago."
+   ],
+   "answer_letter": "D",
+   "table": null,
+   "figure": null,
+   "explanation": "The second explanation holds that water deer occupied “a previously unrecognized southern range that persisted long afterward,” well after the Pleistocene. Choice D would place water deer in northern Vietnam about 2,000 years ago, thousands of years after that cooler phase ended, which the second explanation predicts and the first, that the population “later disappeared,” does not.",
+   "distractors": {
+    "A": {
+     "recipe": "TRAP: consistent with both explanations (same time window)",
+     "why_wrong": "More water deer remains from the same 13,000- to 16,000-year-old period would be expected under either explanation, so they do not show that the range persisted afterward."
+    },
+    "B": {
+     "recipe": "OPP: the rival’s prediction",
+     "why_wrong": "An absence of water deer in younger deposits that do preserve other deer fits the first explanation, that the population disappeared after the cooler phase."
+    },
+    "C": {
+     "recipe": "OFF: identification of the fossils, not their range",
+     "why_wrong": "A close match to modern water deer confirms what the fragments are, which both explanations already accept; it does not show how long the deer remained in the region."
+    }
+   },
+   "models": [
+    "0240d11c",
+    "b32c4b3a",
+    "3.14",
+    "3.9"
+   ],
+   "band7_moves": [
+    "T1_compete: two explanations; the key reaches the second through an unexpected route (food remains at a much later human settlement rather than cave fossils)",
+    "the dates the key depends on (13,000 to 16,000 years ago, the cooler phase) sit in sentence 2, away from the two explanations",
+    "TRAP consistent with both (more remains from the same period); OPP fits the rival; OFF an identification detail",
+    "stem names the claimants and narrows the claim (19 words)"
+   ],
+   "word_count": 113,
+   "sources": [
+    {
+     "what": "Stimpson et al. 2021, R. Soc. Open Sci. 8: 210529: water deer (Hydropotes inermis) historically native to eastern China and the Korean peninsula; mandibles and maxillary canine fragments from Hang Thung Binh 1 cave, Trang An World Heritage Site, dated 13,000 to 16,000 years ago; cooler conditions than today; specimens may represent extirpated Pleistocene populations or a previously unrecognized, longer-standing southerly distribution",
+     "url": "https://doi.org/10.1098/rsos.210529"
+    }
+   ],
+   "notes": "Band 7 target. The key is hypothetical (no such site is claimed); the Pleistocene ended about 11,700 years ago, so 2,000 years ago is long after the cooler phase."
+  },
+  {
+   "id": "command_of_evidence.T2_lit_quote.hard.w4b6_04",
+   "template": "T2_lit_quote",
+   "subtype": "Literary quotation illustrates a claim about a character’s anticipated inner conflict (translated verse drama)",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "The Jewess of Toledo is an 1872 play by Franz Grillparzer, translated in 1914 by George Henry Danton and Annina Periam Danton. After Rachel, the woman he loves, is killed by members of his own court, the King resolves to punish the conspirators, and he anticipates that the strongest resistance to this determination will arise from within himself: ______",
+   "stem": "Which quotation from a translation of The Jewess of Toledo most effectively illustrates the claim?",
+   "options": [
+    "“Justice, and punishment of ev’ry wrong / I swore upon my coronation day, / And I will keep my oath until the death.”",
+    "“My whole life, roughly bundled into one, / Will stand, as ’twere against me, fully armed, / And challenge me to combat with myself. / I, therefore, from myself must first take leave.”",
+    "“But no, thou weepst, and tears no lies can tell. / Behold, I also weep, I weep for rage, / From hot and unslaked passion for revenge!”",
+    "“For was not mine the hand that murdered her? / Had she not come to me, she still would play, / A happy child, a joy to look upon.”"
+   ],
+   "answer_letter": "B",
+   "table": null,
+   "figure": null,
+   "explanation": "The claim has two parts: the King is resolved to punish Rachel’s killers, and he expects the strongest resistance to “arise from within himself.” In choice B he predicts that his “whole life” will “stand … against me, fully armed, / And challenge me to combat with myself,” and he concludes that he must first “take leave” of himself, which shows the inner resistance he expects to his resolve.",
+   "distractors": {
+    "A": {
+     "recipe": "HALF: the resolve without the inner resistance",
+     "why_wrong": "The King states his oath to punish every wrong, but nothing in these lines suggests that he expects any part of himself to resist keeping it."
+    },
+    "C": {
+     "recipe": "OPP: his feelings drive the revenge",
+     "why_wrong": "Here the King’s emotions fuel his desire for revenge rather than oppose it, the reverse of resistance from within."
+    },
+    "D": {
+     "recipe": "OFF: nearby emotion (self-blame)",
+     "why_wrong": "The King blames himself for Rachel’s death, but he says nothing about punishing her killers or about inner resistance to doing so."
+    }
+   },
+   "models": [
+    "3.11",
+    "3.17",
+    "3.35",
+    "4ef17800"
+   ],
+   "word_count": 59,
+   "sources": [
+    {
+     "what": "Grillparzer, The Jewess of Toledo, translated by George Henry Danton and Annina Periam Danton, in The German Classics of the Nineteenth and Twentieth Centuries, vol. 6 (1914), Project Gutenberg ebook 12473, Act V, the King’s speeches before he goes to Rachel’s body; all four quotations checked as exact substrings (line breaks shown as slashes)",
+     "url": "https://www.gutenberg.org/ebooks/12473"
+    },
+    {
+     "what": "play written in the 1850s, first performed in Prague in 1872",
+     "url": "https://en.wikipedia.org/wiki/The_Jewess_of_Toledo"
+    }
+   ],
+   "notes": "Band 6. Year 1872 is the premiere (written about 1851 to 1855, published posthumously; the 1914 volume prints 1873). All four options are the King’s lines in Act V."
+  },
+  {
+   "id": "command_of_evidence.Q2_P8_multipart.hard.w4b6_05",
+   "template": "Q2_P8_multipart",
+   "subtype": "Data description: two-part claim (number vs area) across size classes",
+   "tier": "hard",
+   "band_target": 6,
+   "passage": "As Himalayan glaciers retreat, meltwater accumulates in lakes, some of which can breach their natural dams and devastate the valleys below. Using Landsat satellite imagery, Yong Nie, Qiao Liu, and Shiyin Liu mapped the glacial lakes of the central Himalayas in 1990 and again in 2010 and classified the lakes by surface area. The researchers concluded that although the smallest lakes accounted for most of the increase in the number of glacial lakes, the relatively few lakes larger than 1.0 square kilometer accounted for most of the increase in total lake area.",
+   "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+   "options": [
+    "Lakes of 0.1 square kilometer or less made up 81 of the 123 lakes added, and lakes larger than 1.0 square kilometer added 19.78 of the 28.81 square kilometers of new area.",
+    "Lakes of 0.1 square kilometer or less increased in number by 81, more than the combined increase in the number of lakes in all the other size classes.",
+    "Lakes larger than 3.0 square kilometers increased in number by only 2 but added more lake area than lakes in any other size class did.",
+    "Lakes of 0.2–1.0 square kilometer and lakes of 1.0–3.0 square kilometers increased in number by the same amount, but the larger of these two size classes added more than twice as much lake area."
+   ],
+   "answer_letter": "A",
+   "table": {
+    "title": "Change in Glacial Lakes in the Central Himalayas from 1990 to 2010, by Lake Size",
+    "columns": [
+     "Lake size (square kilometers)",
+     "Increase in number of lakes",
+     "Increase in total lake area (square kilometers)"
+    ],
+    "rows": [
+     [
+      "0.1 or less",
+      "81",
+      "1.86"
+     ],
+     [
+      "0.1–0.2",
+      "20",
+      "2.94"
+     ],
+     [
+      "0.2–1.0",
+      "10",
+      "4.23"
+     ],
+     [
+      "1.0–3.0",
+      "10",
+      "10.73"
+     ],
+     [
+      "More than 3.0",
+      "2",
+      "9.05"
+     ],
+     [
+      "All lakes",
+      "123",
+      "28.81"
+     ]
+    ],
+    "note": null
+   },
+   "figure": null,
+   "explanation": "The conclusion has two parts: the smallest lakes accounted for most of the increase in the number of lakes, and lakes larger than 1.0 square kilometer accounted for most of the increase in area. Choice A addresses both: lakes of 0.1 square kilometer or less made up 81 of the 123 added lakes, and the two size classes above 1.0 square kilometer together added 10.73 + 9.05 = 19.78 of the 28.81 square kilometers of new area.",
+   "distractors": {
+    "B": {
+     "recipe": "HALF: accurate, number only",
+     "why_wrong": "This is accurate (81 versus 42 for all other classes combined), but it says nothing about lake area, so it supports only the first part of the conclusion."
+    },
+    "C": {
+     "recipe": "INACC: wrong extreme",
+     "why_wrong": "Lakes of 1.0–3.0 square kilometers added more area (10.73 square kilometers) than lakes larger than 3.0 square kilometers did (9.05), so the second half of the statement is false."
+    },
+    "D": {
+     "recipe": "IRREL: accurate comparison of the wrong classes",
+     "why_wrong": "This is accurate (10 and 10; 10.73 versus 4.23 square kilometers), but comparing two middle size classes does not show that the smallest lakes dominated the gain in number or that lakes above 1.0 square kilometer dominated the gain in area."
+    }
+   },
+   "models": [
+    "3.18",
+    "3.19",
+    "3.26",
+    "3.2"
+   ],
+   "word_count": 92,
+   "sources": [
+    {
+     "what": "Nie, Liu and Liu 2013, PLoS ONE 8(12): e83973, Table 1: number and area of glacial lakes by areal rank in 1990 and 2010 and 1990-2010 changes (count 81, 20, 10, 10, 2, total 123; area 1.86, 2.94, 4.23, 10.73, 9.05, total 28.81 square kilometers)",
+     "url": "https://doi.org/10.1371/journal.pone.0083973"
+    }
+   ],
+   "notes": "Band 6. Steps: read the two rows above 1.0 and add them, compare with the total; read the smallest row against the total count. Changes are net changes within each size class, labeled as increases. The conclusion is our paraphrase of the table, attributed to the researchers, who report both patterns."
+  },
+  {
+   "id": "command_of_evidence.Q2_P5_control.hard.w4b6_06",
+   "template": "Q2_P5_control",
+   "subtype": "Data description: condition vs two controls; only one comparison isolates the mechanism",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Cocoplum (Chrysobalanus icaco), a shrub often planted as an ornamental in Florida, has spread through a nature preserve in Jupiter, where gopher tortoises eat its fruit and later pass the seeds. Passage through an animal’s gut can speed germination in two ways: by stripping away pulp that may hold chemicals that inhibit germination, or by scarifying (wearing down) the seed coat. To tell these effects apart, Carolyn Hanish and colleagues planted seeds recovered from tortoise feces, seeds whose pulp they had removed by hand, and whole fruits. They concluded that scarification in the tortoise’s gut, not merely the loss of pulp, hastened germination.",
+   "stem": "Which choice best describes data from the table that support Hanish and colleagues’ conclusion?",
+   "options": [
+    "Seeds recovered from tortoise feces reached 50% germination 47 days sooner than whole fruits did, and their median time to germination was 72 days shorter.",
+    "Seeds removed from fruit by hand reached 50% germination sooner than whole fruits did, and their median time to germination was also shorter than that of whole fruits.",
+    "Seeds recovered from tortoise feces reached 50% germination sooner than seeds removed from fruit by hand did, and their median time to germination was also shorter.",
+    "Seeds removed from fruit by hand reached 50% germination sooner than seeds recovered from tortoise feces did, although their median time to germination was longer."
+   ],
+   "answer_letter": "C",
+   "table": {
+    "title": "Germination of Cocoplum Seeds Given Three Treatments",
+    "columns": [
+     "Treatment",
+     "Days to reach 50% germination",
+     "Median time to germination (days)"
+    ],
+    "rows": [
+     [
+      "Seeds recovered from tortoise feces",
+      "61",
+      "73"
+     ],
+     [
+      "Seeds removed from fruit by hand",
+      "95",
+      "122"
+     ],
+     [
+      "Whole fruits",
+      "108",
+      "145"
+     ]
+    ],
+    "note": null
+   },
+   "figure": null,
+   "explanation": "Seeds removed from fruit by hand had lost their pulp but had not passed through a gut, so only a comparison between them and seeds from tortoise feces can show an effect of scarification beyond “the loss of pulp.” Choice C makes that comparison on both measures: seeds from feces reached 50% germination in 61 days rather than 95, and their median time was 73 days rather than 122.",
+   "distractors": {
+    "A": {
+     "recipe": "IRREL: accurate, wrong comparison group",
+     "why_wrong": "This is accurate (108 − 61 = 47; 145 − 73 = 72), but whole fruits still had their pulp, so the difference could come from pulp removal alone rather than from scarification."
+    },
+    "B": {
+     "recipe": "IRREL: accurate, isolates the other effect",
+     "why_wrong": "This is accurate (95 versus 108 days; 122 versus 145 days), but it compares two treatments that never passed through a tortoise, so it shows an effect of removing pulp, not of scarification in the gut."
+    },
+    "D": {
+     "recipe": "INACC: false reading",
+     "why_wrong": "Seeds removed by hand took 95 days to reach 50% germination, longer than the 61 days for seeds from feces, so the first part of the statement is false."
+    }
+   },
+   "models": [
+    "3.43",
+    "3.5",
+    "3.1"
+   ],
+   "band7_moves": [
+    "design wrinkle: a third condition (hand-depulped seeds) separates pulp removal from scarification, and the passage states that logic in sentence 2",
+    "key: the right pair on both measures (a quantifier over two columns)",
+    "distractors: two accurate comparisons of the wrong pairs (IRREL, IRREL) and one false reading",
+    "every option in the key's sentence frame"
+   ],
+   "word_count": 103,
+   "sources": [
+    {
+     "what": "Hanish, Velez, Moore and Anderson 2020, AoB PLANTS 12: plaa024: cocoplum spread by gopher tortoises in a suburban preserve in Jupiter, Florida; gut-passed, hand-depulped and whole fruit treatments; days to 50% germination 61, 95 and 108; median time to germination 73, 122 and 145 days; no significant difference in total proportion germinated; result supports a lone scarification effect",
+     "url": "https://doi.org/10.1093/aobpla/plaa024"
+    }
+   ],
+   "notes": "Band 7 target. Total proportions germinated did not differ (paper), so the table shows only the two timing measures, both reported in the results text."
+  },
+  {
+   "id": "command_of_evidence.T3_person_quote.hard.w4b6_07",
+   "template": "T3_person_quote",
+   "subtype": "Quotation from an art historian supports a claim made inside the text’s rebuttal",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Under the French protectorate, the School of Fine Arts of Casablanca, established in 1919, directed most of its Moroccan students toward ceramics, interior decoration, and other applied crafts while preparing French students for professional careers in painting and sculpture. After Farid Belkahia became director in 1962, he and fellow instructors Mohamed Melehi and Mohamed Chabâa made Morocco’s traditional crafts central to the curriculum. It might seem that they thereby reinstated the colonial institution’s practice of training Moroccans as artisans—but this interpretation overlooks how the three artists treated those crafts not as occupations to be mastered but as a visual vocabulary for modernist abstraction.",
+   "stem": "Which quotation from an art historian would most directly support the claim made in the text?",
+   "options": [
+    "“However modern their own paintings, Belkahia, Melehi, and Chabâa could not fully escape the school’s past: by sending students back to rugs and pottery, they reproduced a curriculum that had long confined Moroccans to the decorative arts while reserving painting for others.”",
+    "“What set the 1960s curriculum apart was not the presence of crafts, which the school had always taught, but their purpose: students studied the geometry of rugs and painted ceilings in order to invent an abstract art of their own, not to become artisans.”",
+    "“The apparent contradiction disappears once we recall that the faculty were responding to a market: collectors abroad prized work that looked recognizably Moroccan, and borrowing motifs from crafts allowed the school’s painters to supply exactly that.”",
+    "“Under Belkahia, students divided their days between the studio and the workshop, learning to weave, carve and paint wood, and work metal alongside the more familiar practices of drawing and painting, a schedule that made the school one of the most demanding in Morocco.”"
+   ],
+   "answer_letter": "B",
+   "table": null,
+   "figure": null,
+   "explanation": "The text claims that Belkahia, Melehi, and Chabâa treated crafts “not as occupations to be mastered but as a visual vocabulary for modernist abstraction.” Choice B makes that point: it grants that crafts had always been taught but says the new purpose was to have students study rugs and painted ceilings “in order to invent an abstract art of their own, not to become artisans.”",
+   "distractors": {
+    "A": {
+     "recipe": "OPP: sides with the view the text rejects",
+     "why_wrong": "This quotation argues that the faculty “reproduced” the colonial curriculum, the very interpretation the text says “overlooks” how the crafts were used."
+    },
+    "C": {
+     "recipe": "TRAP: a reconciliation that misses the claim",
+     "why_wrong": "This resolves the apparent tension by appealing to foreign collectors’ tastes, which says nothing about whether the crafts served as a vocabulary for modern art rather than as trades."
+    },
+    "D": {
+     "recipe": "HALF: describes the craft training without its purpose",
+     "why_wrong": "This describes students learning crafts beside painting, but it does not say that the crafts were studied as sources for modern art rather than as trades, so it could fit either view."
+    }
+   },
+   "models": [
+    "ca9dc00f",
+    "378c66d5",
+    "eaf22802",
+    "3.3"
+   ],
+   "band7_moves": [
+    "the claim sits inside the text’s rebuttal of a view (as in ca9dc00f)",
+    "quotations of 40 to 50 words that argue",
+    "distractors: OPP (sides with the rejected view), TRAP (a reconciliation through market demand), HALF (craft training described without its purpose)"
+   ],
+   "word_count": 103,
+   "sources": [
+    {
+     "what": "School of Fine Arts of Casablanca: founded 1919 under the French Protectorate; Moroccan students oriented toward crafts (ceramics, drafting, interior decoration), French students toward fine arts; Belkahia director from 1962; with Melehi and Chabaa (1964-1972) he brought local traditional crafts into the curriculum",
+     "url": "https://en.wikipedia.org/wiki/School_of_Fine_Arts_of_Casablanca"
+    }
+   ],
+   "notes": "Band 7 target. The quotations are attributed to an unnamed art historian (invented, as in the official items); the facts in the passage are from the source."
+  },
+  {
+   "id": "command_of_evidence.Q2_P8_quantifier.hard.w4b6_08",
+   "template": "Q2_P8_quantifier",
+   "subtype": "Data description: quantified claim (most often at every distance, majority at only one)",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Agricultural communities bordering protected forests frequently lose crops to wild animals. In southwestern Ethiopia, Alemayehu Mamo and colleagues interviewed farmers living close to (less than 0.5 kilometer from), at an intermediate distance from (0.5–1 kilometer), or far from (more than 1 kilometer from) the edge of the Yayu Coffee Forest Biosphere Reserve and documented which crops the farmers reported were most often raided by olive baboons, bush pigs, and other wild mammals. A student reviewing the results claims that maize was the crop farmers named most often at every distance but that it accounted for a majority of responses only close to the forest.",
+   "stem": "Which choice best describes data from the table that support the student’s claim?",
+   "options": [
+    "Close to the forest, maize accounted for 66.7% of responses, far more than any other crop shown accounted for at that distance.",
+    "At each distance, maize accounted for more than a third of responses, and its share fell steadily as farmers’ distance from the forest increased.",
+    "At each distance, maize and sorghum together accounted for more than half of all responses, with sorghum’s share rising from 4.2% close to the forest to 21% elsewhere.",
+    "At each distance, maize accounted for a larger share of responses than any other crop shown did, but its share exceeded 50% only close to the forest."
+   ],
+   "answer_letter": "D",
+   "table": {
+    "title": "Crops Most Often Raided by Wild Mammals near Yayu Forest, by Farmers’ Distance from the Forest (% of responses)",
+    "columns": [
+     "Crop",
+     "Close",
+     "Intermediate",
+     "Far"
+    ],
+    "rows": [
+     [
+      "Maize",
+      "66.7",
+      "34.2",
+      "42.1"
+     ],
+     [
+      "Sorghum",
+      "4.2",
+      "21.0",
+      "21.0"
+     ],
+     [
+      "Avocado",
+      "14.6",
+      "13.2",
+      "0.0"
+     ],
+     [
+      "Mango",
+      "4.2",
+      "13.2",
+      "7.9"
+     ],
+     [
+      "Potato",
+      "6.2",
+      "7.9",
+      "7.9"
+     ]
+    ],
+    "note": null
+   },
+   "figure": null,
+   "explanation": "The claim has two quantified parts: maize was named most often “at every distance,” and it made up a majority “only close to the forest.” Choice D covers both: in every column maize has the largest share (66.7%, 34.2%, and 42.1%), but only the 66.7% close to the forest is above 50%.",
+   "distractors": {
+    "A": {
+     "recipe": "PART: one distance only",
+     "why_wrong": "This is accurate, but it describes only the farmers close to the forest, so it shows neither that maize led at the other distances nor that its share fell below a majority there."
+    },
+    "B": {
+     "recipe": "INACC: compound with one false clause",
+     "why_wrong": "Maize did exceed a third of responses at each distance, but its share did not fall steadily: it dropped from 66.7% to 34.2% and then rose to 42.1% far from the forest, and the statement never shows that maize led the other crops."
+    },
+    "C": {
+     "recipe": "IRREL: accurate, wrong measure (a combined share)",
+     "why_wrong": "This is accurate (70.9%, 55.2%, and 63.1%), but a majority for maize and sorghum combined says nothing about whether maize alone led at each distance or held a majority only close to the forest."
+    }
+   },
+   "models": [
+    "3.24",
+    "3.20",
+    "3.23"
+   ],
+   "band7_moves": [
+    "quantifier trap: “most often at every distance” plus “majority only close”, so the key must check every column and the 50% line",
+    "distractors: a single-column PART, a compound with one false clause, and an accurate combined share (IRREL)",
+    "options share the “At each distance” frame"
+   ],
+   "word_count": 104,
+   "sources": [
+    {
+     "what": "Mamo, Lemessa, Diriba and Hunde 2021, Ecology and Evolution 11: 3203-3216, Table: frequency of farmers' responses (%) on crops often raided by distance from the forest (maize 66.7, 34.2, 42.1; sorghum 4.2, 21, 21; potato 6.2, 7.9, 7.9; mango 4.2, 13.2, 7.9; avocado 14.6, 13.2, 0; teff 4.2, 10.5, 7.9); olive baboon, vervet monkey, bush pigs and crested porcupine the top crop raiders; Yayu Coffee Forest Biosphere Reserve, southwest Ethiopia",
+     "url": "https://doi.org/10.1002/ece3.7268"
+    }
+   ],
+   "notes": "Band 7 target. Teff (4.2, 10.5, 7.9) is left out to keep five rows; it is below maize everywhere, so “any other crop shown” stays true for all crops. Columns are close (<0.5 km), intermediate (0.5-1 km), far (>1 km)."
+  },
+  {
+   "id": "command_of_evidence.Q1_P67_criterion.hard.w4b6_09",
+   "template": "Q1_P67_criterion",
+   "subtype": "Data completion: a ratio defined in the passage must be unpacked before the data bear on the conclusion",
+   "tier": "hard",
+   "band_target": 7,
+   "passage": "Brachiaria grasses sown between rows of maize can recycle nitrogen after the harvest, but nitrogen in agricultural soil can also be converted by microorganisms into nitrous oxide (N₂O), a potent greenhouse gas. In Brazil, Lucas Pecci Canisares, Heitor Cantarella, and colleagues grew maize alone or intercropped with Brachiaria brizantha, with or without nitrogen fertilizer, and measured each plot’s grain yield and its emission intensity: the N₂O it released, expressed in carbon dioxide equivalents, divided by the grain it produced. Because emission intensity is a ratio, it can rise either because a plot released more gas or because it produced less grain. The 2017–18 results therefore suggest that ______",
+   "stem": "Which choice most effectively uses data from the table to complete the statement?",
+   "options": [
+    "intercropping increased the total amount of N₂O released by plots that received no fertilizer, since those plots had more than double the emission intensity of unfertilized maize grown alone while yielding slightly more grain.",
+    "the higher emission intensity of intercropped plots reflects smaller harvests rather than greater emissions, since intercropped maize yielded less grain than maize grown alone whether or not fertilizer was applied.",
+    "intercropping with Brachiaria brizantha raises N₂O emissions from maize fields in every growing season, since in 2017–18 intercropped plots had higher emission intensities than plots of maize grown alone at both fertilizer levels.",
+    "adding fertilizer reduced the total amount of N₂O released by intercropped plots, since the emission intensity of intercropped plots fell from 51.1 without fertilizer to 36.6 with it."
+   ],
+   "answer_letter": "A",
+   "table": {
+    "title": "Maize Grain Yield and Emission Intensity in the 2017–18 Season",
+    "columns": [
+     "Cropping system",
+     "Nitrogen fertilizer (kilograms per hectare)",
+     "Grain yield (metric tons per hectare)",
+     "Emission intensity (kilograms of CO₂ equivalent per metric ton of grain)"
+    ],
+    "rows": [
+     [
+      "Maize alone",
+      "0",
+      "4.8",
+      "21.0"
+     ],
+     [
+      "Maize with B. brizantha",
+      "0",
+      "5.3",
+      "51.1"
+     ],
+     [
+      "Maize alone",
+      "150",
+      "10.0",
+      "24.1"
+     ],
+     [
+      "Maize with B. brizantha",
+      "150",
+      "10.3",
+      "36.6"
+     ]
+    ],
+    "note": null
+   },
+   "figure": null,
+   "explanation": "Emission intensity is N₂O released divided by grain produced, so a higher intensity means more gas only if yield did not fall. Without fertilizer, intercropped plots had an intensity of 51.1 against 21.0 for maize alone, more than double, while yielding slightly more grain (5.3 versus 4.8 metric tons per hectare), so their higher ratio must come from releasing more N₂O, as choice A states.",
+   "distractors": {
+    "B": {
+     "recipe": "WDIR/INACC: the ratio blamed on the wrong term",
+     "why_wrong": "Intercropped maize yielded more grain than maize alone at both fertilizer levels (5.3 versus 4.8 and 10.3 versus 10.0), so lower harvests cannot explain its higher emission intensity."
+    },
+    "C": {
+     "recipe": "OUTS: claim beyond the display",
+     "why_wrong": "The table shows only the 2017–18 season, so it cannot show that intercropping raises emissions in every season, even though its comparison for that season is accurate."
+    },
+    "D": {
+     "recipe": "WDIR: the ratio read as a total",
+     "why_wrong": "The intensity fell because fertilized plots produced far more grain (10.3 versus 5.3 metric tons per hectare); multiplying intensity by yield shows that total emissions rose (about 377 versus 271 kilograms of CO₂ equivalent per hectare), so fertilizer did not reduce them."
+    }
+   },
+   "models": [
+    "4411e15b",
+    "3.22",
+    "3.27"
+   ],
+   "band7_moves": [
+    "proxy: the passage defines emission intensity as a ratio and says it can rise through either term; the key must combine both columns to infer total emissions",
+    "the blank asks for a conclusion about the world (total N2O released), not a restatement of a cell",
+    "options are compound clauses of about 28 to 33 words",
+    "distractors: the ratio read as a total (WDIR), the ratio blamed on yield against the data (INACC), a generalization beyond the one season shown (OUTS)"
+   ],
+   "word_count": 108,
+   "sources": [
+    {
+     "what": "Canisares, Rosolem, Momesso, Crusciol, Villegas, Arango, Ritz and Cantarella 2021, Agriculture, Ecosystems and Environment 319: 107491: maize monocropped or intercropped with Brachiaria brizantha or B. humidicola, 0 or 150 kg N per hectare; 2017/18 grain yield 4.8, 5.3, 10.0, 10.3 t per hectare and emission intensity 21.0, 51.1, 24.1, 36.6 kg CO2 eq per t grain (M0, MB0, M150, MB150); N2O emissions higher in plots with brachiaria",
+     "url": "https://doi.org/10.1016/j.agee.2021.107491"
+    }
+   ],
+   "notes": "Band 7 target. Implied totals (intensity times yield): 100.8, 270.8, 241.0, 377.0 kg CO2 eq per hectare. B. humidicola rows omitted (it failed to establish in the first year). The 2016/17 intensities ran the other way (14.5 vs 11.9), which is why C's every-season claim is unsupported."
+  },
+  {
+   "id": "command_of_evidence.T2_lit_quote.medium.w4b6_10",
+   "template": "T2_lit_quote",
+   "subtype": "Literary quotation illustrates a two-part claim (inexperience made up for by determination)",
+   "tier": "medium",
+   "passage": "Rudder Grange is an 1879 novel by Frank R. Stockton. In the novel, the narrator and his wife, Euphemia, hire a young household servant named Pomona. Stockton characterizes Pomona as someone who, whenever she lacks experience at a particular task, compensates through sheer determination: ______",
+   "stem": "Which quotation from Rudder Grange most effectively illustrates the claim?",
+   "options": [
+    "“Pomona, who knew all about such things, having been on a farm in her first youth, was to be the milkmaid. But when she began operations, she did no more than begin.”",
+    "“‘Can I milk?’ said Pomona. ‘Why, of course, ma’am. I’ve seen ’em milk hundreds of times.’”",
+    "“‘See here, sir,’ she said, ‘it’s mor’n half full. I just made up my mind that I’d learn to milk—if it took me all night.’”",
+    "“She delighted in out-door work, and sometimes dug so vigorously in our garden that she brought up pieces of the deck-planking with every shovelful.”"
+   ],
+   "answer_letter": "C",
+   "table": null,
+   "figure": null,
+   "explanation": "The claim has two parts: Pomona lacks experience at a task, and she compensates through determination. In choice C, Pomona says she “made up my mind that I’d learn to milk—if it took me all night,” which shows both her inexperience (she had to learn) and her resolve, and her pail being “mor’n half full” shows that the effort succeeded.",
+   "distractors": {
+    "A": {
+     "recipe": "HALF: the inexperience without the determination",
+     "why_wrong": "This shows that Pomona could not actually milk the cow, but it says nothing about her overcoming that lack of experience."
+    },
+    "B": {
+     "recipe": "LURE: same task, confidence instead of determination",
+     "why_wrong": "Pomona claims she can milk because she has watched others do it; this shows overconfidence, not determination that makes up for inexperience."
+    },
+    "D": {
+     "recipe": "OFF: energy at a task she already enjoys",
+     "why_wrong": "This shows Pomona’s enthusiasm for outdoor work, but nothing suggests that she lacked experience at digging or had to overcome it."
+    }
+   },
+   "models": [
+    "2.20",
+    "2.10",
+    "2.36",
+    "2.26"
+   ],
+   "word_count": 45,
+   "sources": [
+    {
+     "what": "Frank R. Stockton, Rudder Grange (1879), Project Gutenberg ebook 2011; all four quotations checked as exact substrings (double hyphen rendered as an em dash; inner quotation marks made single); A, B and C from the milking episode after Pomona returns, D from her first months with the narrator",
+     "url": "https://www.gutenberg.org/ebooks/2011"
+    }
+   ],
+   "notes": "Medium. Three options come from the same milking episode, so the student must match both parts of the claim. Rudder Grange was first published as a book in 1879."
+  },
+  {
+   "id": "command_of_evidence.T2_lit_quote.medium.w4b6_11",
+   "template": "T2_lit_quote",
+   "subtype": "Literary quotation illustrates a two-part claim (fierce and protective of her father)",
+   "tier": "medium",
+   "passage": "Aurora Floyd is an 1863 novel by M. E. Braddon. In the novel, Aurora, the daughter of a wealthy banker, is approached by Matthew Harrison, a disreputable dog dealer who wants money and insinuates that he could approach her father instead. Braddon portrays Aurora as fiercely protective of her father: ______",
+   "stem": "Which quotation from Aurora Floyd most effectively illustrates the claim?",
+   "options": [
+    "“‘Do not talk to me of racing; it annoys papa,’ Aurora said to the captain, dropping her voice.”",
+    "“‘Act liberally!’ cried Aurora. ‘Good heavens! if every guinea I have, or ever hope to have, could blot out the business that you trade upon, I’d open my hands and let the money run through them as freely as so much water.’”",
+    "“Aurora was leaning over the rough wooden balustrade, looking lazily at the water.”",
+    "“‘If ever you dare to annoy my father you shall pay dearly for it, Matthew Harrison,’ she said; ‘not that I fear anything you can say, but I will not have him annoyed; I will not have him tormented.’”"
+   ],
+   "answer_letter": "D",
+   "table": null,
+   "figure": null,
+   "explanation": "The claim is that Aurora is fiercely protective of her father. In choice D she threatens Harrison that he “shall pay dearly” if he dares “to annoy my father” and insists, “I will not have him tormented,” which shows both her fierceness and the protectiveness behind it.",
+   "distractors": {
+    "A": {
+     "recipe": "HALF: protective but not fierce",
+     "why_wrong": "Aurora shields her father from an annoying subject here, but she does so quietly, “dropping her voice,” so the quotation does not show fierceness."
+    },
+    "B": {
+     "recipe": "HALF: fierce, but not about her father",
+     "why_wrong": "Aurora speaks passionately here, but her outburst concerns the money and “the business that you trade upon,” not protecting her father."
+    },
+    "C": {
+     "recipe": "OFF: an idle moment",
+     "why_wrong": "This shows Aurora idly watching the water from a bridge and reveals nothing about her attitude toward her father."
+    }
+   },
+   "models": [
+    "2.20",
+    "2.11",
+    "2.26",
+    "2.13"
+   ],
+   "word_count": 51,
+   "sources": [
+    {
+     "what": "M. E. Braddon, Aurora Floyd, vol. 1 (1863), Project Gutenberg ebook 48020; all four quotations checked as exact substrings (inner quotation marks made single, italics on I dropped)",
+     "url": "https://www.gutenberg.org/ebooks/48020"
+    }
+   ],
+   "notes": "Medium. Two half-matches (protective but calm; fierce but not about her father). Harrison mentions his “tarrier-pups” and asking “the old gent” for money in the same scene."
+  },
+  {
+   "id": "command_of_evidence.T1_single.medium.w4b6_12",
+   "template": "T1_single",
+   "subtype": "Hypothetical finding supports a conclusion about how an object was used",
+   "tier": "medium",
+   "passage": "In late medieval England, women in labor were sometimes given birth girdles: long strips of parchment inscribed with prayers and religious images believed to protect mothers and newborns. Yet there has been little direct evidence of how these objects were actually handled. Using a technique that collects proteins from parchment surfaces without damaging them, Sarah Fiddyment and colleagues analyzed a heavily stained fifteenth-century birth girdle now held by the Wellcome Collection in London. The researchers concluded that the girdle had been worn or held against the body during childbirth.",
+   "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+   "options": [
+    "The prayers and images on the girdle closely resemble, in wording and arrangement, those on other English birth girdles made during the same century.",
+    "Many of the human proteins recovered from the stained areas of the girdle are of a kind found mainly in fluids produced by the body during birth.",
+    "Human proteins were also recovered from several medieval prayer books in the Wellcome Collection that were never associated with childbirth.",
+    "The girdle shows signs of having been rolled up, unrolled, and handled many times over the centuries since it was made."
+   ],
+   "answer_letter": "B",
+   "table": null,
+   "figure": null,
+   "explanation": "The researchers concluded that the girdle “had been worn or held against the body during childbirth.” If many of the human proteins in the girdle’s stains came from fluids produced during birth, that would show the girdle was in contact with a woman’s body while she gave birth, as choice B states.",
+   "distractors": {
+    "A": {
+     "recipe": "OFF: the girdle’s design",
+     "why_wrong": "A resemblance to other girdles shows the object’s type and date, not how this girdle was physically used."
+    },
+    "C": {
+     "recipe": "SUBJ: other objects",
+     "why_wrong": "Proteins on prayer books unrelated to childbirth say nothing about contact with a body during birth; if anything, they suggest that human proteins alone do not indicate such use."
+    },
+    "D": {
+     "recipe": "TRAP: wear consistent with any use",
+     "why_wrong": "Repeated rolling and unrolling fits devotional reading as well as use in childbirth, so it does not show that the girdle touched the body during labor."
+    }
+   },
+   "models": [
+    "2.21",
+    "2.6",
+    "2.7",
+    "2.1"
+   ],
+   "word_count": 89,
+   "sources": [
+    {
+     "what": "Fiddyment, Goodison, Brenner, Signorello, Price and Collins 2021, R. Soc. Open Sci. 8: 202055: stained late fifteenth-century English parchment birth girdle (Wellcome Collection Western MS. 632), dry non-invasive sampling of peptides; many human peptides found in cervico-vaginal fluid, suggesting the girdle was actively used during childbirth",
+     "url": "https://doi.org/10.1098/rsos.202055"
+    }
+   ],
+   "notes": "Medium. One bridge: the key names a kind of protein rather than repeating the conclusion. The paper also found honey, cereal, milk and legume peptides; left out to keep options clean."
+  },
+  {
+   "id": "command_of_evidence.Q1_P3_pairwise.medium.w4b6_13",
+   "template": "Q1_P3_pairwise",
+   "subtype": "Data completion: two pairwise comparisons that together show variation",
+   "tier": "medium",
+   "passage": "Mango trees bear clusters of small flowers called panicles, and the fruit production of some cultivars depends heavily on insects transferring pollen between flowers. In Malaysia, A. Nurul Huda and colleagues observed panicles of two cultivars, Sala and Chok Anan, and recorded how frequently the most common visitors, several species of ants and flies, arrived. Every visitor came to Sala panicles more often than to Chok Anan panicles, but the size of the difference varied considerably from one visitor to another: for example, ______",
+   "stem": "Which choice most effectively uses data from the table to complete the example?",
+   "options": [
+    "Iridomyrmex ants visited Sala panicles more than twice as often as Chok Anan panicles, while Stomorhina flies visited the two cultivars at nearly the same rate.",
+    "Sarcophaga flies visited Chok Anan panicles nearly twice as often as Sala panicles, while Camponotus ants visited the two cultivars at nearly the same rate.",
+    "Chrysomya flies visited Sala panicles more often than any other visitor did, and they also visited Chok Anan panicles more often than any other visitor did.",
+    "Camponotus ants visited Sala panicles more than twice as often as they visited Chok Anan panicles, while Sarcophaga flies visited the two cultivars at nearly the same rate."
+   ],
+   "answer_letter": "A",
+   "table": {
+    "title": "Average Number of Visits to Mango Panicles per Two-Minute Observation",
+    "columns": [
+     "Flower visitor (genus)",
+     "Sala",
+     "Chok Anan"
+    ],
+    "rows": [
+     [
+      "Iridomyrmex (ant)",
+      "12.71",
+      "5.14"
+     ],
+     [
+      "Camponotus (ant)",
+      "10.62",
+      "7.69"
+     ],
+     [
+      "Stomorhina (fly)",
+      "8.93",
+      "7.64"
+     ],
+     [
+      "Chrysomya (fly)",
+      "17.00",
+      "9.50"
+     ],
+     [
+      "Sarcophaga (fly)",
+      "8.50",
+      "4.38"
+     ]
+    ],
+    "note": null
+   },
+   "figure": null,
+   "explanation": "The example must show that the gap between the cultivars was large for some visitors and small for others. Iridomyrmex ants averaged 12.71 visits to Sala panicles but only 5.14 to Chok Anan panicles, more than twice as many, while Stomorhina flies averaged 8.93 and 7.64, nearly the same; choice A gives both.",
+   "distractors": {
+    "B": {
+     "recipe": "WDIR: comparison reversed",
+     "why_wrong": "Sarcophaga flies visited Sala panicles more often (8.50) than Chok Anan panicles (4.38), not the reverse, and Camponotus ants visited Sala noticeably more often (10.62 versus 7.69)."
+    },
+    "C": {
+     "recipe": "IRREL: accurate, but not about the size of the difference",
+     "why_wrong": "This is accurate (17.00 and 9.50 are the highest values in each column), but it compares visitors with one another rather than showing how the gap between the two cultivars varied."
+    },
+    "D": {
+     "recipe": "WGRP: right frame, wrong rows",
+     "why_wrong": "Camponotus ants visited Sala panicles only about 1.4 times as often as Chok Anan panicles (10.62 versus 7.69), and Sarcophaga flies visited Sala almost twice as often (8.50 versus 4.38), so both halves are false."
+    }
+   },
+   "models": [
+    "2.18",
+    "2.27",
+    "2.24"
+   ],
+   "word_count": 84,
+   "sources": [
+    {
+     "what": "Huda, Salmah, Hassan, Hamdan and Razak 2015, Journal of Insect Science 15(1): 113, Table 2: visitation frequencies (mean per 2-min observation) of common flower visitors on Sala and Chok Anan panicles (Iridomyrmex 12.71/5.14, Camponotus 10.62/7.69, Stomorhina 8.93/7.64, Chrysomya 17.00/9.50, Sarcophaga 8.50/4.38); study aimed to improve mango production in Malaysia",
+     "url": "https://doi.org/10.1093/jisesa/iev090"
+    }
+   ],
+   "notes": "Medium. Ratios: 2.47, 1.38, 1.17, 1.79, 1.94; 'nearly the same rate' for Stomorhina (8.93 vs 7.64, ratio 1.17) holds by contrast with the 2.47 ratio and is the smallest gap in the table. The author's given name is printed as A. Nurul in the article."
+  },
+  {
+   "id": "command_of_evidence.Q1_P5_control.medium.w4b6_14",
+   "template": "Q1_P5_control",
+   "subtype": "Data completion: treatment vs control, with the effect depending on the treatment",
+   "tier": "medium",
+   "passage": "Smoke from burning vegetation contains compounds that can stimulate dormant seeds to germinate. Mohamed Elsadek and Eltohamy Yousef soaked seeds of cucumber, tomato, and Scotch marigold, as well as cormels (small bulblike underground stems) of gladiolus, either in distilled water or in smoke-water prepared by bubbling smoke from one of five plant species through water, and then recorded the percentage that germinated. They found that the effect of smoke-water depended considerably on which species supplied the smoke: for example, ______",
+   "stem": "Which choice most effectively uses data from the table to complete the example?",
+   "options": [
+    "cucumber seeds germinated at a higher rate than tomato seeds did, whether they were soaked in distilled water, white willow smoke-water, or rosemary smoke-water.",
+    "Scotch marigold seeds soaked in rosemary smoke-water germinated at a higher rate than those soaked in white willow smoke-water, and both of those rates exceeded the rate for seeds in distilled water.",
+    "tomato seeds soaked in white willow smoke-water germinated at a rate about 11 percentage points higher than that of tomato seeds soaked in distilled water.",
+    "gladiolus cormels soaked in white willow smoke-water germinated at a higher rate than those soaked in distilled water, while those soaked in rosemary smoke-water germinated at a lower rate."
+   ],
+   "answer_letter": "D",
+   "table": {
+    "title": "Germination of Seeds and Cormels Soaked in Distilled Water or Smoke-Water (%)",
+    "columns": [
+     "Treatment",
+     "Cucumber",
+     "Tomato",
+     "Gladiolus",
+     "Scotch marigold"
+    ],
+    "rows": [
+     [
+      "Distilled water",
+      "87.3",
+      "75.8",
+      "65.3",
+      "73.3"
+     ],
+     [
+      "White willow smoke-water",
+      "98.7",
+      "86.8",
+      "75.7",
+      "79.5"
+     ],
+     [
+      "Rosemary smoke-water",
+      "89.7",
+      "80.0",
+      "62.0",
+      "71.5"
+     ]
+    ],
+    "note": null
+   },
+   "figure": null,
+   "explanation": "To show that the effect depended on the source of the smoke, the example must compare smoke-water from two plants against the distilled-water control for the same crop. For gladiolus, 75.7% of cormels germinated after white willow smoke-water and 65.3% after distilled water, but only 62.0% after rosemary smoke-water, so the two kinds of smoke-water had opposite effects, as choice D states.",
+   "distractors": {
+    "A": {
+     "recipe": "IRREL: accurate, compares crops rather than treatments",
+     "why_wrong": "This is accurate (87.3 vs 75.8, 98.7 vs 86.8, 89.7 vs 80.0), but a difference between crops says nothing about whether the effect of smoke-water depended on its source."
+    },
+    "B": {
+     "recipe": "INACC: false reading",
+     "why_wrong": "Scotch marigold seeds germinated at a lower rate with rosemary smoke-water (71.5%) than with white willow smoke-water (79.5%), and 71.5% is also below the 73.3% for distilled water."
+    },
+    "C": {
+     "recipe": "PART: one treatment only",
+     "why_wrong": "This is accurate (86.8 − 75.8 = 11.0), but it involves only one kind of smoke-water, so it cannot show that the effect depended on which plant the smoke came from."
+    }
+   },
+   "models": [
+    "2.5",
+    "2.14",
+    "2.19"
+   ],
+   "word_count": 80,
+   "sources": [
+    {
+     "what": "Elsadek and Yousef 2019, Plants 8(4): 104, Table 1: germination percentage after distilled water (DW) or smoke-water from white willow (SW1), sage, rice straw, rosemary (SW4) or lemon eucalyptus; cucumber 87.33/98.67/89.67, tomato 75.83/86.83/80.00, gladiolus 65.33/75.67/62.00, scotch marigold 73.33/79.50/71.50 (DW/SW1/SW4)",
+     "url": "https://doi.org/10.3390/plants8040104"
+    }
+   ],
+   "notes": "Medium. Values rounded to one decimal from the paper's two. Only the control and two of the five smoke-waters are shown. Smoke-cued germination appears in cross_text_connections.S2_joint_inference.hard (fynbos, karrikinolide), a different study and setting."
+  },
+  {
+   "id": "command_of_evidence.Q2_P4_trend.medium.w4b6_15",
+   "template": "Q2_P4_trend",
+   "subtype": "Data description: an abrupt change in one series relative to another",
+   "tier": "medium",
+   "passage": "The United Nations Office for Outer Space Affairs maintains a register of the satellites, probes, and other objects that countries launch into orbit or beyond, allowing researchers to compare national space activity over time. A student comparing two countries’ records concludes that the United Kingdom, whose yearly launches had long been modest, abruptly surpassed Japan by a wide margin at the beginning of the 2020s.",
+   "stem": "Which choice best describes data from the graph that support the student’s conclusion?",
+   "options": [
+    "In 2021, the United Kingdom launched nearly 300 objects into space, more than ten times the number of objects that Japan launched that same year.",
+    "The United Kingdom’s yearly launches stayed below 50 until 2021, when they suddenly rose to nearly 300.",
+    "The United Kingdom launched fewer than 20 objects each year from 2012 through 2019 but launched far more objects than Japan did in both 2020 and 2021.",
+    "Both the United Kingdom and Japan launched more objects in 2021 than they did in 2012."
+   ],
+   "answer_letter": "C",
+   "table": null,
+   "figure": {
+    "kind": "line graph",
+    "title": "Objects Launched into Space by the United Kingdom and Japan, 2012–2021",
+    "x_axis": "Year",
+    "y_axis": "Number of objects launched",
+    "description": "Two lines, one for each year from 2012 to 2021; y-axis 0 to 300 in steps of 50. United Kingdom: 4, 7, 10, 7, 1, 7, 12, 14, then 104 in 2020 and 289 in 2021. Japan: 9, 5, 24, 4, 11, 16, 17, 21, 9, 24. Both lines stay below 25 until 2019; the United Kingdom line then rises steeply, while the Japan line stays below 25.",
+    "data": [
+     {
+      "series": "United Kingdom",
+      "points": [
+       [
+        "2012",
+        4
+       ],
+       [
+        "2013",
+        7
+       ],
+       [
+        "2014",
+        10
+       ],
+       [
+        "2015",
+        7
+       ],
+       [
+        "2016",
+        1
+       ],
+       [
+        "2017",
+        7
+       ],
+       [
+        "2018",
+        12
+       ],
+       [
+        "2019",
+        14
+       ],
+       [
+        "2020",
+        104
+       ],
+       [
+        "2021",
+        289
+       ]
+      ]
+     },
+     {
+      "series": "Japan",
+      "points": [
+       [
+        "2012",
+        9
+       ],
+       [
+        "2013",
+        5
+       ],
+       [
+        "2014",
+        24
+       ],
+       [
+        "2015",
+        4
+       ],
+       [
+        "2016",
+        11
+       ],
+       [
+        "2017",
+        16
+       ],
+       [
+        "2018",
+        17
+       ],
+       [
+        "2019",
+        21
+       ],
+       [
+        "2020",
+        9
+       ],
+       [
+        "2021",
+        24
+       ]
+      ]
+     }
+    ]
+   },
+   "explanation": "The conclusion has two parts: the United Kingdom’s launches “had long been modest,” and the country then “abruptly surpassed Japan by a wide margin” at “the beginning of the 2020s.” Choice C covers both: the United Kingdom launched fewer than 20 objects in every year from 2012 through 2019, then 104 and 289 in 2020 and 2021, far more than Japan’s 9 and 24.",
+   "distractors": {
+    "A": {
+     "recipe": "PART: a single year",
+     "why_wrong": "This is accurate (289 versus 24), but it describes only 2021 and does not show that the United Kingdom’s launches had been modest before."
+    },
+    "B": {
+     "recipe": "INACC: false reading",
+     "why_wrong": "The United Kingdom launched more than 100 objects in 2020, so its launches did not stay below 50 until 2021, and the statement makes no comparison with Japan."
+    },
+    "D": {
+     "recipe": "IRREL: accurate, but true of both countries",
+     "why_wrong": "This is accurate (4 to 289; 9 to 24), but an increase for both countries does not show an abrupt change in the United Kingdom or that it surpassed Japan by a wide margin."
+    }
+   },
+   "models": [
+    "2.12",
+    "2.22",
+    "2.2"
+   ],
+   "word_count": 65,
+   "sources": [
+    {
+     "what": "Our World in Data, yearly number of objects launched into outer space, from the UN Office for Outer Space Affairs Online Index of Objects Launched into Outer Space; United Kingdom 2012-2021: 4, 7, 10, 7, 1, 7, 12, 14, 104, 289; Japan: 9, 5, 24, 4, 11, 16, 17, 21, 9, 24",
+     "url": "https://ourworldindata.org/grapher/yearly-number-of-objects-launched-into-outer-space"
+    }
+   ],
+   "notes": "Medium. Options avoid exact small values, which are hard to read on a 0-300 axis (C says fewer than 20; B is false at gridline scale: 104 in 2020)."
+  },
+  {
+   "id": "command_of_evidence.T1_compete.medium.w4b6_16",
+   "template": "T1_compete",
+   "subtype": "Finding favors one of two accounts of what a feature of drummed speech encodes",
+   "tier": "medium",
+   "passage": "The Bora people of the northwest Amazon transmit messages over long distances using manguaré, a pair of large wooden slit drums. Drummed Bora uses one beat for each syllable of the spoken words, imitating their tones, and the pauses separating beats vary in duration. One straightforward account holds that a pause’s duration depends only on whether the preceding vowel is long or short. Analyzing recordings of drummed messages, Frank Seifart and colleagues proposed instead that pause durations correspond to vowel-to-vowel intervals: the stretch of speech from one vowel to the next, which lengthens both when the vowel is long and when additional consonants precede the next vowel.",
+   "stem": "Which finding, if true, would most directly support Seifart and colleagues’ proposal over the straightforward account?",
+   "options": [
+    "In the recordings, drummed messages contain as many beats as the spoken versions of the same messages contain syllables.",
+    "Words whose vowels are equally long but are separated by different numbers of consonants are drummed with different pauses between beats.",
+    "Pauses between beats are about equally long whenever the preceding vowels are equally long, regardless of how many consonants separate those vowels from the vowels that follow.",
+    "Drummers typically use lower-pitched strokes for syllables with low tone and higher-pitched strokes for syllables with high tone."
+   ],
+   "answer_letter": "B",
+   "table": null,
+   "figure": null,
+   "explanation": "The two accounts disagree about consonants: the straightforward account says a pause’s duration depends “only on whether the preceding vowel is long or short,” while Seifart and colleagues say the interval also lengthens “when additional consonants precede the next vowel.” If words with equally long vowels but different numbers of consonants were drummed with different pauses, only the second account could explain it, as choice B states.",
+   "distractors": {
+    "A": {
+     "recipe": "TRAP: consistent with both accounts",
+     "why_wrong": "Both accounts accept that drummed Bora uses one beat per syllable, so matching numbers of beats and syllables cannot favor either one."
+    },
+    "C": {
+     "recipe": "OPP: the rival account’s prediction",
+     "why_wrong": "Pauses that ignore the number of consonants are exactly what the straightforward account predicts, so this finding would weaken Seifart and colleagues’ proposal."
+    },
+    "D": {
+     "recipe": "OFF: tone rather than pause length",
+     "why_wrong": "This concerns which drum represents each tone, not what determines the length of the pauses between beats."
+    }
+   },
+   "models": [
+    "2.9",
+    "2.30"
+   ],
+   "word_count": 107,
+   "sources": [
+    {
+     "what": "Seifart, Meyer, Grawunder and Dentel 2018, R. Soc. Open Sci. 5: 170354: Bora drum communication (manguare), northwest Amazon; drummed Bora uses as many beats as syllables and two tones; four rhythmic units encoded in pause lengths correspond to vowel-to-vowel intervals with different numbers of consonants and vowel lengths; aligning beats with syllables, mora or only vowel length gives inconsistent results",
+     "url": "https://doi.org/10.1098/rsos.170354"
+    }
+   ],
+   "notes": "Medium. The rival (vowel length only) is one of the alternatives the paper tests and rejects; it is left unattributed. The manguaré is a pair of slit drums, each producing two pitches."
+  },
+  {
+   "id": "command_of_evidence.Q1_P1_lookup.easy.w4b6_17",
+   "template": "Q1_P1_lookup",
+   "subtype": "Data completion: read one named cell",
+   "tier": "easy",
+   "passage": "Tourism brings in a large share of the income of many Pacific nations. While researching tourism in the region, a student looks at data from the World Tourism Organization showing how many international visitors stayed at least one night in several countries in 2019. The student notes that Fiji, the most visited of these countries, received 894,000 such visitors, while Vanuatu received ______",
+   "stem": "Which choice most effectively uses data from the table to complete the statement?",
+   "options": [
+    "172,000 visitors.",
+    "94,000 visitors.",
+    "120,600 visitors.",
+    "67,300 visitors."
+   ],
+   "answer_letter": "C",
+   "table": {
+    "title": "International Overnight Visitors to Five Pacific Island Nations, 2019",
+    "columns": [
+     "Country",
+     "Number of visitors"
+    ],
+    "rows": [
+     [
+      "Fiji",
+      "894,000"
+     ],
+     [
+      "Samoa",
+      "172,000"
+     ],
+     [
+      "Vanuatu",
+      "120,600"
+     ],
+     [
+      "Palau",
+      "94,000"
+     ],
+     [
+      "Tonga",
+      "67,300"
+     ]
+    ],
+    "note": null
+   },
+   "figure": null,
+   "explanation": "According to the table, Vanuatu received 120,600 international overnight visitors in 2019.",
+   "distractors": {
+    "A": {
+     "recipe": "WGRP: another row’s value",
+     "why_wrong": "172,000 is the number of visitors to Samoa, not to Vanuatu."
+    },
+    "B": {
+     "recipe": "WGRP: another row’s value",
+     "why_wrong": "94,000 is the number of visitors to Palau, not to Vanuatu."
+    },
+    "D": {
+     "recipe": "WGRP: another row’s value",
+     "why_wrong": "67,300 is the number of visitors to Tonga, not to Vanuatu."
+    }
+   },
+   "models": [
+    "1.30",
+    "1.37",
+    "1.38"
+   ],
+   "word_count": 63,
+   "sources": [
+    {
+     "what": "Our World in Data, international tourist trips (overnight visitors), from the UN World Tourism Organization; 2019: Fiji 894,000, Samoa 172,000, Vanuatu 120,600, Palau 94,000, Tonga 67,300",
+     "url": "https://ourworldindata.org/grapher/international-tourist-trips"
+    }
+   ],
+   "notes": "Easy lookup with value-only options; every distractor is another row of the same column."
+  },
+  {
+   "id": "command_of_evidence.T1_single.easy.w4b6_18",
+   "template": "T1_single",
+   "subtype": "Hypothetical finding supports a claim about a behavior",
+   "tier": "easy",
+   "passage": "Seals and sea lions are known for their streamlined flippers. Northern true seals, such as harbor seals, have nevertheless retained flexible forelimbs that end in sharp claws. After filming captive seals and observing wild ones, David Hocking and colleagues concluded that these seals use their claws to hold onto large prey while tearing it apart with their teeth. This feeding technique may resemble that of the earliest seals.",
+   "stem": "Which finding, if true, would most directly support Hocking and colleagues’ conclusion?",
+   "options": [
+    "When given large fish, the seals pinned each fish with the claws of their front limbs and pulled off pieces of it with their teeth.",
+    "When given small fish, the seals usually swallowed them whole underwater without using their front limbs at all.",
+    "Fur seals and sea lions, which have stiff, clawless flippers, swim faster than northern true seals do.",
+    "The seals regularly used the claws of their front limbs to grip slippery ice when climbing out of the water."
+   ],
+   "answer_letter": "A",
+   "table": null,
+   "figure": null,
+   "explanation": "Hocking and colleagues concluded that the seals “use their claws to hold onto large prey while tearing it apart with their teeth.” Seeing seals pin large fish with their claws and pull off pieces with their teeth would directly show that behavior, as choice A states.",
+   "distractors": {
+    "B": {
+     "recipe": "OFF: small prey, no claws",
+     "why_wrong": "Swallowing small fish whole involves neither the claws nor tearing, so it says nothing about how the seals handle large prey."
+    },
+    "C": {
+     "recipe": "OFF: different animals and a different trait",
+     "why_wrong": "Swimming speed in fur seals and sea lions is unrelated to how northern true seals use their claws when feeding."
+    },
+    "D": {
+     "recipe": "LURE: claws used, but not for feeding",
+     "why_wrong": "Gripping ice shows that the claws are useful, but not that the seals use them to hold prey while eating."
+    }
+   },
+   "models": [
+    "1.29",
+    "1.5",
+    "1.8",
+    "1.17"
+   ],
+   "word_count": 68,
+   "sources": [
+    {
+     "what": "Hocking et al. 2018, R. Soc. Open Sci. 5: 172393: phocine (northern true) seals retain mobile forelimbs with sharp claws; captive and wild phocines use the claws to secure prey and tear large fish between teeth and forelimbs; resembles how the earliest seals likely fed",
+     "url": "https://doi.org/10.1098/rsos.172393"
+    }
+   ],
+   "notes": "Easy, one step: the key names the claimed behavior in observable form."
+  },
+  {
+   "id": "command_of_evidence.Q1_P2_extreme.easy.w4b6_19",
+   "template": "Q1_P2_extreme",
+   "subtype": "Data completion: maximum among bars",
+   "tier": "easy",
+   "passage": "Yams, starchy tubers that are a dietary staple across much of West Africa, are cultivated mainly on small family farms. The UN’s Food and Agriculture Organization (FAO) compiles international statistics on agricultural production. According to the FAO’s figures for 2020, among the countries in the graph, Ghana produced ______",
+   "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+   "options": [
+    "fewer yams than any of the other three countries.",
+    "fewer yams than Côte d’Ivoire but more yams than Benin and Togo.",
+    "more yams than Benin but fewer yams than Côte d’Ivoire and Togo.",
+    "more yams than any of the other three countries."
+   ],
+   "answer_letter": "D",
+   "table": null,
+   "figure": {
+    "kind": "bar graph",
+    "title": "Yam Production in Four West African Countries, 2020",
+    "x_axis": "Country",
+    "y_axis": "Production (millions of metric tons)",
+    "description": "Four bars; y-axis 0 to 10 in steps of 2. Ghana: about 8.9 million metric tons. Côte d’Ivoire: about 7.7. Benin: about 3.2. Togo: about 0.9. Ghana’s bar is the tallest.",
+    "data": [
+     {
+      "series": "Production",
+      "points": [
+       [
+        "Ghana",
+        8.9
+       ],
+       [
+        "Côte d’Ivoire",
+        7.7
+       ],
+       [
+        "Benin",
+        3.2
+       ],
+       [
+        "Togo",
+        0.9
+       ]
+      ]
+     }
+    ]
+   },
+   "explanation": "The graph shows that Ghana produced about 8.9 million metric tons of yams in 2020, more than Côte d’Ivoire (about 7.7), Benin (about 3.2), or Togo (about 0.9).",
+   "distractors": {
+    "A": {
+     "recipe": "WDIR: wrong extreme",
+     "why_wrong": "Ghana’s bar is the tallest, not the shortest; Togo produced the fewest yams."
+    },
+    "B": {
+     "recipe": "WDIR: one comparison reversed",
+     "why_wrong": "Ghana produced more yams than Côte d’Ivoire, not fewer (about 8.9 versus 7.7 million metric tons)."
+    },
+    "C": {
+     "recipe": "WDIR: two comparisons reversed",
+     "why_wrong": "Ghana produced more yams than both Côte d’Ivoire and Togo, not fewer."
+    }
+   },
+   "models": [
+    "1.9",
+    "1.23",
+    "1.21"
+   ],
+   "word_count": 49,
+   "sources": [
+    {
+     "what": "Our World in Data, yam production, from FAO; 2020: Ghana 8,946,000 t, Cote d'Ivoire 7,654,617 t, Benin 3,150,248 t, Togo 940,876 t",
+     "url": "https://ourworldindata.org/grapher/yams-production"
+    }
+   ],
+   "notes": "Easy extreme. Nigeria (about 56 million t) is left out, as the student's chosen countries; the passage says 'of the four countries shown'. Small family farms is a general description of West African yam growing."
+  },
+  {
+   "id": "command_of_evidence.T3_person_quote.easy.w4b6_20",
+   "template": "T3_person_quote",
+   "subtype": "Quotation from a historian supports a claim about a person",
+   "tier": "easy",
+   "passage": "Hazel Ying Lee, born in Portland, Oregon, in 1912, earned her pilot’s license in 1932, becoming one of the first Chinese American women to accomplish that. The following year she traveled to China, hoping to fly for its air force, which refused to accept a woman as a pilot. During World War II, she joined the Women Airforce Service Pilots, who transported military aircraft between bases within the United States. A student claims that Lee continued flying even when she was refused the position she wanted.",
+   "stem": "Which quotation from a work by a historian would be the most effective evidence for the student to include in support of this claim?",
+   "options": [
+    "“Lee’s parents, who had immigrated from Taishan in southern China, ran a restaurant in Portland’s Chinatown, where Lee and her seven siblings grew up.”",
+    "“Turned away by China’s air force, Lee took a desk job but soon settled in Canton, where she spent several years flying for a private airline.”",
+    "“As a teenager, Lee swam, played handball, and learned to drive a car, pursuits that few Chinese American girls of her generation were able to enjoy.”",
+    "“Lee’s mother opposed her flying lessons, seeing no future for a young woman in aviation.”"
+   ],
+   "answer_letter": "B",
+   "table": null,
+   "figure": null,
+   "explanation": "The student claims that Lee continued flying “even when she was refused the position she wanted.” Choice B describes exactly that: “Turned away by China’s air force,” Lee spent several years “flying for a private airline.”",
+   "distractors": {
+    "A": {
+     "recipe": "OFF: family background",
+     "why_wrong": "This describes Lee’s family and childhood, not any refusal or her flying."
+    },
+    "C": {
+     "recipe": "OFF: other activities",
+     "why_wrong": "This describes Lee’s teenage pastimes, which have nothing to do with being refused a role as a pilot."
+    },
+    "D": {
+     "recipe": "HALF: opposition, but not a refused position or continued flying",
+     "why_wrong": "This shows that Lee’s mother disapproved of her lessons, but it does not describe Lee being refused a position she sought or continuing to fly afterward."
+    }
+   },
+   "models": [
+    "1.15",
+    "1.19",
+    "1.26",
+    "1.13"
+   ],
+   "word_count": 86,
+   "sources": [
+    {
+     "what": "Hazel Ying Lee: born Portland 1912; pilot's license October 1932, one of the first Chinese American women to earn one; went to China in 1933, Chinese air force would not accept a woman pilot, took a desk job and then flew for a private airline in Canton; joined the WASP; parents from Taishan ran a restaurant; eight children; swimming, handball, driving; mother opposed flying",
+     "url": "https://en.wikipedia.org/wiki/Hazel_Ying_Lee"
+    }
+   ],
+   "notes": "Easy. Quotations are attributed to an unnamed historian (invented wording on sourced facts)."
+  },
+  {
+   "id": "command_of_evidence.Q1_P3_pairwise.easy.w4b6_21",
+   "template": "Q1_P3_pairwise",
+   "subtype": "Data completion: two comparisons between two rows (full factorial options)",
+   "tier": "easy",
+   "passage": "Sweden and Finland both get most of their electricity from sources other than fossil fuels, but their mixes of sources differ. A student researching energy in northern Europe looks at data compiled by the research group Ember on the share of each country’s electricity that came from hydropower, wind, and nuclear power in 2020. The student finds that compared with Finland, Sweden generated a larger share of its electricity from hydropower, ______",
+   "stem": "Which choice most effectively uses data from the table to complete the statement?",
+   "options": [
+    "a larger share from wind, and a larger share from nuclear power.",
+    "a smaller share from wind, and a larger share from nuclear power.",
+    "a larger share from wind, and a smaller share from nuclear power.",
+    "a smaller share from wind, and a smaller share from nuclear power."
+   ],
+   "answer_letter": "C",
+   "table": {
+    "title": "Share of Electricity Generated from Three Sources in Sweden and Finland, 2020",
+    "columns": [
+     "Country",
+     "Hydropower (%)",
+     "Wind (%)",
+     "Nuclear (%)"
+    ],
+    "rows": [
+     [
+      "Sweden",
+      "44.2",
+      "16.8",
+      "30.0"
+     ],
+     [
+      "Finland",
+      "22.9",
+      "11.9",
+      "33.6"
+     ]
+    ],
+    "note": null
+   },
+   "figure": null,
+   "explanation": "The table shows that Sweden generated 16.8% of its electricity from wind, more than Finland’s 11.9%, and 30.0% from nuclear power, less than Finland’s 33.6%.",
+   "distractors": {
+    "A": {
+     "recipe": "WDIR: nuclear comparison reversed",
+     "why_wrong": "Sweden’s nuclear share (30.0%) was smaller than Finland’s (33.6%), not larger."
+    },
+    "B": {
+     "recipe": "WDIR: both comparisons reversed",
+     "why_wrong": "Sweden’s wind share was larger than Finland’s and its nuclear share was smaller, the reverse of this choice."
+    },
+    "D": {
+     "recipe": "WDIR: wind comparison reversed",
+     "why_wrong": "Sweden’s wind share (16.8%) was larger than Finland’s (11.9%), not smaller."
+    }
+   },
+   "models": [
+    "1.3",
+    "1.7",
+    "1.4"
+   ],
+   "word_count": 72,
+   "sources": [
+    {
+     "what": "Our World in Data, share of electricity from hydropower, wind and nuclear, from Ember; 2020: Sweden 44.2, 16.8, 30.0; Finland 22.9, 11.9, 33.6 (percent)",
+     "url": "https://ourworldindata.org/grapher/share-electricity-hydro"
+    }
+   ],
+   "notes": "Easy 2x2 factorial. Wind and nuclear shares from the companion OWID charts share-electricity-wind and share-electricity-nuclear. Finland's three sources total 68.4%, Sweden's 91.0%, so 'most of their electricity from sources other than fossil fuels' holds."
+  },
+  {
+   "id": "command_of_evidence.Q2_P4_trend.easy.w4b6_22",
+   "template": "Q2_P4_trend",
+   "subtype": "Data description: endpoints show an overall rise despite fluctuation (underlined claim)",
+   "tier": "easy",
+   "passage": "Kenya grows avocados both for local markets and for international export. Annual statistics reported to the FAO, a United Nations agency, record how many metric tons of avocados the country produced from 2010 to 2020. According to a student, although the amount produced fluctuated during this period, <u>Kenya’s avocado production rose overall between 2010 and 2020</u>.",
+   "stem": "Which choice most effectively uses data from the graph to justify the underlined claim?",
+   "options": [
+    "Kenya produced about 200,000 metric tons of avocados in 2010 and more than 300,000 metric tons in 2020.",
+    "Kenya’s avocado production fell from about 200,000 metric tons in 2010 to about 150,000 metric tons in 2011.",
+    "Kenya produced less than 150,000 metric tons of avocados in 2015, the smallest amount of any year shown.",
+    "Kenya’s avocado production rose every year from 2010 to 2020."
+   ],
+   "answer_letter": "A",
+   "table": null,
+   "figure": {
+    "kind": "line graph",
+    "title": "Avocado Production in Kenya, 2010–2020",
+    "x_axis": "Year",
+    "y_axis": "Production (thousands of metric tons)",
+    "description": "One line, one point per year from 2010 to 2020; y-axis 0 to 350 in steps of 50. Values: 2010 about 202; 2011 about 149; 2012 about 167; 2013 about 178; 2014 about 219; 2015 about 136 (the minimum); 2016 about 176; 2017 about 218; 2018 about 234; 2019 about 264; 2020 about 323 (the maximum).",
+    "data": [
+     {
+      "series": "Kenya",
+      "points": [
+       [
+        "2010",
+        202
+       ],
+       [
+        "2011",
+        149
+       ],
+       [
+        "2012",
+        167
+       ],
+       [
+        "2013",
+        178
+       ],
+       [
+        "2014",
+        219
+       ],
+       [
+        "2015",
+        136
+       ],
+       [
+        "2016",
+        176
+       ],
+       [
+        "2017",
+        218
+       ],
+       [
+        "2018",
+        234
+       ],
+       [
+        "2019",
+        264
+       ],
+       [
+        "2020",
+        323
+       ]
+      ]
+     }
+    ]
+   },
+   "explanation": "To show that production rose overall from 2010 to 2020 despite fluctuations, the data must compare the first and last years. Kenya produced about 200,000 metric tons in 2010 and more than 300,000 in 2020 (about 323,000), as choice A states.",
+   "distractors": {
+    "B": {
+     "recipe": "CONTRA: accurate, but a decline",
+     "why_wrong": "This is accurate, but a drop from 2010 to 2011 shows one of the fluctuations, not an overall rise between 2010 and 2020."
+    },
+    "C": {
+     "recipe": "IRREL: accurate, the low point only",
+     "why_wrong": "This is accurate, but the smallest amount in a single year does not show how production in 2020 compared with production in 2010."
+    },
+    "D": {
+     "recipe": "INACC: ignores the fluctuations",
+     "why_wrong": "Production did not rise every year; it fell in 2011 and again in 2015."
+    }
+   },
+   "models": [
+    "1.14"
+   ],
+   "word_count": 56,
+   "sources": [
+    {
+     "what": "Our World in Data, avocado production, from FAO; Kenya 2010-2020 (t): 202,294; 149,241; 166,948; 177,799; 218,692; 136,420; 176,045; 217,688; 233,933; 264,032; 322,556",
+     "url": "https://ourworldindata.org/grapher/avocado-production"
+    }
+   ],
+   "notes": "Easy. Graph values in thousands, rounded. Only one official item (1.14) in this cell."
+  }
+ ],
+ "done": true
+}

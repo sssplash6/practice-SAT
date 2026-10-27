@@ -95,7 +95,26 @@
       ],
       "word_count": 60,
       "sources": [],
-      "notes": "Grant then turn inside one sentence (3.17 shape: Of course ... but), not the Still shape b1 used. K1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so this is written as a strong band 6 and band_target is 6, not the 7 the plan asked for. No contrast decoy (contrast and concession exclude each other) and no In fact, Indeed or Actually beside the concession key. Trap: Furthermore and Specifically for a reader who takes the blank sentence as more detail about long song. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Grant then turn inside one sentence (3.17 shape: Of course ... but), not the Still shape b1 used. K1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so this is written as a strong band 6 and band_target is 6, not the 7 the plan asked for. No contrast decoy (contrast and concession exclude each other) and no In fact, Indeed or Actually beside the concession key. Trap: Furthermore and Specifically for a reader who takes the blank sentence as more detail about long song. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "K1_grant_turn has no band-7 official items (spec/rw/band7/transitions.md section 5), so it cannot be band 7; band_target 6 is right. Strong band 6 on the 3.17 / 974b5a8c shape (Of course ..., but ... inside one sentence) with cause, specification and additive decoys and no contrast or In fact decoy; Furthermore and Specifically pull a reader who takes the sentence as more detail about long song."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
     {
       "id": "transitions.S1_spec_restate.hard.w4b3_02",
@@ -141,7 +160,26 @@
         "blank after a semicolon",
         "two concession decoys (synonym pair)",
         "key outside the core 13"
-      ]
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "The explicit rarity cue ('seldom chose it for altarpieces or portraits' right before the blank) pairs directly with 'more often', the frame of band-6 4b7a84b0 ('rarely ... More often'), not of band-7 d3b7d7a3, where the frequency must be inferred from 'complicates this popular narrative'; same ruling as w1b3_02. Not hardened: without the rarity word, additionally and nevertheless become arguable, and the d3b7d7a3 frame already carries five live S1 items. A clean, strong band 6 (non-adversative key outside the core 13, concession pair plus additive decoy, blank after a semicolon)."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
     {
       "id": "transitions.U1_culmination_alt.hard.w4b3_03",
@@ -181,15 +219,34 @@
       ],
       "word_count": 56,
       "sources": [],
-      "notes": "Alternative method (3.16 shape), band 6 by plan. No instead, by contrast or however among the options (each could link two methods), and the first sentence states no limitation of sonar, so no causal decoy can read as defensible. Ultimately is already the key of seven live U1 items, so this one keys Alternatively. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Alternative method (3.16 shape), band 6 by plan. No instead, by contrast or however among the options (each could link two methods), and the first sentence states no limitation of sonar, so no causal decoy can read as defensible. Ultimately is already the key of seven live U1 items, so this one keys Alternatively. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "band_target 6 by plan; the alternative form of 9502ec65 / 3.16 (Alternatively against example, restatement and cause decoys), with no instead, by contrast or however on offer and no limitation of sonar stated, so no decoy is defensible."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
     {
       "id": "transitions.E1_consequence.hard.w4b3_04",
       "template": "E1_consequence",
-      "subtype": "Consequence: a conclusion that looks like a contrast",
+      "subtype": "Consequence: a misconception that looks like a contrast",
       "tier": "hard",
       "band_target": 7,
-      "passage": "In 1968, German mathematician Dietrich Braess analyzed road networks in which each driver takes whatever route is quickest for that individual driver. He showed that in such a congested network, opening a new road can lengthen everyone’s travel time, as drivers crowd onto the shortcut. ______ the common assumption that constructing additional roads will always ease traffic is mistaken.",
+      "passage": "Club mosses are evergreen plants common on temperate woodland floors. Their creeping stems, densely clothed in tiny, overlapping leaves, give colonies the appearance of a plush green carpet. ______ these plants are often mistaken for true mosses, when in fact they are vascular plants, possessing internal tissues that transport water and nutrients, and are more closely related to ferns than to mosses.",
       "stem": "Which choice completes the text with the most logical transition?",
       "options": [
         "However,",
@@ -200,35 +257,56 @@
       "answer_letter": "D",
       "table": null,
       "figure": null,
-      "explanation": "Braess showed that in a congested network, “opening a new road can lengthen everyone’s travel time.” If adding a road can slow every driver, then the belief that more roads always help cannot be right. The blank sentence draws exactly that conclusion: “the common assumption that constructing additional roads will always ease traffic is mistaken.” “Hence” fits, since it signals a claim that follows logically from the previous one.",
+      "explanation": "The text describes how club mosses look: their stems, “densely clothed in tiny, overlapping leaves, give colonies the appearance of a plush green carpet.” That mosslike look leads to the belief the blank sentence reports: “these plants are often mistaken for true mosses.” The words “when in fact” correct that belief, not the earlier sentences. “Hence” fits, since it introduces a consequence of the plants’ appearance.",
       "distractors": {
         "A": {
           "recipe": "false opposition (contrast)",
-          "why_wrong": "The word “mistaken” makes the blank sentence look like a reversal, but what it rejects is the popular assumption, not Braess’s finding. The blank sentence agrees with Braess and follows from his result."
+          "why_wrong": "The words “when in fact” make the blank sentence look like a reversal, but what they correct is the common belief, not the description before the blank. The belief that club mosses are true mosses follows from their carpetlike look; it does not contrast with it."
         },
         "B": {
           "recipe": "wrong grain (example)",
-          "why_wrong": "The blank sentence is not one instance of Braess’s finding, such as a particular city or road; it is a general conclusion drawn from that finding."
+          "why_wrong": "The common belief about club mosses is not one example of their creeping stems and tiny leaves; it is a result of how those features make the plants look."
         },
         "C": {
           "recipe": "false opposition (concession)",
-          "why_wrong": "“That said” would mark the blank sentence as a qualification of Braess’s finding, but it does not limit that finding; it states what the finding implies."
+          "why_wrong": "“That said” would mark the blank sentence as a qualification of the description of the plants, but it does not limit that description; it reports a belief that the plants’ appearance produces."
         }
       },
       "models": [
-        "a2bff07e",
         "a965c6ed",
+        "a2bff07e",
         "3.9"
       ],
-      "word_count": 59,
+      "word_count": 62,
       "sources": [],
-      "notes": "Band-7 E1 recipe (spec/rw/band7/transitions.md section 5): the conclusion is a correction (“the common assumption that constructing additional roads will always ease traffic is mistaken,” as in a965c6ed’s “incorrectly assumed” and a2bff07e’s repudiation), so two adversative decoys pull (However, That said). A first draft concluded that closing a road can speed traffic; dropped because Conversely would fit that converse claim and could make However look defensible. Not the however-then-Hence three-sentence frame of the live Doggerland and Chenoweth items. Braess (1968) is real and his result is described as he stated it. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "notes": "Replaced in review: the draft's subject, Braess's paradox, is taught in game theory and network courses and retold in popular science, a topic-fame tell (GENERATE.md). New subject on the band-7 E1 misconception frame of a965c6ed (appearance, then Hence with a belief corrected by when in fact), a frame no live item uses; options and key letter kept. Real subject from general botany (club mosses, Lycopodiaceae, are vascular lycophytes), no researcher named. Transitions: no web check (WAVE.md, 2026-10-16).",
       "band7_moves": [
-        "surface contrast in B, consequence key",
+        "surface contrast in B (mistaken for ... when in fact), consequence key",
         "two adversative decoys (contrast and concession)",
-        "wrong-grain decoy for a same-topic B",
+        "wrong-grain decoy (example)",
         "key outside the core 13"
-      ]
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "replaced the subject (Braess's paradox, a textbook and pop-science topic) with club mosses mistaken for true mosses on the a965c6ed misconception frame; new explanation, distractor notes, models and band7_moves; claim withdrawn and new one appended to claims.txt"
+        ],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective. Blind answer recorded for the original Braess draft (D, agreed); the replacement keeps key D and was re-solved blind (D).",
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "a965c6ed move: the blank sentence carries its own contrast (often mistaken for ... when in fact), so However and That said pull on first read, while its main clause is a consequence of the sentences before the blank; For instance is the wrong-grain decoy; key Hence outside the core 13; no sequence or summary decoy; surface-contrast proxy passes (in fact in the blank's sentence); 62 words, register 5.39 chars per word."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
     {
       "id": "transitions.C1_two_subject.medium.w4b3_05",
@@ -268,7 +346,15 @@
       ],
       "word_count": 42,
       "sources": [],
-      "notes": "Two subjects with opposite values, blank after an introductory phrase inside the sentence (2.4 position). Decoys differ from 2.6 (in other words, for example, similarly). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Two subjects with opposite values, blank after an introductory phrase inside the sentence (2.4 position). Decoys differ from 2.6 (in other words, for example, similarly). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.C1_two_subject.medium.w4b3_06",
@@ -307,7 +393,15 @@
       ],
       "word_count": 49,
       "sources": [],
-      "notes": "Two subjects, blank as an interrupter after the second subject (2.6, 1.34 position). Trap: for instance, since side-necked turtles belong to the larger group the first sentence describes. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Two subjects, blank as an interrupter after the second subject (2.6, 1.34 position). Trap: for instance, since side-necked turtles belong to the larger group the first sentence describes. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.A1_addition.medium.w4b3_07",
@@ -346,7 +440,15 @@
       ],
       "word_count": 52,
       "sources": [],
-      "notes": "Two contributions by one person (2.11 shape), keyed Additionally. No similarity decoy (addition and similarity exclude each other). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Two contributions by one person (2.11 shape), keyed Additionally. No similarity decoy (addition and similarity exclude each other). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.S1_spec_restate.medium.w4b3_08",
@@ -385,7 +487,15 @@
       ],
       "word_count": 61,
       "sources": [],
-      "notes": "General statement, then its exact content (2.12 shape), keyed Specifically. No example decoy (example and specification exclude each other) and no causal decoy. Trap: On the other hand, for a reader who reacts to the front and back pairing inside the blank sentence. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "General statement, then its exact content (2.12 shape), keyed Specifically. No example decoy (example and specification exclude each other) and no causal decoy. Trap: On the other hand, for a reader who reacts to the front and back pairing inside the blank sentence. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.S1_spec_restate.medium.w4b3_09",
@@ -424,7 +534,15 @@
       ],
       "word_count": 56,
       "sources": [],
-      "notes": "Term, em dash, then its gloss (2.15 position), keyed that is. The later for instance sentence gives the instance, so the for example decoy is plainly the wrong grain for the dash clause. No in other words or specifically beside the key. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Term, em dash, then its gloss (2.15 position), keyed that is. The later for instance sentence gives the instance, so the for example decoy is plainly the wrong grain for the dash clause. No in other words or specifically beside the key. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.C2_belief_finding.medium.w4b3_10",
@@ -463,14 +581,22 @@
       ],
       "word_count": 52,
       "sources": [],
-      "notes": "Established view, then a finding that breaks it, keyed However (2.1 relation, sentence-initial as in 1.1). No causal decoy: a reader could argue that Forbes’s claim prompted the later expeditions. Forbes’s azoic hypothesis (about 300 fathoms) is described as he stated it; no expedition or later researcher is named. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Established view, then a finding that breaks it, keyed However (2.1 relation, sentence-initial as in 1.1). No causal decoy: a reader could argue that Forbes’s claim prompted the later expeditions. Forbes’s azoic hypothesis (about 300 fathoms) is described as he stated it; no expedition or later researcher is named. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.E1_consequence.medium.w4b3_11",
       "template": "E1_consequence",
       "subtype": "Consequence: a physical property, then its effect",
       "tier": "medium",
-      "passage": "In the ocean, sound travels most slowly within a layer roughly a kilometer deep. Sound waves straying above or below this layer are refracted back into it, so the layer functions as a channel that keeps sound from dispersing. ______ low-frequency sounds generated within the channel, including certain whale vocalizations, can be detected thousands of kilometers away.",
+      "passage": "In the ocean, sound travels most slowly within a layer roughly a kilometer down. Sound waves straying above or below this layer are refracted back into it, so the layer functions as a channel that keeps sound from dispersing. ______ low-frequency sounds generated within the channel, including certain whale vocalizations, can be detected thousands of kilometers away.",
       "stem": "Which choice completes the text with the most logical transition?",
       "options": [
         "Nevertheless,",
@@ -502,14 +628,24 @@
       ],
       "word_count": 57,
       "sources": [],
-      "notes": "Property, then consequence, keyed Hence (2.14 key). No example decoy: whale calls could otherwise be read as an instance of sound carried by the channel. The layer’s depth is given loosely (it varies with latitude). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Property, then consequence, keyed Hence (2.14 key). No example decoy: whale calls could otherwise be read as an instance of sound carried by the channel. The layer’s depth is given loosely (it varies with latitude). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "'a layer roughly a kilometer deep' (reads as the layer's thickness) changed to 'a layer roughly a kilometer down'"
+        ],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "fixed"
+      }
     },
     {
       "id": "transitions.T1_sequence_time.medium.w4b3_12",
       "template": "T1_sequence_time",
       "subtype": "Time: the end of a long effort",
       "tier": "medium",
-      "passage": "In 1883, publisher Pratap Chandra Roy began issuing the first complete English translation of the Mahabharata, the monumental Sanskrit epic, translated by Indian scholar Kisari Mohan Ganguli. The translation appeared in installments over more than a decade, and Roy died before the project was complete. ______ in 1896, the last installment was printed.",
+      "passage": "In 1883, publisher Pratap Chandra Roy began issuing the first complete English translation of the Mahabharata, the monumental Sanskrit epic, undertaken by Indian scholar Kisari Mohan Ganguli. The translation appeared in installments over more than a decade, and Roy died before the project was complete. ______ in 1896, the last installment was printed.",
       "stem": "Which choice completes the text with the most logical transition?",
       "options": [
         "Therefore,",
@@ -541,7 +677,17 @@
       ],
       "word_count": 53,
       "sources": [],
-      "notes": "End of a long effort (2.13 shape), keyed Finally. No second time word and no concession decoy (Nevertheless would read as defensible after the publisher’s death). Roy died in 1895; the work was completed under his widow, which the passage leaves out. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "End of a long effort (2.13 shape), keyed Finally. No second time word and no concession decoy (Nevertheless would read as defensible after the publisher’s death). Roy died in 1895; the work was completed under his widow, which the passage leaves out. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "removed the repetition 'translation ... translated by' ('undertaken by')"
+        ],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "fixed"
+      }
     },
     {
       "id": "transitions.U1_culmination_alt.medium.w4b3_13",
@@ -579,7 +725,15 @@
       ],
       "word_count": 55,
       "sources": [],
-      "notes": "Place key There (2.8, the cell’s only model), with a different frame and verb from 2.8. No causal decoy: Consequently would be defensible, since gathering the documents is why historians can consult them in one building. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Place key There (2.8, the cell’s only model), with a different frame and verb from 2.8. No causal decoy: Consequently would be defensible, since gathering the documents is why historians can consult them in one building. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.T1_sequence_time.easy.w4b3_14",
@@ -618,7 +772,15 @@
       ],
       "word_count": 54,
       "sources": [],
-      "notes": "First ... ______ ... Finally procedure (1.8 shape), keyed Next. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "First ... ______ ... Finally procedure (1.8 shape), keyed Next. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.T1_sequence_time.easy.w4b3_15",
@@ -657,7 +819,15 @@
       ],
       "word_count": 47,
       "sources": [],
-      "notes": "Two dated events in order (1.18 shape), keyed Later. No similarity or addition decoy, since another novel set in Malgudi would make either defensible. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Two dated events in order (1.18 shape), keyed Later. No similarity or addition decoy, since another novel set in Malgudi would make either defensible. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.E1_consequence.easy.w4b3_16",
@@ -696,7 +866,15 @@
       ],
       "word_count": 52,
       "sources": [],
-      "notes": "A law, then its consequence (1.36 shape). B is a later court case, not another clause of the constitution, and no example or specification decoy is offered, since the case could be read as an instance of the rights in action. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "A law, then its consequence (1.36 shape). B is a later court case, not another clause of the constitution, and no example or specification decoy is offered, since the case could be read as an instance of the rights in action. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.E1_consequence.easy.w4b3_17",
@@ -735,7 +913,15 @@
       ],
       "word_count": 45,
       "sources": [],
-      "notes": "Property, then consequence (1.15 shape). No example decoy: a glowing trail could be read as an instance of the organisms flashing when disturbed. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Property, then consequence (1.15 shape). No example decoy: a glowing trail could be read as an instance of the organisms flashing when disturbed. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.X1_example.easy.w4b3_18",
@@ -774,7 +960,15 @@
       ],
       "word_count": 43,
       "sources": [],
-      "notes": "General claim, then a named instance (1.37 shape), keyed For example. No causal decoy, since the split panpipe could be read as the reason the melody is divided. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "General claim, then a named instance (1.37 shape), keyed For example. No causal decoy, since the split panpipe could be read as the reason the melody is divided. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.X1_example.easy.w4b3_19",
@@ -813,7 +1007,15 @@
       ],
       "word_count": 49,
       "sources": [],
-      "notes": "General claim, then a named instance, blank as an interrupter after the subject (1.28 position). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "General claim, then a named instance, blank as an interrupter after the subject (1.28 position). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.C3_limiting_fact.easy.w4b3_20",
@@ -852,7 +1054,15 @@
       ],
       "word_count": 51,
       "sources": [],
-      "notes": "Positive claim, then a limiting fact about the same subject (1.33 shape), keyed However. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Positive claim, then a limiting fact about the same subject (1.33 shape), keyed However. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.C1_two_subject.easy.w4b3_21",
@@ -891,7 +1101,15 @@
       ],
       "word_count": 42,
       "sources": [],
-      "notes": "Two subjects, opposite values (1.17 shape), keyed By contrast. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Two subjects, opposite values (1.17 shape), keyed By contrast. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.E2_motive_action.easy.w4b3_22",
@@ -930,7 +1148,15 @@
       ],
       "word_count": 56,
       "sources": [],
-      "notes": "Need, then the action it motivates (1.9 shape), keyed For this reason. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Need, then the action it motivates (1.9 shape), keyed For this reason. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     },
     {
       "id": "transitions.P1_purpose_aptness.easy.w4b3_23",
@@ -968,7 +1194,15 @@
       ],
       "word_count": 49,
       "sources": [],
-      "notes": "Goal, then deliberate act (1.21 shape), keyed With this in mind. No causal decoy (purpose and cause exclude each other), and a different decoy set from 1.21 (On the contrary, In conclusion, Regardless). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation."
+      "notes": "Goal, then deliberate act (1.21 shape), keyed With this in mind. No causal decoy (purpose and cause exclude each other), and a different decoy set from 1.21 (On the contrary, In conclusion, Regardless). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, user decision 2026-10-16). Named people and bodies are real and described from well-known record; no made-up finding is attributed to a real person or organisation. rw_options.py finds no second acceptable connective.",
+        "status": "pass"
+      }
     }
   ]
 }

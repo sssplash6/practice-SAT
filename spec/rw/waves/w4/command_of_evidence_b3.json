@@ -1,1738 +1,1986 @@
 {
- "skill": "Command of Evidence",
- "slug": "command_of_evidence",
- "part": "w4b3",
- "domain": "Information and Ideas",
- "plan": {
-  "templates": [
-   {
-    "code": "T1_single",
-    "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
-   },
-   {
-    "code": "T1_compete",
-    "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
-   },
-   {
-    "code": "T2_lit_quote",
-    "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
-   },
-   {
-    "code": "Q2_P8_multipart",
-    "name": "Data description: multi-part, interaction, or passage-plus-data claim"
-   },
-   {
-    "code": "T3_person_quote",
-    "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
-   },
-   {
-    "code": "Q1_P5_control",
-    "name": "Data completion: condition vs control"
-   },
-   {
-    "code": "Q1_P3_pairwise",
-    "name": "Data completion: pairwise comparison (one or two comparisons)"
-   },
-   {
-    "code": "Q1_P2_extreme",
-    "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
-   },
-   {
-    "code": "Q1_P4_trend",
-    "name": "Data completion: change over time"
-   },
-   {
-    "code": "Q1_P1_lookup",
-    "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
-   }
-  ]
- },
- "items": [
-  {
-   "id": "command_of_evidence.T1_single.hard.w4b3_01",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a claim (training of young potters; the key supplies the missing premise that teaching leaves two makers’ prints on one vessel)",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "Because the ridges of fingerprints broaden as a person matures, the average ridge width in a print can be used to estimate the approximate age of the individual who left it. Applying this technique to 112 fingerprints impressed into the clay of vessels manufactured between about 2850 and 2500 BCE in an urban neighborhood at Tell eṣ-Ṣâfi/Gath, in present-day Israel, archaeologist Kent D. Fowler and colleagues determined that most of the prints had been left by adults or by adolescents. The researchers propose that in this community, young potters acquired their craft by working under the supervision of experienced practitioners.",
-   "stem": "Which finding from Fowler and colleagues’ study, if true, would most directly support the researchers’ proposal about young potters?",
-   "options": [
-    "Most of the vessels that bear an adolescent’s prints also bear an adult’s prints, on surfaces that were shaped and smoothed while the vessel was being built.",
-    "Prints left by adolescents are about as common on vessels from the earliest layers of the neighborhood as on vessels from its most recent layers.",
-    "Prints of adolescents and prints of adults almost never appear on the same vessel, and vessels marked only by adolescents are as carefully finished as those marked by adults.",
-    "Most of the prints on the vessels, whether they were left by adults or by adolescents, appear to have been made by males rather than by females."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers propose that “young potters acquired their craft by working under the supervision of experienced practitioners.” Learning under supervision means that a novice and an experienced potter handled the same pieces of work. If vessels with an adolescent’s prints usually also carry an adult’s prints on surfaces formed during building, the two worked on those vessels together, which is what training of this kind would leave behind. Choice A therefore supports the proposal.",
-   "distractors": {
-    "B": {
-     "recipe": "TRAP: wrong time window, consistent with both",
-     "why_wrong": "It shows only that adolescents made pottery throughout the neighborhood’s history; adolescents working on their own would leave the same pattern, so it says nothing about whether they were guided by experienced potters."
-    },
-    "C": {
-     "recipe": "OPP: points to independent work",
-     "why_wrong": "If adolescents and adults never handled the same vessels and adolescents’ own vessels were as well finished as adults’, adolescents would appear to be skilled potters working on their own, which weakens rather than supports the proposal."
-    },
-    "D": {
-     "recipe": "OFF: same prints, different variable (sex)",
-     "why_wrong": "Whether the potters were mostly male concerns who made pottery, not whether young potters were taught by experienced ones."
-    }
-   },
-   "models": [
-    "3.28",
-    "3.45",
-    "3.12",
-    "3.36"
-   ],
-   "sources": [
-    {
-     "what": "Fowler, Ross, Walker, Barritt-Cleary, Greenfield, Maeir, Biehl 2020, PLoS ONE 15(4): e0231046: mean ridge breadth (age) and ridge density (sex) of 112 fingerprints on Early Bronze Age III (c. 2850–2500 BCE) pottery from the urban neighbourhood at Tell eṣ-Ṣâfi/Gath, Israel; most prints by adult and young males, the rest by adult and young females; multiple prints of different age and sex on the same vessels suggest they were impressed during the training of young potters",
-     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0231046"
-    }
-   ],
-   "notes": "Band-7 moves: the claim is stated as guidance of novices; the key supplies the unstated premise that teaching leaves two makers’ prints on surfaces formed during building, the very pattern the authors read as training. B TRAP (time window, fits independent work too), C OPP (independent skilled adolescents), D OFF (sex of potters, true in the study but beside the point). Three steps: guidance implies shared work, shared work leaves co-occurring prints, the key reports that co-occurrence. The paper's age classes are adult/adolescent and child; children's prints (only on handles) are left out to avoid a second training reading.",
-   "band7_moves": [
-    "key supplies the missing premise (guidance leaves two makers’ prints on one vessel)",
-    "TRAP distractor consistent with both readings (time window)",
-    "OPP distractor (independent skilled adolescents)",
-    "stem names the study and the claimant"
-   ],
-   "word_count": 100
-  },
-  {
-   "id": "command_of_evidence.T1_single.hard.w4b3_02",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a claim (microbes rather than melanosomes; location criterion given in the passage)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Microscopic rod- and sphere-shaped bodies preserved in some fossil feathers have been identified as melanosomes, the pigment-containing structures responsible for the colors of living birds’ feathers, and that identification has been used to propose colorations for extinct birds and dinosaurs, even though bacteria that colonize decaying feathers are similar in size and shape. Comparing modern feathers with feathers that microbes had overgrown, Alison E. Moyer and colleagues found that melanosomes are always embedded within the keratin composing a feather, whereas microbes spread in continuous layers across its surface. The team argues that the bodies in a fossil feather of the early bird Gansus yumenensis may therefore be traces of microbes.",
-   "stem": "Which finding, if true, would most directly support the team’s argument about the bodies in the Gansus feather?",
-   "options": [
-    "Within the Gansus feather, the bodies are lined up along the feather’s branches in the same arrangement that melanosomes show in the feathers of living birds.",
-    "The bodies in the Gansus feather match the melanosomes of modern birds’ feathers closely in both their size and their shape.",
-    "The bodies are more densely packed near the tip of the Gansus feather than they are near the feather’s base.",
-    "Impressions of the bodies appear not only on the Gansus feather itself but also on grains of the rock immediately surrounding it."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "According to the passage, “melanosomes are always embedded within the keratin composing a feather, whereas microbes spread in continuous layers across its surface.” Bodies that also left impressions on the rock grains around the feather could not have been sealed inside the feather’s keratin; they must have spread beyond the feather, as a microbial layer would. Choice D therefore supports the team’s argument that the bodies are traces of microbes.",
-   "distractors": {
-    "A": {
-     "recipe": "OPP: the melanosome reading",
-     "why_wrong": "An arrangement inside the feather like that of melanosomes in living birds would favor the melanosome identification, not the microbial one."
-    },
-    "B": {
-     "recipe": "TRAP: consistent with both (size and shape)",
-     "why_wrong": "The passage says bacteria are “similar in size and shape” to melanosomes, so a close match in size and shape cannot tell the two apart."
-    },
-    "C": {
-     "recipe": "OFF: distribution within the feather, no bearing on inside versus surface",
-     "why_wrong": "Where along the feather the bodies are concentrated does not show whether they lie within the keratin or across the surface, the difference the team uses to separate melanosomes from microbes."
-    }
-   },
-   "models": [
-    "3.31",
-    "3.45",
-    "3.12",
-    "3.7"
-   ],
-   "sources": [
-    {
-     "what": "Moyer, Zheng, Johnson, Lamanna, Li, Lacovara, Schweitzer 2014, Scientific Reports 4: 4233, Melanosomes or microbes: microbodies in fossil feathers reinterpreted as melanosomes generated colour hypotheses for dinosaurs; melanosomes and microbes overlap in size and morphology; melanosomes always internal, embedded in keratin, microbes grow across the surface in continuous layers; mouldic impressions associated with both the Gansus yumenensis feather and sediment grains support a microbial origin",
-     "url": "https://www.nature.com/articles/srep04233"
-    }
-   ],
-   "notes": "Band 6: the inside-versus-surface criterion is in the passage, and the key needs one bridge (impressions on surrounding grains mean the bodies were not inside the keratin). The key mirrors the real finding (mouldic impressions on sediment grains). B is killed by the passage's own statement, a deliberate fit-both trap.",
-   "band7_moves": [],
-   "word_count": 110
-  },
-  {
-   "id": "command_of_evidence.T1_compete.hard.w4b3_03",
-   "template": "T1_compete",
-   "subtype": "Finding that discriminates two explanations (conformity versus public information)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Animals that acquire behaviors by observing others must decide which individuals to imitate: under one strategy, conformity, an animal copies whatever the majority of a group is doing, whereas under another, the use of public information, it evaluates each option according to how successfully others appear to be exploiting it. Edwin van Leeuwen, Thomas Morgan, and Katharina Riebel allowed zebra finches to observe two groups of finches, differing in size, feeding from two unfamiliar feeders, one black and one white, and then recorded which feeder each observer selected. The researchers concluded that zebra finches are not conformists but instead rely on public information.",
-   "stem": "Which finding from the study, if true, would most directly support the researchers’ conclusion?",
-   "options": [
-    "The observers generally chose the feeder used by the larger group, even in trials in which the smaller group pecked at its feeder more often.",
-    "When a smaller group pecked at its feeder more often than a larger group pecked at the other feeder, the observers generally chose the smaller group’s feeder.",
-    "When the larger group also pecked at its feeder more often than the smaller group did, the observers generally chose the larger group’s feeder.",
-    "The observers pecked more often at the black feeder than at the white one, regardless of how many birds they had seen eating from each."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "Under conformity an animal “copies whatever the majority of a group is doing,” whereas under the use of public information it “evaluates each option according to how successfully others appear to be exploiting it.” The two strategies point to different feeders only when the smaller group is the busier one. If the observers then chose the smaller group’s feeder, they followed how actively others were feeding rather than how many were feeding, so choice B supports the conclusion.",
-   "distractors": {
-    "A": {
-     "recipe": "OPP: the conformity prediction",
-     "why_wrong": "Following the larger group even when the smaller group fed more actively is what conformity predicts, so it would weaken the conclusion."
-    },
-    "C": {
-     "recipe": "TRAP: consistent with both strategies",
-     "why_wrong": "When the larger group is also the busier one, conformity and public information both point to its feeder, so this choice cannot show which strategy the birds used."
-    },
-    "D": {
-     "recipe": "OFF: a color preference",
-     "why_wrong": "A preference for the black feeder that ignores what the groups did says nothing about whether the birds conform or use public information."
-    }
-   },
-   "models": [
-    "3.10",
-    "3.9",
-    "3.8",
-    "3.15"
-   ],
-   "sources": [
-    {
-     "what": "van Leeuwen, Morgan, Riebel 2021, Biology Letters 17: 20200767, Foraging zebra finches are public information users rather than conformists: observers watched two demonstrator groups differing in size (ratios 1:2, 2:4, 3:3, 1:5) forage from novel black and white feeders; observers did not copy the majority but were influenced by the demonstrators’ foraging activity (pecks), in an anti-conformist fashion",
-     "url": "https://royalsocietypublishing.org/doi/10.1098/rsbl.2020.0767"
-    }
-   ],
-   "notes": "Band 6. The key needs two links: the strategies diverge only when the minority is the busier group, and choosing the minority's feeder then marks public information. Matches the real result (influenced by pecks, not majority).",
-   "band7_moves": [],
-   "word_count": 103
-  },
-  {
-   "id": "command_of_evidence.T1_compete.hard.w4b3_04",
-   "template": "T1_compete",
-   "subtype": "Finding that discriminates two explanations (eggs versus individual organisms; the key supplies the growth premise)",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "Chitinozoans are microscopic, flask-shaped fossils with tough organic walls that are found in marine rocks formed between about 485 and 359 million years ago. Because individual chitinozoan species appeared and disappeared quickly, geologists use them to date the rock layers in which they occur, yet the question of what kind of organism produced them has never been settled. For decades, most researchers have treated chitinozoans as the eggs of some unidentified marine animal. After examining many well-preserved specimens of a newly described species, Hercochitina violana, Yan Liang and colleagues argued instead that chitinozoans may not have been eggs at all but rather individual microorganisms.",
-   "stem": "Which finding about Hercochitina violana, if true, would most directly support Liang and colleagues’ argument?",
-   "options": [
-    "Specimens of H. violana are often found joined end to end in chains, an arrangement that resembles the strings of eggs laid by some living marine worms.",
-    "Specimens of H. violana vary in size by about as much as the specimens of most other chitinozoan species do.",
-    "Specimens of H. violana form an unbroken series running from small, simple forms to large forms with elaborate surface ornamentation.",
-    "H. violana occurs only in rocks from a brief interval of geologic time, which makes it especially useful for dating the layers in which it is found."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "Liang and colleagues argue that chitinozoans “may not have been eggs at all but rather individual microorganisms.” An egg is formed at more or less its final size and structure, whereas an organism grows and develops. An unbroken series running from small, simple specimens to large, elaborately ornamented ones looks like the growth stages of a single kind of organism, which fits the researchers’ view and not the egg interpretation. Choice C therefore supports their argument.",
-   "distractors": {
-    "A": {
-     "recipe": "OPP: fits the egg view",
-     "why_wrong": "Chains resembling the egg strings of living marine worms would make chitinozoans look more like eggs, supporting the interpretation the researchers reject."
-    },
-    "B": {
-     "recipe": "TRAP: comparison that cannot decide",
-     "why_wrong": "Comparing H. violana only with other chitinozoans says nothing about how chitinozoans differ from eggs, so it fits either interpretation."
-    },
-    "D": {
-     "recipe": "OFF: an irrelevant property of the same fossils",
-     "why_wrong": "A short time range explains why the species is useful for dating rocks; it does not show whether its specimens were eggs or organisms."
-    }
-   },
-   "models": [
-    "3.6",
-    "3.15",
-    "3.14",
-    "3.9"
-   ],
-   "sources": [
-    {
-     "what": "Liang, Bernardo, Goldman, Nõlvak, Tang, Wang, Hints 2019, Proceedings of the Royal Society B 286: 20191270: chitinozoans, organic-walled microfossils of Ordovician to Devonian age (ca 485–359 Ma) used in biostratigraphy, of unknown affinity and most commonly interpreted as eggs of marine metazoans; the size variation within chitinozoan species is larger than in fossil and modern eggs; distinct and continuous morphological variation in the new species Hercochitina violana is more plausibly an ontogenetic series of individual microorganisms than eggs",
-     "url": "https://royalsocietypublishing.org/doi/10.1098/rspb.2019.1270"
-    }
-   ],
-   "notes": "Band-7 moves: the passage gives only the two views; the key supplies the growth (ontogeny) premise that eggs do not develop progressively, matching the authors' reading of H. violana. A OPP (chains fit egg strings; chitinozoan chains are real and long cited for the egg view), B TRAP (within-chitinozoan comparison), D OFF (biostratigraphic use).",
-   "band7_moves": [
-    "key supplies the missing premise (a growth series implies a developing organism)",
-    "TRAP distractor with a comparison that cannot decide",
-    "OPP distractor fitting the rival view",
-    "stem names the claimant and the rival"
-   ],
-   "word_count": 104
-  },
-  {
-   "id": "command_of_evidence.T2_lit_quote.hard.w4b3_05",
-   "template": "T2_lit_quote",
-   "subtype": "Literary quotation illustrates an indirect claim (translated drama; parts of one story as options)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "The Lower Depths is a 1902 play by Maxim Gorky, translated by Jenny Covan in 1922. In the play, Luka, an elderly wanderer lodging among the destitute, intimates that a consoling belief can matter more to a suffering person than the truth does: ______",
-   "stem": "Which quotation from a translation of The Lower Depths most effectively illustrates the claim?",
-   "options": [
-    "“He said: ‘Somewhere on this earth there must be a righteous land—and wonderful people live there—good people! They respect each other, help each other, and everything is peaceful and good!’”",
-    "“The learned man was offended. ‘My plans,’ he said, ‘are correct. But there exists no land of righteousness anywhere.’”",
-    "“Some one has to be kind, girl—some one must pity people! Christ pitied everybody—and he said to us: ‘Go and do likewise!’”",
-    "“He’d lived and lived and suffered and suffered, and had believed all the time in the existence of this land—and now, according to the plans, it didn’t exist at all. He felt robbed!”"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The claim is that Luka intimates that “a consoling belief can matter more to a suffering person than the truth does.” In choice D, Luka describes a man who had “suffered and suffered” while believing in a land that, once the truth was shown on the maps, “didn’t exist at all,” leaving him feeling “robbed.” The man lost something of value when the truth replaced his belief, which is exactly what the claim describes.",
-   "distractors": {
-    "A": {
-     "recipe": "HALF: the belief without the truth that undoes it",
-     "why_wrong": "It presents the man’s hopeful belief in a righteous land but says nothing about the truth or about what the belief was worth to him compared with it."
-    },
-    "B": {
-     "recipe": "HALF: the truth without its cost",
-     "why_wrong": "It states the truth, that no such land exists, but not the belief it destroys or the harm done to a suffering man."
-    },
-    "C": {
-     "recipe": "OFF: same speaker, nearby value (pity)",
-     "why_wrong": "Luka urges kindness and pity toward others, but he does not weigh a consoling belief against the truth."
-    }
-   },
-   "models": [
-    "3.17",
-    "3.37",
-    "3.11",
-    "3.35"
-   ],
-   "sources": [
-    {
-     "what": "Maxim Gorky, The Lower Depths: A Drama in Four Acts, English translation by Jenny Covan (New York: Brentano’s, 1922, Moscow Art Theatre Series of Russian Plays); Act III, Luka’s story of the man who believed in a land of righteousness and the learned man’s maps; Luka’s lines on pity to Natasha; all four quotations checked as exact substrings of the Gutenberg text (double hyphens as closed em dashes, inner double quotes as single quotes)",
-     "url": "https://www.gutenberg.org/ebooks/52468"
-    }
-   ],
-   "notes": "Play first performed 1902 (Moscow Art Theatre). Three options come from the same story, so the key must be matched to both parts of the claim (belief and truth weighed); C is Luka in a nearby mood (pity). Lines where Luka tells Nastya that a believed love affair was real were left out (they would also illustrate the claim).",
-   "band7_moves": [],
-   "word_count": 44
-  },
-  {
-   "id": "command_of_evidence.Q2_P8_multipart.hard.w4b3_06",
-   "template": "Q2_P8_multipart",
-   "subtype": "Data description (interaction: each color of lizard compared across the two grounds)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Camouflage protects an animal only when its coloration matches the surrounding terrain, and in northwestern China the toad-headed lizard Phrynocephalus versicolor has evolved dark coloration where the ground is dark while retaining lighter coloration in neighboring areas where the ground is pale. Lixia Wan and colleagues tested the hypothesis that a lizard runs faster on ground it does not match, where it must depend on speed rather than concealment, by timing dark and light lizards in racing tunnels positioned on both kinds of ground. Examining the results, a student concludes that the hypothesis was supported for light lizards but not for dark lizards.",
-   "stem": "Which choice best describes data from the table that support the student’s conclusion?",
-   "options": [
-    "On dark ground, light lizards ran faster than dark lizards, 0.821 compared with 0.626 meters per second, but on pale ground they ran slower than dark lizards, 0.558 compared with 0.609.",
-    "Light lizards ran much faster on dark ground than on pale ground, 0.821 compared with 0.558 meters per second, whereas dark lizards ran at nearly equal speeds on the two, 0.626 and 0.609.",
-    "Dark lizards ran faster on pale ground, which they do not match, than on dark ground, while light lizards ran at almost the same speed whichever kind of ground they were on.",
-    "Light lizards ran faster on dark ground, which they do not match, than on pale ground, which they do match, 0.821 compared with 0.558 meters per second."
-   ],
-   "answer_letter": "B",
-   "table": {
-    "title": "Average Running Speed of Toad-Headed Lizards on Two Kinds of Ground (meters per second)",
-    "columns": [
-     "Lizards",
-     "On dark ground",
-     "On pale ground"
-    ],
-    "rows": [
-     [
-      "Light lizards",
-      "0.821",
-      "0.558"
-     ],
-     [
-      "Dark lizards",
-      "0.626",
-      "0.609"
-     ]
-    ],
-    "note": null
-   },
-   "figure": null,
-   "explanation": "The student concludes that “the hypothesis was supported for light lizards but not for dark lizards.” Light lizards match pale ground, and they ran much faster on dark ground (0.821 meters per second) than on pale ground (0.558), as the hypothesis predicts. Dark lizards match dark ground, yet they ran at nearly equal speeds on dark ground (0.626) and on pale ground (0.609), so they did not run faster on the ground they do not match. Choice B reports both halves.",
-   "distractors": {
-    "A": {
-     "recipe": "IRREL: accurate comparison on the wrong axis (colors within one ground)",
-     "why_wrong": "The values are read correctly, but they compare light and dark lizards on the same ground; the hypothesis concerns how each lizard’s speed changes between ground it matches and ground it does not."
-    },
-    "C": {
-     "recipe": "WDIR/INACC: the pattern assigned to the wrong lizards",
-     "why_wrong": "The table shows the reverse: dark lizards ran at almost the same speed on both grounds (0.626 and 0.609), and light lizards were the ones whose speed differed greatly."
-    },
-    "D": {
-     "recipe": "HALF: accurate for light lizards only",
-     "why_wrong": "The reading is accurate, but it covers only light lizards; the student’s conclusion also says the hypothesis did not hold for dark lizards, which this choice does not address."
-    }
-   },
-   "models": [
-    "3.26",
-    "3.18",
-    "3.16"
-   ],
-   "sources": [
-    {
-     "what": "Wan, Liu, Wang, Yang, Li, Sun, Niu, Zhao, Jin 2021, Ecology and Evolution 11: 17409–17416 (doi 10.1002/ece3.8374): Phrynocephalus versicolor evolved darker dorsal color in melanistic habitats and kept a lighter color in adjacent non-melanistic habitats; hypothesis that lizards run more slowly on well-matching backgrounds; running speed measured in field racing tunnels placed on melanistic and non-melanistic substrates; average speed (m/s) light lizards 0.821 on melanistic, 0.558 on non-melanistic; dark lizards 0.626 on melanistic, 0.609 on non-melanistic",
-     "url": "https://europepmc.org/article/PMC/PMC8668757"
-    }
-   ],
-   "notes": "The conclusion is given to a student (the paper says only that light lizards are potentially faster than dark ones in melanistic habitats). 'Dark ground' and 'pale ground' stand for the paper's melanistic and non-melanistic substrates. Checked: both lizards ran faster on dark ground, so no option says that (it would also support the conclusion).",
-   "band7_moves": [],
-   "word_count": 103
-  },
-  {
-   "id": "command_of_evidence.T3_person_quote.hard.w4b3_07",
-   "template": "T3_person_quote",
-   "subtype": "Quotation from an art historian supports a student’s argument (technique tied to purpose)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "The Indonesian painter Affandi (circa 1907–1990), who was largely self-taught, became known in the 1950s for an unconventional technique. Rather than applying oil paint with a brush, he squeezed it directly from the tube onto the canvas and then manipulated it with his fingers and palms. A student argues that this technique was considerably more than a recognizable signature, contending that it was Affandi’s means of transferring the emotions a subject aroused in him onto the canvas as immediately as possible.",
-   "stem": "Which quotation from an art historian would best support the student’s argument?",
-   "options": [
-    "“Working straight from the tube with his bare hands, Affandi could set down what a beggar or a crowded market made him feel before the feeling cooled; the thick, twisting ridges of paint carry an agitation that a brush would have smoothed away.”",
-    "“The tube method began as a practical shortcut—Affandi, impatient, had been unable to find a pencil—and it remained chiefly that: an efficient way to cover a canvas, revealing more about his working habits than about what he hoped his paintings would express.”",
-    "“His canvases are built from coils and ribbons of pigment applied so heavily that, viewed from the side, the surface rises in ridges several millimeters high, and in places the colors, pressed together by his palm, mix directly on the canvas.”",
-    "“Affandi declined to paint the pleasant landscapes that collectors requested, choosing instead an old woman, a beggar, a dark mountain—subjects he considered expressive rather than beautiful—and returning to them repeatedly throughout his career.”"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The student contends that the technique “was Affandi’s means of transferring the emotions a subject aroused in him onto the canvas as immediately as possible.” Choice A ties the technique to exactly that aim: working from the tube with his hands let Affandi record what a subject made him feel before the feeling faded, and the ridges of paint preserve an agitation a brush would have erased.",
-   "distractors": {
-    "B": {
-     "recipe": "OPP: sides with the view the student rejects",
-     "why_wrong": "It presents the procedure as a mere convenience that says little about what the paintings express, which contradicts the student’s argument."
-    },
-    "C": {
-     "recipe": "HALF: the technique described, without its purpose",
-     "why_wrong": "It describes how thickly the paint was applied and how colors mixed, but it never links the technique to the feelings Affandi wanted to convey."
-    },
-    "D": {
-     "recipe": "TRAP: expressiveness through subject matter, not technique",
-     "why_wrong": "It shows that Affandi chose expressive subjects, but the student’s argument concerns his technique of applying paint, which this quotation does not mention."
-    }
-   },
-   "models": [
-    "3.33",
-    "3.32",
-    "3.3",
-    "3.21"
-   ],
-   "sources": [
-    {
-     "what": "Wikipedia, Affandi (c. 1907–1990), Indonesian painter, self-taught from 1934, considered Indonesia’s foremost Expressionist; from the 1950s painted by squeezing paint directly from the tube (Carrying the First Grandchild, 1953), found the painted object appeared more alive and felt more freedom to express his feelings using his hands instead of a brush; adopted the method after losing patience looking for a missing pencil; painted suffering (an old woman, a beggar, a black mountain), subjects expressive rather than beautiful",
-     "url": "https://en.wikipedia.org/wiki/Affandi"
-    }
-   ],
-   "notes": "Quotations are invented and attributed to an unnamed art historian, as CB does; their factual content follows the source (the pencil story, the subjects he named). Band 6: the key must be matched to the argument's link between procedure and emotion; D (subject matter) and C (technique alone) each match half.",
-   "band7_moves": [],
-   "word_count": 81
-  },
-  {
-   "id": "command_of_evidence.Q1_P5_control.hard.w4b3_08",
-   "template": "Q1_P5_control",
-   "subtype": "Data completion (the heaviest treatment compared with the untreated control)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Spreading organic mulch, such as wood chips, over bare soil can reduce runoff during heavy rainfall and allow more water to infiltrate the ground, but because mulch also absorbs water, a thick layer may retain rain that would otherwise reach the soil. At Jiufeng National Forest Park in Beijing, Bing Wang and colleagues covered trays of sloping soil with different quantities of mulch, subjected them to simulated rainstorms of two intensities, and measured how much water the soil stored. Comparing the mulched soil with bare soil, the team found that heavier applications of mulch did not continue to improve water storage: ______",
-   "stem": "Which choice most effectively uses data from the graph to complete the statement?",
-   "options": [
-    "soil covered with 0.25 kilogram of mulch per square meter stored less water than bare soil did under both rainfall intensities.",
-    "at the higher rainfall intensity, soil under 1.00 kilogram of mulch per square meter stored nearly twice as much water as bare soil.",
-    "with 1.00 kilogram of mulch per square meter, the soil stored about as much water as bare soil did at either rainfall intensity.",
-    "the lightest mulch layer, 0.25 kilogram per square meter, raised the amount of water stored in the soil above that of bare soil at both intensities."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": {
-    "kind": "bar graph",
-    "title": "Water Stored in Soil under Different Amounts of Mulch during Simulated Heavy Rain",
-    "x_axis": "Mulch applied (kilograms per square meter)",
-    "y_axis": "Water stored in soil (millimeters)",
-    "description": "Grouped bars at five mulch amounts (0, which is bare soil; 0.25; 0.50; 0.75; 1.00 kilograms per square meter), two bars each: rainfall of 60 millimeters per hour and rainfall of 90 millimeters per hour. Y-axis 0 to 25 in steps of 5. 60 mm/h: about 12.6, 19.8, 16.4, 13.8, 12.4. 90 mm/h: about 12.5, 22.7, 20.3, 16.6, 13.1. At both intensities storage is highest at 0.25 and falls with each heavier layer, back to about the bare-soil level at 1.00.",
-    "data": [
-     {
-      "series": "Rainfall of 60 mm per hour",
-      "points": [
-       [
-        "0",
-        12.6
-       ],
-       [
-        "0.25",
-        19.8
-       ],
-       [
-        "0.50",
-        16.4
-       ],
-       [
-        "0.75",
-        13.8
-       ],
-       [
-        "1.00",
-        12.4
-       ]
-      ]
-     },
-     {
-      "series": "Rainfall of 90 mm per hour",
-      "points": [
-       [
-        "0",
-        12.5
-       ],
-       [
-        "0.25",
-        22.7
-       ],
-       [
-        "0.50",
-        20.3
-       ],
-       [
-        "0.75",
-        16.6
-       ],
-       [
-        "1.00",
-        13.1
-       ]
-      ]
-     }
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w4b3",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      }
     ]
-   },
-   "explanation": "The team found that “heavier applications of mulch did not continue to improve water storage.” The graph shows that with 1.00 kilogram of mulch per square meter, the heaviest layer tested, the soil stored about 12.4 millimeters of water at 60 millimeters of rain per hour and about 13.1 millimeters at 90, close to the 12.6 and 12.5 millimeters stored by bare soil. Since the heaviest layer gave almost no gain over bare soil, choice C completes the statement.",
-   "distractors": {
-    "A": {
-     "recipe": "WDIR: the lightest layer reported below bare soil",
-     "why_wrong": "Soil under 0.25 kilogram of mulch stored the most water of all, about 19.8 and 22.7 millimeters, well above bare soil’s 12.6 and 12.5."
-    },
-    "B": {
-     "recipe": "INACC: invented gain",
-     "why_wrong": "At 90 millimeters per hour, soil under 1.00 kilogram of mulch stored about 13.1 millimeters, barely more than the 12.5 stored by bare soil, not nearly twice as much."
-    },
-    "D": {
-     "recipe": "IRREL: true, but about the light layer only",
-     "why_wrong": "The graph does show that the lightest layer raised storage above bare soil, but that says nothing about whether heavier layers kept improving storage, which is what the statement is about."
-    }
-   },
-   "models": [
-    "3.38",
-    "3.46",
-    "3.4"
-   ],
-   "sources": [
-    {
-     "what": "Wang, Niu, Berndtsson, Zhang, Chen, Li, Zhu 2021, Scientific Reports 11: 6259 (doi 10.1038/s41598-021-85343-x): rainfall simulation experiments with organic mulch (ground wood residue, wood chips and straw) in Jiufeng National Forestry Park, Beijing; soil water storage (mm), 15° slope, mulch 0, 0.25, 0.50, 0.75, 1.00 kg/m2: 60 mm/h 12.6, 19.8, 16.4, 13.8, 12.4; 90 mm/h 12.5, 22.7, 20.3, 16.6, 13.1; higher application rates gave less soil water",
-     "url": "https://www.nature.com/articles/s41598-021-85343-x"
-    }
-   ],
-   "notes": "Graph uses the paper's 15-degree slope values (Table 1). Checked in Python: only C is true and bears on the claim; D is true but concerns the light layer only. No option compares 0.50 with 0.25 (that comparison would also support the statement).",
-   "band7_moves": [],
-   "word_count": 102
   },
-  {
-   "id": "command_of_evidence.Q1_P3_pairwise.hard.w4b3_09",
-   "template": "Q1_P3_pairwise",
-   "subtype": "Data completion (two comparisons in different years: an early lead later lost)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Over the 2010s, solar power grew from a negligible source of electricity into a substantial one in several countries, although the trajectories differed considerably. In some countries, a burst of construction early in the decade was followed by years of little further expansion, while countries whose solar industries developed more gradually continued adding capacity and eventually matched or surpassed those early leaders. Examining figures for 2013 through 2021 compiled by Ember, an independent energy research organization, a student finds that Honduras exemplifies the first of these patterns: according to the graph, the share of Honduras’s electricity generated from solar power ______",
-   "stem": "Which choice most effectively uses data from the graph to complete the statement?",
-   "options": [
-    "was greater than Chile’s in both 2015 and 2017.",
-    "was lower than Vietnam’s in 2017 but higher than Vietnam’s in 2021.",
-    "rose steadily throughout the period and in 2021 was higher than the share in any other country shown.",
-    "was more than twice Jordan’s in 2017 but was lower than Jordan’s in 2021."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": {
-    "kind": "line graph",
-    "title": "Share of Electricity Generated from Solar Power in Four Countries, 2013–2021",
-    "x_axis": "Year",
-    "y_axis": "Percent of electricity generated from solar power",
-    "description": "Four lines at 2013, 2015, 2017, 2019 and 2021; y-axis 0 to 16 in steps of 2. Honduras: about 0, 4.9, 9.9, 10.5, 10.3 (a sharp rise to 2017, then nearly flat). Jordan: about 0, 0.3, 4.4, 10.0, 15.4 (rises steadily and is highest in 2021). Chile: about 0, 1.7, 4.9, 7.5, 12.0. Vietnam: about 0, 0, 0, 2.0, 10.3 (near zero until 2017, then a steep rise). In 2017 Honduras is highest; by 2021 Jordan and Chile are above Honduras and Vietnam is level with it.",
-    "data": [
-     {
-      "series": "Honduras",
-      "points": [
-       [
-        "2013",
-        0.0
-       ],
-       [
-        "2015",
-        4.88
-       ],
-       [
-        "2017",
-        9.91
-       ],
-       [
-        "2019",
-        10.51
-       ],
-       [
-        "2021",
-        10.25
-       ]
-      ]
-     },
-     {
-      "series": "Jordan",
-      "points": [
-       [
-        "2013",
-        0.0
-       ],
-       [
-        "2015",
-        0.26
-       ],
-       [
-        "2017",
-        4.38
-       ],
-       [
-        "2019",
-        10.03
-       ],
-       [
-        "2021",
-        15.4
-       ]
-      ]
-     },
-     {
-      "series": "Chile",
-      "points": [
-       [
-        "2013",
-        0.01
-       ],
-       [
-        "2015",
-        1.66
-       ],
-       [
-        "2017",
-        4.87
-       ],
-       [
-        "2019",
-        7.5
-       ],
-       [
-        "2021",
-        11.99
-       ]
-      ]
-     },
-     {
-      "series": "Vietnam",
-      "points": [
-       [
-        "2013",
-        0.01
-       ],
-       [
-        "2015",
-        0.01
-       ],
-       [
-        "2017",
-        0.01
-       ],
-       [
-        "2019",
-        2.03
-       ],
-       [
-        "2021",
-        10.31
-       ]
-      ]
-     }
-    ]
-   },
-   "explanation": "The student says Honduras exemplifies the pattern in which “a burst of construction early in the decade was followed by years of little further expansion” while slower countries “eventually matched or surpassed those early leaders.” The graph shows Honduras at about 9.9% in 2017, more than twice Jordan’s 4.4%, but at about 10.3% in 2021, below Jordan’s 15.4%. Choice D shows Honduras leading early and then being overtaken.",
-   "distractors": {
-    "A": {
-     "recipe": "PART: accurate early comparison only",
-     "why_wrong": "Honduras’s share was indeed above Chile’s in 2015 and 2017, but this shows only the early lead, not that a more gradual country later matched or overtook Honduras."
-    },
-    "B": {
-     "recipe": "WDIR: comparison reversed",
-     "why_wrong": "In 2017 Honduras’s share (about 9.9%) was far higher than Vietnam’s (near 0%), and in 2021 the two were nearly equal, so neither half of the statement is accurate."
-    },
-    "C": {
-     "recipe": "INACC: contradicts the pattern",
-     "why_wrong": "Honduras’s share leveled off after 2017, and in 2021 it was below Jordan’s and Chile’s, so it neither rose steadily nor ended highest."
-    }
-   },
-   "models": [
-    "3.30",
-    "3.29"
-   ],
-   "sources": [
+  "items": [
     {
-     "what": "Our World in Data, Share of electricity production from solar (Ember), percent: Honduras 2013 0.0, 2015 4.88, 2017 9.91, 2019 10.51, 2021 10.25; Jordan 0.0, 0.26, 4.38, 10.03, 15.40; Chile 0.01, 1.66, 4.87, 7.50, 11.99; Vietnam 0.01, 0.01, 0.01, 2.03, 10.31",
-     "url": "https://ourworldindata.org/grapher/share-electricity-solar"
-    }
-   ],
-   "notes": "Every option checked in Python against the values. Vietnam also catches up with Honduras by 2021 (10.31 against 10.25), so no option states that true Vietnam comparison; B reverses it and is false in both halves. Ember describes itself as an independent energy think tank.",
-   "band7_moves": [],
-   "word_count": 101
-  },
-  {
-   "id": "command_of_evidence.Q1_P2_extreme.hard.w4b3_10",
-   "template": "Q1_P2_extreme",
-   "subtype": "Data completion (filter by a criterion stated in the passage, then the maximum)",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "Agricultural surveys frequently estimate a field’s yield by harvesting only a small portion of it and extrapolating from the result. Using complete harvests of 230 smallholder maize fields in Ethiopia as the standard, Tesfaye Shiferaw Sida and colleagues determined how often several such shortcut methods produced an estimate within 10% of a field’s true yield. A student designing a survey in which workers can harvest no more than 20 square meters of each field observes that, among the methods respecting that restriction, the one most likely to produce an estimate within 10% of the true yield was ______",
-   "stem": "Which choice most effectively uses data from the table to complete the statement?",
-   "options": [
-    "the random quadrat, which harvests 16 square meters and came within 10% of the true yield in about 25% of cases.",
-    "the random octant, which came within 10% of the true yield in about 30% of cases, more often than any other method in the table.",
-    "the three diagonal quadrats, which together harvest 48 square meters and came within 10% of the true yield in about 28% of cases.",
-    "the horizontal transect, which harvests only 4 square meters and came within 10% of the true yield in about 20% of cases."
-   ],
-   "answer_letter": "A",
-   "table": {
-    "title": "Accuracy of Five Methods for Estimating Maize Yield on Smallholder Fields in Ethiopia",
-    "columns": [
-     "Method",
-     "Area harvested per field (square meters)",
-     "Chance of an estimate within 10% of true yield (%)"
-    ],
-    "rows": [
-     [
-      "MW path",
-      "10",
-      "17.8"
-     ],
-     [
-      "Horizontal transect",
-      "4",
-      "19.5"
-     ],
-     [
-      "Random quadrat",
-      "16",
-      "25.2"
-     ],
-     [
-      "Three diagonal quadrats",
-      "48",
-      "28.4"
-     ],
-     [
-      "Random octant",
-      "177*",
-      "29.8"
-     ]
-    ],
-    "note": "*Average; the area varies with the size of the field."
-   },
-   "figure": null,
-   "explanation": "The student’s survey allows workers to harvest “no more than 20 square meters of each field.” Only the MW path (10 square meters), the horizontal transect (4), and the random quadrat (16) respect that restriction. Of these three, the random quadrat had the highest chance of an estimate within 10% of the true yield, 25.2%, compared with 19.5% and 17.8%. Choice A therefore completes the statement.",
-   "distractors": {
-    "B": {
-     "recipe": "TRAP: the overall maximum, outside the passage's limit",
-     "why_wrong": "The random octant was the most accurate method overall, but it harvests about 177 square meters, far more than the 20-square-meter limit, so it is not among the methods the student is considering."
+      "id": "command_of_evidence.T1_single.hard.w4b3_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (training of young potters; the key supplies the missing premise that teaching leaves two makers’ prints on one vessel)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Because the ridges of fingerprints broaden as a person matures, the average ridge width in a print can be used to estimate the approximate age of the individual who left it. Applying this technique to 112 fingerprints impressed into the clay of vessels manufactured between about 2850 and 2500 BCE in an urban neighborhood at Tell eṣ-Ṣâfi/Gath, in present-day Israel, archaeologist Kent D. Fowler and colleagues determined that most of the prints had been left by adults or by adolescents. The researchers propose that in this community, young potters acquired their craft by working under the supervision of experienced practitioners.",
+      "stem": "Which finding from Fowler and colleagues’ study, if true, would most directly support the researchers’ proposal about young potters?",
+      "options": [
+        "Most vessels bearing an adolescent’s prints also bear an adult’s prints, on surfaces that were shaped and smoothed while the vessel was being built.",
+        "Prints left by adolescents are about as common on vessels from the earliest layers of the neighborhood as on vessels from its most recent layers.",
+        "Vessels bearing only adolescents’ prints are about as numerous, and as evenly shaped and as carefully smoothed, as vessels that bear only adults’ prints.",
+        "Most of the prints on the vessels, whether they were left by adults or by adolescents, appear to have been made by males rather than by females."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers propose that “young potters acquired their craft by working under the supervision of experienced practitioners.” Learning under supervision means that a novice and an experienced potter handled the same pieces of work. If vessels with an adolescent’s prints usually also carry an adult’s prints on surfaces formed during building, the two worked on those vessels together, which is what training of this kind would leave behind. Choice A therefore supports the proposal.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: wrong time window, consistent with both",
+          "why_wrong": "It shows only that adolescents made pottery throughout the neighborhood’s history; adolescents working on their own would leave the same pattern, so it says nothing about whether they were guided by experienced potters."
+        },
+        "C": {
+          "recipe": "OPP: competent independent work by adolescents, no sign of supervision",
+          "why_wrong": "Many well-made vessels handled by adolescents alone would suggest that adolescents could work competently on their own; this says nothing about whether they learned the craft under the supervision of experienced potters, and it points away from the proposal."
+        },
+        "D": {
+          "recipe": "OFF: same prints, different variable (sex)",
+          "why_wrong": "Whether the potters were mostly male concerns who made pottery, not whether young potters were taught by experienced ones."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.45",
+        "3.12",
+        "3.36"
+      ],
+      "sources": [
+        {
+          "what": "Fowler, Ross, Walker, Barritt-Cleary, Greenfield, Maeir, Biehl 2020, PLoS ONE 15(4): e0231046: mean ridge breadth (age) and ridge density (sex) of 112 fingerprints on Early Bronze Age III (c. 2850–2500 BCE) pottery from the urban neighbourhood at Tell eṣ-Ṣâfi/Gath, Israel; most prints by adult and young males, the rest by adult and young females; multiple prints of different age and sex on the same vessels suggest they were impressed during the training of young potters",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0231046"
+        }
+      ],
+      "notes": "Band-7 moves: the claim is stated as guidance of novices; the key supplies the unstated premise that teaching leaves two makers’ prints on surfaces formed during building, the very pattern the authors read as training. B TRAP (time window, fits independent work too), C OPP (many well-finished vessels by adolescents alone; reviewer rewrote it so it no longer negates the key's co-occurrence), D OFF (sex of potters, true in the study but beside the point). Three steps: guidance implies shared work, shared work leaves co-occurring prints, the key reports that co-occurrence. The paper's age classes are adult/adolescent and child; children's prints (only on handles) are left out to avoid a second training reading.",
+      "band7_moves": [
+        "key supplies the missing premise (guidance leaves two makers’ prints on one vessel)",
+        "TRAP distractor consistent with both readings (time window)",
+        "OPP distractor (independent skilled adolescents)",
+        "stem names the study and the claimant"
+      ],
+      "word_count": 100,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "rewrote option C so it no longer negates the key's co-occurrence (it read as A's mirror image, the band-7 pilot tell); C now reports many well-finished vessels by adolescents alone",
+          "shortened key A so it is not the longest option"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the reviewer's fix to C: 100-word passage, 19-word stem naming the study, and the key supplies a premise the passage leaves out (supervised work leaves two makers' prints on surfaces formed during building). B is a TRAP (time window, fits independent work too), C an OPP that no longer mirrors the key, D the one OFF option. Passes checks 1, 2, 5 and 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
     },
-    "C": {
-     "recipe": "TRAP: second-highest overall, outside the limit",
-     "why_wrong": "The three diagonal quadrats harvest 48 square meters in total, which exceeds the student’s limit."
-    },
-    "D": {
-     "recipe": "WGRP: within the limit but not the most accurate",
-     "why_wrong": "The horizontal transect stays within the limit, but its chance of an estimate within 10%, about 20%, is lower than the random quadrat’s 25.2%."
-    }
-   },
-   "models": [
-    "3.44"
-   ],
-   "sources": [
     {
-     "what": "Sida, Chamberlin, Ayalew, Kosmowski, Craufurd 2021, Field Crops Research 267: 108147 (doi 10.1016/j.fcr.2021.108147, PMC8146729): full plot harvests of 230 smallholder maize fields in Ethiopia; sampling area per method (m2): MW path 10, horizontal transect 4, random quadrat 16, three diagonal quadrats 48, random octant 177 (47–690); probability of an estimate within 10% of the true yield: 0.178, 0.195, 0.252, 0.284, 0.298",
-     "url": "https://europepmc.org/article/PMC/PMC8146729"
-    }
-   ],
-   "notes": "Band-7 moves (Q1_P2, model 3.44): a filter set by a criterion stated only in the passage (the 20-square-meter limit), then a maximum; the two most accurate methods overall are traps outside the limit (TRAP), and one in-limit method is less accurate. Farmer prediction and the full harvest are left out of the table. Operations: read the limit, filter three rows by area, compare three values.",
-   "band7_moves": [
-    "filter set by a passage criterion before the extreme",
-    "traps are the overall maxima outside the filter",
-    "compound options naming method, area and value"
-   ],
-   "word_count": 98
-  },
-  {
-   "id": "command_of_evidence.T2_lit_quote.medium.w4b3_11",
-   "template": "T2_lit_quote",
-   "subtype": "Literary quotation illustrates a two-part claim (attraction and unease)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "The Ladies’ Paradise is an 1883 novel by Émile Zola. Newly arrived in Paris from a provincial town, Denise first encounters the enormous department store that gives the novel its title. Zola portrays her as simultaneously attracted to the store and apprehensive about it: ______",
-   "stem": "Which quotation from The Ladies’ Paradise most effectively illustrates the claim?",
-   "options": [
-    "“At this hour, The Ladies’ Paradise, with its furnace-like brilliancy, completed its conquest of her. In the great metropolis, black and silent beneath the rain—in this Paris, to which she was a stranger, it shone out like a lighthouse, and seemed to be of itself the life and light of the city.”",
-    "“At the same time her uncle’s shop made her feel ill at ease; she felt unreasonable disdain, instinctive repugnance for this cold, icy place, the home of old-fashioned trading.”",
-    "“She was bewildered and attracted by this shop, to her so vast, which she saw more people enter in an hour than she had seen enter Cornaille’s in six months; and with her desire to enter it was mingled a vague sense of danger which rendered her seduction complete.”",
-    "“There was the continual roaring of a machine at work, an engulfing of customers close-pressed against the counters, bewildered amidst the piles of goods, and finally hurled towards the pay-desks.”"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The claim has two parts: Denise is “attracted to the store” and “apprehensive about it.” In choice C, she is “attracted by this shop” and feels a “desire to enter it,” and with that desire “was mingled a vague sense of danger,” so the quotation shows both her attraction and her apprehension.",
-   "distractors": {
-    "A": {
-     "recipe": "HALF: attraction only",
-     "why_wrong": "The store “completed its conquest of her” and shines “like a lighthouse,” which shows only her attraction, not any apprehension."
+      "id": "command_of_evidence.T1_single.hard.w4b3_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (fossil sea cow as a seagrass grazer; the feeding link is given in the passage)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Because seagrass seldom fossilizes, paleontologists often reconstruct ancient seagrass meadows from the remains of the animals that consumed them. Dugongs, for example, subsist almost entirely on seagrass, which they uproot from the seabed with their downturned snouts. In Qatar, Nicholas D. Pyenson and colleagues documented more than 170 sites, concentrated in an area smaller than a square kilometer and all within a single layer of rock at least 21 million years old, that contain fossil bones of an extinct sea cow, Salwasiren qatarensis. The researchers suggest that Salwasiren, like the dugongs inhabiting the region today, was a seagrass grazer.",
+      "stem": "Which finding about Salwasiren, if true, would most directly support the researchers’ suggestion?",
+      "options": [
+        "Salwasiren was only distantly related to the dugongs that live in the region today.",
+        "Salwasiren’s teeth show the kind of wear seen in living animals that crush the shells of clams and snails.",
+        "Several Salwasiren bones bear bite marks left by large sharks, which also prey on the dugongs that live in the region today.",
+        "The front of Salwasiren’s skull angles steeply downward, so its mouth would have faced the seafloor, as a dugong’s does."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers suggest that Salwasiren “was a seagrass grazer,” and the passage explains that dugongs “uproot” seagrass “from the seabed with their downturned snouts.” A skull whose front angles steeply downward, leaving the mouth facing the seafloor as a dugong’s does, shows that Salwasiren was built to feed on the seabed in the way dugongs do. Choice D therefore supports the suggestion that it grazed on seagrass.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: true of the species, but ancestry cannot decide diet",
+          "why_wrong": "How closely Salwasiren was related to today’s dugongs says nothing about what it ate; closely and distantly related animals can share a diet or differ in one."
+        },
+        "B": {
+          "recipe": "OPP: a rival diet",
+          "why_wrong": "Tooth wear like that of shell-crushing animals would suggest that Salwasiren fed on clams and snails, which would weaken, not support, the suggestion that it grazed on seagrass."
+        },
+        "C": {
+          "recipe": "TRAP: shares a predator with dugongs, not a diet",
+          "why_wrong": "Being hunted by the same kind of predator as today’s dugongs shows nothing about what Salwasiren itself ate."
+        }
+      },
+      "models": [
+        "3.31",
+        "3.45",
+        "3.12",
+        "3.7"
+      ],
+      "sources": [
+        {
+          "what": "Pyenson, Sakal, LeBlanc, Blundell, Klim, Marshall, Velez-Juarbe, Wolfe, Al-Naimi 2025, PeerJ 13: e20030 (doi 10.7717/peerj.20030), High abundance of Early Miocene sea cows from Qatar shows repeated evolution of seagrass ecosystem engineers in Eastern Tethys: seagrasses rarely fossilize and their consumers serve as proxies; over 172 sites in less than 1 km2 from one stratigraphic level (Al Maszhabiya bonebed, Aquitanian, 23.03 to 21.6 Ma); new dugongine Salwasiren qatarensis, distantly related to extant dugongs, which occupy seagrass habitats of the Gulf today; premaxilla shows the deflection of the distal rostrum seen in most dugongids; seagrass consumers have evolved repeatedly in the region at least since the Early Miocene",
+          "url": "https://europepmc.org/article/PMC/PMC12701702"
+        }
+      ],
+      "notes": "Reviewer replacement: the earlier subject (melanosomes or microbes in a fossil feather) shares its premise with official Inferences item eca09a92 (melanosomes in a fossil feather reveal an extinct bird's color). Band 6: the feeding link sits in an earlier sentence (dugongs uproot seagrass from the seabed with downturned snouts); the key paraphrases it (skull angled down, mouth facing the seafloor) and needs one bridge. The key fits the real anatomy (rostral deflection like most dugongids). A is true in the study but cannot decide diet; C ties Salwasiren to dugongs through predators, not food; B is the rival diet. No option uses abundance or a shallow-water setting, since the paper itself reads those as signs of seagrass habitat.",
+      "band7_moves": [],
+      "word_count": 99,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "replaced the subject: the melanosomes-or-microbes fossil feather premise is official Inferences item eca09a92 (melanosomes in a fossil feather reveal an extinct bird's color); new item on Salwasiren qatarensis, the Early Miocene sea cow bonebed in Qatar (Pyenson et al. 2025, PeerJ, abstract and full text fetched), same template, tier, band 6 and key letter D; claim appended to claims.txt and the old claim withdrawn",
+          "blind_answer and agreed refer to the original (melanosome) version; the replacement was written by the reviewer and has had no independent blind solve"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "B": {
-     "recipe": "LURE: unease, but about the wrong shop",
-     "why_wrong": "Denise feels ill at ease here, but about her uncle’s old-fashioned shop, not the department store."
-    },
-    "D": {
-     "recipe": "LURE: shares the word “bewildered,” describes the customers",
-     "why_wrong": "It describes the crowds being processed by the store like a machine; the bewildered people are customers, and nothing is said about Denise’s feelings."
-    }
-   },
-   "models": [
-    "2.26",
-    "2.13",
-    "2.31",
-    "2.10"
-   ],
-   "sources": [
     {
-     "what": "Émile Zola, The Ladies’ Paradise (Au bonheur des dames, 1883), English edition with an introduction by Ernest Alfred Vizetelly (London: Hutchinson, 1895), Chapter I; all four quotations checked as exact substrings of the Gutenberg text (double hyphens as closed em dashes)",
-     "url": "https://www.gutenberg.org/ebooks/54726"
-    }
-   ],
-   "notes": "All quotations from Chapter I, Denise's arrival. The key is the one sentence that names both her desire and the 'vague sense of danger'. Option A is the longest, so the key is not.",
-   "band7_moves": [],
-   "word_count": 45
-  },
-  {
-   "id": "command_of_evidence.T1_single.medium.w4b3_12",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a claim (group comparison: listening expertise)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Orchestral sample libraries are collections of recordings of single notes played on real instruments, which composers can put together on a computer to imitate a full orchestra. In an online experiment, music psychologist Reinhard Kopiez and colleagues asked more than 600 listeners with different amounts of musical and audio training to judge whether excerpts of a classical work had been played by a live orchestra or made with such a library. The researchers hypothesized that listeners’ skill at judging sound would affect how well they could tell the two kinds of recording apart.",
-   "stem": "Which finding, if true, would most directly support the researchers’ hypothesis?",
-   "options": [
-    "Most listeners described the live orchestra recordings as more pleasant to hear than the recordings that had been produced with the sample library.",
-    "Listeners who work professionally with recorded sound identified the source of the excerpts correctly more often than other listeners did.",
-    "Listeners identified the source of slow, quiet excerpts correctly more often than they identified the source of fast, loud excerpts.",
-    "On average, the listeners in the experiment identified the source of the excerpts correctly about 72 percent of the time."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers hypothesized that “listeners’ skill at judging sound would affect how well they could tell the two kinds of recording apart.” If listeners whose work involves judging recorded sound identified the source correctly more often than other listeners, accuracy would differ with skill, as the hypothesis predicts. Choice B therefore supports it.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: preference, not accuracy",
-     "why_wrong": "Which recordings listeners enjoyed more says nothing about how accurately listeners of different expertise could identify them."
+      "id": "command_of_evidence.T1_compete.hard.w4b3_03",
+      "template": "T1_compete",
+      "subtype": "Finding that discriminates two explanations (conformity versus public information)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Animals that acquire behaviors by observing others must decide which individuals to imitate: under one strategy, conformity, an animal copies whatever the majority of a group is doing, whereas under another, the use of public information, it evaluates each option according to how successfully others appear to be exploiting it. Edwin van Leeuwen, Thomas Morgan, and Katharina Riebel allowed zebra finches to observe two groups of finches, differing in size, feeding from two unfamiliar feeders, one black and one white, and then recorded which feeder each observer selected. The researchers concluded that zebra finches are not conformists but instead rely on public information.",
+      "stem": "Which finding from the study, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "The observers generally chose the feeder used by the larger group, even in trials in which the smaller group pecked at its feeder more often.",
+        "When a smaller group pecked at its feeder more often than a larger group pecked at the other feeder, the observers generally chose the smaller group’s feeder.",
+        "When the larger group also pecked at its feeder more often than the smaller group did, the observers generally chose the larger group’s feeder.",
+        "The observers pecked more often at the black feeder than at the white one, regardless of how many birds they had seen eating from each."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Under conformity an animal “copies whatever the majority of a group is doing,” whereas under the use of public information it “evaluates each option according to how successfully others appear to be exploiting it.” The two strategies point to different feeders only when the smaller group is the busier one. If the observers then chose the smaller group’s feeder, they followed how actively others were feeding rather than how many were feeding, so choice B supports the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the conformity prediction",
+          "why_wrong": "Following the larger group even when the smaller group fed more actively is what conformity predicts, so it would weaken the conclusion."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both strategies",
+          "why_wrong": "When the larger group is also the busier one, conformity and public information both point to its feeder, so this choice cannot show which strategy the birds used."
+        },
+        "D": {
+          "recipe": "OFF: a color preference",
+          "why_wrong": "A preference for the black feeder that ignores what the groups did says nothing about whether the birds conform or use public information."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.9",
+        "3.8",
+        "3.15"
+      ],
+      "sources": [
+        {
+          "what": "van Leeuwen, Morgan, Riebel 2021, Biology Letters 17: 20200767, Foraging zebra finches are public information users rather than conformists: observers watched two demonstrator groups differing in size (ratios 1:2, 2:4, 3:3, 1:5) forage from novel black and white feeders; observers did not copy the majority but were influenced by the demonstrators’ foraging activity (pecks), in an anti-conformist fashion",
+          "url": "https://royalsocietypublishing.org/doi/10.1098/rsbl.2020.0767"
+        }
+      ],
+      "notes": "Band 6. The key needs two links: the strategies diverge only when the minority is the busier group, and choosing the minority's feeder then marks public information. Matches the real result (influenced by pecks, not majority).",
+      "band7_moves": [],
+      "word_count": 103,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "OFF: a property of the music, not of the listeners",
-     "why_wrong": "A difference between kinds of excerpts concerns the music, not whether listeners’ expertise affected their accuracy."
-    },
-    "D": {
-     "recipe": "PART: overall accuracy with no comparison between groups",
-     "why_wrong": "An average for all listeners does not show whether more expert listeners did better than less expert ones."
-    }
-   },
-   "models": [
-    "2.6",
-    "2.43",
-    "2.7",
-    "2.16"
-   ],
-   "sources": [
     {
-     "what": "Kopiez, Wolf, Platz, Mons 2016, PLoS ONE 11(7): e0158324, Replacing the Orchestra? The Discernibility of Sample Library and Live Orchestra Sounds: online experiment with 602 listeners judging whether a classical orchestral work was a live recording or produced with an orchestral sample library; overall 72.5% correct; sound experts tended to identify the source correctly, listeners with lower expertise 68.6% (80.0% for high sound-discrimination expertise); the study tested the influence of listening expertise",
-     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0158324"
-    }
-   ],
-   "notes": "Medium: the key needs the comparison group (expert against other listeners). D uses the study's real overall figure (72.5%, about 72 percent) as an accurate but comparison-free distractor. Kopiez is a professor of music psychology at the Hanover University of Music, Drama and Media.",
-   "band7_moves": [],
-   "word_count": 93
-  },
-  {
-   "id": "command_of_evidence.T1_single.medium.w4b3_13",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a claim (a behavior is maladaptive; the key shows the better alternative)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Female common glow-worms, beetles found across much of Europe, glow at night to attract flying males, which find the females by their light. Because artificial light can make that glow harder for males to see, Christina Elgert and colleagues studied how females respond to it. Females exposed to artificial light did not move away but instead delayed glowing or did not glow at all. The researchers argue that this response is maladaptive: by staying where they are, females give up mating opportunities that moving could have provided.",
-   "stem": "Which finding, if true, would most directly support the researchers’ argument?",
-   "options": [
-    "Females that delayed glowing in artificial light went on to glow for longer, once they began, than females in darkness did.",
-    "Glowing dummy females set beneath a simulated streetlight attracted as many males as dummies set a few meters away.",
-    "Glow-worm larvae, which also give off light, were about as common near streetlights as in nearby areas without artificial light.",
-    "Glowing dummy females placed a few meters from a simulated streetlight attracted more males than dummies placed directly beneath it."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers argue that “by staying where they are, females give up mating opportunities that moving could have provided.” If dummy females a few meters from a streetlight attracted more males than dummies directly beneath it, a female that moved a short distance away from the light would attract more mates than one that stayed put. Choice D therefore supports the argument.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: glow duration, no bearing on relocating",
-     "why_wrong": "Glowing longer after a delay says nothing about whether moving away from the light would have brought a female more males."
+      "id": "command_of_evidence.T1_compete.hard.w4b3_04",
+      "template": "T1_compete",
+      "subtype": "Finding that discriminates two explanations (eggs versus individual organisms; the key supplies the growth premise)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Chitinozoans are microscopic, flask-shaped fossils with tough organic walls that are found in marine rocks formed between about 485 and 359 million years ago. Because individual chitinozoan species appeared and disappeared quickly, geologists use them to date the rock layers in which they occur, yet the question of what kind of organism produced them has never been settled. For decades, most researchers have treated chitinozoans as the eggs of some unidentified marine animal. After examining many well-preserved specimens of a newly described species, Hercochitina violana, Yan Liang and colleagues argued instead that chitinozoans may not have been eggs at all but rather individual microorganisms.",
+      "stem": "Which finding about Hercochitina violana, if true, would most directly support Liang and colleagues’ argument?",
+      "options": [
+        "Specimens of H. violana are often found joined end to end in chains, an arrangement that resembles the strings of eggs laid by some living marine worms.",
+        "Specimens of H. violana vary in size by about as much as the specimens of most other chitinozoan species do.",
+        "Specimens of H. violana form an unbroken series running from small, simple forms to large forms with elaborate surface ornamentation.",
+        "H. violana occurs only in rocks from a brief interval of geologic time, which makes it especially useful for dating the layers in which it is found."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Liang and colleagues argue that chitinozoans “may not have been eggs at all but rather individual microorganisms.” An egg is formed at more or less its final size and structure, whereas an organism grows and develops. An unbroken series running from small, simple specimens to large, elaborately ornamented ones looks like the growth stages of a single kind of organism, which fits the researchers’ view and not the egg interpretation. Choice C therefore supports their argument.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: fits the egg view",
+          "why_wrong": "Chains resembling the egg strings of living marine worms would make chitinozoans look more like eggs, supporting the interpretation the researchers reject."
+        },
+        "B": {
+          "recipe": "TRAP: comparison that cannot decide",
+          "why_wrong": "Comparing H. violana only with other chitinozoans says nothing about how chitinozoans differ from eggs, so it fits either interpretation."
+        },
+        "D": {
+          "recipe": "OFF: an irrelevant property of the same fossils",
+          "why_wrong": "A short time range explains why the species is useful for dating rocks; it does not show whether its specimens were eggs or organisms."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.15",
+        "3.14",
+        "3.9"
+      ],
+      "sources": [
+        {
+          "what": "Liang, Bernardo, Goldman, Nõlvak, Tang, Wang, Hints 2019, Proceedings of the Royal Society B 286: 20191270: chitinozoans, organic-walled microfossils of Ordovician to Devonian age (ca 485–359 Ma) used in biostratigraphy, of unknown affinity and most commonly interpreted as eggs of marine metazoans; the size variation within chitinozoan species is larger than in fossil and modern eggs; distinct and continuous morphological variation in the new species Hercochitina violana is more plausibly an ontogenetic series of individual microorganisms than eggs",
+          "url": "https://royalsocietypublishing.org/doi/10.1098/rspb.2019.1270"
+        }
+      ],
+      "notes": "Band-7 moves: the passage gives only the two views; the key supplies the growth (ontogeny) premise that eggs do not develop progressively, matching the authors' reading of H. violana. A OPP (chains fit egg strings; chitinozoan chains are real and long cited for the egg view), B TRAP (within-chitinozoan comparison), D OFF (biostratigraphic use).",
+      "band7_moves": [
+        "key supplies the missing premise (a growth series implies a developing organism)",
+        "TRAP distractor with a comparison that cannot decide",
+        "OPP distractor fitting the rival view",
+        "stem names the claimant and the rival"
+      ],
+      "word_count": 104,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key adds the growth premise the passage omits (an organism grows from small, simple to large, ornate forms; an egg does not). Discrimination: the egg view predicts no growth series, the organism view predicts one; B (size variation compared only with other chitinozoans) is a TRAP that fits both, A fits the egg view, D is an irrelevant property. 104-word passage, 15-word stem naming the claimants. Passes checks 1, 2, 5, 6 and 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
     },
-    "B": {
-     "recipe": "OPP: no benefit from moving",
-     "why_wrong": "If dummies near and far from the light attracted equal numbers of males, moving away would gain a female nothing, which weakens the argument."
-    },
-    "C": {
-     "recipe": "SUBJ: larvae rather than adult females",
-     "why_wrong": "How common the glowing larvae are near lights says nothing about whether adult females would attract more males by moving away from a light."
-    }
-   },
-   "models": [
-    "2.21",
-    "2.38",
-    "2.6",
-    "2.33"
-   ],
-   "sources": [
     {
-     "what": "Elgert, Hopkins, Kaitala, Candolin 2020, Proceedings of the Royal Society B 287: 20200806, Reproduction under light pollution: maladaptive response to spatial variation in artificial light in a glow-worm: females of Lampyris noctiluca glow to attract males; exposed to an artificial light gradient they do not move away but delay or refrain from glowing; field study with a simulated streetlight showed that staying still under the light decreases mate attraction, while moving only a short distance from the light markedly improves it",
-     "url": "https://royalsocietypublishing.org/doi/10.1098/rspb.2020.0806"
-    }
-   ],
-   "notes": "The key mirrors the real field result (dummy females at inner versus outer positions around a simulated streetlight). Medium: two links (staying is costly only if relocating helps; the key shows relocating helps).",
-   "band7_moves": [],
-   "word_count": 87
-  },
-  {
-   "id": "command_of_evidence.Q1_P3_pairwise.medium.w4b3_14",
-   "template": "Q1_P3_pairwise",
-   "subtype": "Data completion (two counts within one column, against the other column)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Low-frequency traffic noise can obscure birdsong, and urban populations of many bird species produce higher-pitched songs than rural populations do. Recording red-whiskered bulbuls in Hong Kong, Ann W. Y. To and colleagues identified two song types that differ only in their introductory note, which is lower in Type A songs than in Type B songs. In urban areas, the birds apparently preferred the higher introductory note: ______",
-   "stem": "Which choice most effectively uses data from the table to complete the statement?",
-   "options": [
-    "20 urban birds sang Type B songs, while only 2 sang Type A songs.",
-    "16 peri-urban birds sang Type A songs, while 13 sang Type B songs.",
-    "2 urban birds sang Type B songs, while 20 sang Type A songs.",
-    "13 urban birds sang Type B songs, compared with 16 peri-urban birds."
-   ],
-   "answer_letter": "A",
-   "table": {
-    "title": "Number of Red-Whiskered Bulbuls Recorded Singing Each Song Type in Hong Kong",
-    "columns": [
-     "Song type",
-     "Peri-urban areas (city edges)",
-     "Urban areas"
-    ],
-    "rows": [
-     [
-      "Type A (lower first note)",
-      "16",
-      "2"
-     ],
-     [
-      "Type B (higher first note)",
-      "13",
-      "20"
-     ]
-    ],
-    "note": null
-   },
-   "figure": null,
-   "explanation": "The statement says that “in urban areas, the birds apparently preferred the higher introductory note,” the note that begins Type B songs. The table shows that in urban areas 20 birds sang Type B songs and only 2 sang Type A songs, so choice A completes the statement.",
-   "distractors": {
-    "B": {
-     "recipe": "WGRP: the peri-urban column",
-     "why_wrong": "These are the peri-urban counts, where the two song types were about equally common; they say nothing about urban birds."
+      "id": "command_of_evidence.T2_lit_quote.hard.w4b3_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates an indirect claim (translated drama; parts of one story as options)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The Lower Depths is a 1902 play by Maxim Gorky, translated by Jenny Covan in 1922. In the play, Luka, an elderly wanderer lodging among the destitute, intimates that a consoling belief can matter more to a suffering person than the truth does: ______",
+      "stem": "Which quotation from a translation of The Lower Depths most effectively illustrates the claim?",
+      "options": [
+        "“He said: ‘Somewhere on this earth there must be a righteous land—and wonderful people live there—good people! They respect each other, help each other, and everything is peaceful and good!’”",
+        "“The learned man was offended. ‘My plans,’ he said, ‘are correct. But there exists no land of righteousness anywhere.’”",
+        "“Some one has to be kind, girl—some one must pity people! Christ pitied everybody—and he said to us: ‘Go and do likewise!’”",
+        "“He’d lived and lived and suffered and suffered, and had believed all the time in the existence of this land—and now, according to the plans, it didn’t exist at all. He felt robbed!”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Luka intimates that “a consoling belief can matter more to a suffering person than the truth does.” In choice D, Luka describes a man who had “suffered and suffered” while believing in a land that, once the truth was shown on the maps, “didn’t exist at all,” leaving him feeling “robbed.” The man lost something of value when the truth replaced his belief, which is exactly what the claim describes.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the belief without the truth that undoes it",
+          "why_wrong": "It presents the man’s hopeful belief in a righteous land but says nothing about the truth or about what the belief was worth to him compared with it."
+        },
+        "B": {
+          "recipe": "HALF: the truth without its cost",
+          "why_wrong": "It states the truth, that no such land exists, but not the belief it destroys or the harm done to a suffering man."
+        },
+        "C": {
+          "recipe": "OFF: same speaker, nearby value (pity)",
+          "why_wrong": "Luka urges kindness and pity toward others, but he does not weigh a consoling belief against the truth."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.37",
+        "3.11",
+        "3.35"
+      ],
+      "sources": [
+        {
+          "what": "Maxim Gorky, The Lower Depths: A Drama in Four Acts, English translation by Jenny Covan (New York: Brentano’s, 1922, Moscow Art Theatre Series of Russian Plays); Act III, Luka’s story of the man who believed in a land of righteousness and the learned man’s maps; Luka’s lines on pity to Natasha; all four quotations checked as exact substrings of the Gutenberg text (double hyphens as closed em dashes, inner double quotes as single quotes)",
+          "url": "https://www.gutenberg.org/ebooks/52468"
+        }
+      ],
+      "notes": "Play first performed 1902 (Moscow Art Theatre). Three options come from the same story, so the key must be matched to both parts of the claim (belief and truth weighed); C is Luka in a nearby mood (pity). Lines where Luka tells Nastya that a believed love affair was real were left out (they would also illustrate the claim).",
+      "band7_moves": [],
+      "word_count": 44,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "WDIR: the urban counts swapped",
-     "why_wrong": "The urban counts are reversed: 20 urban birds sang Type B songs and 2 sang Type A songs."
-    },
-    "D": {
-     "recipe": "INACC: misplaced values",
-     "why_wrong": "13 and 16 are peri-urban counts (Type B and Type A); 20 urban birds, not 13, sang Type B songs."
-    }
-   },
-   "models": [
-    "2.18",
-    "2.28",
-    "2.32",
-    "2.27"
-   ],
-   "sources": [
     {
-     "what": "To, Dingle, Collins 2021, Behavioral Ecology 32(5): 1042–1053, Multiple constraints on urban bird communication: both abiotic and biotic noise shape songs in cities: four species in Hong Kong; red-whiskered bulbul songs of two types differing in the first note (Type A lower, Type B higher); observed frequency by location, peri-urban Type A 16, Type B 13; urban Type A 2, Type B 20 (29 peri-urban and 22 urban birds); urban birds sang Type B more often",
-     "url": "https://academic.oup.com/beheco/article/32/5/1042/6309374"
-    }
-   ],
-   "notes": "Counts are of birds (they sum to the paper's 29 peri-urban and 22 urban bulbuls). The paper's Table 3 calls them observed frequency of song type.",
-   "band7_moves": [],
-   "word_count": 67
-  },
-  {
-   "id": "command_of_evidence.Q1_P4_trend.medium.w4b3_15",
-   "template": "Q1_P4_trend",
-   "subtype": "Data completion (endpoints of one line in a four-line graph)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Air travel in Africa grew a great deal between 2005 and 2019, though not evenly. South Africa’s airlines, for instance, were already carrying more than 10 million passengers a year in 2005, so growth there started from a large base. Some of the biggest increases, however, were made by airlines in countries such as Ethiopia, where the number of passengers carried by the country’s airlines rose from ______",
-   "stem": "Which choice most effectively uses data from the graph to complete the assertion?",
-   "options": [
-    "about 2.5 million in 2005 to about 6.5 million in 2019.",
-    "under 2 million in 2005 to over 10 million in 2019.",
-    "under 1 million in 2005 to about 6.5 million in 2019.",
-    "about 12 million in 2005 to about 26 million in 2019."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": {
-    "kind": "line graph",
-    "title": "Passengers Carried by Airlines Registered in Four African Countries, 2005–2019",
-    "x_axis": "Year",
-    "y_axis": "Passengers (millions)",
-    "description": "Four lines at 2005, 2007, 2009, 2011, 2013, 2015, 2017 and 2019; y-axis 0 to 30 million in steps of 5 million. South Africa: about 11.8, 12.9, 12.5, 16.4, 16.3, 18.9, 20.8, 26.2. Ethiopia: about 1.7, 2.3, 2.9, 4.4, 5.7, 7.1, 9.6, 12.6. Kenya: about 2.4, 2.9, 2.9, 4.5, 4.5, 4.6, 5.1, 6.4. Nigeria: about 0.7, 1.4, 1.4, 4.8, 4.2, 4.6, 4.8, 6.5. Ethiopia starts below Kenya and ends about twice as high as Kenya and Nigeria.",
-    "data": [
-     {
-      "series": "South Africa",
-      "points": [
-       [
-        "2005",
-        11.84
-       ],
-       [
-        "2007",
-        12.87
-       ],
-       [
-        "2009",
-        12.5
-       ],
-       [
-        "2011",
-        16.41
-       ],
-       [
-        "2013",
-        16.31
-       ],
-       [
-        "2015",
-        18.88
-       ],
-       [
-        "2017",
-        20.82
-       ],
-       [
-        "2019",
-        26.21
-       ]
-      ]
-     },
-     {
-      "series": "Ethiopia",
-      "points": [
-       [
-        "2005",
-        1.67
-       ],
-       [
-        "2007",
-        2.29
-       ],
-       [
-        "2009",
-        2.91
-       ],
-       [
-        "2011",
-        4.44
-       ],
-       [
-        "2013",
-        5.67
-       ],
-       [
-        "2015",
-        7.07
-       ],
-       [
-        "2017",
-        9.57
-       ],
-       [
-        "2019",
-        12.63
-       ]
-      ]
-     },
-     {
-      "series": "Kenya",
-      "points": [
-       [
-        "2005",
-        2.42
-       ],
-       [
-        "2007",
-        2.86
-       ],
-       [
-        "2009",
-        2.95
-       ],
-       [
-        "2011",
-        4.51
-       ],
-       [
-        "2013",
-        4.52
-       ],
-       [
-        "2015",
-        4.57
-       ],
-       [
-        "2017",
-        5.11
-       ],
-       [
-        "2019",
-        6.42
-       ]
-      ]
-     },
-     {
-      "series": "Nigeria",
-      "points": [
-       [
-        "2005",
-        0.75
-       ],
-       [
-        "2007",
-        1.36
-       ],
-       [
-        "2009",
-        1.37
-       ],
-       [
-        "2011",
-        4.79
-       ],
-       [
-        "2013",
-        4.21
-       ],
-       [
-        "2015",
-        4.61
-       ],
-       [
-        "2017",
-        4.79
-       ],
-       [
-        "2019",
-        6.54
-       ]
-      ]
-     }
-    ]
-   },
-   "explanation": "The sentence needs the number of passengers carried by Ethiopia’s airlines at the start and end of the period. The Ethiopia line begins at about 1.7 million in 2005, under 2 million, and ends at about 12.6 million in 2019, over 10 million, so choice B completes the assertion.",
-   "distractors": {
-    "A": {
-     "recipe": "WGRP: Kenya’s line",
-     "why_wrong": "About 2.5 million in 2005 and about 6.5 million in 2019 are Kenya’s values, not Ethiopia’s."
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w4b3_06",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (interaction: each color of lizard compared across the two grounds)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Camouflage protects an animal only when its coloration matches the surrounding terrain, and in northwestern China the toad-headed lizard Phrynocephalus versicolor has evolved dark coloration where the ground is dark while retaining lighter coloration in neighboring areas where the ground is pale. Lixia Wan and colleagues tested the hypothesis that a lizard runs faster on ground it does not match, where it must depend on speed rather than concealment, by timing dark and light lizards in racing tunnels positioned on both kinds of ground. Examining the results, a student concludes that the hypothesis was supported for light lizards but not for dark lizards.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "On dark ground, light lizards ran faster than dark lizards, 0.821 compared with 0.626 meters per second, but on pale ground they ran slower than dark lizards, 0.558 compared with 0.609.",
+        "Light lizards ran much faster on dark ground than on pale ground, 0.821 compared with 0.558 meters per second, whereas dark lizards ran at nearly equal speeds on the two, 0.626 and 0.609.",
+        "Dark lizards ran faster on pale ground, which they do not match, than on dark ground, while light lizards ran at almost the same speed whichever kind of ground they were on.",
+        "Light lizards ran faster on dark ground, which they do not match, than on pale ground, which they do match, 0.821 compared with 0.558 meters per second."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Average Running Speed of Toad-Headed Lizards on Two Kinds of Ground (meters per second)",
+        "columns": [
+          "Lizards",
+          "On dark ground",
+          "On pale ground"
+        ],
+        "rows": [
+          [
+            "Light lizards",
+            "0.821",
+            "0.558"
+          ],
+          [
+            "Dark lizards",
+            "0.626",
+            "0.609"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student concludes that “the hypothesis was supported for light lizards but not for dark lizards.” Light lizards match pale ground, and they ran much faster on dark ground (0.821 meters per second) than on pale ground (0.558), as the hypothesis predicts. Dark lizards match dark ground, yet they ran at nearly equal speeds on dark ground (0.626) and on pale ground (0.609), so they did not run faster on the ground they do not match. Choice B reports both halves.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison on the wrong axis (colors within one ground)",
+          "why_wrong": "The values are read correctly, but they compare light and dark lizards on the same ground; the hypothesis concerns how each lizard’s speed changes between ground it matches and ground it does not."
+        },
+        "C": {
+          "recipe": "WDIR/INACC: the pattern assigned to the wrong lizards",
+          "why_wrong": "The table shows the reverse: dark lizards ran at almost the same speed on both grounds (0.626 and 0.609), and light lizards were the ones whose speed differed greatly."
+        },
+        "D": {
+          "recipe": "HALF: accurate for light lizards only",
+          "why_wrong": "The reading is accurate, but it covers only light lizards; the student’s conclusion also says the hypothesis did not hold for dark lizards, which this choice does not address."
+        }
+      },
+      "models": [
+        "3.26",
+        "3.18",
+        "3.16"
+      ],
+      "sources": [
+        {
+          "what": "Wan, Liu, Wang, Yang, Li, Sun, Niu, Zhao, Jin 2021, Ecology and Evolution 11: 17409–17416 (doi 10.1002/ece3.8374): Phrynocephalus versicolor evolved darker dorsal color in melanistic habitats and kept a lighter color in adjacent non-melanistic habitats; hypothesis that lizards run more slowly on well-matching backgrounds; running speed measured in field racing tunnels placed on melanistic and non-melanistic substrates; average speed (m/s) light lizards 0.821 on melanistic, 0.558 on non-melanistic; dark lizards 0.626 on melanistic, 0.609 on non-melanistic",
+          "url": "https://europepmc.org/article/PMC/PMC8668757"
+        }
+      ],
+      "notes": "The conclusion is given to a student (the paper says only that light lizards are potentially faster than dark ones in melanistic habitats). 'Dark ground' and 'pale ground' stand for the paper's melanistic and non-melanistic substrates. Checked: both lizards ran faster on dark ground, so no option says that (it would also support the conclusion).",
+      "band7_moves": [],
+      "word_count": 103,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "WGRP: Nigeria’s line",
-     "why_wrong": "Under 1 million in 2005 and about 6.5 million in 2019 describe Nigeria; Ethiopia ended the period above 10 million."
-    },
-    "D": {
-     "recipe": "WGRP: South Africa’s line",
-     "why_wrong": "About 12 million in 2005 and about 26 million in 2019 are South Africa’s values, the large base the passage mentions."
-    }
-   },
-   "models": [
-    "2.15",
-    "2.34",
-    "2.40"
-   ],
-   "sources": [
     {
-     "what": "World Bank, Air transport, passengers carried (IS.AIR.PSGR), Ethiopia 1,667,316 (2005), 2,290,179, 2,914,056, 4,440,918, 5,671,501, 7,074,779, 9,566,378, 12,631,216 (2019); Kenya 2,424,382 to 6,417,534; Nigeria 747,648 to 6,539,048; South Africa 11,844,657 to 26,211,258",
-     "url": "https://api.worldbank.org/v2/country/ETH;KEN;NGA;ZAF/indicator/IS.AIR.PSGR?format=json&date=2005:2019"
-    }
-   ],
-   "notes": "The indicator counts domestic and international passengers of air carriers registered in the country. Values in millions rounded to two decimals; each option checked in Python.",
-   "band7_moves": [],
-   "word_count": 68
-  },
-  {
-   "id": "command_of_evidence.Q2_P8_multipart.medium.w4b3_16",
-   "template": "Q2_P8_multipart",
-   "subtype": "Data description (two measures, each across three conditions)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Camera traps can survey wildlife cheaply, but only if the animals they photograph are identified correctly, which is hard when two similar species share a habitat. Fiona McKibben and Jennifer Frey developed a key for telling apart two nearly identical chipmunk species in New Mexico and tested observers on photographs of museum specimens whose species was already known. The researchers concluded that both the key and later training made identifications more accurate and also made observers agree with one another more often.",
-   "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
-   "options": [
-    "Observers relying on published descriptions were correct 78.2% of the time, whereas observers using the key were correct 93.0% of the time before any training.",
-    "Agreement among observers using the key rose from 0.75 before training to 0.95 after it, so after training their identifications were much more consistent than before.",
-    "Accuracy and agreement both rose from observers using published descriptions (78.2%, 0.47) to key users before training (93.0%, 0.75) and again after training (98.8%, 0.95).",
-    "Observers relying on published descriptions were less accurate than key users after training, 78.2% compared with 93.0%, and agreed with one another far less."
-   ],
-   "answer_letter": "C",
-   "table": {
-    "title": "Accuracy and Agreement of Observers Identifying Two Chipmunk Species from Photographs",
-    "columns": [
-     "Observers",
-     "Identifications correct (%)",
-     "Agreement among observers (0 = none, 1 = complete)"
-    ],
-    "rows": [
-     [
-      "Using published descriptions",
-      "78.2",
-      "0.47"
-     ],
-     [
-      "Using the key, before training",
-      "93.0",
-      "0.75"
-     ],
-     [
-      "Using the key, after training",
-      "98.8",
-      "0.95"
-     ]
-    ],
-    "note": null
-   },
-   "figure": null,
-   "explanation": "The researchers concluded that “both the key and later training made identifications more accurate and also made observers agree with one another more often.” The table shows accuracy rising from 78.2% with published descriptions to 93.0% with the key and 98.8% after training, while agreement rose from 0.47 to 0.75 to 0.95. Choice C reports both measures at all three stages.",
-   "distractors": {
-    "A": {
-     "recipe": "HALF: accuracy and the key only",
-     "why_wrong": "The values are accurate, but they cover only accuracy and only the effect of the key; nothing is said about agreement or about training."
+      "id": "command_of_evidence.T3_person_quote.hard.w4b3_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a student’s argument (technique tied to purpose)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The Indonesian painter Affandi (circa 1907–1990), who was largely self-taught, became known in the 1950s for an unconventional technique. Rather than applying oil paint with a brush, he squeezed it directly from the tube onto the canvas and then manipulated it with his fingers and palms. A student argues that this technique was considerably more than a recognizable signature, contending that it was Affandi’s means of transferring the emotions a subject aroused in him onto the canvas as immediately as possible.",
+      "stem": "Which quotation from an art historian would best support the student’s argument?",
+      "options": [
+        "“Working straight from the tube with his bare hands, Affandi could set down what a beggar or a crowded market made him feel before the feeling cooled; the thick, twisting ridges of paint carry an agitation that a brush would have smoothed away.”",
+        "“The tube method began as a practical shortcut—Affandi, impatient, had been unable to find a pencil—and it remained chiefly that: an efficient way to cover a canvas, revealing more about his working habits than about what he hoped his paintings would express.”",
+        "“His canvases are built from coils and ribbons of pigment applied so heavily that, viewed from the side, the surface rises in ridges several millimeters high, and in places the colors, pressed together by his palm, mix directly on the canvas.”",
+        "“Affandi declined to paint the pleasant landscapes that collectors requested, choosing instead an old woman, a beggar, a dark mountain—subjects he considered expressive rather than beautiful—and returning to them repeatedly throughout his career.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The student contends that the technique “was Affandi’s means of transferring the emotions a subject aroused in him onto the canvas as immediately as possible.” Choice A ties the technique to exactly that aim: working from the tube with his hands let Affandi record what a subject made him feel before the feeling faded, and the ridges of paint preserve an agitation a brush would have erased.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: sides with the view the student rejects",
+          "why_wrong": "It presents the procedure as a mere convenience that says little about what the paintings express, which contradicts the student’s argument."
+        },
+        "C": {
+          "recipe": "HALF: the technique described, without its purpose",
+          "why_wrong": "It describes how thickly the paint was applied and how colors mixed, but it never links the technique to the feelings Affandi wanted to convey."
+        },
+        "D": {
+          "recipe": "TRAP: expressiveness through subject matter, not technique",
+          "why_wrong": "It shows that Affandi chose expressive subjects, but the student’s argument concerns his technique of applying paint, which this quotation does not mention."
+        }
+      },
+      "models": [
+        "3.33",
+        "3.32",
+        "3.3",
+        "3.21"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Affandi (c. 1907–1990), Indonesian painter, self-taught from 1934, considered Indonesia’s foremost Expressionist; from the 1950s painted by squeezing paint directly from the tube (Carrying the First Grandchild, 1953), found the painted object appeared more alive and felt more freedom to express his feelings using his hands instead of a brush; adopted the method after losing patience looking for a missing pencil; painted suffering (an old woman, a beggar, a black mountain), subjects expressive rather than beautiful",
+          "url": "https://en.wikipedia.org/wiki/Affandi"
+        }
+      ],
+      "notes": "Quotations are invented and attributed to an unnamed art historian, as CB does; their factual content follows the source (the pencil story, the subjects he named). Band 6: the key must be matched to the argument's link between procedure and emotion; D (subject matter) and C (technique alone) each match half.",
+      "band7_moves": [],
+      "word_count": 81,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "B": {
-     "recipe": "HALF: agreement and training only",
-     "why_wrong": "The values are accurate, but they cover only agreement and only the effect of training, not the key’s effect or accuracy."
-    },
-    "D": {
-     "recipe": "INACC: wrong row",
-     "why_wrong": "93.0% is the accuracy of key users before training; after training it was 98.8%."
-    }
-   },
-   "models": [
-    "2.42",
-    "2.8"
-   ],
-   "sources": [
     {
-     "what": "McKibben, Frey 2021, Ecology and Evolution 11(14): 9741–9764, Linking camera-trap data to taxonomy: identifying photographs of morphologically similar chipmunks: identification key for Neotamias minimus atristriatus and N. canipes tested on photographs of verified museum specimens; literature observers 78.2% correct, Fleiss’ kappa 0.47; key observers before training 93.0%, 0.75; after training 98.8%, 0.95",
-     "url": "https://europepmc.org/article/PMC/PMC8293720"
-    }
-   ],
-   "notes": "Agreement is Fleiss' kappa, glossed in the column header. The species are the Peñasco least chipmunk (endangered in New Mexico) and the gray-footed chipmunk; names left out to keep the passage near the models' length.",
-   "band7_moves": [],
-   "word_count": 82
-  },
-  {
-   "id": "command_of_evidence.Q1_P1_lookup.easy.w4b3_17",
-   "template": "Q1_P1_lookup",
-   "subtype": "Data completion (reverse lookup: find the row by its purpose, report the years)",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "Bull kelp is a large seaweed that forms floating forests along the shores of the northeastern Pacific Ocean. To trace changes in the kelp’s distribution in South Puget Sound, Washington, since the 1870s, Helen D. Berry and colleagues combined 48 historical and modern surveys. Many of these surveys were originally conducted for purposes unrelated to kelp. According to the table, the survey intended to locate kelp beds suitable for harvesting was carried out in ______",
-   "stem": "Which choice most effectively uses data from the table to complete the statement?",
-   "options": [
-    "1873–1879.",
-    "1935–1936.",
-    "1978.",
-    "1911–1912."
-   ],
-   "answer_letter": "D",
-   "table": {
-    "title": "Selected Surveys Recording Bull Kelp in South Puget Sound",
-    "columns": [
-     "Years of survey",
-     "Purpose of survey"
-    ],
-    "rows": [
-     [
-      "1873–1879",
-      "mapping for navigation"
-     ],
-     [
-      "1911–1912",
-      "locating kelp beds for harvest"
-     ],
-     [
-      "1935–1936",
-      "mapping for navigation"
-     ],
-     [
-      "1978",
-      "mapping wildlife habitat"
-     ],
-     [
-      "2017",
-      "mapping wildlife habitat"
-     ]
-    ],
-    "note": null
-   },
-   "figure": null,
-   "explanation": "The sentence asks when the survey “intended to locate kelp beds suitable for harvesting” was carried out. In the table, the only survey whose purpose is locating kelp beds for harvest is listed for 1911–1912, so choice D is correct.",
-   "distractors": {
-    "A": {
-     "recipe": "WGRP: navigation survey",
-     "why_wrong": "The 1873–1879 survey was made for navigation, not to locate kelp for harvest."
+      "id": "command_of_evidence.Q1_P5_control.hard.w4b3_08",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion (the heaviest treatment compared with the untreated control)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Spreading organic mulch, such as wood chips, over bare soil can reduce runoff during heavy rainfall and allow more water to infiltrate the ground, but because mulch also absorbs water, a thick layer may retain rain that would otherwise reach the soil. At Jiufeng National Forest Park in Beijing, Bing Wang and colleagues covered trays of sloping soil with different quantities of mulch, subjected them to simulated rainstorms of two intensities, and measured how much water the soil stored. Comparing the mulched soil with bare soil, the team found that heavier applications of mulch did not continue to improve water storage: ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "soil covered with 0.25 kilogram of mulch per square meter stored less water than bare soil did under both rainfall intensities.",
+        "at the higher rainfall intensity, soil under 1.00 kilogram of mulch per square meter stored nearly twice as much water as bare soil.",
+        "with 1.00 kilogram of mulch per square meter, the soil stored about as much water as bare soil did at either rainfall intensity.",
+        "the lightest mulch layer, 0.25 kilogram per square meter, raised the amount of water stored in the soil above that of bare soil at both intensities."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Water Stored in Soil under Different Amounts of Mulch during Simulated Heavy Rain",
+        "x_axis": "Mulch applied (kilograms per square meter)",
+        "y_axis": "Water stored in soil (millimeters)",
+        "description": "Grouped bars at five mulch amounts (0, which is bare soil; 0.25; 0.50; 0.75; 1.00 kilograms per square meter), two bars each: rainfall of 60 millimeters per hour and rainfall of 90 millimeters per hour. Y-axis 0 to 25 in steps of 5. 60 mm/h: about 12.6, 19.8, 16.4, 13.8, 12.4. 90 mm/h: about 12.5, 22.7, 20.3, 16.6, 13.1. At both intensities storage is highest at 0.25 and falls with each heavier layer, back to about the bare-soil level at 1.00.",
+        "data": [
+          {
+            "series": "Rainfall of 60 mm per hour",
+            "points": [
+              [
+                "0",
+                12.6
+              ],
+              [
+                "0.25",
+                19.8
+              ],
+              [
+                "0.50",
+                16.4
+              ],
+              [
+                "0.75",
+                13.8
+              ],
+              [
+                "1.00",
+                12.4
+              ]
+            ]
+          },
+          {
+            "series": "Rainfall of 90 mm per hour",
+            "points": [
+              [
+                "0",
+                12.5
+              ],
+              [
+                "0.25",
+                22.7
+              ],
+              [
+                "0.50",
+                20.3
+              ],
+              [
+                "0.75",
+                16.6
+              ],
+              [
+                "1.00",
+                13.1
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The team found that “heavier applications of mulch did not continue to improve water storage.” The graph shows that with 1.00 kilogram of mulch per square meter, the heaviest layer tested, the soil stored about 12.4 millimeters of water at 60 millimeters of rain per hour and about 13.1 millimeters at 90, close to the 12.6 and 12.5 millimeters stored by bare soil. Since the heaviest layer gave almost no gain over bare soil, choice C completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: the lightest layer reported below bare soil",
+          "why_wrong": "Soil under 0.25 kilogram of mulch stored the most water of all, about 19.8 and 22.7 millimeters, well above bare soil’s 12.6 and 12.5."
+        },
+        "B": {
+          "recipe": "INACC: invented gain",
+          "why_wrong": "At 90 millimeters per hour, soil under 1.00 kilogram of mulch stored about 13.1 millimeters, barely more than the 12.5 stored by bare soil, not nearly twice as much."
+        },
+        "D": {
+          "recipe": "IRREL: true, but about the light layer only",
+          "why_wrong": "The graph does show that the lightest layer raised storage above bare soil, but that says nothing about whether heavier layers kept improving storage, which is what the statement is about."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.46",
+        "3.4"
+      ],
+      "sources": [
+        {
+          "what": "Wang, Niu, Berndtsson, Zhang, Chen, Li, Zhu 2021, Scientific Reports 11: 6259 (doi 10.1038/s41598-021-85343-x): rainfall simulation experiments with organic mulch (ground wood residue, wood chips and straw) in Jiufeng National Forestry Park, Beijing; soil water storage (mm), 15° slope, mulch 0, 0.25, 0.50, 0.75, 1.00 kg/m2: 60 mm/h 12.6, 19.8, 16.4, 13.8, 12.4; 90 mm/h 12.5, 22.7, 20.3, 16.6, 13.1; higher application rates gave less soil water",
+          "url": "https://www.nature.com/articles/s41598-021-85343-x"
+        }
+      ],
+      "notes": "Graph uses the paper's 15-degree slope values (Table 1). Checked in Python: only C is true and bears on the claim; D is true but concerns the light layer only. No option compares 0.50 with 0.25 (that comparison would also support the statement).",
+      "band7_moves": [],
+      "word_count": 102,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 14,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "B": {
-     "recipe": "WGRP: navigation survey",
-     "why_wrong": "The 1935–1936 survey was also made for navigation."
-    },
-    "C": {
-     "recipe": "WGRP: habitat survey",
-     "why_wrong": "The 1978 survey mapped habitat; it was not made to find kelp for harvest."
-    }
-   },
-   "models": [
-    "1.37",
-    "1.38",
-    "1.12"
-   ],
-   "sources": [
     {
-     "what": "Berry, Mumford, Christiaen, Dowty, Calloway, Ferrier, Grossman, VanArendonk 2021, PLoS ONE 16(2): e0229703, Long-term changes in kelp forests in an inner basin of the Salish Sea: 48 historical and modern Nereocystis surveys over 145 years in South Puget Sound; synoptic survey table: 1873–1879 navigation, 1911–1912 harvest (kelp beds suitable for harvest, Fertilizer Investigations), 1935–1936 navigation, 1978 habitat, 1997–1999 habitat, 2013 and 2017 habitat",
-     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0229703"
-    }
-   ],
-   "notes": "Purposes paraphrased from the paper's synoptic survey table (navigation; harvest; habitat). Rows 1997–1999 and 2013 left out.",
-   "word_count": 75
-  },
-  {
-   "id": "command_of_evidence.Q1_P1_lookup.easy.w4b3_18",
-   "template": "Q1_P1_lookup",
-   "subtype": "Data completion (one named cell in a table)",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "Vélo’v, the bike-sharing system of Lyon, France, lets subscribers borrow a bicycle at one docking station and return it at another. Physicist Jordan Cambe and colleagues analyzed five years of records covering more than 120,000 subscribers. About half of the subscribers stopped using the system within a year, but others became long-term users, remaining active for at least three years. According to the table, the percentage of subscribers aged 43–52 who became long-term users was ______",
-   "stem": "Which choice most effectively uses data from the table to complete the statement?",
-   "options": [
-    "34.2%.",
-    "37.6%.",
-    "45.5%.",
-    "17.0%."
-   ],
-   "answer_letter": "B",
-   "table": {
-    "title": "Subscribers to Lyon’s Bike-Sharing System Who Became Long-Term Users, by Age",
-    "columns": [
-     "Age group (years)",
-     "Number of subscribers",
-     "Long-term users (%)"
-    ],
-    "rows": [
-     [
-      "13–22",
-      "38,366",
-      "11.7"
-     ],
-     [
-      "23–32",
-      "46,696",
-      "17.0"
-     ],
-     [
-      "33–42",
-      "17,113",
-      "34.2"
-     ],
-     [
-      "43–52",
-      "11,331",
-      "37.6"
-     ],
-     [
-      "53–62",
-      "5,572",
-      "45.5"
-     ]
-    ],
-    "note": null
-   },
-   "figure": null,
-   "explanation": "The sentence asks for “the percentage of subscribers aged 43–52 who became long-term users.” In the table, the row for the 43–52 age group shows 37.6 in the long-term users column, so choice B is correct.",
-   "distractors": {
-    "A": {
-     "recipe": "WGRP: neighboring row (33–42)",
-     "why_wrong": "34.2% is the value for subscribers aged 33–42, not 43–52."
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w4b3_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (two comparisons in different years: an early lead later lost)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Over the 2010s, solar power grew from a negligible source of electricity into a substantial one in several countries, although the trajectories differed considerably from one country to another. In some countries, an early burst of construction was followed by years of little further expansion, while countries whose solar industries developed more gradually continued adding capacity and eventually matched or surpassed those early leaders. Examining figures for 2013 through 2021 compiled by Ember, an independent energy research organization, a student finds that Honduras exemplifies the first of these patterns: according to the graph, the share of Honduras’s electricity generated from solar power ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "was greater than Chile’s in both 2015 and 2017.",
+        "was lower than Vietnam’s in 2017 but higher than Vietnam’s in 2021.",
+        "rose steadily throughout the period and in 2021 was higher than the share in any other country shown.",
+        "was more than twice Jordan’s in 2017 but was lower than Jordan’s in 2021."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Share of Electricity Generated from Solar Power in Four Countries, 2013–2021",
+        "x_axis": "Year",
+        "y_axis": "Percent of electricity generated from solar power",
+        "description": "Four lines at 2013, 2015, 2017, 2019 and 2021; y-axis 0 to 16 in steps of 2. Honduras: about 0, 4.9, 9.9, 10.5, 10.3 (a sharp rise to 2017, then nearly flat). Jordan: about 0, 0.3, 4.4, 10.0, 15.4 (rises steadily and is highest in 2021). Chile: about 0, 1.7, 4.9, 7.5, 12.0. Vietnam: about 0, 0, 0, 2.0, 10.3 (near zero until 2017, then a steep rise). In 2017 Honduras is highest; by 2021 Jordan and Chile are above Honduras and Vietnam is level with it.",
+        "data": [
+          {
+            "series": "Honduras",
+            "points": [
+              [
+                "2013",
+                0.0
+              ],
+              [
+                "2015",
+                4.88
+              ],
+              [
+                "2017",
+                9.91
+              ],
+              [
+                "2019",
+                10.51
+              ],
+              [
+                "2021",
+                10.25
+              ]
+            ]
+          },
+          {
+            "series": "Jordan",
+            "points": [
+              [
+                "2013",
+                0.0
+              ],
+              [
+                "2015",
+                0.26
+              ],
+              [
+                "2017",
+                4.38
+              ],
+              [
+                "2019",
+                10.03
+              ],
+              [
+                "2021",
+                15.4
+              ]
+            ]
+          },
+          {
+            "series": "Chile",
+            "points": [
+              [
+                "2013",
+                0.01
+              ],
+              [
+                "2015",
+                1.66
+              ],
+              [
+                "2017",
+                4.87
+              ],
+              [
+                "2019",
+                7.5
+              ],
+              [
+                "2021",
+                11.99
+              ]
+            ]
+          },
+          {
+            "series": "Vietnam",
+            "points": [
+              [
+                "2013",
+                0.01
+              ],
+              [
+                "2015",
+                0.01
+              ],
+              [
+                "2017",
+                0.01
+              ],
+              [
+                "2019",
+                2.03
+              ],
+              [
+                "2021",
+                10.31
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The student says Honduras exemplifies the pattern in which “an early burst of construction was followed by years of little further expansion” while slower countries “eventually matched or surpassed those early leaders.” The graph shows Honduras at about 9.9% in 2017, more than twice Jordan’s 4.4%, but at about 10.3% in 2021, below Jordan’s 15.4%. Choice D shows Honduras leading early and then being overtaken.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: accurate early comparison only",
+          "why_wrong": "Honduras’s share was indeed above Chile’s in 2015 and 2017, but this shows only the early lead, not that a more gradual country later matched or overtook Honduras."
+        },
+        "B": {
+          "recipe": "WDIR: comparison reversed",
+          "why_wrong": "In 2017 Honduras’s share (about 9.9%) was far higher than Vietnam’s (near 0%), and in 2021 the two were nearly equal, so neither half of the statement is accurate."
+        },
+        "C": {
+          "recipe": "INACC: contradicts the pattern",
+          "why_wrong": "Honduras’s share leveled off after 2017, and in 2021 it was below Jordan’s and Chile’s, so it neither rose steadily nor ended highest."
+        }
+      },
+      "models": [
+        "3.30",
+        "3.29"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, Share of electricity production from solar (Ember), percent: Honduras 2013 0.0, 2015 4.88, 2017 9.91, 2019 10.51, 2021 10.25; Jordan 0.0, 0.26, 4.38, 10.03, 15.40; Chile 0.01, 1.66, 4.87, 7.50, 11.99; Vietnam 0.01, 0.01, 0.01, 2.03, 10.31",
+          "url": "https://ourworldindata.org/grapher/share-electricity-solar"
+        }
+      ],
+      "notes": "Every option checked in Python against the values. Vietnam also catches up with Honduras by 2021 (10.31 against 10.25), so no option states that true Vietnam comparison; B reverses it and is false in both halves. Ember describes itself as an independent energy think tank.",
+      "band7_moves": [],
+      "word_count": 103,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 21,
+        "fixes": [
+          "passage said the burst came 'early in the decade', but Honduras's rise runs 2013 to 2017 on the graph; now 'an early burst of construction' (explanation quote updated)",
+          "first sentence lengthened slightly to stay near the models' median length"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "WGRP: neighboring row (53–62)",
-     "why_wrong": "45.5% is the value for subscribers aged 53–62."
-    },
-    "D": {
-     "recipe": "WGRP: another row (23–32)",
-     "why_wrong": "17.0% is the value for subscribers aged 23–32."
-    }
-   },
-   "models": [
-    "1.30",
-    "1.37",
-    "1.38"
-   ],
-   "sources": [
     {
-     "what": "Cambe, Abry, Barnier, Borgnat, Vogel, Jensen, Gallotti 2020, PLoS ONE 15(4): e0231550, Who benefits most from Lyon’s bike sharing system?: 5-year dataset of 120,827 year-long Vélo’v subscribers; about half leave after one year; long-term users are those active for at least 3 years; share of long-term users by age 13–22 11.7%, 23–32 17.0%, 33–42 34.2%, 43–52 37.6%, 53–62 45.5%, 63–72 52.0% (with user counts 38,366; 46,696; 17,113; 11,331; 5,572)",
-     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0231550"
-    }
-   ],
-   "notes": "The 63–72 row (1,611 users, 52.0%) is left out to keep five rows. Cambe is at the ENS de Lyon physics laboratory.",
-   "word_count": 76
-  },
-  {
-   "id": "command_of_evidence.T1_single.easy.w4b3_19",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a claim (one step: faster turnover at the top of the charts)",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "Physicists Lukas Schneider and Claudius Gros analyzed five decades of weekly album sales charts from the United States, the United Kingdom, Germany, and the Netherlands. They were especially interested in how quickly albums rise to the top of a chart and how long they remain there. Based on their analysis, the researchers claim that changes in popular culture now happen faster than they did in the past.",
-   "stem": "Which finding, if true, would most directly support the researchers’ claim?",
-   "options": [
-    "Albums now tend to reach number one in their first week on a chart, while in earlier decades they usually took over a month to reach the top.",
-    "Albums by solo performers spent about as many weeks on the charts as albums by bands and other musical groups did.",
-    "The number of different albums reaching number one each year has steadily fallen in all four countries since the 1970s.",
-    "Albums that reached number one in the United States usually went on to reach number one in the United Kingdom and in Germany within a few weeks."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers claim that “changes in popular culture now happen faster than they did in the past.” If albums now reach number one right away instead of taking over a month, as they did in earlier decades, the charts are changing more quickly than before. Choice A therefore supports the claim.",
-   "distractors": {
-    "B": {
-     "recipe": "OFF: solo performers versus groups",
-     "why_wrong": "A comparison of solo performers and groups says nothing about whether the charts change faster now than in the past."
+      "id": "command_of_evidence.Q1_P2_extreme.hard.w4b3_10",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (filter by a criterion stated in the passage, then the maximum)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Agricultural surveys frequently estimate a field’s yield by harvesting only a small portion of it and extrapolating from the result, because harvesting an entire field is slow and costly. Using complete harvests of 230 smallholder maize fields in Ethiopia as the standard, Tesfaye Shiferaw Sida and colleagues determined how often several such shortcut methods produced an estimate within 10% of a field’s true yield. A student designing a survey in which workers can harvest no more than 20 square meters of each field observes that, among the methods respecting that restriction, the one most likely to produce an estimate within 10% of the true yield was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the random quadrat, which harvests 16 square meters of each field and came within 10% of the true yield in about 25% of cases.",
+        "the random octant, which came within 10% of the true yield in about 30% of cases, more often than any other method in the table.",
+        "the three diagonal quadrats, which together harvest 48 square meters of each field and came within 10% of the true yield in about 28% of cases.",
+        "the horizontal transect, which harvests only 4 square meters of each field and came within 10% of the true yield in about 20% of cases."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Accuracy of Five Methods for Estimating Maize Yield on Smallholder Fields in Ethiopia",
+        "columns": [
+          "Method",
+          "Area harvested per field (square meters)",
+          "Chance of an estimate within 10% of true yield (%)"
+        ],
+        "rows": [
+          [
+            "MW path",
+            "10",
+            "17.8"
+          ],
+          [
+            "Horizontal transect",
+            "4",
+            "19.5"
+          ],
+          [
+            "Random quadrat",
+            "16",
+            "25.2"
+          ],
+          [
+            "Three diagonal quadrats",
+            "48",
+            "28.4"
+          ],
+          [
+            "Random octant",
+            "177*",
+            "29.8"
+          ]
+        ],
+        "note": "*Average; the octant is one-eighth of the field, so its area ranged from 47 to 690 square meters."
+      },
+      "figure": null,
+      "explanation": "The student’s survey allows workers to harvest “no more than 20 square meters of each field.” Only the MW path (10 square meters), the horizontal transect (4), and the random quadrat (16) respect that restriction. Of these three, the random quadrat had the highest chance of an estimate within 10% of the true yield, 25.2%, compared with 19.5% and 17.8%. Choice A therefore completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: the overall maximum, outside the passage's limit",
+          "why_wrong": "The random octant was the most accurate method overall, but it harvests about 177 square meters, far more than the 20-square-meter limit, so it is not among the methods the student is considering."
+        },
+        "C": {
+          "recipe": "TRAP: second-highest overall, outside the limit",
+          "why_wrong": "The three diagonal quadrats harvest 48 square meters in total, which exceeds the student’s limit."
+        },
+        "D": {
+          "recipe": "WGRP: within the limit but not the most accurate",
+          "why_wrong": "The horizontal transect stays within the limit, but its chance of an estimate within 10%, about 20%, is lower than the random quadrat’s 25.2%."
+        }
+      },
+      "models": [
+        "3.44"
+      ],
+      "sources": [
+        {
+          "what": "Sida, Chamberlin, Ayalew, Kosmowski, Craufurd 2021, Field Crops Research 267: 108147 (doi 10.1016/j.fcr.2021.108147, PMC8146729): full plot harvests of 230 smallholder maize fields in Ethiopia; sampling area per method (m2): MW path 10, horizontal transect 4, random quadrat 16, three diagonal quadrats 48, random octant 177 (47–690); probability of an estimate within 10% of the true yield: 0.178, 0.195, 0.252, 0.284, 0.298",
+          "url": "https://europepmc.org/article/PMC/PMC8146729"
+        }
+      ],
+      "notes": "Band-7 moves (Q1_P2, model 3.44): a filter set by a criterion stated only in the passage (the 20-square-meter limit), then a maximum; the two most accurate methods overall are traps outside the limit (TRAP), and one in-limit method is less accurate. Farmer prediction and the full harvest are left out of the table. Operations: read the limit, filter three rows by area, compare three values.",
+      "band7_moves": [
+        "filter set by a passage criterion before the extreme",
+        "traps are the overall maxima outside the filter",
+        "compound options naming method, area and value"
+      ],
+      "word_count": 107,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 13,
+        "fixes": [
+          "table note now gives the octant's real range (47 to 690 square meters, Sida et al. Table 1) so no small field's octant can be read as under the 20-square-meter limit",
+          "passage and options lengthened a little to band-7 lengths (passage 107 words, options 24 to 26 words)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Q1_P2 with the filter trap section 5 asks for: the 20-square-meter limit is stated only in the passage, then a maximum over the three rows that pass. B and C are accurate overall maxima outside the filter and D is accurate but not the maximum, so all three distractors are accurate readings. Four operations (read the limit, filter five areas, compare three values, rule out the octant by its range). 107-word passage, compound options of 24 to 26 words. Passes checks 8, 9, 10, 12 and 13."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
     },
-    "C": {
-     "recipe": "OPP: slower turnover",
-     "why_wrong": "Fewer albums reaching number one each year would mean each one stays on top longer, suggesting slower, not faster, change."
-    },
-    "D": {
-     "recipe": "OFF: agreement among countries",
-     "why_wrong": "Whether hits in one country become hits in others concerns how success spreads, not whether it changes faster than it used to."
-    }
-   },
-   "models": [
-    "1.1",
-    "1.17",
-    "1.41",
-    "1.35"
-   ],
-   "sources": [
     {
-     "what": "Schneider, Gros 2019, Royal Society Open Science 6: 190944, Five decades of US, UK, German and Dutch music charts show that cultural processes are accelerating: for most of the past five decades number one albums needed more than a month to climb to the top, nowadays an album is top ranked either from the start or not at all; the number of top-listed albums rose from roughly a dozen per year to about 40",
-     "url": "https://royalsocietypublishing.org/doi/10.1098/rsos.190944"
-    }
-   ],
-   "notes": "Easy, one step; the key restates the paper's main finding in plain terms. C reverses the real trend (number-one albums per year rose from about 12 to about 40).",
-   "band7_moves": [],
-   "word_count": 67
-  },
-  {
-   "id": "command_of_evidence.Q1_P2_extreme.easy.w4b3_20",
-   "template": "Q1_P2_extreme",
-   "subtype": "Data completion (maximum in a single-series bar graph)",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "Trail bridges, simple footbridges built over rivers, can give rural communities safer access to schools, health care, and markets. To measure how heavily such bridges are used, engineer Evan Thomas and colleagues installed motion-activated cameras at four trail bridges in rural Rwanda. The bridges had been constructed by the nonprofit organization Bridges to Prosperity. Of the four bridges in the graph, the bridge with the highest average number of daily crossings in 2019 was ______",
-   "stem": "Which choice most effectively uses data from the graph to complete the statement?",
-   "options": [
-    "Rukarakara.",
-    "Mugeri.",
-    "Kabere.",
-    "Ruharazi."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": {
-    "kind": "bar graph",
-    "title": "Average Daily Crossings at Four Trail Bridges in Rwanda, 2019",
-    "x_axis": "Bridge",
-    "y_axis": "Average crossings per day",
-    "description": "One bar per bridge; y-axis 0 to 500 in steps of 100. Kabere: about 478 (the highest). Rukarakara: about 287. Ruharazi: about 85 (the lowest). Mugeri: about 218.",
-    "data": [
-     {
-      "series": "Average crossings per day",
-      "points": [
-       [
-        "Kabere",
-        478
-       ],
-       [
-        "Rukarakara",
-        287
-       ],
-       [
-        "Ruharazi",
-        85
-       ],
-       [
-        "Mugeri",
-        218
-       ]
-      ]
-     }
-    ]
-   },
-   "explanation": "The sentence asks for the bridge with “the highest average number of daily crossings in 2019.” In the graph, the Kabere bar reaches about 478 crossings per day, higher than the bars for Rukarakara (about 287), Mugeri (about 218), and Ruharazi (about 85). Choice C is therefore correct.",
-   "distractors": {
-    "A": {
-     "recipe": "WGRP: second-highest bar",
-     "why_wrong": "Rukarakara averaged about 287 crossings per day, fewer than Kabere’s 478."
+      "id": "command_of_evidence.T2_lit_quote.medium.w4b3_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (attraction and unease)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "The Ladies’ Paradise is an 1883 novel by Émile Zola. Newly arrived in Paris from a provincial town, Denise first encounters the enormous department store that gives the novel its title. Zola portrays her as simultaneously attracted to the store and apprehensive about it: ______",
+      "stem": "Which quotation from The Ladies’ Paradise most effectively illustrates the claim?",
+      "options": [
+        "“At this hour, The Ladies’ Paradise, with its furnace-like brilliancy, completed its conquest of her. In the great metropolis, black and silent beneath the rain—in this Paris, to which she was a stranger, it shone out like a lighthouse, and seemed to be of itself the life and light of the city.”",
+        "“At the same time her uncle’s shop made her feel ill at ease; she felt unreasonable disdain, instinctive repugnance for this cold, icy place, the home of old-fashioned trading.”",
+        "“She was bewildered and attracted by this shop, to her so vast, which she saw more people enter in an hour than she had seen enter Cornaille’s in six months; and with her desire to enter it was mingled a vague sense of danger which rendered her seduction complete.”",
+        "“There was the continual roaring of a machine at work, an engulfing of customers close-pressed against the counters, bewildered amidst the piles of goods, and finally hurled towards the pay-desks.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Denise is “attracted to the store” and “apprehensive about it.” In choice C, she is “attracted by this shop” and feels a “desire to enter it,” and with that desire “was mingled a vague sense of danger,” so the quotation shows both her attraction and her apprehension.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: attraction only",
+          "why_wrong": "The store “completed its conquest of her” and shines “like a lighthouse,” which shows only her attraction, not any apprehension."
+        },
+        "B": {
+          "recipe": "LURE: unease, but about the wrong shop",
+          "why_wrong": "Denise feels ill at ease here, but about her uncle’s old-fashioned shop, not the department store."
+        },
+        "D": {
+          "recipe": "LURE: shares the word “bewildered,” describes the customers",
+          "why_wrong": "It describes the crowds being processed by the store like a machine; the bewildered people are customers, and nothing is said about Denise’s feelings."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.13",
+        "2.31",
+        "2.10"
+      ],
+      "sources": [
+        {
+          "what": "Émile Zola, The Ladies’ Paradise (Au bonheur des dames, 1883), English edition with an introduction by Ernest Alfred Vizetelly (London: Hutchinson, 1895), Chapter I; all four quotations checked as exact substrings of the Gutenberg text (double hyphens as closed em dashes)",
+          "url": "https://www.gutenberg.org/ebooks/54726"
+        }
+      ],
+      "notes": "All quotations from Chapter I, Denise's arrival. The key is the one sentence that names both her desire and the 'vague sense of danger'. Option A is the longest, so the key is not.",
+      "band7_moves": [],
+      "word_count": 45,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
     },
-    "B": {
-     "recipe": "WGRP: middle bar",
-     "why_wrong": "Mugeri averaged about 218 crossings per day, well below Kabere."
-    },
-    "D": {
-     "recipe": "WDIR: the lowest bar",
-     "why_wrong": "Ruharazi had the lowest average, about 85 crossings per day, not the highest."
-    }
-   },
-   "models": [
-    "1.21",
-    "1.9",
-    "1.18"
-   ],
-   "sources": [
     {
-     "what": "Thomas, Gerster, Mugabo, Jean, Oates 2020, PLoS ONE 15(10): e0241379: motion-activated cameras at trail bridges built by Bridges to Prosperity in rural Rwanda, fall 2019; mean daily crossings Kabere 478, Rukarakara 287, Ruharazi 85, Mugeri 218 (table of daily crossings)",
-     "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0241379"
-    }
-   ],
-   "notes": "Bar values are the paper's mean daily crossings counted by the computer-vision method at the four video sites.",
-   "word_count": 75
-  },
-  {
-   "id": "command_of_evidence.T2_lit_quote.easy.w4b3_21",
-   "template": "T2_lit_quote",
-   "subtype": "Literary quotation illustrates a single-trait claim",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "Eugénie Grandet is an 1833 novel by Honoré de Balzac. In the novel, Balzac portrays the wealthy Monsieur Grandet as unwilling to spend even small amounts of money on his own household: ______",
-   "stem": "Which quotation from Eugénie Grandet most effectively illustrates the claim?",
-   "options": [
-    "“Monsieur Grandet’s manners were very simple. He spoke little. He usually expressed his meaning by short sententious phrases uttered in a soft voice.”",
-    "“What’s all this, Nanon? I have never seen you like this before. What have you got in your head? Are you the mistress here? You sha’n’t have more than six pieces of sugar.”",
-    "“La Grande Nanon was perhaps the only human being capable of accepting willingly the despotism of her master. The whole town envied Monsieur and Madame Grandet the possession of her.”",
-    "“Attitude, manners, bearing, everything about him, in short, testified to that belief in himself which the habit of succeeding in all enterprises never fails to give to a man.”"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The claim is that Grandet is “unwilling to spend even small amounts of money on his own household.” In choice B, Grandet scolds his servant Nanon and refuses to give her more than six pieces of sugar, a tiny household expense, so the quotation illustrates his stinginess.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: another trait of the same character (manner of speech)",
-     "why_wrong": "It describes how Grandet speaks, not how he spends money."
+      "id": "command_of_evidence.T1_single.medium.w4b3_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (group comparison: listening expertise)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Orchestral sample libraries are collections of recordings of single notes played on real instruments, which composers can put together on a computer to imitate a full orchestra. In an online experiment, music psychologist Reinhard Kopiez and colleagues asked more than 600 listeners with different amounts of musical and audio training to judge whether excerpts of a classical work had been played by a live orchestra or made with such a library. The researchers hypothesized that listeners’ skill at judging sound would affect how well they could tell the two kinds of recording apart.",
+      "stem": "Which finding, if true, would most directly support the researchers’ hypothesis?",
+      "options": [
+        "Most listeners described the live orchestra recordings as more pleasant to hear than the recordings that had been produced with the sample library.",
+        "Listeners who work professionally with recorded sound identified the source of the excerpts correctly more often than other listeners did.",
+        "Listeners identified the source of slow, quiet excerpts correctly more often than they identified the source of fast, loud excerpts.",
+        "On average, the listeners in the experiment identified the source of the excerpts correctly about 72 percent of the time."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers hypothesized that “listeners’ skill at judging sound would affect how well they could tell the two kinds of recording apart.” If listeners whose work involves judging recorded sound identified the source correctly more often than other listeners, accuracy would differ with skill, as the hypothesis predicts. Choice B therefore supports it.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: preference, not accuracy",
+          "why_wrong": "Which recordings listeners enjoyed more says nothing about how accurately listeners of different expertise could identify them."
+        },
+        "C": {
+          "recipe": "OFF: a property of the music, not of the listeners",
+          "why_wrong": "A difference between kinds of excerpts concerns the music, not whether listeners’ expertise affected their accuracy."
+        },
+        "D": {
+          "recipe": "PART: overall accuracy with no comparison between groups",
+          "why_wrong": "An average for all listeners does not show whether more expert listeners did better than less expert ones."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.43",
+        "2.7",
+        "2.16"
+      ],
+      "sources": [
+        {
+          "what": "Kopiez, Wolf, Platz, Mons 2016, PLoS ONE 11(7): e0158324, Replacing the Orchestra? The Discernibility of Sample Library and Live Orchestra Sounds: online experiment with 602 listeners judging whether a classical orchestral work was a live recording or produced with an orchestral sample library; overall 72.5% correct; sound experts tended to identify the source correctly, listeners with lower expertise 68.6% (80.0% for high sound-discrimination expertise); the study tested the influence of listening expertise",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0158324"
+        }
+      ],
+      "notes": "Medium: the key needs the comparison group (expert against other listeners). D uses the study's real overall figure (72.5%, about 72 percent) as an accurate but comparison-free distractor. Kopiez is a professor of music psychology at the Hanover University of Music, Drama and Media.",
+      "band7_moves": [],
+      "word_count": 93,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
     },
-    "C": {
-     "recipe": "OFF: another character (the servant’s loyalty)",
-     "why_wrong": "It describes Nanon’s willingness to serve her master, not Grandet’s unwillingness to spend."
-    },
-    "D": {
-     "recipe": "OFF: another trait of the same character (self-confidence)",
-     "why_wrong": "It describes Grandet’s confidence from his success in business, not his reluctance to spend money."
-    }
-   },
-   "models": [
-    "1.11",
-    "1.16",
-    "1.42",
-    "1.39"
-   ],
-   "sources": [
     {
-     "what": "Honoré de Balzac, Eugénie Grandet (1833), translated by Katharine Prescott Wormeley; Grandet’s manners and appearance, la Grande Nanon, and the sugar quarrel with Nanon; all four quotations checked as exact substrings of the Gutenberg text",
-     "url": "https://www.gutenberg.org/ebooks/1715"
-    }
-   ],
-   "notes": "Single-trait claim with three off-target quotations (manner of speech, the servant, self-confidence). The line about Grandet's gloves lasting twenty months was left out, since it would also show thrift.",
-   "band7_moves": [],
-   "word_count": 33
-  },
-  {
-   "id": "command_of_evidence.Q1_P4_trend.easy.w4b3_22",
-   "template": "Q1_P4_trend",
-   "subtype": "Data completion (change over time; pick the line that shows a dramatic rise)",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "Georgia, Armenia, and Azerbaijan are neighboring countries in the South Caucasus, the mountainous region between the Black Sea and the Caspian Sea. All three received more international visitors in 2019 than in 2005. Using World Bank statistics, a student researching regional tourism observes that the increases over this period differed considerably in size from one country to the next. In one of the three countries, the growth in tourism was especially dramatic. For example, the number of international visitors arriving in ______",
-   "stem": "Which choice most effectively uses data from the graph to complete the example?",
-   "options": [
-    "Georgia rose from under 1 million in 2005 to over 7 million in 2019.",
-    "Armenia grew from about 2 million in 2005 to about 8 million in 2019.",
-    "Azerbaijan fell from about 3 million in 2005 to about 1 million in 2019.",
-    "Armenia stayed above 3 million in every year from 2005 to 2019."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": {
-    "kind": "line graph",
-    "title": "International Visitors Arriving in Three South Caucasus Countries, 2005–2019",
-    "x_axis": "Year",
-    "y_axis": "Visitors (millions)",
-    "description": "Three lines at 2005, 2007, 2009, 2011, 2013, 2015, 2017 and 2019; y-axis 0 to 8 million in steps of 1 million. Georgia: about 0.6, 1.1, 1.5, 2.7, 5.0, 5.3, 6.5, 7.7. Azerbaijan: about 1.2, 1.3, 1.8, 2.2, 2.5, 2.0, 2.7, 3.2. Armenia: about 0.3, 0.5, 0.6, 0.8, 1.1, 1.2, 1.5, 1.9. Georgia starts below 1 million and rises far more steeply than the other two, ending near 8 million; Armenia stays below 2 million throughout.",
-    "data": [
-     {
-      "series": "Georgia",
-      "points": [
-       [
-        "2005",
-        0.56
-       ],
-       [
-        "2007",
-        1.05
-       ],
-       [
-        "2009",
-        1.5
-       ],
-       [
-        "2011",
-        2.71
-       ],
-       [
-        "2013",
-        4.95
-       ],
-       [
-        "2015",
-        5.26
-       ],
-       [
-        "2017",
-        6.48
-       ],
-       [
-        "2019",
-        7.73
-       ]
-      ]
-     },
-     {
-      "series": "Azerbaijan",
-      "points": [
-       [
-        "2005",
-        1.18
-       ],
-       [
-        "2007",
-        1.33
-       ],
-       [
-        "2009",
-        1.83
-       ],
-       [
-        "2011",
-        2.24
-       ],
-       [
-        "2013",
-        2.51
-       ],
-       [
-        "2015",
-        2.01
-       ],
-       [
-        "2017",
-        2.7
-       ],
-       [
-        "2019",
-        3.17
-       ]
-      ]
-     },
-     {
-      "series": "Armenia",
-      "points": [
-       [
-        "2005",
-        0.32
-       ],
-       [
-        "2007",
-        0.51
-       ],
-       [
-        "2009",
-        0.58
-       ],
-       [
-        "2011",
-        0.76
-       ],
-       [
-        "2013",
-        1.08
-       ],
-       [
-        "2015",
-        1.19
-       ],
-       [
-        "2017",
-        1.5
-       ],
-       [
-        "2019",
-        1.89
-       ]
-      ]
-     }
-    ]
-   },
-   "explanation": "The student notes that “the growth in tourism was especially dramatic” in one of the three countries. The graph shows that the number of international visitors arriving in Georgia was about 0.6 million in 2005, under 1 million, and about 7.7 million in 2019, over 7 million. Choice A therefore gives an accurate example of a dramatic rise.",
-   "distractors": {
-    "B": {
-     "recipe": "WGRP/INACC: Georgia-sized values given to Armenia",
-     "why_wrong": "Armenia had only about 0.3 million visitors in 2005 and about 1.9 million in 2019, not about 2 million and about 8 million."
+      "id": "command_of_evidence.T1_single.medium.w4b3_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (a behavior is maladaptive; the key shows the better alternative)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Female common glow-worms, beetles found across much of Europe, glow at night to attract flying males, which find the females by their light. Because artificial light can make that glow harder for males to see, Christina Elgert and colleagues studied how females respond to it. Females exposed to artificial light did not move away but instead delayed glowing or did not glow at all. The researchers argue that this response is maladaptive: by staying where they are, females give up mating opportunities that moving could have provided.",
+      "stem": "Which finding, if true, would most directly support the researchers’ argument?",
+      "options": [
+        "Females that delayed glowing in artificial light went on to glow for longer, once they began, than females in darkness did.",
+        "Glowing dummy females set beneath a simulated streetlight attracted as many males as dummies set a few meters away.",
+        "Glow-worm larvae, which also give off light, were about as common near streetlights as in nearby areas without artificial light.",
+        "Glowing dummy females placed a few meters from a simulated streetlight attracted more males than dummies placed directly beneath it."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers argue that “by staying where they are, females give up mating opportunities that moving could have provided.” If dummy females a few meters from a streetlight attracted more males than dummies directly beneath it, a female that moved a short distance away from the light would attract more mates than one that stayed put. Choice D therefore supports the argument.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: glow duration, no bearing on relocating",
+          "why_wrong": "Glowing longer after a delay says nothing about whether moving away from the light would have brought a female more males."
+        },
+        "B": {
+          "recipe": "OPP: no benefit from moving",
+          "why_wrong": "If dummies near and far from the light attracted equal numbers of males, moving away would gain a female nothing, which weakens the argument."
+        },
+        "C": {
+          "recipe": "SUBJ: larvae rather than adult females",
+          "why_wrong": "How common the glowing larvae are near lights says nothing about whether adult females would attract more males by moving away from a light."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.38",
+        "2.6",
+        "2.33"
+      ],
+      "sources": [
+        {
+          "what": "Elgert, Hopkins, Kaitala, Candolin 2020, Proceedings of the Royal Society B 287: 20200806, Reproduction under light pollution: maladaptive response to spatial variation in artificial light in a glow-worm: females of Lampyris noctiluca glow to attract males; exposed to an artificial light gradient they do not move away but delay or refrain from glowing; field study with a simulated streetlight showed that staying still under the light decreases mate attraction, while moving only a short distance from the light markedly improves it",
+          "url": "https://royalsocietypublishing.org/doi/10.1098/rspb.2020.0806"
+        }
+      ],
+      "notes": "The key mirrors the real field result (dummy females at inner versus outer positions around a simulated streetlight). Medium: two links (staying is costly only if relocating helps; the key shows relocating helps).",
+      "band7_moves": [],
+      "word_count": 87,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
     },
-    "C": {
-     "recipe": "WDIR: rise reported as a fall",
-     "why_wrong": "Azerbaijan’s visitors rose from about 1.2 million in 2005 to about 3.2 million in 2019; they did not fall."
-    },
-    "D": {
-     "recipe": "INACC: wrong level",
-     "why_wrong": "Armenia’s line stays below 2 million in every year shown, so it never rises above 3 million."
-    }
-   },
-   "models": [
-    "1.10",
-    "1.6"
-   ],
-   "sources": [
     {
-     "what": "World Bank, International tourism, number of arrivals (ST.INT.ARVL), Georgia, Armenia, Azerbaijan, 2005–2019: Georgia 560,000 (2005), 1,052,000, 1,500,000, 2,712,000, 4,954,000, 5,256,000, 6,483,000, 7,726,000 (2019); Armenia 319,000 to 1,894,000; Azerbaijan 1,177,000 to 3,170,000",
-     "url": "https://api.worldbank.org/v2/country/GEO;ARM;AZE/indicator/ST.INT.ARVL?format=json&date=2005:2019"
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w4b3_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (two counts within one column, against the other column)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Low-frequency traffic noise can obscure birdsong, and urban populations of many bird species produce higher-pitched songs than rural populations do. Recording red-whiskered bulbuls in Hong Kong, Ann W. Y. To and colleagues identified two song types that differ only in their introductory note, which is lower in Type A songs than in Type B songs. In urban areas, the birds apparently preferred the higher introductory note: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "20 urban birds sang Type B songs, while only 2 sang Type A songs.",
+        "16 peri-urban birds sang Type A songs, while 13 sang Type B songs.",
+        "2 urban birds sang Type B songs, while 20 sang Type A songs.",
+        "13 urban birds sang Type B songs, compared with 16 peri-urban birds."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Number of Red-Whiskered Bulbuls Recorded Singing Each Song Type in Hong Kong",
+        "columns": [
+          "Song type",
+          "Peri-urban areas (city edges)",
+          "Urban areas"
+        ],
+        "rows": [
+          [
+            "Type A (lower first note)",
+            "16",
+            "2"
+          ],
+          [
+            "Type B (higher first note)",
+            "13",
+            "20"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement says that “in urban areas, the birds apparently preferred the higher introductory note,” the note that begins Type B songs. The table shows that in urban areas 20 birds sang Type B songs and only 2 sang Type A songs, so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: the peri-urban column",
+          "why_wrong": "These are the peri-urban counts, where the two song types were about equally common; they say nothing about urban birds."
+        },
+        "C": {
+          "recipe": "WDIR: the urban counts swapped",
+          "why_wrong": "The urban counts are reversed: 20 urban birds sang Type B songs and 2 sang Type A songs."
+        },
+        "D": {
+          "recipe": "INACC: misplaced values",
+          "why_wrong": "13 and 16 are peri-urban counts (Type B and Type A); 20 urban birds, not 13, sang Type B songs."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.28",
+        "2.32",
+        "2.27"
+      ],
+      "sources": [
+        {
+          "what": "To, Dingle, Collins 2021, Behavioral Ecology 32(5): 1042–1053, Multiple constraints on urban bird communication: both abiotic and biotic noise shape songs in cities: four species in Hong Kong; red-whiskered bulbul songs of two types differing in the first note (Type A lower, Type B higher); observed frequency by location, peri-urban Type A 16, Type B 13; urban Type A 2, Type B 20 (29 peri-urban and 22 urban birds); urban birds sang Type B more often",
+          "url": "https://academic.oup.com/beheco/article/32/5/1042/6309374"
+        }
+      ],
+      "notes": "Counts are of birds (they sum to the paper's 29 peri-urban and 22 urban bulbuls). The paper's Table 3 calls them observed frequency of song type.",
+      "band7_moves": [],
+      "word_count": 67,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w4b3_15",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion (endpoints of one line in a four-line graph)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Air travel in Africa grew a great deal between 2005 and 2019, though not evenly. South Africa’s airlines, for instance, were already carrying more than 10 million passengers a year in 2005, so growth there started from a large base. Some of the biggest increases, however, were made by airlines in countries such as Ethiopia, where the number of passengers carried by the country’s airlines rose from ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the assertion?",
+      "options": [
+        "about 2.5 million in 2005 to about 6.5 million in 2019.",
+        "under 2 million in 2005 to over 10 million in 2019.",
+        "under 1 million in 2005 to about 6.5 million in 2019.",
+        "about 12 million in 2005 to about 26 million in 2019."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Passengers Carried by Airlines Registered in Four African Countries, 2005–2019",
+        "x_axis": "Year",
+        "y_axis": "Passengers (millions)",
+        "description": "Four lines at 2005, 2007, 2009, 2011, 2013, 2015, 2017 and 2019; y-axis 0 to 30 million in steps of 5 million. South Africa: about 11.8, 12.9, 12.5, 16.4, 16.3, 18.9, 20.8, 26.2. Ethiopia: about 1.7, 2.3, 2.9, 4.4, 5.7, 7.1, 9.6, 12.6. Kenya: about 2.4, 2.9, 2.9, 4.5, 4.5, 4.6, 5.1, 6.4. Nigeria: about 0.7, 1.4, 1.4, 4.8, 4.2, 4.6, 4.8, 6.5. Ethiopia starts below Kenya and ends about twice as high as Kenya and Nigeria.",
+        "data": [
+          {
+            "series": "South Africa",
+            "points": [
+              [
+                "2005",
+                11.84
+              ],
+              [
+                "2007",
+                12.87
+              ],
+              [
+                "2009",
+                12.5
+              ],
+              [
+                "2011",
+                16.41
+              ],
+              [
+                "2013",
+                16.31
+              ],
+              [
+                "2015",
+                18.88
+              ],
+              [
+                "2017",
+                20.82
+              ],
+              [
+                "2019",
+                26.21
+              ]
+            ]
+          },
+          {
+            "series": "Ethiopia",
+            "points": [
+              [
+                "2005",
+                1.67
+              ],
+              [
+                "2007",
+                2.29
+              ],
+              [
+                "2009",
+                2.91
+              ],
+              [
+                "2011",
+                4.44
+              ],
+              [
+                "2013",
+                5.67
+              ],
+              [
+                "2015",
+                7.07
+              ],
+              [
+                "2017",
+                9.57
+              ],
+              [
+                "2019",
+                12.63
+              ]
+            ]
+          },
+          {
+            "series": "Kenya",
+            "points": [
+              [
+                "2005",
+                2.42
+              ],
+              [
+                "2007",
+                2.86
+              ],
+              [
+                "2009",
+                2.95
+              ],
+              [
+                "2011",
+                4.51
+              ],
+              [
+                "2013",
+                4.52
+              ],
+              [
+                "2015",
+                4.57
+              ],
+              [
+                "2017",
+                5.11
+              ],
+              [
+                "2019",
+                6.42
+              ]
+            ]
+          },
+          {
+            "series": "Nigeria",
+            "points": [
+              [
+                "2005",
+                0.75
+              ],
+              [
+                "2007",
+                1.36
+              ],
+              [
+                "2009",
+                1.37
+              ],
+              [
+                "2011",
+                4.79
+              ],
+              [
+                "2013",
+                4.21
+              ],
+              [
+                "2015",
+                4.61
+              ],
+              [
+                "2017",
+                4.79
+              ],
+              [
+                "2019",
+                6.54
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The sentence needs the number of passengers carried by Ethiopia’s airlines at the start and end of the period. The Ethiopia line begins at about 1.7 million in 2005, under 2 million, and ends at about 12.6 million in 2019, over 10 million, so choice B completes the assertion.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: Kenya’s line",
+          "why_wrong": "About 2.5 million in 2005 and about 6.5 million in 2019 are Kenya’s values, not Ethiopia’s."
+        },
+        "C": {
+          "recipe": "WGRP: Nigeria’s line",
+          "why_wrong": "Under 1 million in 2005 and about 6.5 million in 2019 describe Nigeria; Ethiopia ended the period above 10 million."
+        },
+        "D": {
+          "recipe": "WGRP: South Africa’s line",
+          "why_wrong": "About 12 million in 2005 and about 26 million in 2019 are South Africa’s values, the large base the passage mentions."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "sources": [
+        {
+          "what": "World Bank, Air transport, passengers carried (IS.AIR.PSGR), Ethiopia 1,667,316 (2005), 2,290,179, 2,914,056, 4,440,918, 5,671,501, 7,074,779, 9,566,378, 12,631,216 (2019); Kenya 2,424,382 to 6,417,534; Nigeria 747,648 to 6,539,048; South Africa 11,844,657 to 26,211,258",
+          "url": "https://api.worldbank.org/v2/country/ETH;KEN;NGA;ZAF/indicator/IS.AIR.PSGR?format=json&date=2005:2019"
+        }
+      ],
+      "notes": "The indicator counts domestic and international passengers of air carriers registered in the country. Values in millions rounded to two decimals; each option checked in Python.",
+      "band7_moves": [],
+      "word_count": 68,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 33,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.medium.w4b3_16",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (two measures, each across three conditions)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Camera traps can survey wildlife cheaply, but only if the animals they photograph are identified correctly, which is hard when two similar species share a habitat. Fiona McKibben and Jennifer Frey developed a key for telling apart two nearly identical chipmunk species in New Mexico and tested observers on photographs of museum specimens whose species was already known. The researchers concluded that both the key and later training made identifications more accurate and also made observers agree with one another more often.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Observers relying on published descriptions were correct 78.2% of the time, whereas observers using the key were correct 93.0% of the time before any training.",
+        "Agreement among observers using the key rose from 0.75 before training to 0.95 after it, so after training their identifications were much more consistent than before.",
+        "Accuracy and agreement both rose from observers using published descriptions (78.2%, 0.47) to key users before training (93.0%, 0.75) and again after training (98.8%, 0.95).",
+        "Observers relying on published descriptions were less accurate than key users after training, 78.2% compared with 93.0%, and agreed with one another far less."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Accuracy and Agreement of Observers Identifying Two Chipmunk Species from Photographs",
+        "columns": [
+          "Observers",
+          "Identifications correct (%)",
+          "Agreement among observers (0 = none, 1 = complete)"
+        ],
+        "rows": [
+          [
+            "Using published descriptions",
+            "78.2",
+            "0.47"
+          ],
+          [
+            "Using the key, before training",
+            "93.0",
+            "0.75"
+          ],
+          [
+            "Using the key, after training",
+            "98.8",
+            "0.95"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The researchers concluded that “both the key and later training made identifications more accurate and also made observers agree with one another more often.” The table shows accuracy rising from 78.2% with published descriptions to 93.0% with the key and 98.8% after training, while agreement rose from 0.47 to 0.75 to 0.95. Choice C reports both measures at all three stages.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: accuracy and the key only",
+          "why_wrong": "The values are accurate, but they cover only accuracy and only the effect of the key; nothing is said about agreement or about training."
+        },
+        "B": {
+          "recipe": "HALF: agreement and training only",
+          "why_wrong": "The values are accurate, but they cover only agreement and only the effect of training, not the key’s effect or accuracy."
+        },
+        "D": {
+          "recipe": "INACC: wrong row",
+          "why_wrong": "93.0% is the accuracy of key users before training; after training it was 98.8%."
+        }
+      },
+      "models": [
+        "2.42",
+        "2.8"
+      ],
+      "sources": [
+        {
+          "what": "McKibben, Frey 2021, Ecology and Evolution 11(14): 9741–9764, Linking camera-trap data to taxonomy: identifying photographs of morphologically similar chipmunks: identification key for Neotamias minimus atristriatus and N. canipes tested on photographs of verified museum specimens; literature observers 78.2% correct, Fleiss’ kappa 0.47; key observers before training 93.0%, 0.75; after training 98.8%, 0.95",
+          "url": "https://europepmc.org/article/PMC/PMC8293720"
+        }
+      ],
+      "notes": "Agreement is Fleiss' kappa, glossed in the column header. The species are the Peñasco least chipmunk (endangered in New Mexico) and the gray-footed chipmunk; names left out to keep the passage near the models' length.",
+      "band7_moves": [],
+      "word_count": 82,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w4b3_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (reverse lookup: find the row by its purpose, report the years)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Bull kelp is a large seaweed that forms floating forests along the shores of the northeastern Pacific Ocean. To trace changes in the kelp’s distribution in South Puget Sound, Washington, since the 1870s, Helen D. Berry and colleagues combined 48 historical and modern surveys. Many of these surveys were originally conducted for purposes unrelated to kelp. According to the table, the survey intended to locate kelp beds suitable for harvesting was carried out in ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "1873–1879.",
+        "1935–1936.",
+        "1978.",
+        "1911–1912."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Selected Surveys Recording Bull Kelp in South Puget Sound",
+        "columns": [
+          "Years of survey",
+          "Purpose of survey"
+        ],
+        "rows": [
+          [
+            "1873–1879",
+            "mapping for navigation"
+          ],
+          [
+            "1911–1912",
+            "locating kelp beds for harvest"
+          ],
+          [
+            "1935–1936",
+            "mapping for navigation"
+          ],
+          [
+            "1978",
+            "mapping wildlife habitat"
+          ],
+          [
+            "2017",
+            "mapping wildlife habitat"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The sentence asks when the survey “intended to locate kelp beds suitable for harvesting” was carried out. In the table, the only survey whose purpose is locating kelp beds for harvest is listed for 1911–1912, so choice D is correct.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: navigation survey",
+          "why_wrong": "The 1873–1879 survey was made for navigation, not to locate kelp for harvest."
+        },
+        "B": {
+          "recipe": "WGRP: navigation survey",
+          "why_wrong": "The 1935–1936 survey was also made for navigation."
+        },
+        "C": {
+          "recipe": "WGRP: habitat survey",
+          "why_wrong": "The 1978 survey mapped habitat; it was not made to find kelp for harvest."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.38",
+        "1.12"
+      ],
+      "sources": [
+        {
+          "what": "Berry, Mumford, Christiaen, Dowty, Calloway, Ferrier, Grossman, VanArendonk 2021, PLoS ONE 16(2): e0229703, Long-term changes in kelp forests in an inner basin of the Salish Sea: 48 historical and modern Nereocystis surveys over 145 years in South Puget Sound; synoptic survey table: 1873–1879 navigation, 1911–1912 harvest (kelp beds suitable for harvest, Fertilizer Investigations), 1935–1936 navigation, 1978 habitat, 1997–1999 habitat, 2013 and 2017 habitat",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0229703"
+        }
+      ],
+      "notes": "Purposes paraphrased from the paper's synoptic survey table (navigation; harvest; habitat). Rows 1997–1999 and 2013 left out.",
+      "word_count": 75,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w4b3_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (one named cell in a table)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Vélo’v, the bike-sharing system of Lyon, France, lets subscribers borrow a bicycle at one docking station and return it at another. Physicist Jordan Cambe and colleagues analyzed five years of records covering more than 120,000 subscribers. About half of the subscribers stopped using the system within a year, but others became long-term users, remaining active for at least three years. According to the table, the percentage of subscribers aged 43–52 who became long-term users was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "34.2%.",
+        "37.6%.",
+        "45.5%.",
+        "17.0%."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Subscribers to Lyon’s Bike-Sharing System Who Became Long-Term Users, by Age",
+        "columns": [
+          "Age group (years)",
+          "Number of subscribers",
+          "Long-term users (%)"
+        ],
+        "rows": [
+          [
+            "13–22",
+            "38,366",
+            "11.7"
+          ],
+          [
+            "23–32",
+            "46,696",
+            "17.0"
+          ],
+          [
+            "33–42",
+            "17,113",
+            "34.2"
+          ],
+          [
+            "43–52",
+            "11,331",
+            "37.6"
+          ],
+          [
+            "53–62",
+            "5,572",
+            "45.5"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The sentence asks for “the percentage of subscribers aged 43–52 who became long-term users.” In the table, the row for the 43–52 age group shows 37.6 in the long-term users column, so choice B is correct.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: neighboring row (33–42)",
+          "why_wrong": "34.2% is the value for subscribers aged 33–42, not 43–52."
+        },
+        "C": {
+          "recipe": "WGRP: neighboring row (53–62)",
+          "why_wrong": "45.5% is the value for subscribers aged 53–62."
+        },
+        "D": {
+          "recipe": "WGRP: another row (23–32)",
+          "why_wrong": "17.0% is the value for subscribers aged 23–32."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.37",
+        "1.38"
+      ],
+      "sources": [
+        {
+          "what": "Cambe, Abry, Barnier, Borgnat, Vogel, Jensen, Gallotti 2020, PLoS ONE 15(4): e0231550, Who benefits most from Lyon’s bike sharing system?: 5-year dataset of 120,827 year-long Vélo’v subscribers; about half leave after one year; long-term users are those active for at least 3 years; share of long-term users by age 13–22 11.7%, 23–32 17.0%, 33–42 34.2%, 43–52 37.6%, 53–62 45.5%, 63–72 52.0% (with user counts 38,366; 46,696; 17,113; 11,331; 5,572)",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0231550"
+        }
+      ],
+      "notes": "The 63–72 row (1,611 users, 52.0%) is left out to keep five rows. Cambe is at the ENS de Lyon physics laboratory.",
+      "word_count": 76,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 15,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w4b3_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (one step: faster turnover at the top of the charts)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Physicists Lukas Schneider and Claudius Gros analyzed five decades of weekly album sales charts from the United States, the United Kingdom, Germany, and the Netherlands. They were especially interested in how quickly albums rise to the top of a chart and how long they remain there. Based on their analysis, the researchers claim that changes in popular culture now happen faster than they did in the past.",
+      "stem": "Which finding, if true, would most directly support the researchers’ claim?",
+      "options": [
+        "Albums now tend to reach number one in their first week on a chart, while in earlier decades they usually took over a month to reach the top.",
+        "Albums by solo performers spent about as many weeks on the charts as albums by bands and other musical groups did.",
+        "The number of different albums reaching number one each year has steadily fallen in all four countries since the 1970s.",
+        "Albums that reached number one in the United States usually went on to reach number one in the United Kingdom and in Germany within a few weeks."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers claim that “changes in popular culture now happen faster than they did in the past.” If albums now reach number one right away instead of taking over a month, as they did in earlier decades, the charts are changing more quickly than before. Choice A therefore supports the claim.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: solo performers versus groups",
+          "why_wrong": "A comparison of solo performers and groups says nothing about whether the charts change faster now than in the past."
+        },
+        "C": {
+          "recipe": "OPP: slower turnover",
+          "why_wrong": "Fewer albums reaching number one each year would mean each one stays on top longer, suggesting slower, not faster, change."
+        },
+        "D": {
+          "recipe": "OFF: agreement among countries",
+          "why_wrong": "Whether hits in one country become hits in others concerns how success spreads, not whether it changes faster than it used to."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.17",
+        "1.41",
+        "1.35"
+      ],
+      "sources": [
+        {
+          "what": "Schneider, Gros 2019, Royal Society Open Science 6: 190944, Five decades of US, UK, German and Dutch music charts show that cultural processes are accelerating: for most of the past five decades number one albums needed more than a month to climb to the top, nowadays an album is top ranked either from the start or not at all; the number of top-listed albums rose from roughly a dozen per year to about 40",
+          "url": "https://royalsocietypublishing.org/doi/10.1098/rsos.190944"
+        }
+      ],
+      "notes": "Easy, one step; the key restates the paper's main finding in plain terms. C reverses the real trend (number-one albums per year rose from about 12 to about 40).",
+      "band7_moves": [],
+      "word_count": 67,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w4b3_20",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (maximum in a single-series bar graph)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Trail bridges, simple footbridges built over rivers, can give rural communities safer access to schools, health care, and markets. To measure how heavily such bridges are used, engineer Evan Thomas and colleagues installed motion-activated cameras at four trail bridges in rural Rwanda. The bridges had been constructed by the nonprofit organization Bridges to Prosperity. Of the four bridges in the graph, the bridge with the highest average number of daily crossings in 2019 was ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "Rukarakara.",
+        "Mugeri.",
+        "Kabere.",
+        "Ruharazi."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Average Daily Crossings at Four Trail Bridges in Rwanda, 2019",
+        "x_axis": "Bridge",
+        "y_axis": "Average crossings per day",
+        "description": "One bar per bridge; y-axis 0 to 500 in steps of 100. Kabere: about 478 (the highest). Rukarakara: about 287. Ruharazi: about 85 (the lowest). Mugeri: about 218.",
+        "data": [
+          {
+            "series": "Average crossings per day",
+            "points": [
+              [
+                "Kabere",
+                478
+              ],
+              [
+                "Rukarakara",
+                287
+              ],
+              [
+                "Ruharazi",
+                85
+              ],
+              [
+                "Mugeri",
+                218
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The sentence asks for the bridge with “the highest average number of daily crossings in 2019.” In the graph, the Kabere bar reaches about 478 crossings per day, higher than the bars for Rukarakara (about 287), Mugeri (about 218), and Ruharazi (about 85). Choice C is therefore correct.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: second-highest bar",
+          "why_wrong": "Rukarakara averaged about 287 crossings per day, fewer than Kabere’s 478."
+        },
+        "B": {
+          "recipe": "WGRP: middle bar",
+          "why_wrong": "Mugeri averaged about 218 crossings per day, well below Kabere."
+        },
+        "D": {
+          "recipe": "WDIR: the lowest bar",
+          "why_wrong": "Ruharazi had the lowest average, about 85 crossings per day, not the highest."
+        }
+      },
+      "models": [
+        "1.21",
+        "1.9",
+        "1.18"
+      ],
+      "sources": [
+        {
+          "what": "Thomas, Gerster, Mugabo, Jean, Oates 2020, PLoS ONE 15(10): e0241379: motion-activated cameras at trail bridges built by Bridges to Prosperity in rural Rwanda, fall 2019; mean daily crossings Kabere 478, Rukarakara 287, Ruharazi 85, Mugeri 218 (table of daily crossings)",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0241379"
+        }
+      ],
+      "notes": "Bar values are the paper's mean daily crossings counted by the computer-vision method at the four video sites.",
+      "word_count": 75,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w4b3_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a single-trait claim",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Eugénie Grandet is an 1833 novel by Honoré de Balzac. In the novel, Balzac portrays the wealthy Monsieur Grandet as unwilling to spend even small amounts of money on his own household: ______",
+      "stem": "Which quotation from Eugénie Grandet most effectively illustrates the claim?",
+      "options": [
+        "“Monsieur Grandet’s manners were very simple. He spoke little. He usually expressed his meaning by short sententious phrases uttered in a soft voice.”",
+        "“What’s all this, Nanon? I have never seen you like this before. What have you got in your head? Are you the mistress here? You sha’n’t have more than six pieces of sugar.”",
+        "“La Grande Nanon was perhaps the only human being capable of accepting willingly the despotism of her master. The whole town envied Monsieur and Madame Grandet the possession of her.”",
+        "“Attitude, manners, bearing, everything about him, in short, testified to that belief in himself which the habit of succeeding in all enterprises never fails to give to a man.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Grandet is “unwilling to spend even small amounts of money on his own household.” In choice B, Grandet scolds his servant Nanon and refuses to give her more than six pieces of sugar, a tiny household expense, so the quotation illustrates his stinginess.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: another trait of the same character (manner of speech)",
+          "why_wrong": "It describes how Grandet speaks, not how he spends money."
+        },
+        "C": {
+          "recipe": "OFF: another character (the servant’s loyalty)",
+          "why_wrong": "It describes Nanon’s willingness to serve her master, not Grandet’s unwillingness to spend."
+        },
+        "D": {
+          "recipe": "OFF: another trait of the same character (self-confidence)",
+          "why_wrong": "It describes Grandet’s confidence from his success in business, not his reluctance to spend money."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.16",
+        "1.42",
+        "1.39"
+      ],
+      "sources": [
+        {
+          "what": "Honoré de Balzac, Eugénie Grandet (1833), translated by Katharine Prescott Wormeley; Grandet’s manners and appearance, la Grande Nanon, and the sugar quarrel with Nanon; all four quotations checked as exact substrings of the Gutenberg text",
+          "url": "https://www.gutenberg.org/ebooks/1715"
+        }
+      ],
+      "notes": "Single-trait claim with three off-target quotations (manner of speech, the servant, self-confidence). The line about Grandet's gloves lasting twenty months was left out, since it would also show thrift.",
+      "band7_moves": [],
+      "word_count": 33,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.easy.w4b3_22",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion (change over time; pick the line that shows a dramatic rise)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Georgia, Armenia, and Azerbaijan are neighboring countries in the South Caucasus, the mountainous region between the Black Sea and the Caspian Sea. All three received more international visitors in 2019 than in 2005. Using World Bank statistics, a student researching regional tourism observes that the increases over this period differed considerably in size from one country to the next. In one of the three countries, the growth in tourism was especially dramatic. For example, the number of international visitors arriving in ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "Georgia rose from under 1 million in 2005 to over 7 million in 2019.",
+        "Armenia grew from about 2 million in 2005 to about 8 million in 2019.",
+        "Azerbaijan fell from about 3 million in 2005 to about 1 million in 2019.",
+        "Armenia stayed above 3 million in every year from 2005 to 2019."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "International Visitors Arriving in Three South Caucasus Countries, 2005–2019",
+        "x_axis": "Year",
+        "y_axis": "Visitors (millions)",
+        "description": "Three lines at 2005, 2007, 2009, 2011, 2013, 2015, 2017 and 2019; y-axis 0 to 8 million in steps of 1 million. Georgia: about 0.6, 1.1, 1.5, 2.7, 5.0, 5.3, 6.5, 7.7. Azerbaijan: about 1.2, 1.3, 1.8, 2.2, 2.5, 2.0, 2.7, 3.2. Armenia: about 0.3, 0.5, 0.6, 0.8, 1.1, 1.2, 1.5, 1.9. Georgia starts below 1 million and rises far more steeply than the other two, ending near 8 million; Armenia stays below 2 million throughout.",
+        "data": [
+          {
+            "series": "Georgia",
+            "points": [
+              [
+                "2005",
+                0.56
+              ],
+              [
+                "2007",
+                1.05
+              ],
+              [
+                "2009",
+                1.5
+              ],
+              [
+                "2011",
+                2.71
+              ],
+              [
+                "2013",
+                4.95
+              ],
+              [
+                "2015",
+                5.26
+              ],
+              [
+                "2017",
+                6.48
+              ],
+              [
+                "2019",
+                7.73
+              ]
+            ]
+          },
+          {
+            "series": "Azerbaijan",
+            "points": [
+              [
+                "2005",
+                1.18
+              ],
+              [
+                "2007",
+                1.33
+              ],
+              [
+                "2009",
+                1.83
+              ],
+              [
+                "2011",
+                2.24
+              ],
+              [
+                "2013",
+                2.51
+              ],
+              [
+                "2015",
+                2.01
+              ],
+              [
+                "2017",
+                2.7
+              ],
+              [
+                "2019",
+                3.17
+              ]
+            ]
+          },
+          {
+            "series": "Armenia",
+            "points": [
+              [
+                "2005",
+                0.32
+              ],
+              [
+                "2007",
+                0.51
+              ],
+              [
+                "2009",
+                0.58
+              ],
+              [
+                "2011",
+                0.76
+              ],
+              [
+                "2013",
+                1.08
+              ],
+              [
+                "2015",
+                1.19
+              ],
+              [
+                "2017",
+                1.5
+              ],
+              [
+                "2019",
+                1.89
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The student notes that “the growth in tourism was especially dramatic” in one of the three countries. The graph shows that the number of international visitors arriving in Georgia was about 0.6 million in 2005, under 1 million, and about 7.7 million in 2019, over 7 million. Choice A therefore gives an accurate example of a dramatic rise.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP/INACC: Georgia-sized values given to Armenia",
+          "why_wrong": "Armenia had only about 0.3 million visitors in 2005 and about 1.9 million in 2019, not about 2 million and about 8 million."
+        },
+        "C": {
+          "recipe": "WDIR: rise reported as a fall",
+          "why_wrong": "Azerbaijan’s visitors rose from about 1.2 million in 2005 to about 3.2 million in 2019; they did not fall."
+        },
+        "D": {
+          "recipe": "INACC: wrong level",
+          "why_wrong": "Armenia’s line stays below 2 million in every year shown, so it never rises above 3 million."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.6"
+      ],
+      "sources": [
+        {
+          "what": "World Bank, International tourism, number of arrivals (ST.INT.ARVL), Georgia, Armenia, Azerbaijan, 2005–2019: Georgia 560,000 (2005), 1,052,000, 1,500,000, 2,712,000, 4,954,000, 5,256,000, 6,483,000, 7,726,000 (2019); Armenia 319,000 to 1,894,000; Azerbaijan 1,177,000 to 3,170,000",
+          "url": "https://api.worldbank.org/v2/country/GEO;ARM;AZE/indicator/ST.INT.ARVL?format=json&date=2005:2019"
+        }
+      ],
+      "notes": "Values in figure.data are World Bank figures in millions, rounded to two decimals; every option checked against them in Python.",
+      "word_count": 82,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 25,
+        "fixes": [],
+        "status": "pass"
+      }
     }
-   ],
-   "notes": "Values in figure.data are World Bank figures in millions, rounded to two decimals; every option checked against them in Python.",
-   "word_count": 82
-  }
- ],
- "done": true
+  ],
+  "done": true
 }

@@ -116,3 +116,65 @@ State: 25 of 46 batches promoted (583 w4 items live; R&W bank 3,433 locally). Re
 To restart: ask Claude to "resume wave 4 from spec/rw/waves/w4/RUNBOOK.md". Writer prompt template:
 `<SP>/writer_prompt.txt`; reviewer/solver prompts as used above (w3 RUNBOOK has the originals).
 - 13:14 DEPLOYED (deploy/push.sh, user's request): prod R&W bank 3,433 = waves 1-3 + 25 promoted w4 batches. Wave 4 still paused at 25/46.
+
+## RESUMED 2026-10-27
+
+- Old scratch is gone (new session). New `<SP>` = `/private/tmp/claude-501/-Users-workingmyassof-freshbot-satbank/76b9850c-8a09-4251-b31f-505f38295172/scratchpad/w4` (reg.py, running.json, queue.json,
+  writer_prompt.txt, reviewer_prompt.txt). Lead steps: `WAVE=w4 W3_SCRATCH=<SP> python3 spec/rw/waves/scripts/wave_lead.py prep|finish <batch>`.
+- Bank check now needs anonymous learners allowed (email-only sign-in, 2026-10-20):
+  `SATF_EMAIL_ONLY=0 PYTHONPATH=. python3 server/checks/rw_bank.py` (passes at resume).
+- Carried notes: boundaries_b4 w4b4_04 Man'yoshu duplicates live w4b3_04 (replace); transitions_b3 w4b3_04 Braess fame call;
+  rhetorical_synthesis_b5 already swapped 03 (resprouter) and 19 (Harris Tweed), review as written.
+- 08:41 RESUMED: 9 reviewers (Inf b3, CoE b3, TSP b3, RS b4, RS b5, Trn b3, Trn b4, Bnd b4, FSS b4) and 9 writers (CoE b4, b5, b6, WiC b4, b5, b6, TSP b4, Bnd b5, FSS b5) launched; queued writers CoE b7, WiC b7, WiC b8.
+- 08:42 make_plan.py fixed for wave 5: hard cells on templates with 'none' in the band-7 column of spec/rw/band7/<skill>.md (Bnd S1_comma_conj, S4_compound, S4_subj_verb, S2_intro_comma, S3_comma_pair; FSS R2_finite_main, R2_finite_second, R2_to_inf, R3_appositive, R5_personal) are band 6; hard FSS R4 tense cells move to medium. Dry run checked, w5 not frozen (wave 4 first).
+- 08:51 boundaries_b4 reviewed (24 pass, 1 fixed: 04 Manyoshu replaced by Somali alliterative poetry; 6 band-7 verdicts) -> safety + 2 gates.
+- 08:51 form_structure_and_sense_b4 reviewed (21 pass, 3 fixed; 02 hardened to band 7; 07 hard tense rated easier, stays band 6) -> safety; gates pending a slot. Bnd b4 safety in (0 flagged).
+- 08:52 transitions_b4 reviewed (20 pass, 2 fixed; 03 hardened to band 7, 07 Pukui dictionary title corrected) -> prepped; solves queued. FSS b4 gates launched.
+- 08:54 PROMOTED boundaries_b4 25/25 (gate 0.72/0.45/ours 0.51 -> review; safety 0 flagged). w4 live 608. FSS b4 safety in (0 flagged). Trn b4 safety + 2 gates launched.
+- 08:55 PROMOTED form_structure_and_sense_b4 24/24 (gate 0.82/0.72/ours 0.67 -> review) and transitions_b4 22/22 (gate 0.70/0.42/ours 0.58 -> six); safeties 0 flagged. w4 live 654. text_structure_and_purpose_b3 reviewed (20 pass, 5 fixed; 01 to 03 hardened to band 7; Redburn source note records a skipped paragraph) -> safety + 2 gates. Writers command_of_evidence_b7, words_in_context_b7 launched; WiC b8 queued.
+- 08:56 PROMOTED text_structure_and_purpose_b3 25/25 (gate 0.79/0.75/ours 0.84 -> six; safety 0 flagged; gate2 noted missing underlines only on official anchors g004/g012/g022/g023, the known cb_api gap). w4 live 679. Writer words_in_context_b8 launched: every w4 batch now has an agent or is promoted. Queue empty.
+- 08:57 rhetorical_synthesis_b4 reviewed (20 pass, 4 fixed; 03, 04 hardened to band 7; key-longest 10 -> 7 of 24) -> safety + 2 gates. transitions_b3 reviewed (20 pass, 3 fixed; 04 Braess judged a fame tell, now club mosses mistaken for mosses, band 7) -> prepped. FOR THE USER: Trn b3 easy items on well-known subjects kept (Alcock and Brown 1919, Miyake tactile paving, Mosquito Bay).
+- 08:58 rhetorical_synthesis_b5 reviewed (15 pass, 8 fixed; 21 Kitti's bat cloned live w3b3_21 shrew, now Diquis spheres; 22 palafitos would be 5th stilt-house subject, now Queensland bottle tree; 01, 02 band 7; 18 tense fixed, artist died 2025) -> prepped; solves queued.
+- 08:59 PROMOTED rhetorical_synthesis_b4 24/24 (gate 0.77/0.82/ours 0.84, anchors blind -> six; safety 0 flagged). w4 live 703. Trn b3 and RS b5 solves running.
+- 08:59 PROMOTED transitions_b3 (safety 0 flagged; see verdict.json). w4 live 726.
+- 08:59 PROMOTED rhetorical_synthesis_b5 (safety 0 flagged; gate {"band6": 0.77, "band7": 0.67, "ours": 0.73, "rule": "six"}); Rhetorical Synthesis done for w4. w4 live 749.
+- 09:03 inferences_b3 reviewed (16 pass, 7 fixed; all premises from fetched pages; 09 Terracotta Army was a round-1 fame subject, now Zanotto 1998 cathedral glass does not flow; 02, 07, 11 hardened; all hard band 6) -> safety. FOR THE USER: the replacement (cathedral glass flow myth) is itself a well-known popular-science topic, borderline fame.
+- 09:04 PROMOTED inferences_b3 (six; safety 0 flagged); Inferences done for w4. w4 live 772.
+- 09:09 words_in_context_b4 written (24, done; 6 literary cells added; withdrew James Weldon Johnson (official CoE author) and Ruth McEnery Stuart (dated racial portrayal); 17 earlier passages reworded denser to pass check_rw) -> reviewer, told to check the rewrites did not overshoot CB register.
+- 09:12 command_of_evidence_b3 reviewed (18 pass, 4 fixed; 02 melanosome feather colour duplicated official Inf eca09a92, now Salwasiren fossil sea cow (Pyenson 2025), written by the reviewer so the safety solve is its only blind check; 01 option was the key's negation; 01, 04, 10 band 7) -> safety + 2 gates.
+- 09:12 boundaries_b5 written (25, done; 08 S1_comma_conj band 6, no band-7 officials) -> reviewer (fame call on 06 Qingming scroll; test 04 '; however,' trap).
+- 09:14 PROMOTED command_of_evidence_b3 (gate {"band6": 0.82, "band7": 0.8, "ours": 0.77, "rule": "review"}; safety 0 flagged). Lead checked gate close calls g019 (w4b3_09: A true but shows only the early lead, D shows lead then overtaken, key sound) and g026 (w4b3_05, safety agreed); 177* in 10 is explained by the table note. w4 live 794.
+- 09:25 text_structure_and_purpose_b4 written (25, done; 11 Teasdale withdrawn for Lampman, sonnet cut 4 lines 'adapted'; Nancy underline 4 words) -> reviewer (judge both departures; fame call on 23 Kyoto cherry bloom).
+- 09:30 boundaries_b5 reviewed (23 pass, 2 fixed; 06 Qingming scroll judged famous, now Kim Hong-do's genre album; 04 '; however,' trap holds; 01, 04, 06, 10 band 7; 13 Ennigaldi-Nanna 'first museum' minor fame risk kept) -> safety + 2 gates. command_of_evidence_b4 written (22, done) -> reviewer.
+- 09:30 words_in_context_b4 reviewed (17 pass, 7 fixed; 05 key changed by reviewer Conscious -> Cognizant for band 7, lead checked: 'sensible of' = aware of, key sound; padded wording in 01 to 03 undone) -> safety. FOR WAVE 5 BRIEF: in WiC a high literary share pulls a tier's register average down, so writers padded the other passages to pass check_rw; keep the literary share near CB's (about 5 in 28 medium) instead.
+- 09:31 PROMOTED boundaries_b5 (gate {"band6": 0.73, "band7": 0.43, "ours": 0.59, "rule": "six"}; shaky gate items g019/g021 are official anchors) and words_in_context_b4 (review; safety 0 flagged); Boundaries done for w4. w4 live 842.
+- 09:32 boundaries_b5 w4b5_04 (Lingua Ignota): safety chose the '; however,' trap; lead upheld key ', however;' (same shape and call as w4b1_04), lead_override recorded, promoted 25/25.
+- 09:35 form_structure_and_sense_b5 written (24, done; Super Soaker, McCoy, McGurk, SN 1987A withdrawn as famous) -> reviewer. WAVE 5 STARTED alongside (spec/rw/waves/w5/RUNBOOK.md).
+- 09:42 words_in_context_b5 written (23, done; diamond rain and Massospora withdrawn as viral; 01 Hilton premise narrowed to the paper) -> reviewer (fame call on 03 super-recognizers; band call on 04).
+- 09:43 USER: no new batches until the running set is finished. Queue held in <w4 SP>/queue_held.json (39 w5 writer batches, untouched); queue.json emptied. In-flight batches still get their review and blind solves so they can be promoted.
+- 09:45 USER said 'stop all', all 19 agents stopped; a minute later the user asked to resume all: 18 resumed with their context, WiC b6 writer (it had stalled) relaunched in continue mode. The 39 held w5 batches stay held.
+- 09:49 command_of_evidence_b4 reviewed (18 pass, 4 fixed; 02 passage overstated the paper, 17 Olmec stone source narrowed to 'Most', 08 table rows restored; 7 band 7; 22 no echo) -> safety + gate1; gate2 queued.
+- 09:49 form_structure_and_sense_b5 reviewed (19 pass, 5 fixed; 24 Frederick Jones duplicated official RS ba263620, now Sarah Boone; 05 second stepwell, now Kizhi domes; 03 sign language (8 live) now London lamplighters; 01, 05, 06 band 7) -> prepped, solves queued. WAVE.md saturated themes: sign language, stilt houses, stepwells.
+- 09:50 PROMOTED command_of_evidence_b4 (gate {"band6": 0.79, "band7": 0.72, "ours": 0.73, "rule": "review"}; safety 0 flagged). USER: no new agents at all (I had kept launching review/solve agents for finished batches; wrong reading). From now on only the agents already running finish; finished writer batches wait for review; nothing else launched. FSS b5 gate2 not launched.
+- 09:51 PROMOTED form_structure_and_sense_b5 on one gate run (gate {"band6": 0.87, "band7": 0.71, "ours": 0.84, "rule": "six"}; safety 0 flagged); FSS done for w4. command_of_evidence_b6 written (22, done) -> WAITS for a reviewer (no new agents). Reviewer notes: 04 play dated 1872 (premiere; written 1850s, 1914 volume prints 1873); 05 states as the researchers' conclusion a pattern only their table shows; 14 theme close to live CTC smoke-germination item.
+- 09:56 command_of_evidence_b5 written (22, done; Myanmar phones withdrawn for South Korea R&D) -> WAITS for a reviewer. Reviewer notes: 06 Lang'at mangroves, the 110-day sediment window's timing was inferred ('before treatment'), confirm or reword; simplifications in 06 table, rice-frog %, Asawa 'the 1940s'.
+- 09:57 words_in_context_b6 written (23, done; Gurindji Kriol twin of live Light Warlpiri item, now Mary Delany mosaics; 1 excerpt 'adapted') -> WAITS for a reviewer.
+- 10:04 text_structure_and_purpose_b4 reviewed (12 pass, 13 fixed; 04, 07 hardened to band 7; Lampman now consecutive lines 5 to 14; Nancy underline lengthened per 0f2933b9; 23 Kyoto judged a fame tell, now Xygalatas Thaipusam study; source gap: 06 Oberlin page 404, confirmed from search summary only) -> WAITS for safety + gate solves (no new agents).
+- 10:04 words_in_context_b8 written (23, done; Shange swapped for Purifoy, three authors with no Gutenberg text replaced) -> WAITS for a reviewer. Reviewer notes: Jennings patent year 1821 not on the source pages; Maghribi agent-and-shunning goes beyond the source ('social sanctions').
+- 10:08 words_in_context_b5 reviewed (21 pass, 2 fixed; 03 super-recognizers judged famous, now severely deficient autobiographical memory; 04 kept band 7) -> WAITS for its safety solve (no new agents). Lead call: kept 02 Yurok (4th 'language outlives its speakers' subject, but different skill and hinge); theme added to WAVE.md saturated list.
+- 10:13 words_in_context_b7 written (23, done; Bispo do Rosario withdrawn, Dafora instead) -> WAITS for a reviewer. Reviewer notes: 01 'within a generation' rounds the paper's finding; 09 and 16 run above model medians.
+- 10:34 network outage (ENOTFOUND) killed the 10 running writers; user said resume: all 10 resumed with their context (same agents, no new ones).
+- 10:37 command_of_evidence_b7 written (21, done; Fauset was official ed586475, now Mona Caird) -> WAITS for a reviewer. Every w4 batch is now written. Reviewer notes: 14 bar totals summed from the paper's S1 table (1,710) while the text says 3,668, check; 08 nitrogen figure has a wide CI; 13 third tourist-arrivals item.
+
+## PAUSED 2026-10-27 (user: no new agents) - how to resume
+
+All agents finished; none running. Bank check passes; R&W bank 3,739 locally (889 w4 live). Not deployed, not committed.
+- 38 of 46 batches promoted.
+- **Reviewed, need blind solves** (`wave_lead.py prep`, safety + 2 gates, `finish`): text_structure_and_purpose_b4,
+  words_in_context_b5 (WiC: safety only, no gate).
+- **Written, need review** (prompt: `spec/rw/waves/w4/reviewer_prompt.txt`, add the per-batch reviewer notes from the
+  log above): command_of_evidence_b5, b6, b7; words_in_context_b6, b7, b8.
+- Prompts are saved in this folder (writer_prompt.txt, reviewer_prompt.txt): the scratch folder may be gone; point
+  `<SP>` at a new scratchpad and recreate `reg.py` (a 15-line registry) if needed.
+- 11:17 USER: 'resume wave 5'. Hold lifted. Finishing w4's 8 leftover batches alongside (reviews/solves first), then the 39 held w5 writers from the queue.
+- 13:59 correction: user wants wave 5 only; w4 leftovers stay paused (TSP b4 and WiC b5 prepped, solves not launched).

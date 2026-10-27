@@ -1,917 +1,1119 @@
 {
- "skill": "Transitions",
- "slug": "transitions",
- "part": "w4b4",
- "domain": "Expression of Ideas",
- "plan": {
-  "templates": [
-   {
-    "code": "K2_qualification",
-    "name": "Concession: supported claim, then a fact that qualifies it"
-   },
-   {
-    "code": "S1_spec_restate",
-    "name": "Specification/restatement: exact content or plain rewording"
-   },
-   {
-    "code": "U1_culmination_alt",
-    "name": "Culmination, alternative and place (ultimately, alternatively, there)"
-   },
-   {
-    "code": "P1_purpose_aptness",
-    "name": "Purpose and aptness: goal then deliberate act, or a fitting echo"
-   },
-   {
-    "code": "C1_two_subject",
-    "name": "Contrast: two subjects, opposite values"
-   },
-   {
-    "code": "A1_addition",
-    "name": "Addition/similarity: a further item of the same kind"
-   },
-   {
-    "code": "C2_belief_finding",
-    "name": "Contrast: established view or appearance, then a finding that breaks it"
-   },
-   {
-    "code": "E1_consequence",
-    "name": "Cause/effect: condition, principle or evidence, then its consequence"
-   },
-   {
-    "code": "T1_sequence_time",
-    "name": "Sequence/time: next step, earlier or later event, end of a long effort"
-   },
-   {
-    "code": "X1_example",
-    "name": "Example: general claim, then one named instance"
-   },
-   {
-    "code": "C3_limiting_fact",
-    "name": "Contrast: positive claim, then a limiting fact about the same subject"
-   }
-  ]
- },
- "items": [
-  {
-   "id": "transitions.K2_qualification.hard.w4b4_01",
-   "template": "K2_qualification",
-   "subtype": "Concession: qualification of a supported claim",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "Archaeologists have long counted Moundville, in Alabama, among the preeminent Mississippian centers. By around 1250 CE, more than two dozen earthen mounds, the tallest nearly sixty feet high, encircled its expansive plaza. ______ the site was densely inhabited only briefly: by about 1300, most residents had dispersed to outlying farmsteads, and Moundville functioned chiefly as a ceremonial center and burial ground.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Specifically,",
-    "That said,",
-    "For this reason,",
-    "Moreover,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The first two sentences support the claim that Moundville was one of “the preeminent Mississippian centers,” pointing to its mounds and “expansive plaza.” The blank sentence limits that picture without overturning it: the site “was densely inhabited only briefly,” and after about 1300 it “functioned chiefly as a ceremonial center and burial ground.” “That said” fits because it introduces a fact that qualifies the claim just made.",
-   "distractors": {
-    "A": {
-     "recipe": "wrong grain (specification)",
-     "why_wrong": "The blank sentence does not spell out what made Moundville a preeminent center; it says that few people lived there for long, which limits that claim. The sentence ends by naming the site’s later role, but that role is part of the qualification, not a more precise version of the earlier claim."
-    },
-    "C": {
-     "recipe": "unearned cause",
-     "why_wrong": "The mounds and the plaza did not cause residents to move away to outlying farmsteads; nothing in the text links the two as cause and effect."
-    },
-    "D": {
-     "recipe": "additive",
-     "why_wrong": "“Moreover” would add another point in favor of Moundville’s importance, but the blank sentence cuts against the impression of a large, crowded town."
-    }
-   },
-   "models": [
-    "3.12",
-    "3.8",
-    "3.14"
-   ],
-   "word_count": 60,
-   "sources": [],
-   "notes": "K2 band-7 model ecb31049 (3.12): supported claim, then a qualifying fact, keyed That said, with one cause, one additive and one specification decoy (no adversative decoy, no In fact or Indeed beside the concession key). Lure: the closing words “functioned chiefly as a ceremonial center” can read as specifying what kind of center Moundville was (Specifically). Key outside the core 13; no sequence or summary decoys; register 5.39 chars per word. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
+  "skill": "Transitions",
+  "slug": "transitions",
+  "part": "w4b4",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "K2_qualification",
+        "name": "Concession: supported claim, then a fact that qualifies it"
+      },
+      {
+        "code": "S1_spec_restate",
+        "name": "Specification/restatement: exact content or plain rewording"
+      },
+      {
+        "code": "U1_culmination_alt",
+        "name": "Culmination, alternative and place (ultimately, alternatively, there)"
+      },
+      {
+        "code": "P1_purpose_aptness",
+        "name": "Purpose and aptness: goal then deliberate act, or a fitting echo"
+      },
+      {
+        "code": "C1_two_subject",
+        "name": "Contrast: two subjects, opposite values"
+      },
+      {
+        "code": "A1_addition",
+        "name": "Addition/similarity: a further item of the same kind"
+      },
+      {
+        "code": "C2_belief_finding",
+        "name": "Contrast: established view or appearance, then a finding that breaks it"
+      },
+      {
+        "code": "E1_consequence",
+        "name": "Cause/effect: condition, principle or evidence, then its consequence"
+      },
+      {
+        "code": "T1_sequence_time",
+        "name": "Sequence/time: next step, earlier or later event, end of a long effort"
+      },
+      {
+        "code": "X1_example",
+        "name": "Example: general claim, then one named instance"
+      },
+      {
+        "code": "C3_limiting_fact",
+        "name": "Contrast: positive claim, then a limiting fact about the same subject"
+      }
+    ]
   },
-  {
-   "id": "transitions.S1_spec_restate.hard.w4b4_02",
-   "template": "S1_spec_restate",
-   "subtype": "Restatement of an abstract claim",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Korean artist Lee Ufan has titled his sculptures Relatum since the early 1970s, reflecting his conviction that an artwork resides less in physical objects than in the relationships among them. ______ in a typical Relatum installation—a weathered boulder beside a plate of industrial steel—neither material is meant to command attention on its own; what matters is the tension between them.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Moreover,",
-    "Similarly,",
-    "Nevertheless,",
-    "That is,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence states an abstract idea: for Lee, an artwork “resides less in physical objects than in the relationships among them.” The blank sentence says the same thing in concrete terms: “neither material is meant to command attention on its own; what matters is the tension between them.” “That is” fits because it introduces a rewording that makes the first claim clearer.",
-   "distractors": {
-    "A": {
-     "recipe": "additive",
-     "why_wrong": "The blank sentence is not a second, separate point about Lee’s work; it explains what it means for an artwork to reside “in the relationships among” objects."
+  "items": [
+    {
+      "id": "transitions.K2_qualification.hard.w4b4_01",
+      "template": "K2_qualification",
+      "subtype": "Concession: qualification of a supported claim",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Archaeologists have long counted Moundville, in Alabama, among the preeminent Mississippian centers. By around 1250 CE, more than two dozen earthen mounds, the tallest nearly sixty feet high, encircled its expansive plaza. ______ the site was densely inhabited only briefly: by about 1300, most residents had dispersed to outlying farmsteads, and Moundville functioned chiefly as a ceremonial center and burial ground.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Specifically,",
+        "That said,",
+        "For this reason,",
+        "Moreover,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first two sentences support the claim that Moundville was one of “the preeminent Mississippian centers,” pointing to its mounds and “expansive plaza.” The blank sentence limits that picture without overturning it: the site “was densely inhabited only briefly,” and after about 1300 it “functioned chiefly as a ceremonial center and burial ground.” “That said” fits because it introduces a fact that qualifies the claim just made.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The blank sentence does not spell out what made Moundville a preeminent center; it says that few people lived there for long, which limits that claim. The sentence ends by naming the site’s later role, but that role is part of the qualification, not a more precise version of the earlier claim."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The mounds and the plaza did not cause residents to move away to outlying farmsteads; nothing in the text links the two as cause and effect."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "“Moreover” would add another point in favor of Moundville’s importance, but the blank sentence cuts against the impression of a large, crowded town."
+        }
+      },
+      "models": [
+        "3.12",
+        "3.8",
+        "3.14"
+      ],
+      "word_count": 60,
+      "sources": [],
+      "notes": "K2 band-7 model ecb31049 (3.12): supported claim, then a qualifying fact, keyed That said, with one cause, one additive and one specification decoy (no adversative decoy, no In fact or Indeed beside the concession key). Lure: the closing words “functioned chiefly as a ceremonial center” can read as specifying what kind of center Moundville was (Specifically). Key outside the core 13; no sequence or summary decoys; register 5.39 chars per word. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Same frame and decoy recipes as the template's band-7 model ecb31049 (long-held standing, then a record that cuts against it; cause, additive and specification decoys, no adversative decoy, no In fact), register 5.39. The Specifically lure on 'functioned chiefly as a ceremonial center' is real. Low edge of band 7: 'only briefly' flags the turn about as plainly as the model's 'no fusion reaction ... had ever'."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "B": {
-     "recipe": "false parallel",
-     "why_wrong": "“Similarly” would present a different case that resembles the first, but the blank sentence is about the same Relatum sculptures and the same idea."
+    {
+      "id": "transitions.S1_spec_restate.hard.w4b4_02",
+      "template": "S1_spec_restate",
+      "subtype": "Restatement of an abstract claim",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Korean artist Lee Ufan has titled his sculptures Relatum since the early 1970s, reflecting his conviction that an artwork resides less in physical objects than in the relationships among them. ______ in a typical Relatum installation—a weathered boulder beside a plate of industrial steel—neither material is meant to command attention on its own; what matters is the tension between them.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Moreover,",
+        "Similarly,",
+        "Nevertheless,",
+        "That is,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence states an abstract idea: for Lee, an artwork “resides less in physical objects than in the relationships among them.” The blank sentence says the same thing in concrete terms: “neither material is meant to command attention on its own; what matters is the tension between them.” “That is” fits because it introduces a rewording that makes the first claim clearer.",
+      "distractors": {
+        "A": {
+          "recipe": "additive",
+          "why_wrong": "The blank sentence is not a second, separate point about Lee’s work; it explains what it means for an artwork to reside “in the relationships among” objects."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "“Similarly” would present a different case that resembles the first, but the blank sentence is about the same Relatum sculptures and the same idea."
+        },
+        "C": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Nothing in the blank sentence holds true in spite of the first sentence; the two sentences agree."
+        }
+      },
+      "models": [
+        "3.1",
+        "3.5"
+      ],
+      "word_count": 59,
+      "sources": [],
+      "notes": "Hard pattern 4 of transitions.md section 6 (restating an abstract claim), keyed That is with additive, similarity and concession decoys as in 3.1 but with different words; no example or specification decoy, since “a typical Relatum installation” could make either defensible. Lure: Moreover, for a reader who takes the boulder-and-steel description as a new fact. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Restating an abstract claim (hard pattern 4) with additive, similarity and concession decoys as in band-6 e3edc138. S1's one band-7 item (d3b7d7a3) uses the frequency form (more often), not used here, so band 6 is the right target; band_target 6 kept."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "false opposition (concession)",
-     "why_wrong": "Nothing in the blank sentence holds true in spite of the first sentence; the two sentences agree."
+    {
+      "id": "transitions.U1_culmination_alt.hard.w4b4_03",
+      "template": "U1_culmination_alt",
+      "subtype": "Alternative: one named case acting differently",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In one tagging study of brown trout (Salmo trutta) in northern Europe, many juveniles spent two or three years in their natal stream before migrating to coastal feeding grounds, then returned upstream, considerably larger, to spawn. Fish 4417, ______ grew through three summers in the stream’s upper reaches before maturing and spawning there, never departing for the sea.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "specifically,",
+        "for instance,",
+        "alternatively,",
+        "likewise,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes the path “many juveniles” took: they spent “two or three years in their natal stream before migrating to coastal feeding grounds.” Fish 4417 began the same way but took the other path open to a young trout: it matured and spawned in the stream, “never departing for the sea.” “Alternatively” fits because it introduces a different course from the one just described.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "Fish 4417’s three summers in the stream may look like a detail of the juveniles’ early years, but the sentence goes on to say that it matured and spawned there, “never departing for the sea,” so it does not give a more precise account of the migration the first sentence describes."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Fish 4417 is not an instance of the juveniles that migrated to coastal feeding grounds; it spent its whole life in the stream, “never departing for the sea.”"
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "Fish 4417 began as the migrating juveniles did, in the stream, but “Likewise” would say that it behaved as they did overall; it did the opposite and never left for the sea."
+        }
+      },
+      "models": [
+        "3.16",
+        "e225cf02"
+      ],
+      "word_count": 58,
+      "sources": [],
+      "notes": "U1 band-7 alternative shape (e225cf02): one named member of a studied group takes the other strategy, with only instance-type decoys (specification, example, similarity) and no plain contrast word on offer. Lure: the tag number makes Fish 4417 look like one of the fish just described (same referent). Unnamed study; brown trout partial migration (sea-going versus stream-resident fish) is real biology. Key outside the core 13; no sequence or summary decoys. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "hardened toward e225cf02: the blank sentence now opens like the migrants' path (three summers in the stream) and the difference arrives late (matured and spawned there, never departing for the sea), so the instance and similarity decoys pull on first read; 'most juveniles' became 'many juveniles' (no majority flag); register 4.93 to 5.35 chars per word; explanation and why_wrong rewritten to quote the new text"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "After the fix it follows e225cf02: one tagged member of a studied group takes the other strategy, only instance-type decoys (specifically, for instance, likewise) and no contrast word on offer; the blank sentence starts like the migrants (same referent) and the difference comes at the end; register 5.35. Before the fix 'most juveniles ... descended to the sea' against 'remained in its natal stream permanently' killed every decoy at once (band 6)."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.P1_purpose_aptness.hard.w4b4_04",
+      "template": "P1_purpose_aptness",
+      "subtype": "Purpose: goal then deliberate act",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Dutch designer Daan Roosegaarde wanted to transform urban smog, usually encountered only as an abstract statistic, into something people could see and even hold. ______ in 2015 he unveiled the Smog Free Tower, a seven-meter structure that extracts fine particles from the surrounding air. The collected particles are then compressed into small black cubes and set in rings.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "To that end,",
+        "In other words,",
+        "Likewise,",
+        "Regardless,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence states Roosegaarde’s goal: to turn smog “into something people could see and even hold.” The blank sentence and the one after it describe what he did to reach that goal: he built a tower that “extracts fine particles from the surrounding air,” and the particles are “compressed into small black cubes and set in rings.” “To that end” fits because it introduces an action taken to achieve the goal just stated.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The blank sentence does not reword Roosegaarde’s goal; it describes a specific project he carried out to achieve it."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "“Likewise” would present a separate case resembling the first, but the tower is Roosegaarde’s own response to the goal in the first sentence."
+        },
+        "D": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "“Regardless” would mean the tower was built without regard to his goal, but the rings of compressed particles are exactly “something people could see and even hold.”"
+        }
+      },
+      "models": [
+        "3.15",
+        "3.13"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "P1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so this is written as a strong band 6 and band_target is 6, not the 7 the plan asked for. Purpose key with no cause/effect decoy (bank rule); decoys restatement, similarity, dismissive concession. Lure: In other words, for a reader who takes the tower as a restatement of the goal. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "P1_purpose_aptness has no band-7 official items (spec/rw/band7/transitions.md section 5), so it cannot be band 7; a strong band 6 like f5149550 (stated goal, then the act; restatement, similarity and dismissive decoys, no cause decoy). band_target 6 kept."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w4b4_05",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects (interrupter)",
+      "tier": "medium",
+      "passage": "In most frogs, fertilization occurs externally: as a female releases her eggs into the water, the male clasping her deposits sperm over them. The male coastal tailed frog, ______ fertilizes eggs internally, using a tail-like extension of its cloaca that likely keeps sperm from dispersing in the turbulent streams where it breeds.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "by contrast,",
+        "for example,",
+        "in other words,",
+        "as a result,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that in most frogs, “fertilization occurs externally.” The coastal tailed frog does the opposite: it “fertilizes eggs internally.” “By contrast” fits because it sets this second subject against the first.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The tailed frog is a frog, but it is not an example of external fertilization; it is an exception to it."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The second sentence does not reword the first; it describes a frog that breeds in a different way."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The way most frogs breed does not cause the tailed frog to fertilize its eggs internally."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.4"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Two subjects, opposite values, the connective as an interrupter after the second subject (2.6 position). Lure: for example, since the tailed frog belongs to the group just described. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w4b4_06",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects (after an introductory phrase)",
+      "tier": "medium",
+      "passage": "In European hand papermaking, a vatman submerges a screened mold in diluted pulp only once, then agitates it gently so that the fibers settle into a uniform sheet. In Japan’s nagashizuki technique, ______ the papermaker repeatedly scoops pulp onto the screen and sloshes it back and forth, building each sheet from numerous thin layers.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "in addition,",
+        "for instance,",
+        "in contrast,",
+        "thus,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says the European papermaker dips the mold into the pulp “only once.” In the nagashizuki technique, the papermaker “repeatedly scoops pulp onto the screen.” “In contrast” fits because it sets the Japanese method against the European one.",
+      "distractors": {
+        "A": {
+          "recipe": "additive",
+          "why_wrong": "The second sentence does not add another step to the European method; it describes a different method that works the opposite way."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Nagashizuki is not an instance of the European single-dip method; it is a different technique."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The European method does not lead Japanese papermakers to scoop pulp repeatedly; the two methods are simply different."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.18"
+      ],
+      "word_count": 53,
+      "sources": [],
+      "notes": "Two methods, one attribute (how many times the screen takes up pulp), opposite values; blank after the introductory phrase of the second sentence. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w4b4_07",
+      "template": "A1_addition",
+      "subtype": "Addition: a second contribution by the same person",
+      "tier": "medium",
+      "passage": "In 1957, Hawaiian scholar Mary Kawena Pukui and linguist Samuel H. Elbert published a Hawaiian-English dictionary that, in revised form, remains the standard reference for the Hawaiian language. ______ Pukui gathered nearly 3,000 Hawaiian proverbs and poetic sayings, translating and explaining each one for the collection ʻŌlelo Noʻeau, published in 1983.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Instead,",
+        "In other words,",
+        "Regardless,",
+        "Additionally,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes one of Pukui’s contributions to the study of Hawaiian: a Hawaiian-English dictionary. The blank sentence names a second, separate one: she “gathered nearly 3,000 Hawaiian proverbs and poetic sayings” for ʻŌlelo Noʻeau. “Additionally” fits because it adds another item of the same kind.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "“Instead” would mean Pukui collected proverbs in place of working on the dictionary, but she did both."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Collecting proverbs is a different project from the dictionary, not a rewording of it."
+        },
+        "C": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "“Regardless” would suggest the dictionary has no bearing on what follows, but the blank sentence simply continues the account of Pukui’s work."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.10"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Two acts by the same person (2.11 shape). No similarity decoy beside an addition key (bank rule); no motive sentence that would let a cause decoy reach back. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "the 1957 Pukui and Elbert book was the Hawaiian-English Dictionary (the title Hawaiian Dictionary came with the revised editions): passage now says 'a Hawaiian-English dictionary that, in revised form, remains the standard reference'; explanation updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w4b4_08",
+      "template": "S1_spec_restate",
+      "subtype": "Specification: exact content of a general statement",
+      "tier": "medium",
+      "passage": "Choquequirao, an Inca settlement perched high above Peru’s Apurímac River, features an ornamental element rarely documented at other Inca sites. ______ on one precipitous slope, pale stones embedded in a series of dark terrace walls form two dozen llama figures, arranged so that the animals appear to be climbing the mountainside in a long procession.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "Specifically,",
+        "As a result,",
+        "In addition,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence mentions “an ornamental element rarely documented at other Inca sites” without saying what it is. The blank sentence gives the exact content: “pale stones embedded in a series of dark terrace walls form two dozen llama figures.” “Specifically” fits because it introduces the precise details of the general statement.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The llama figures do not contrast with the ornamental element; they are that element."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The site’s decoration does not produce the llama figures; the figures are the decoration being described."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "The blank sentence does not add a second feature of the site; it describes the one feature the first sentence mentions."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.3"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "A general mention, then its exact content (2.12 shape); no example decoy beside a specification key (bank rule). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w4b4_09",
+      "template": "S1_spec_restate",
+      "subtype": "Restatement of a technical term",
+      "tier": "medium",
+      "passage": "Economists characterize consumer demand for table salt as highly inelastic: because salt is inexpensive and a typical household consumes only small quantities of it, even substantial fluctuations in its price barely register with shoppers. ______ households continue to purchase roughly the same amount of salt whether its price rises sharply or declines.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In other words,",
+        "Nevertheless,",
+        "Similarly,",
+        "In addition,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence calls the demand for salt “highly inelastic” and says that changes in its price “barely register with shoppers.” The blank sentence puts the same idea in plain terms: households “continue to purchase roughly the same amount of salt whether its price rises sharply or declines.” “In other words” fits because it introduces a rewording of the previous claim.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "“Nevertheless” would mean households keep buying salt in spite of what the first sentence says, but the first sentence explains exactly why they do."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence is not about a different product that behaves like salt; it is about salt itself."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "The blank sentence adds no new fact; it restates what “inelastic” demand means."
+        }
+      },
+      "models": [
+        "2.15"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Restatement of a technical term. No cause decoy, since the blank sentence could be read as following from the first. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C2_belief_finding.medium.w4b4_10",
+      "template": "C2_belief_finding",
+      "subtype": "Contrast: established view, then a finding (interrupter)",
+      "tier": "medium",
+      "passage": "Clouded leopards inhabiting the islands of Borneo and Sumatra were long classified as members of the same species as their counterparts on the Southeast Asian mainland. Genetic and morphological analyses published in 2006, ______ revealed differences substantial enough that the island populations are now recognized as a distinct species: the Sunda clouded leopard.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "for example,",
+        "therefore,",
+        "however,",
+        "in addition,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence gives the long-held view: the island cats “were long classified as members of the same species” as mainland clouded leopards. The 2006 analyses overturned it, showing the island populations to be “a distinct species.” “However” fits because it marks a finding that contradicts the earlier view.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The 2006 analyses are not an example of the old classification; they challenged it."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "The old classification did not lead to the discovery of differences; the finding goes against it."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "The blank sentence does not add support to the old view; it reports evidence that replaced it."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.1"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Established view, then a finding that breaks it, the connective as an interrupter after a long subject (2.16 position). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.medium.w4b4_11",
+      "template": "E1_consequence",
+      "subtype": "Cause/effect: condition, then its consequence",
+      "tier": "medium",
+      "passage": "When construction of Cuba’s National Art Schools began in Havana in 1961, steel and cement were scarce on the island. ______ the schools’ architects built them largely of brick and terracotta tile, relying on the Catalan vault, a centuries-old technique that spans interior spaces with thin layers of tile and requires minimal steel reinforcement.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "By contrast,",
+        "Hence,",
+        "For instance,",
+        "Likewise,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence states a condition: “steel and cement were scarce on the island.” The blank sentence gives the result: the architects “built them largely of brick and terracotta tile,” using a vault that “requires minimal steel reinforcement.” “Hence” fits because it introduces a consequence of the previous sentence.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The brick construction does not contrast with the shortage; it is the response to it."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Building with brick is not an instance of a shortage of steel and cement; it follows from that shortage."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a similar shortage; it describes what the architects did because of the one already mentioned."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.9"
+      ],
+      "word_count": 53,
+      "sources": [],
+      "notes": "Condition, then consequence, keyed with the medium-tier Hence. Plain contrast decoy rather than Nevertheless, which could be read as “they built anyway despite the shortage.” Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.medium.w4b4_12",
+      "template": "T1_sequence_time",
+      "subtype": "Time: an earlier event",
+      "tier": "medium",
+      "passage": "In 1970, Éditions du Seuil in Paris issued Ivorian writer Ahmadou Kourouma’s novel Les soleils des indépendances, which attracted a substantial French readership. ______ the manuscript had been rejected by French publishers who objected to Kourouma’s reshaping of French syntax to echo Malinke speech. It had first appeared in 1968 from a university press in Montreal.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "As a result,",
+        "Similarly,",
+        "For example,",
+        "Previously,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes the novel’s 1970 publication in Paris. The blank sentence moves back in time: the manuscript “had been rejected by French publishers,” and the next sentence adds that it “had first appeared in 1968.” “Previously” fits because it introduces events that came before the one just described.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "The 1970 Paris edition could not have caused rejections that came before it."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a similar success; it describes the earlier rejections the novel faced."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The rejections are not an example of the novel attracting French readers; they happened before that."
+        }
+      },
+      "models": [
+        "2.2"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Reverse-order time key (2.2 shape); the past perfect and the 1968 date carry the relation. No contrast decoy, since the rejections could be read as opposing the later success. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.U1_culmination_alt.medium.w4b4_13",
+      "template": "U1_culmination_alt",
+      "subtype": "Place: what happened at the place just named",
+      "tier": "medium",
+      "passage": "In 1973, Palestinian poet Mahmoud Darwish settled in Beirut, which was then the foremost center of Arabic-language publishing and a hub of political debate. ______ he edited the research journal Shu’un Filastiniyya (Palestinian Affairs). In 1981, also in Beirut, he founded the literary magazine Al-Karmel, which published innovative poetry, fiction, and criticism by writers throughout the Arab world.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "There,",
+        "Instead,",
+        "In particular,",
+        "Likewise,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence names a place: Darwish “settled in Beirut.” The blank sentence describes what he did in that city: “he edited the research journal Shu’un Filastiniyya.” “There” fits because it refers back to Beirut, the place just named.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Darwish did not edit the journal in place of settling in Beirut; he did this work after he moved there."
+        },
+        "C": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "Editing a journal is not a particular part of settling in Beirut; it is what he went on to do in the city."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a similar move; it describes Darwish’s work in Beirut."
+        }
+      },
+      "models": [
+        "2.8"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "Place key (2.8 shape, the only medium U1 model). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w4b4_14",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence: next step of a process",
+      "tier": "easy",
+      "passage": "Venetian glassmakers create millefiori (“thousand flowers”) glass in stages. First, they layer molten glass of different colors around a central rod, forming a thick cane with a floral pattern in its cross section. ______ they reheat the cane and stretch it until it is long and thin, miniaturizing the pattern without distorting it. Finally, they slice the cane into small disks.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Regardless,",
+        "In other words,",
+        "Next,",
+        "Similarly,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The passage describes a process in order: “First,” the glassmakers form a cane, and “Finally,” they slice it. The blank sentence gives the step in between: they “reheat the cane and stretch it.” “Next” fits because it introduces the following step in the process.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "“Regardless” would mean the first step does not matter, but stretching the cane depends on having made it."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Stretching the cane is a new step, not a rewording of the first one."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "Stretching the cane is not similar to layering the glass; it is the step that comes after it."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.22"
+      ],
+      "word_count": 60,
+      "sources": [],
+      "notes": "Process with First / ______ / Finally cues (1.8 shape). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w4b4_15",
+      "template": "T1_sequence_time",
+      "subtype": "Time: a later event",
+      "tier": "easy",
+      "passage": "From April to August 1914, Japanese author Natsume Sōseki’s novel Kokoro, which traces a student’s friendship with a reclusive older man he calls Sensei, was serialized in the newspaper Asahi Shimbun. ______ in September of that year, the novel was published as a single volume, with a cover that Sōseki designed himself.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the contrary,",
+        "Later,",
+        "For example,",
+        "In conclusion,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Kokoro “was serialized in the newspaper Asahi Shimbun” from April to August 1914. The blank sentence describes what happened afterward, “in September of that year.” “Later” fits because it introduces an event that came after the one just described.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The book edition does not contradict the newspaper serialization; it followed it."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The book edition is not an example of the serialization; it is a separate, later event."
+        },
+        "D": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the passage; it adds a new event."
+        }
+      },
+      "models": [
+        "1.18",
+        "1.12"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Dated events in order (1.18 shape); no addition decoy, which could read as “also published as a book.” Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w4b4_16",
+      "template": "E1_consequence",
+      "subtype": "Cause/effect: condition, then its consequence",
+      "tier": "easy",
+      "passage": "Coober Pedy, an opal-mining town in the desert of South Australia, has summer temperatures that often climb above 40°C (104°F). ______ many of the town’s residents live in “dugouts,” homes carved into the sandstone hillsides, where the temperature holds steady at a comfortable level all year.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "For instance,",
+        "Likewise,",
+        "As a result,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes the town’s extreme heat: temperatures “often climb above 40°C.” The blank sentence explains how residents respond: many live in dugouts, where the temperature “holds steady at a comfortable level all year.” “As a result” fits because it introduces a consequence of the heat.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "“Nevertheless” would mean residents live in dugouts in spite of the heat, but the heat is the reason for the dugouts."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Living in dugouts is not an example of high temperatures; it is a response to them."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe something similar to the heat; it describes its effect on how people live."
+        }
+      },
+      "models": [
+        "1.27",
+        "1.15"
+      ],
+      "word_count": 45,
+      "sources": [],
+      "notes": "Condition, then consequence. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w4b4_17",
+      "template": "E1_consequence",
+      "subtype": "Cause/effect: condition, then its consequence",
+      "tier": "easy",
+      "passage": "The Gila monster is a venomous lizard inhabiting the deserts of the American Southwest and northwestern Mexico. It can consume up to a third of its body weight in a single meal, storing the surplus energy as fat in its thick tail. ______ a wild Gila monster may require only a few substantial meals each year.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Consequently,",
+        "In comparison,",
+        "Meanwhile,",
+        "For example,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says a Gila monster can eat a huge meal, “storing the surplus energy as fat in its thick tail.” Because of that stored energy, it “may require only a few substantial meals each year.” “Consequently” fits because it introduces a result of the previous sentence.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "The blank sentence does not compare the Gila monster with another animal; it describes the same lizard."
+        },
+        "C": {
+          "recipe": "phantom time",
+          "why_wrong": "“Meanwhile” would describe something happening at the same time, but the blank sentence states an outcome of the lizard’s eating habits."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Needing few meals is not an example of storing fat in the tail; it is what that storage makes possible."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.3"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Condition, then consequence. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w4b4_18",
+      "template": "X1_example",
+      "subtype": "Example: general claim, then one named instance",
+      "tier": "easy",
+      "passage": "Throughout her career, Peruvian artist Elena Izcue drew inspiration from the art of Peru’s ancient civilizations. ______ in 1926 she published El arte peruano en la escuela (Peruvian Art in the School), a set of drawing books for schoolchildren. The books taught students to copy and adapt designs from ancient Peruvian textiles and pottery.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Instead,",
+        "In conclusion,",
+        "For example,",
+        "In other words,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence makes a general claim: Izcue “drew inspiration from the art of Peru’s ancient civilizations.” The blank sentence gives one instance, a set of drawing books, and the next sentence shows how they used “designs from ancient Peruvian textiles and pottery.” “For example” fits because it introduces an example of the general claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The drawing books are not something Izcue made in place of work inspired by ancient art; they are such work."
+        },
+        "B": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the passage; it introduces a specific project."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The blank sentence adds a new, specific fact rather than rewording the first sentence."
+        }
+      },
+      "models": [
+        "1.25",
+        "1.2"
+      ],
+      "word_count": 53,
+      "sources": [],
+      "notes": "General claim, then one named instance. No cause decoy: her interest in ancient art could be read as the reason for the books. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w4b4_19",
+      "template": "X1_example",
+      "subtype": "Example: general claim, then one named instance",
+      "tier": "easy",
+      "passage": "Cuban composer Ernesto Lecuona often brought the sounds of Afro-Cuban street music into his works for the concert hall. ______ his piano piece “La comparsa” imitates a carnival procession. Its drumlike rhythm grows louder as the musicians seem to approach, then softens as they pass.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the other hand,",
+        "For instance,",
+        "Likewise,",
+        "Today,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Lecuona “often brought the sounds of Afro-Cuban street music” into his concert works. The blank sentence names one such work, “La comparsa,” which “imitates a carnival procession.” “For instance” fits because it introduces an example of the general claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "“La comparsa” does not contrast with Lecuona’s use of street music; it shows that use."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a different composer or a similar case; it gives an instance of Lecuona’s own habit."
+        },
+        "D": {
+          "recipe": "wrong time",
+          "why_wrong": "“Today” would set the piece in the present, but nothing in the passage contrasts the past with the present."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.20"
+      ],
+      "word_count": 44,
+      "sources": [],
+      "notes": "General claim with “often,” then one named instance. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C3_limiting_fact.easy.w4b4_20",
+      "template": "C3_limiting_fact",
+      "subtype": "Contrast: positive claim, then a limiting fact",
+      "tier": "easy",
+      "passage": "In 1775, Swedish chemist Carl Wilhelm Scheele created a bright green pigment that soon became popular for coloring wallpaper, fabric, artificial flowers, and even candy. ______ the pigment contained arsenic, and people who spent long hours in rooms decorated with it sometimes became seriously ill, suffering headaches, nausea, and other symptoms.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For instance,",
+        "Similarly,",
+        "Thus,",
+        "However,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence presents the pigment positively: it was “bright green” and “soon became popular.” The blank sentence gives a serious drawback: it “contained arsenic,” and some people “became seriously ill.” “However” fits because it introduces a fact that contrasts with the pigment’s popularity.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The arsenic is not an example of the pigment’s popularity; it is a problem with the pigment."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe something similar to the pigment’s popularity; it describes a danger."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The pigment’s popularity did not cause it to contain arsenic."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.33"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Positive claim, then a limiting fact about the same subject. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C1_two_subject.easy.w4b4_21",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects, opposite values",
+      "tier": "easy",
+      "passage": "Female mosquitoes of many species feed on the blood of humans and other animals, which supplies the protein they need to produce eggs. ______ male mosquitoes never bite: they feed only on flower nectar, fruit juices, and other sugary plant fluids.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "By contrast,",
+        "For example,",
+        "Similarly,",
+        "In other words,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says female mosquitoes “feed on the blood of humans and other animals.” The blank sentence says the opposite about males: they “never bite.” “By contrast” fits because it sets the males against the females.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Male mosquitoes are not an example of blood-feeding females; they behave in the opposite way."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "“Similarly” would mean males also feed on blood, but they “never bite.”"
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The blank sentence is about a different group, so it cannot be a rewording of the first sentence."
+        }
+      },
+      "models": [
+        "1.17",
+        "1.14"
+      ],
+      "word_count": 40,
+      "sources": [],
+      "notes": "Two subjects, opposite values. No cause decoy (a reader could argue that only egg-producing females need blood). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.easy.w4b4_22",
+      "template": "A1_addition",
+      "subtype": "Addition: a second activity of the same person",
+      "tier": "easy",
+      "passage": "Indian vocalist M. S. Subbulakshmi was among the most celebrated performers of Carnatic music, South India’s classical tradition, and her concert career spanned more than six decades. ______ she appeared in several films, most memorably in the title role of Meera (1945), a film about the life of the sixteenth-century poet-saint Meerabai.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the contrary,",
+        "In other words,",
+        "In addition,",
+        "For instance,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes Subbulakshmi’s concert career. The blank sentence adds a separate activity: she “appeared in several films.” “In addition” fits because it introduces another item of the same kind, a further part of her career.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "Her film work does not contradict her concert career; she did both."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Acting in films is new information, not a rewording of her concert career."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Acting in films is not an instance of giving concerts of Carnatic music."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.30"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Two activities of one person. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
     }
-   },
-   "models": [
-    "3.1",
-    "3.5"
-   ],
-   "word_count": 59,
-   "sources": [],
-   "notes": "Hard pattern 4 of transitions.md section 6 (restating an abstract claim), keyed That is with additive, similarity and concession decoys as in 3.1 but with different words; no example or specification decoy, since “a typical Relatum installation” could make either defensible. Lure: Moreover, for a reader who takes the boulder-and-steel description as a new fact. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.U1_culmination_alt.hard.w4b4_03",
-   "template": "U1_culmination_alt",
-   "subtype": "Alternative: one named case acting differently",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "In one tagging study of brown trout (Salmo trutta) in northern Europe, most juveniles from a single tributary descended to the sea after two or three years, feeding in coastal waters until they were large enough to return upstream and spawn. Fish 4417, ______ remained in its natal stream permanently, maturing at a fraction of the size of its seagoing counterparts.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "specifically,",
-    "for instance,",
-    "alternatively,",
-    "likewise,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence describes what “most juveniles from a single tributary” did: they “descended to the sea.” Fish 4417 took the other path open to a young trout: it “remained in its natal stream permanently.” “Alternatively” fits because it introduces a different course from the one just described.",
-   "distractors": {
-    "A": {
-     "recipe": "wrong grain (specification)",
-     "why_wrong": "Fish 4417 comes from the same study, but the blank sentence does not give a more precise account of the migration to the sea; it describes a fish that never made that migration."
-    },
-    "B": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Fish 4417 is not an instance of the juveniles that went to sea; it “remained in its natal stream permanently.”"
-    },
-    "D": {
-     "recipe": "false parallel",
-     "why_wrong": "“Likewise” would say that Fish 4417 behaved like the juveniles that migrated, but it did the opposite."
-    }
-   },
-   "models": [
-    "3.16",
-    "e225cf02"
-   ],
-   "word_count": 60,
-   "sources": [],
-   "notes": "U1 band-7 alternative shape (e225cf02): one named member of a studied group takes the other strategy, with only instance-type decoys (specification, example, similarity) and no plain contrast word on offer. Lure: the tag number makes Fish 4417 look like one of the fish just described (same referent). Unnamed study; brown trout partial migration (sea-going versus stream-resident fish) is real biology. Key outside the core 13; no sequence or summary decoys. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.P1_purpose_aptness.hard.w4b4_04",
-   "template": "P1_purpose_aptness",
-   "subtype": "Purpose: goal then deliberate act",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Dutch designer Daan Roosegaarde wanted to transform urban smog, usually encountered only as an abstract statistic, into something people could see and even hold. ______ in 2015 he unveiled the Smog Free Tower, a seven-meter structure that extracts fine particles from the surrounding air. The collected particles are then compressed into small black cubes and set in rings.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "To that end,",
-    "In other words,",
-    "Likewise,",
-    "Regardless,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence states Roosegaarde’s goal: to turn smog “into something people could see and even hold.” The blank sentence and the one after it describe what he did to reach that goal: he built a tower that “extracts fine particles from the surrounding air,” and the particles are “compressed into small black cubes and set in rings.” “To that end” fits because it introduces an action taken to achieve the goal just stated.",
-   "distractors": {
-    "B": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "The blank sentence does not reword Roosegaarde’s goal; it describes a specific project he carried out to achieve it."
-    },
-    "C": {
-     "recipe": "false parallel",
-     "why_wrong": "“Likewise” would present a separate case resembling the first, but the tower is Roosegaarde’s own response to the goal in the first sentence."
-    },
-    "D": {
-     "recipe": "false opposition (dismissive)",
-     "why_wrong": "“Regardless” would mean the tower was built without regard to his goal, but the rings of compressed particles are exactly “something people could see and even hold.”"
-    }
-   },
-   "models": [
-    "3.15",
-    "3.13"
-   ],
-   "word_count": 57,
-   "sources": [],
-   "notes": "P1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so this is written as a strong band 6 and band_target is 6, not the 7 the plan asked for. Purpose key with no cause/effect decoy (bank rule); decoys restatement, similarity, dismissive concession. Lure: In other words, for a reader who takes the tower as a restatement of the goal. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C1_two_subject.medium.w4b4_05",
-   "template": "C1_two_subject",
-   "subtype": "Contrast: two subjects (interrupter)",
-   "tier": "medium",
-   "passage": "In most frogs, fertilization occurs externally: as a female releases her eggs into the water, the male clasping her deposits sperm over them. The male coastal tailed frog, ______ fertilizes eggs internally, using a tail-like extension of its cloaca that likely keeps sperm from dispersing in the turbulent streams where it breeds.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "by contrast,",
-    "for example,",
-    "in other words,",
-    "as a result,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence says that in most frogs, “fertilization occurs externally.” The coastal tailed frog does the opposite: it “fertilizes eggs internally.” “By contrast” fits because it sets this second subject against the first.",
-   "distractors": {
-    "B": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The tailed frog is a frog, but it is not an example of external fertilization; it is an exception to it."
-    },
-    "C": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "The second sentence does not reword the first; it describes a frog that breeds in a different way."
-    },
-    "D": {
-     "recipe": "unearned cause",
-     "why_wrong": "The way most frogs breed does not cause the tailed frog to fertilize its eggs internally."
-    }
-   },
-   "models": [
-    "2.6",
-    "2.4"
-   ],
-   "word_count": 51,
-   "sources": [],
-   "notes": "Two subjects, opposite values, the connective as an interrupter after the second subject (2.6 position). Lure: for example, since the tailed frog belongs to the group just described. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C1_two_subject.medium.w4b4_06",
-   "template": "C1_two_subject",
-   "subtype": "Contrast: two subjects (after an introductory phrase)",
-   "tier": "medium",
-   "passage": "In European hand papermaking, a vatman submerges a screened mold in diluted pulp only once, then agitates it gently so that the fibers settle into a uniform sheet. In Japan’s nagashizuki technique, ______ the papermaker repeatedly scoops pulp onto the screen and sloshes it back and forth, building each sheet from numerous thin layers.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "in addition,",
-    "for instance,",
-    "in contrast,",
-    "thus,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence says the European papermaker dips the mold into the pulp “only once.” In the nagashizuki technique, the papermaker “repeatedly scoops pulp onto the screen.” “In contrast” fits because it sets the Japanese method against the European one.",
-   "distractors": {
-    "A": {
-     "recipe": "additive",
-     "why_wrong": "The second sentence does not add another step to the European method; it describes a different method that works the opposite way."
-    },
-    "B": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Nagashizuki is not an instance of the European single-dip method; it is a different technique."
-    },
-    "D": {
-     "recipe": "unearned cause",
-     "why_wrong": "The European method does not lead Japanese papermakers to scoop pulp repeatedly; the two methods are simply different."
-    }
-   },
-   "models": [
-    "2.4",
-    "2.18"
-   ],
-   "word_count": 53,
-   "sources": [],
-   "notes": "Two methods, one attribute (how many times the screen takes up pulp), opposite values; blank after the introductory phrase of the second sentence. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.A1_addition.medium.w4b4_07",
-   "template": "A1_addition",
-   "subtype": "Addition: a second contribution by the same person",
-   "tier": "medium",
-   "passage": "In 1957, Hawaiian scholar Mary Kawena Pukui and linguist Samuel H. Elbert published the Hawaiian Dictionary, which remains the standard reference for the Hawaiian language. ______ Pukui gathered nearly 3,000 Hawaiian proverbs and poetic sayings, translating and explaining each one for the collection ʻŌlelo Noʻeau, published in 1983.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Instead,",
-    "In other words,",
-    "Regardless,",
-    "Additionally,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence describes one of Pukui’s contributions to the study of Hawaiian: the Hawaiian Dictionary. The blank sentence names a second, separate one: she “gathered nearly 3,000 Hawaiian proverbs and poetic sayings” for ʻŌlelo Noʻeau. “Additionally” fits because it adds another item of the same kind.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "“Instead” would mean Pukui collected proverbs in place of working on the dictionary, but she did both."
-    },
-    "B": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "Collecting proverbs is a different project from the dictionary, not a rewording of it."
-    },
-    "C": {
-     "recipe": "false opposition (dismissive)",
-     "why_wrong": "“Regardless” would suggest the dictionary has no bearing on what follows, but the blank sentence simply continues the account of Pukui’s work."
-    }
-   },
-   "models": [
-    "2.11",
-    "2.10"
-   ],
-   "word_count": 47,
-   "sources": [],
-   "notes": "Two acts by the same person (2.11 shape). No similarity decoy beside an addition key (bank rule); no motive sentence that would let a cause decoy reach back. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.S1_spec_restate.medium.w4b4_08",
-   "template": "S1_spec_restate",
-   "subtype": "Specification: exact content of a general statement",
-   "tier": "medium",
-   "passage": "Choquequirao, an Inca settlement perched high above Peru’s Apurímac River, features an ornamental element rarely documented at other Inca sites. ______ on one precipitous slope, pale stones embedded in a series of dark terrace walls form two dozen llama figures, arranged so that the animals appear to be climbing the mountainside in a long procession.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "However,",
-    "Specifically,",
-    "As a result,",
-    "In addition,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence mentions “an ornamental element rarely documented at other Inca sites” without saying what it is. The blank sentence gives the exact content: “pale stones embedded in a series of dark terrace walls form two dozen llama figures.” “Specifically” fits because it introduces the precise details of the general statement.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "The llama figures do not contrast with the ornamental element; they are that element."
-    },
-    "C": {
-     "recipe": "unearned cause",
-     "why_wrong": "The site’s decoration does not produce the llama figures; the figures are the decoration being described."
-    },
-    "D": {
-     "recipe": "additive",
-     "why_wrong": "The blank sentence does not add a second feature of the site; it describes the one feature the first sentence mentions."
-    }
-   },
-   "models": [
-    "2.12",
-    "2.3"
-   ],
-   "word_count": 54,
-   "sources": [],
-   "notes": "A general mention, then its exact content (2.12 shape); no example decoy beside a specification key (bank rule). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.S1_spec_restate.medium.w4b4_09",
-   "template": "S1_spec_restate",
-   "subtype": "Restatement of a technical term",
-   "tier": "medium",
-   "passage": "Economists characterize consumer demand for table salt as highly inelastic: because salt is inexpensive and a typical household consumes only small quantities of it, even substantial fluctuations in its price barely register with shoppers. ______ households continue to purchase roughly the same amount of salt whether its price rises sharply or declines.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "In other words,",
-    "Nevertheless,",
-    "Similarly,",
-    "In addition,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence calls the demand for salt “highly inelastic” and says that changes in its price “barely register with shoppers.” The blank sentence puts the same idea in plain terms: households “continue to purchase roughly the same amount of salt whether its price rises sharply or declines.” “In other words” fits because it introduces a rewording of the previous claim.",
-   "distractors": {
-    "B": {
-     "recipe": "false opposition (concession)",
-     "why_wrong": "“Nevertheless” would mean households keep buying salt in spite of what the first sentence says, but the first sentence explains exactly why they do."
-    },
-    "C": {
-     "recipe": "false parallel",
-     "why_wrong": "The blank sentence is not about a different product that behaves like salt; it is about salt itself."
-    },
-    "D": {
-     "recipe": "additive",
-     "why_wrong": "The blank sentence adds no new fact; it restates what “inelastic” demand means."
-    }
-   },
-   "models": [
-    "2.15"
-   ],
-   "word_count": 51,
-   "sources": [],
-   "notes": "Restatement of a technical term. No cause decoy, since the blank sentence could be read as following from the first. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C2_belief_finding.medium.w4b4_10",
-   "template": "C2_belief_finding",
-   "subtype": "Contrast: established view, then a finding (interrupter)",
-   "tier": "medium",
-   "passage": "Clouded leopards inhabiting the islands of Borneo and Sumatra were long classified as members of the same species as their counterparts on the Southeast Asian mainland. Genetic and morphological analyses published in 2006, ______ revealed differences substantial enough that the island populations are now recognized as a distinct species: the Sunda clouded leopard.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "for example,",
-    "therefore,",
-    "however,",
-    "in addition,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence gives the long-held view: the island cats “were long classified as members of the same species” as mainland clouded leopards. The 2006 analyses overturned it, showing the island populations to be “a distinct species.” “However” fits because it marks a finding that contradicts the earlier view.",
-   "distractors": {
-    "A": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The 2006 analyses are not an example of the old classification; they challenged it."
-    },
-    "B": {
-     "recipe": "unearned cause",
-     "why_wrong": "The old classification did not lead to the discovery of differences; the finding goes against it."
-    },
-    "D": {
-     "recipe": "additive",
-     "why_wrong": "The blank sentence does not add support to the old view; it reports evidence that replaced it."
-    }
-   },
-   "models": [
-    "2.16",
-    "2.1"
-   ],
-   "word_count": 52,
-   "sources": [],
-   "notes": "Established view, then a finding that breaks it, the connective as an interrupter after a long subject (2.16 position). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.E1_consequence.medium.w4b4_11",
-   "template": "E1_consequence",
-   "subtype": "Cause/effect: condition, then its consequence",
-   "tier": "medium",
-   "passage": "When construction of Cuba’s National Art Schools began in Havana in 1961, steel and cement were scarce on the island. ______ the schools’ architects built them largely of brick and terracotta tile, relying on the Catalan vault, a centuries-old technique that spans interior spaces with thin layers of tile and requires minimal steel reinforcement.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "By contrast,",
-    "Hence,",
-    "For instance,",
-    "Likewise,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence states a condition: “steel and cement were scarce on the island.” The blank sentence gives the result: the architects “built them largely of brick and terracotta tile,” using a vault that “requires minimal steel reinforcement.” “Hence” fits because it introduces a consequence of the previous sentence.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "The brick construction does not contrast with the shortage; it is the response to it."
-    },
-    "C": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Building with brick is not an instance of a shortage of steel and cement; it follows from that shortage."
-    },
-    "D": {
-     "recipe": "false parallel",
-     "why_wrong": "The blank sentence does not describe a similar shortage; it describes what the architects did because of the one already mentioned."
-    }
-   },
-   "models": [
-    "2.14",
-    "2.9"
-   ],
-   "word_count": 53,
-   "sources": [],
-   "notes": "Condition, then consequence, keyed with the medium-tier Hence. Plain contrast decoy rather than Nevertheless, which could be read as “they built anyway despite the shortage.” Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.T1_sequence_time.medium.w4b4_12",
-   "template": "T1_sequence_time",
-   "subtype": "Time: an earlier event",
-   "tier": "medium",
-   "passage": "In 1970, Éditions du Seuil in Paris issued Ivorian writer Ahmadou Kourouma’s novel Les soleils des indépendances, which attracted a substantial French readership. ______ the manuscript had been rejected by French publishers who objected to Kourouma’s reshaping of French syntax to echo Malinke speech. It had first appeared in 1968 from a university press in Montreal.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "As a result,",
-    "Similarly,",
-    "For example,",
-    "Previously,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence describes the novel’s 1970 publication in Paris. The blank sentence moves back in time: the manuscript “had been rejected by French publishers,” and the next sentence adds that it “had first appeared in 1968.” “Previously” fits because it introduces events that came before the one just described.",
-   "distractors": {
-    "A": {
-     "recipe": "unearned cause",
-     "why_wrong": "The 1970 Paris edition could not have caused rejections that came before it."
-    },
-    "B": {
-     "recipe": "false parallel",
-     "why_wrong": "The blank sentence does not describe a similar success; it describes the earlier rejections the novel faced."
-    },
-    "C": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The rejections are not an example of the novel attracting French readers; they happened before that."
-    }
-   },
-   "models": [
-    "2.2"
-   ],
-   "word_count": 55,
-   "sources": [],
-   "notes": "Reverse-order time key (2.2 shape); the past perfect and the 1968 date carry the relation. No contrast decoy, since the rejections could be read as opposing the later success. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.U1_culmination_alt.medium.w4b4_13",
-   "template": "U1_culmination_alt",
-   "subtype": "Place: what happened at the place just named",
-   "tier": "medium",
-   "passage": "In 1973, Palestinian poet Mahmoud Darwish settled in Beirut, which was then the foremost center of Arabic-language publishing and a hub of political debate. ______ he edited the research journal Shu’un Filastiniyya (Palestinian Affairs). In 1981, also in Beirut, he founded the literary magazine Al-Karmel, which published innovative poetry, fiction, and criticism by writers throughout the Arab world.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "There,",
-    "Instead,",
-    "In particular,",
-    "Likewise,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence names a place: Darwish “settled in Beirut.” The blank sentence describes what he did in that city: “he edited the research journal Shu’un Filastiniyya.” “There” fits because it refers back to Beirut, the place just named.",
-   "distractors": {
-    "B": {
-     "recipe": "false opposition",
-     "why_wrong": "Darwish did not edit the journal in place of settling in Beirut; he did this work after he moved there."
-    },
-    "C": {
-     "recipe": "wrong grain (specification)",
-     "why_wrong": "Editing a journal is not a particular part of settling in Beirut; it is what he went on to do in the city."
-    },
-    "D": {
-     "recipe": "false parallel",
-     "why_wrong": "The blank sentence does not describe a similar move; it describes Darwish’s work in Beirut."
-    }
-   },
-   "models": [
-    "2.8"
-   ],
-   "word_count": 57,
-   "sources": [],
-   "notes": "Place key (2.8 shape, the only medium U1 model). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.T1_sequence_time.easy.w4b4_14",
-   "template": "T1_sequence_time",
-   "subtype": "Sequence: next step of a process",
-   "tier": "easy",
-   "passage": "Venetian glassmakers create millefiori (“thousand flowers”) glass in stages. First, they layer molten glass of different colors around a central rod, forming a thick cane with a floral pattern in its cross section. ______ they reheat the cane and stretch it until it is long and thin, miniaturizing the pattern without distorting it. Finally, they slice the cane into small disks.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Regardless,",
-    "In other words,",
-    "Next,",
-    "Similarly,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The passage describes a process in order: “First,” the glassmakers form a cane, and “Finally,” they slice it. The blank sentence gives the step in between: they “reheat the cane and stretch it.” “Next” fits because it introduces the following step in the process.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition (dismissive)",
-     "why_wrong": "“Regardless” would mean the first step does not matter, but stretching the cane depends on having made it."
-    },
-    "B": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "Stretching the cane is a new step, not a rewording of the first one."
-    },
-    "D": {
-     "recipe": "false parallel",
-     "why_wrong": "Stretching the cane is not similar to layering the glass; it is the step that comes after it."
-    }
-   },
-   "models": [
-    "1.8",
-    "1.22"
-   ],
-   "word_count": 60,
-   "sources": [],
-   "notes": "Process with First / ______ / Finally cues (1.8 shape). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.T1_sequence_time.easy.w4b4_15",
-   "template": "T1_sequence_time",
-   "subtype": "Time: a later event",
-   "tier": "easy",
-   "passage": "From April to August 1914, Japanese author Natsume Sōseki’s novel Kokoro, which traces a student’s friendship with a reclusive older man he calls Sensei, was serialized in the newspaper Asahi Shimbun. ______ in September of that year, the novel was published as a single volume, with a cover that Sōseki designed himself.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "On the contrary,",
-    "Later,",
-    "For example,",
-    "In conclusion,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence says Kokoro “was serialized in the newspaper Asahi Shimbun” from April to August 1914. The blank sentence describes what happened afterward, “in September of that year.” “Later” fits because it introduces an event that came after the one just described.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "The book edition does not contradict the newspaper serialization; it followed it."
-    },
-    "C": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The book edition is not an example of the serialization; it is a separate, later event."
-    },
-    "D": {
-     "recipe": "premature summary",
-     "why_wrong": "The blank sentence does not sum up the passage; it adds a new event."
-    }
-   },
-   "models": [
-    "1.18",
-    "1.12"
-   ],
-   "word_count": 51,
-   "sources": [],
-   "notes": "Dated events in order (1.18 shape); no addition decoy, which could read as “also published as a book.” Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.E1_consequence.easy.w4b4_16",
-   "template": "E1_consequence",
-   "subtype": "Cause/effect: condition, then its consequence",
-   "tier": "easy",
-   "passage": "Coober Pedy, an opal-mining town in the desert of South Australia, has summer temperatures that often climb above 40°C (104°F). ______ many of the town’s residents live in “dugouts,” homes carved into the sandstone hillsides, where the temperature holds steady at a comfortable level all year.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Nevertheless,",
-    "For instance,",
-    "Likewise,",
-    "As a result,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence describes the town’s extreme heat: temperatures “often climb above 40°C.” The blank sentence explains how residents respond: many live in dugouts, where the temperature “holds steady at a comfortable level all year.” “As a result” fits because it introduces a consequence of the heat.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition (concession)",
-     "why_wrong": "“Nevertheless” would mean residents live in dugouts in spite of the heat, but the heat is the reason for the dugouts."
-    },
-    "B": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Living in dugouts is not an example of high temperatures; it is a response to them."
-    },
-    "C": {
-     "recipe": "false parallel",
-     "why_wrong": "The blank sentence does not describe something similar to the heat; it describes its effect on how people live."
-    }
-   },
-   "models": [
-    "1.27",
-    "1.15"
-   ],
-   "word_count": 45,
-   "sources": [],
-   "notes": "Condition, then consequence. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.E1_consequence.easy.w4b4_17",
-   "template": "E1_consequence",
-   "subtype": "Cause/effect: condition, then its consequence",
-   "tier": "easy",
-   "passage": "The Gila monster is a venomous lizard inhabiting the deserts of the American Southwest and northwestern Mexico. It can consume up to a third of its body weight in a single meal, storing the surplus energy as fat in its thick tail. ______ a wild Gila monster may require only a few substantial meals each year.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Consequently,",
-    "In comparison,",
-    "Meanwhile,",
-    "For example,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The second sentence says a Gila monster can eat a huge meal, “storing the surplus energy as fat in its thick tail.” Because of that stored energy, it “may require only a few substantial meals each year.” “Consequently” fits because it introduces a result of the previous sentence.",
-   "distractors": {
-    "B": {
-     "recipe": "false opposition",
-     "why_wrong": "The blank sentence does not compare the Gila monster with another animal; it describes the same lizard."
-    },
-    "C": {
-     "recipe": "phantom time",
-     "why_wrong": "“Meanwhile” would describe something happening at the same time, but the blank sentence states an outcome of the lizard’s eating habits."
-    },
-    "D": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Needing few meals is not an example of storing fat in the tail; it is what that storage makes possible."
-    }
-   },
-   "models": [
-    "1.5",
-    "1.3"
-   ],
-   "word_count": 55,
-   "sources": [],
-   "notes": "Condition, then consequence. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.X1_example.easy.w4b4_18",
-   "template": "X1_example",
-   "subtype": "Example: general claim, then one named instance",
-   "tier": "easy",
-   "passage": "Throughout her career, Peruvian artist Elena Izcue drew inspiration from the art of Peru’s ancient civilizations. ______ in 1926 she published El arte peruano en la escuela (Peruvian Art in the School), a set of drawing books for schoolchildren. The books taught students to copy and adapt designs from ancient Peruvian textiles and pottery.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Instead,",
-    "In conclusion,",
-    "For example,",
-    "In other words,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence makes a general claim: Izcue “drew inspiration from the art of Peru’s ancient civilizations.” The blank sentence gives one instance, a set of drawing books, and the next sentence shows how they used “designs from ancient Peruvian textiles and pottery.” “For example” fits because it introduces an example of the general claim.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "The drawing books are not something Izcue made in place of work inspired by ancient art; they are such work."
-    },
-    "B": {
-     "recipe": "premature summary",
-     "why_wrong": "The blank sentence does not sum up the passage; it introduces a specific project."
-    },
-    "D": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "The blank sentence adds a new, specific fact rather than rewording the first sentence."
-    }
-   },
-   "models": [
-    "1.25",
-    "1.2"
-   ],
-   "word_count": 53,
-   "sources": [],
-   "notes": "General claim, then one named instance. No cause decoy: her interest in ancient art could be read as the reason for the books. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.X1_example.easy.w4b4_19",
-   "template": "X1_example",
-   "subtype": "Example: general claim, then one named instance",
-   "tier": "easy",
-   "passage": "Cuban composer Ernesto Lecuona often brought the sounds of Afro-Cuban street music into his works for the concert hall. ______ his piano piece “La comparsa” imitates a carnival procession. Its drumlike rhythm grows louder as the musicians seem to approach, then softens as they pass.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "On the other hand,",
-    "For instance,",
-    "Likewise,",
-    "Today,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence says Lecuona “often brought the sounds of Afro-Cuban street music” into his concert works. The blank sentence names one such work, “La comparsa,” which “imitates a carnival procession.” “For instance” fits because it introduces an example of the general claim.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "“La comparsa” does not contrast with Lecuona’s use of street music; it shows that use."
-    },
-    "C": {
-     "recipe": "false parallel",
-     "why_wrong": "The blank sentence does not describe a different composer or a similar case; it gives an instance of Lecuona’s own habit."
-    },
-    "D": {
-     "recipe": "wrong time",
-     "why_wrong": "“Today” would set the piece in the present, but nothing in the passage contrasts the past with the present."
-    }
-   },
-   "models": [
-    "1.37",
-    "1.20"
-   ],
-   "word_count": 44,
-   "sources": [],
-   "notes": "General claim with “often,” then one named instance. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C3_limiting_fact.easy.w4b4_20",
-   "template": "C3_limiting_fact",
-   "subtype": "Contrast: positive claim, then a limiting fact",
-   "tier": "easy",
-   "passage": "In 1775, Swedish chemist Carl Wilhelm Scheele created a bright green pigment that soon became popular for coloring wallpaper, fabric, artificial flowers, and even candy. ______ the pigment contained arsenic, and people who spent long hours in rooms decorated with it sometimes became seriously ill, suffering headaches, nausea, and other symptoms.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "For instance,",
-    "Similarly,",
-    "Thus,",
-    "However,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence presents the pigment positively: it was “bright green” and “soon became popular.” The blank sentence gives a serious drawback: it “contained arsenic,” and some people “became seriously ill.” “However” fits because it introduces a fact that contrasts with the pigment’s popularity.",
-   "distractors": {
-    "A": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The arsenic is not an example of the pigment’s popularity; it is a problem with the pigment."
-    },
-    "B": {
-     "recipe": "false parallel",
-     "why_wrong": "The blank sentence does not describe something similar to the pigment’s popularity; it describes a danger."
-    },
-    "C": {
-     "recipe": "unearned cause",
-     "why_wrong": "The pigment’s popularity did not cause it to contain arsenic."
-    }
-   },
-   "models": [
-    "1.10",
-    "1.33"
-   ],
-   "word_count": 50,
-   "sources": [],
-   "notes": "Positive claim, then a limiting fact about the same subject. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C1_two_subject.easy.w4b4_21",
-   "template": "C1_two_subject",
-   "subtype": "Contrast: two subjects, opposite values",
-   "tier": "easy",
-   "passage": "Female mosquitoes of many species feed on the blood of humans and other animals, which supplies the protein they need to produce eggs. ______ male mosquitoes never bite: they feed only on flower nectar, fruit juices, and other sugary plant fluids.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "By contrast,",
-    "For example,",
-    "Similarly,",
-    "In other words,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence says female mosquitoes “feed on the blood of humans and other animals.” The blank sentence says the opposite about males: they “never bite.” “By contrast” fits because it sets the males against the females.",
-   "distractors": {
-    "B": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Male mosquitoes are not an example of blood-feeding females; they behave in the opposite way."
-    },
-    "C": {
-     "recipe": "false parallel",
-     "why_wrong": "“Similarly” would mean males also feed on blood, but they “never bite.”"
-    },
-    "D": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "The blank sentence is about a different group, so it cannot be a rewording of the first sentence."
-    }
-   },
-   "models": [
-    "1.17",
-    "1.14"
-   ],
-   "word_count": 40,
-   "sources": [],
-   "notes": "Two subjects, opposite values. No cause decoy (a reader could argue that only egg-producing females need blood). Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.A1_addition.easy.w4b4_22",
-   "template": "A1_addition",
-   "subtype": "Addition: a second activity of the same person",
-   "tier": "easy",
-   "passage": "Indian vocalist M. S. Subbulakshmi was among the most celebrated performers of Carnatic music, South India’s classical tradition, and her concert career spanned more than six decades. ______ she appeared in several films, most memorably in the title role of Meera (1945), a film about the life of the sixteenth-century poet-saint Meerabai.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "On the contrary,",
-    "In other words,",
-    "In addition,",
-    "For instance,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence describes Subbulakshmi’s concert career. The blank sentence adds a separate activity: she “appeared in several films.” “In addition” fits because it introduces another item of the same kind, a further part of her career.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "Her film work does not contradict her concert career; she did both."
-    },
-    "B": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "Acting in films is new information, not a rewording of her concert career."
-    },
-    "D": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Acting in films is not an instance of giving concerts of Carnatic music."
-    }
-   },
-   "models": [
-    "1.7",
-    "1.30"
-   ],
-   "word_count": 51,
-   "sources": [],
-   "notes": "Two activities of one person. Facts from general knowledge, not web-checked (Transitions: no fact check, WAVE.md); no made-up finding attributed to a real person or organisation."
-  }
- ],
- "done": true
+  ],
+  "done": true
 }

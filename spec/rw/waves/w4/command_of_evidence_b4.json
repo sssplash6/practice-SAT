@@ -1,1204 +1,1873 @@
 {
- "skill": "Command of Evidence",
- "slug": "command_of_evidence",
- "part": "w4b4",
- "domain": "Information and Ideas",
- "plan": {
-  "templates": [
-   {
-    "code": "T1_single",
-    "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
-   },
-   {
-    "code": "T1_compete",
-    "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
-   },
-   {
-    "code": "T2_lit_quote",
-    "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
-   },
-   {
-    "code": "T3_person_quote",
-    "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
-   },
-   {
-    "code": "Q2_P8_quantifier",
-    "name": "Data description: quantified claim (for each, all except one)"
-   },
-   {
-    "code": "Q1_P67_criterion",
-    "name": "Data completion: passage criterion or presence/absence combined with the display"
-   },
-   {
-    "code": "Q1_P2_extreme",
-    "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
-   },
-   {
-    "code": "Q1_P3_pairwise",
-    "name": "Data completion: pairwise comparison (one or two comparisons)"
-   },
-   {
-    "code": "Q1_P4_trend",
-    "name": "Data completion: change over time"
-   },
-   {
-    "code": "Q2_P8_multipart",
-    "name": "Data description: multi-part, interaction, or passage-plus-data claim"
-   }
-  ]
- },
- "items": [
-  {
-   "id": "command_of_evidence.T1_single.hard.w4b4_01",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a two-part dating claim (more recent than thought, and a response to a datable event)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "The rice terraces of Ifugao Province, in the mountains of northern Luzon in the Philippines, are often described as about 2,000 years old. That estimate, however, rests largely on early twentieth-century calculations of how long constructing such an extensive system would have taken. After excavating at Old Kiyyangan, a village first settled roughly 1,000 years ago, archaeologist Stephen Acabado and colleagues concluded that wet-rice cultivation on the terraces is far more recent. In their view, it developed as a response to the Spanish colonization of the Philippine lowlands, which began in the 1570s.",
-   "stem": "Which finding, if true, would most directly support Acabado and colleagues’ conclusion?",
-   "options": [
-    "Pollen from rice grown in flooded fields first appears in soil layers at Old Kiyyangan dating to about 1300 CE, some three centuries after the village was settled.",
-    "Small terraces for growing taro, a crop that does not require flooded fields, were built at Old Kiyyangan centuries before any Spanish expedition reached Luzon.",
-    "Unambiguous traces of wet rice at Old Kiyyangan first appear in layers dating to about 1650, when the village’s terraced fields also began to expand rapidly.",
-    "Charcoal found beneath the stone walls of Old Kiyyangan’s oldest wet-rice terraces dates to about 1,000 years ago, when the village was first settled."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "Acabado and colleagues conclude that wet-rice cultivation on the terraces “is far more recent” than 2,000 years and that it “developed as a response to the Spanish colonization of the Philippine lowlands, which began in the 1570s.” Wet rice first appearing around 1650, with the terraces expanding at the same time, is both far younger than 2,000 years and comes a few decades after colonization began, so choice C supports both parts of the conclusion.",
-   "distractors": {
-    "A": {
-     "recipe": "HALF: supports “more recent” but not the colonial link",
-     "why_wrong": "Wet rice around 1300 CE would be younger than 2,000 years, but it would predate the Spanish colonization of the 1570s by nearly three centuries, so it could not have been a response to that colonization."
-    },
-    "B": {
-     "recipe": "TRAP: true but not what is asked (a different crop)",
-     "why_wrong": "Early taro terraces say nothing about when wet rice, which needs flooded fields, was taken up, so the finding does not bear on the timing the conclusion is about."
-    },
-    "D": {
-     "recipe": "OPP: would weaken",
-     "why_wrong": "Wet-rice terraces dating to about 1,000 years ago would be centuries older than the Spanish colonization, which would cut against the claim that wet-rice cultivation was a response to it."
-    }
-   },
-   "models": [
-    "3.12",
-    "3.31",
-    "3.28",
-    "3.36"
-   ],
-   "sources": [
-    {
-     "what": "Acabado, Koller, Liu, Farahani, Barretto-Tesoro, Reyes, Martin, Peterson 2019, Journal of Field Archaeology 44(3): 195-214, 'The Short History of the Ifugao Rice Terraces: A Local Response to the Spanish Conquest' (abstract): local histories place the terraces at 2,000 to 3,000 years old; the authors argue wet-rice cultivation is much more recent, a response to the intrusion of the Spanish Empire into the northern highlands",
-     "url": "https://oasis.library.unlv.edu/anthro_fac_articles/501"
-    },
-    {
-     "what": "Archaeology magazine on Acabado's Ifugao work: the 2,000-year figure rests on early twentieth-century estimates of construction time; Old Kiyyangan, the first Ifugao village, settled about 1,000 years ago; clear wet rice from about 1650; earlier small terraces for taro",
-     "url": "https://archaeology.org/issues/online/collection/philippines-ifugao-rice-terraces/"
-    }
-   ],
-   "notes": "Band 6. The key needs two linked steps: 1650 is after the 1570s, and both far younger than 2,000 years. A HALF (younger but pre-colonial), B TRAP (true, other crop), D OPP. Spanish colonization of the Philippines began with Legazpi in 1565 (Cebu) and Manila in 1571; the passage says lowland colonization began in the 1570s, which fits the Luzon lowlands. Hypothetical findings only; the 1650 date in C matches Acabado's reported result.",
-   "word_count": 93
-  },
-  {
-   "id": "command_of_evidence.T1_single.hard.w4b4_02",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports an explanatory hypothesis (the comparison must isolate temperature and tie it to escape)",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "Female horseflies (tabanids), which feed on blood, attack sunlit, dark-coated horses and cattle more often than shaded or pale ones. Shiny dark surfaces reflect strongly polarized light, which the flies are known to seek out. Yet biologist Gábor Horváth and his colleagues have found that tabanids also prefer warm black targets to cool ones with identical optical properties. The researchers hypothesize that this thermal preference arises not because warmer animals provide a more accessible meal but because warmth improves a fly’s chances of surviving its host’s defensive reactions, such as the swishing of a tail or the twitching of skin.",
-   "stem": "Which finding from Horváth and colleagues’ field experiments, if true, would most directly support their hypothesis?",
-   "options": [
-    "Flies on black barrels warmed with heated air escaped a researcher’s attempts to catch them more often than flies on identical barrels cooled with water did.",
-    "Thermal images taken on a sunny day showed that the backs of black horses reached higher surface temperatures than the backs of white horses, at times exceeding 50°C.",
-    "Flies feeding on warmer animals obtained a full meal of blood more quickly than flies feeding on cooler animals did, because warmth widens the blood vessels near the skin.",
-    "More flies landed on black barrels placed in direct sunlight than on otherwise identical black barrels placed in the shade of nearby trees on the same afternoons."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers hypothesize that tabanids prefer warmth “because warmth improves a fly’s chances of surviving its host’s defensive reactions.” A researcher trying to catch a landed fly stands in for a host trying to dislodge it, and the warm and cool barrels looked the same, so only temperature differed. If flies on the warm barrels escaped more often, warmth helped them survive an attack, as the hypothesis predicts, so choice A supports it.",
-   "distractors": {
-    "B": {
-     "recipe": "TRAP: accurate but insufficient (shows the host difference, not its benefit)",
-     "why_wrong": "Warmer coats on black horses explain why a fly that prefers warmth would choose dark hosts, but the finding says nothing about whether warmth helps flies survive a host’s defenses, which is the reason the hypothesis gives."
-    },
-    "C": {
-     "recipe": "OPP: the rival explanation",
-     "why_wrong": "A quicker meal on warmer animals points to the explanation the researchers reject, that warmer animals “provide a more accessible meal,” rather than to any benefit in escaping a host’s defenses."
-    },
-    "D": {
-     "recipe": "TRAP: consistent with both explanations",
-     "why_wrong": "Sunlit barrels are both warmer and more strongly polarizing than shaded ones, and a landing count shows only where flies go, not whether warmth helps them escape, so the finding cannot support the hypothesis."
-    }
-   },
-   "models": [
-    "3.42",
-    "3.39",
-    "3.45",
-    "3.28",
-    "5b74feb9"
-   ],
-   "sources": [
-    {
-     "what": "Horváth, Pereszlényi, Egri, Tóth, Jánosi 2020, PLoS ONE 15(5): e0233038, 'Why do biting horseflies prefer warmer hosts? tabanids can escape easier from warmer targets': tabanids prefer sunlit, darker, warmer hosts; shiny dark targets reflect highly polarized light that host-seeking females prefer; earlier work showed a preference for warm black targets over cold ones with the same optics; hypothesis that warmer wing muscles and nervous system let flies avoid host defensive reactions by prompt takeoff (alternative noted: wider capillaries in warmer hosts); a blind experimenter tried to capture flies landed on warm (air-filled) and cold (water-filled) shiny black barrels with a tea strainer; escape success fell as target temperature fell; thermography of sunlit horses, black up to 54.6°C",
-     "url": "https://doi.org/10.1371/journal.pone.0233038"
-    }
-   ],
-   "notes": "Band-7 moves: stem names the study and claimants (15 words); key needs two bridges the passage does not state (a capture attempt stands in for a host's defense; identical barrels isolate temperature from optics). B TRAP accurate but insufficient (a real thermography result), C OPP (the rival named in the passage, also raised in the paper), D TRAP fits both (sun changes warmth and polarization). Key is the paper's real result.",
-   "word_count": 100
-  },
-  {
-   "id": "command_of_evidence.T1_compete.hard.w4b4_03",
-   "template": "T1_compete",
-   "subtype": "Hypothetical finding discriminates between two accounts of a volcanic flank collapse (single sudden failure vs. a series of small slides)",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "Sometime between 65,000 and 124,000 years ago, much of the eastern flank of Fogo, a volcanic island in Cape Verde, collapsed into the Atlantic Ocean. Some geologists have proposed that the flank failed through a succession of relatively small landslides, each displacing too little water to generate more than a modest tsunami. Volcanologist Ricardo Ramalho and colleagues, who examined deposits on Santiago Island, approximately 55 kilometers east of the collapse site, dispute this interpretation. They argue that the collapse began with a single catastrophic failure of an immense volume of rock and that the resulting wave was far larger than any that a succession of small landslides could have produced.",
-   "stem": "Which finding about Santiago Island, if true, would most directly support Ramalho and colleagues’ argument?",
-   "options": [
-    "Sand and broken seashells that could only have come from the seafloor were deposited around the time of the collapse across low-lying land on the side of Santiago that faces Fogo.",
-    "Deposits laid down on Santiago around the time of the collapse show that at least two separate waves struck the island, one shortly after the other.",
-    "None of the deposits on Santiago that date to the time of the collapse lie more than a few meters above the level at which the sea stood when Fogo’s flank failed.",
-    "Around the time of the collapse, blocks of rock weighing over 100 tons were torn from Santiago’s sea cliffs and left on a plateau up to 200 meters above sea level."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "Ramalho and colleagues argue that the collapse “began with a single catastrophic failure of an immense volume of rock” and that the resulting wave “was far larger than any that a succession of small landslides could have produced.” Only an enormous wave could tear blocks weighing over 100 tons from sea cliffs and carry them uphill onto a plateau 200 meters above the sea, so choice D shows that a giant wave struck Santiago when Fogo’s flank failed, as the single-failure account predicts and the small-landslides account rules out.",
-   "distractors": {
-    "A": {
-     "recipe": "TRAP: consistent with both explanations",
-     "why_wrong": "Seafloor sand and shells spread over low-lying coastal land show only that some tsunami reached Santiago; a modest wave from a small landslide could have left them, so the finding does not favor a single catastrophic failure."
-    },
-    "B": {
-     "recipe": "TRAP: consistent with both explanations (number of waves, not their size)",
-     "why_wrong": "Two waves in quick succession fit a series of landslides, and they also fit one great failure followed by smaller ones; the finding says nothing about how large either wave was, which is what separates the two accounts."
-    },
-    "C": {
-     "recipe": "OPP: the rival’s prediction",
-     "why_wrong": "Deposits no more than a few meters above the sea would point to modest waves, which is what the small-landslides account predicts, so this finding would weaken rather than support Ramalho and colleagues’ argument."
-    }
-   },
-   "models": [
-    "3.9",
-    "3.48",
-    "3.14",
-    "0c622cfb",
-    "0240d11c"
-   ],
-   "sources": [
-    {
-     "what": "Ramalho et al. 2015, Science Advances 1(9): e1500456, 'Hazard potential of volcanic flank collapses raised by new megatsunami evidence': Fogo's eastern flank collapsed (earlier estimates 65,000 to 124,000 years ago); earlier work suggested successive small retrogressive failures and no megatsunami; Santiago lies 55 km from the collapse site; megaclasts of about 1 to 700 tonnes quarried from the cliff edge and carried uphill onto the plateau, up to 220 m elevation (a 185 t block at 215 m), dated by cosmogenic 3He to about 73,000 years ago; authors conclude at least one fast, voluminous failure produced a giant tsunami, possibly followed by smaller ones",
-     "url": "https://doi.org/10.1126/sciadv.1500456"
-    }
-   ],
-   "notes": "Band-7 moves: two named views; the key supplies the unstated bridge (only a giant wave can lift 100-ton blocks 200 m uphill) and matches the paper's real evidence. A TRAP fits both, B TRAP fits both (the earlier two-wave evidence, which the authors fold into a big-then-smaller sequence), C OPP. Stem 15 words, narrowed and naming the claimants. Three steps: blocks moved uphill by water, so wave enormous, so not small slides.",
-   "word_count": 110
-  },
-  {
-   "id": "command_of_evidence.T1_compete.hard.w4b4_04",
-   "template": "T1_compete",
-   "subtype": "Hypothetical finding discriminates between an energy limit and a time limit on foraging",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Flapping flight is fast but energetically costly, whereas soaring on thermals (columns of rising warm air) conserves energy but is comparatively slow, a disadvantage that is especially pronounced for small species. Because lesser kestrels (Falco naumanni), small insectivorous falcons that breed in colonies in southern Spain, can carry only a single prey item to their nestlings per foraging trip, researchers anticipated that the birds would favor flapping flight, maximizing the frequency of their deliveries. Tracking kestrels from two colonies near Seville with GPS devices, Jesús Hernández-Pliego and colleagues instead concluded that during the breeding season the birds are constrained more by energy than by time.",
-   "stem": "Which finding, if true, would most directly support Hernández-Pliego and colleagues’ conclusion?",
-   "options": [
-    "When thermals were available, kestrels generally kept flapping to hunting areas close to the colony, which allowed them to return to their nestlings more often.",
-    "Once thermals formed each day, kestrels soared to hunting areas far from the colony, even though this lowered how often they delivered prey to their nestlings.",
-    "Early in the morning, before any thermals had formed, kestrels flapped their wings when traveling between the colony and the areas where they hunted.",
-    "Kestrels from the colony surrounded by poor hunting habitat traveled farther from the nest on foraging trips than kestrels from the colony in better habitat did."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers conclude that the kestrels are “constrained more by energy than by time.” If the birds switched to slow, energy-saving soaring as soon as thermals allowed it, even at the cost of delivering prey to their nestlings less often, they gave up time to save energy, which is what an energy limit predicts. Choice B therefore supports the conclusion.",
-   "distractors": {
-    "A": {
-     "recipe": "OPP: the rival’s prediction",
-     "why_wrong": "Choosing to flap when soaring was possible, so as to deliver food more often, would show the birds saving time at the cost of energy, which fits the expectation the researchers rejected."
-    },
-    "C": {
-     "recipe": "TRAP: consistent with both explanations (no choice available)",
-     "why_wrong": "Before thermals form, flapping is the only way to travel, so flapping then reveals nothing about whether the birds put energy or time first."
-    },
-    "D": {
-     "recipe": "TRAP: consistent with both explanations (habitat, not flight choice)",
-     "why_wrong": "Birds from a poorer habitat might travel farther simply because prey nearby is scarce, whether they are limited by energy or by time, so the difference does not favor either view."
-    }
-   },
-   "models": [
-    "3.8",
-    "3.10",
-    "3.15",
-    "3.9",
-    "0240d11c"
-   ],
-   "sources": [
-    {
-     "what": "Hernández-Pliego, Rodríguez, Bustamante 2015, PLoS ONE 10(12): e0145402, 'Why Do Kestrels Soar?': flapping costs more energy than soaring-gliding, which is slower especially for small species; 35 lesser kestrels from two colonies near Seville (one urban, 50 km apart) tracked with GPS over four breeding seasons; contrary to expectations they relied on thermal soaring, flapping to nearby areas when thermals were absent and soaring to distant areas once thermals formed, which reduced chick provisioning rate; kestrels carry a single prey per trip; conclusion: more energy than time-constrained in the breeding season",
-     "url": "https://doi.org/10.1371/journal.pone.0145402"
-    }
-   ],
-   "notes": "Band 6. Two views (time limit expected, energy limit concluded). Key is the paper's real result. A OPP, C TRAP (no choice when thermals absent), D TRAP (habitat effect, also real: the urban colony in poor habitat showed the pattern more strongly). Each wrong option is accurate or plausible in its first part and fails on the link to energy versus time.",
-   "word_count": 105
-  },
-  {
-   "id": "command_of_evidence.T2_lit_quote.hard.w4b4_05",
-   "template": "T2_lit_quote",
-   "subtype": "Literary quotation illustrates an indirect claim (Elizabethan drama; the key carries the claim in figurative language)",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "A Woman Killed with Kindness is a 1603 play by Thomas Heywood. In the play, Frankford learns that his wife has betrayed him with Wendoll, a friend whom he had welcomed into his household. When his wife pleads for his pardon, Frankford intimates that he, rather than she, will bear the shame of her betrayal: ______",
-   "stem": "Which quotation from A Woman Killed with Kindness most effectively illustrates the claim?",
-   "options": [
-    "“O God! O God! that it were possible / To undo things done; to call back yesterday! / That Time could turn up his swift sandy glass, / To untell the days, and to redeem these hours!”",
-    "“Yet for these infants, these young harmless souls, / On whose white brows thy shame is charactered, / And grows in greatness as they wax in years,— / Look but on them, and melt away in tears.”",
-    "“Spare thou thy tears, for I will weep for thee: / And keep thy countenance, for I’ll blush for thee.”",
-    "“Go, villain, and my wrongs sit on thy soul / As heavy as this grief doth upon mine!”"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The claim is that Frankford suggests he, “rather than she, will bear the shame of her betrayal.” In choice C he tells his wife to hold back her tears because he will weep for her, and to keep her composure (“keep thy countenance”) because he will blush for her: he takes on the tears and the blush of shame that should be hers.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: nearby emotion (regret)",
-     "why_wrong": "Frankford wishes he could turn back time and undo what has happened, which expresses regret, not that he will carry his wife’s shame in her place."
-    },
-    "B": {
-     "recipe": "LURE and wrong subject: shares the word “shame” but places it on the children",
-     "why_wrong": "Frankford says the shame is written on his children’s brows and urges his wife to weep, so the shame falls on the children and the tears on her, not on him in her place."
-    },
-    "D": {
-     "recipe": "OPP: wishes the burden onto the offender",
-     "why_wrong": "Frankford wishes that the wrongs done to him would weigh on the offender’s soul as heavily as his grief weighs on his own, which places the burden on the other person rather than taking it on himself."
-    }
-   },
-   "models": [
-    "3.37",
-    "3.17",
-    "3.11",
-    "3.34",
-    "3.35"
-   ],
-   "sources": [
-    {
-     "what": "Thomas Heywood, A Woman Killed with Kindness, Mermaid Series edition by A. Wilson Verity (Vizetelly, 1888), Act IV, Scene VI; Henslowe's Diary payments to Heywood for the play in February and March 1603; all four quotations checked as exact substrings of the Gutenberg text (double hyphen set as an em dash)",
-     "url": "https://www.gutenberg.org/ebooks/67267"
-    }
-   ],
-   "notes": "Band-7 moves: pre-1929 drama in Elizabethan English; the claim uses an indirect verb (intimates); the key states the claim only through figurative language (weep for thee, blush for thee); distractors are the same speaker in nearby emotions (regret, reproach over the children with the word shame, grief and wished revenge). Wendoll is listed in the play as Frankford's friend; the wife is named only as Mistress Frankford (Nan) in this edition, so the passage says his wife. Work not used by any official item (grep of cb_api and transcripts for Heywood: none) or by our bank.",
-   "word_count": 56
-  },
-  {
-   "id": "command_of_evidence.T3_person_quote.hard.w4b4_07",
-   "template": "T3_person_quote",
-   "subtype": "Quotation from a person supports a claim made inside the author’s rebuttal of a common reading",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "In 1951, while living in Denmark and exhibiting with the avant-garde collective CoBrA, South African artist Ernest Mancoba carved Sculpture, a diminutive, vaguely figurelike form cut from a single block of wood. Several critics characterized Mancoba’s “little wooden images” as expressions of his “strong African origins.” That interpretation may seem plausible, given that Mancoba first learned woodcarving at an Anglican mission college in South Africa, but it confines the significance of his work to his birthplace. Mancoba himself attached little importance to geography; what mattered to him was a lineage connecting artists, regardless of origin, who endeavored to reconcile the spiritual and the material.",
-   "stem": "Which quotation from an art historian would most directly support the claim made in the text?",
-   "options": [
-    "“Whatever Mancoba absorbed in Paris and Copenhagen, the carving of Sculpture belongs to the devotional workshops of South Africa where he trained, and it is as a record of those workshops, and of the land that produced them, that the work most rewards close attention.”",
-    "“Mancoba left the marks of his chisel visible on a form that only half resembles a living body, so that Sculpture seems caught between a block of wood and a sacred image, an object at once stubbornly physical and quietly devotional.”",
-    "“Critics need not choose between Mancoba’s African and European identities: Sculpture is the work of a man formed equally by a South African youth and a Danish maturity, and viewers who keep both chapters of that biography in mind will see the most in it.”",
-    "“Mancoba felt as close to the unknown carvers of Inuit amulets as to the sculptors of his native South Africa; what united such makers, in his view, was a shared struggle to give the invisible life of the spirit a shape in wood or stone.”"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The text claims that Mancoba “attached little importance to geography” and valued “a lineage connecting artists, regardless of origin, who endeavored to reconcile the spiritual and the material.” Choice D says he felt as close to Inuit carvers as to South African ones, so origin did not decide his kinship, and that what united such artists was a struggle to give the life of the spirit a shape in wood or stone, which is the reconciling of the spiritual and the material.",
-   "distractors": {
-    "A": {
-     "recipe": "OPP: sides with the reading the text rejects",
-     "why_wrong": "The quotation ties the work’s meaning to the South African workshops and “the land that produced them,” which is the birthplace-centered interpretation the text argues against."
-    },
-    "B": {
-     "recipe": "HALF: the spiritual and the material without the kinship across origins",
-     "why_wrong": "The quotation describes Sculpture as both physical and devotional, but it says nothing about Mancoba’s sense of kinship with artists regardless of where they came from, the main point of the claim."
-    },
-    "C": {
-     "recipe": "TRAP: a reconciliation that still reads the work through geography",
-     "why_wrong": "The quotation replaces one birthplace with two places, South Africa and Denmark, so it still locates the work’s meaning in the artist’s biography and geography rather than in a lineage of artists from any origin."
-    }
-   },
-   "models": [
-    "ca9dc00f",
-    "3.3",
-    "3.21",
-    "3.32",
-    "3.33"
-   ],
-   "sources": [
-    {
-     "what": "Art Institute of Chicago, Ernest Mancoba, Sculpture (1951), wood: his last known sculpture, carved from a single wood block, a diminutive, vaguely lifelike form; reflects Christian icons and South African devotional sculpture; critics viewed his “little wooden images” as evidence of his “strong African origins,” but for Mancoba it was not geography that mattered but the shared lineage with artists who could reconcile the spiritual and the material",
-     "url": "https://www.artic.edu/artworks/255263/sculpture"
-    },
-    {
-     "what": "Wikipedia, Ernest Mancoba: learned woodcarving at Grace Dieu, an Anglican diocesan training college; moved to Denmark in 1947 with Sonja Ferlov and joined Asger Jorn's circle, which became CoBrA (1948); his carving of this period inspired by Inuit art as much as by African sculpture",
-     "url": "https://en.wikipedia.org/wiki/Ernest_Mancoba"
-    }
-   ],
-   "notes": "Band-7 moves: the claim sits inside the author's rebuttal of a common reading (model ca9dc00f); quotations of about 45 words that argue; A OPP (sides with the rejected view), B HALF (spiritual and material only), C TRAP (reconciliation that misses the claim, as in ca9dc00f B). Quotations are attributed to an unnamed art historian and are invented, as T3 allows. The critics' phrases are quoted as the museum quotes them.",
-   "word_count": 104
-  },
-  {
-   "id": "command_of_evidence.Q2_P8_quantifier.hard.w4b4_08",
-   "template": "Q2_P8_quantifier",
-   "subtype": "Data description: quantified claim (the same two plants dominate each introduced bird’s diet) plus a contrast with the native bird",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "Of Hawaii’s native fruit-eating birds, only the Omao, a thrush found on Hawaii Island, survives in numbers large enough to disperse the seeds of native plants, and its range has contracted to less than half its original extent. Two introduced birds, the Japanese white-eye and the red-billed leiothrix, are now abundant throughout the islands. To determine whether they could assume the Omao’s ecological role, ecologist Liba Pejchar identified the seeds in droppings collected from all three species. She concluded that the introduced birds depend on a narrow set of food plants—the same two widespread species in each case—whereas the Omao distributes its feeding more evenly across native plants.",
-   "stem": "Which choice best describes data from the table that support Pejchar’s conclusion?",
-   "options": [
-    "Rubus hawaiensis made up more than 85% of the seeds in the Japanese white-eye’s diet, while Vaccinium calycinum made up nearly 70% of the seeds in the red-billed leiothrix’s diet.",
-    "Rubus hawaiensis and Vaccinium calycinum together made up more than 90% of the seeds in each introduced bird’s diet, whereas no plant species made up more than about a third of the seeds in the Omao’s diet.",
-    "A single plant species, Rubus hawaiensis, made up most of the seeds in the diets of both introduced birds, whereas Ilex anomala made up about a third of the seeds in the Omao’s diet.",
-    "Ilex anomala made up about a third of the seeds in the Omao’s diet but was absent from both introduced birds’ diets, which alone included seeds of the introduced plant Rubus rosifolius."
-   ],
-   "answer_letter": "B",
-   "table": {
-    "title": "Percentage of Seeds from Selected Plant Species in Droppings of Three Bird Species on Hawaii Island",
-    "columns": [
-     "Plant species",
-     "Omao (%)",
-     "Japanese white-eye (%)",
-     "Red-billed leiothrix (%)"
-    ],
-    "rows": [
-     [
-      "Rubus hawaiensis",
-      "14.6",
-      "85.9",
-      "22.7"
-     ],
-     [
-      "Vaccinium calycinum",
-      "22.2",
-      "4.5",
-      "69.4"
-     ],
-     [
-      "Cheirodendron trigynum",
-      "20.1",
-      "6.2",
-      "1.8"
-     ],
-     [
-      "Ilex anomala",
-      "34.0",
-      "0",
-      "0"
-     ],
-     [
-      "Rubus rosifolius (introduced)",
-      "0",
-      "2.8",
-      "5.7"
-     ]
-    ],
-    "note": "Not all plant species found in the droppings are shown."
-   },
-   "figure": null,
-   "explanation": "The conclusion has two parts: each introduced bird depends on “the same two widespread species,” and the Omao feeds “more evenly across native plants.” Rubus hawaiensis and Vaccinium calycinum make up 85.9% + 4.5% = 90.4% of the white-eye’s seeds and 22.7% + 69.4% = 92.1% of the leiothrix’s, while the Omao’s largest share for any plant is 34.0%. Choice B states both parts.",
-   "distractors": {
-    "A": {
-     "recipe": "PART: each bird’s single top plant, accurate but insufficient",
-     "why_wrong": "Both figures are accurate, but they name a different plant for each bird, so they do not show that the same two plants dominate both diets, and they say nothing about the Omao."
-    },
-    "C": {
-     "recipe": "INACC: misread the leiothrix column",
-     "why_wrong": "Rubus hawaiensis makes up only 22.7% of the leiothrix’s seeds, not most of them; that bird’s diet is dominated by Vaccinium calycinum."
-    },
-    "D": {
-     "recipe": "IRREL: accurate differences in which plants are eaten, not in how concentrated the diets are",
-     "why_wrong": "The figures are accurate, but which plants each bird eats or avoids does not show whether the introduced birds’ diets are concentrated on two plants or whether the Omao’s is spread evenly."
-    }
-   },
-   "models": [
-    "3.24",
-    "3.20",
-    "3.23",
-    "3.30"
-   ],
-   "sources": [
-    {
-     "what": "Pejchar 2015, AoB PLANTS 7: plv072, 'Introduced birds incompletely replace seed dispersal by a native frugivore': Omao is the only native frugivore persisting in sufficient numbers, restricted to less than half its original range; two introduced frugivores abundant; >90% of seeds dispersed by introduced birds from two ubiquitous small-seeded species; Table 2 per cent of seeds by plant species in diet (faecal) samples: R. hawaiensis 14.6/85.9/22.7, Vaccinium calycinum 22.2/4.5/69.4, C. trigynum 20.1/6.2/1.8, I. anomala 34.0/0/0, R. rosifolius (introduced) 0/2.8/5.7 for Omao/Japanese White-eye/Red-billed Leiothrix",
-     "url": "https://doi.org/10.1093/aobpla/plv072"
-    }
-   ],
-   "notes": "Band-7 moves: two-part quantified claim (each introduced bird, the same two plants) plus a contrast; the key needs two sums and a column maximum (four operations). A PART (each bird's top plant only, true), C INACC (wrong column read), D IRREL (true, wrong property). Rows omitted from the paper's table: Styphelia 2.1/0/0, Psychotria 6.9/0/0, P. sandwicensis 0/0.6/0.3; the note says not all species are shown, and the omitted Omao values do not exceed 34.0, so the key's maximum holds for the full table.",
-   "word_count": 108
-  },
-  {
-   "id": "command_of_evidence.Q1_P67_criterion.hard.w4b4_09",
-   "template": "Q1_P67_criterion",
-   "subtype": "Data completion: passage relations (nutrients raise stomatal density; colony size and nesting habits set the guano supply) applied to the display to support a conclusion about the world",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "On Triangle Island, a seabird colony in Canada’s Pacific waters, the shrub salmonberry has spread in recent decades across ground where seabirds excavate their nesting burrows. To evaluate explanations for this expansion, ecologist Ron Ydenberg and colleagues measured salmonberry’s stomatal density (the number of pores per square millimeter of leaf surface), which tends to increase with nutrient availability. Triangle and Pine Islands host very large seabird colonies, whereas Lucy Island hosts a much smaller one of about 10,000 pairs; on East Limestone Island, the nesting ancient murrelets never deliver food to their burrows, so little guano (nutrient-rich droppings) accumulates. The researchers concluded that guano, rather than burrowing, best explains the shrub’s expansion, since ______",
-   "stem": "Which choice most effectively uses data from the table to complete the statement?",
-   "options": [
-    "density on East Limestone Island was far below the level on the mainland coast, indicating that the murrelets’ burrowing had damaged salmonberry roots there more severely than burrowing had on any other island.",
-    "density on Triangle Island has risen as its seabird colony has grown, whereas density on the mainland coast has remained nearly constant since the early twentieth century.",
-    "density was well above the mainland level only on the two islands with very large colonies and was lowest of all on East Limestone Island, where little guano accumulates.",
-    "density on every island with a seabird colony exceeded the level on the mainland coast, and it was highest on Triangle Island, which hosts one of the two largest colonies."
-   ],
-   "answer_letter": "C",
-   "table": {
-    "title": "Mean Stomatal Density of Salmonberry Leaves at Five Locations in British Columbia",
-    "columns": [
-     "Location",
-     "Mean stomatal density (pores per square millimeter)"
-    ],
-    "rows": [
-     [
-      "Mainland coast (no seabird colony)",
-      "267"
-     ],
-     [
-      "Lucy Island",
-      "256"
-     ],
-     [
-      "Triangle Island",
-      "390"
-     ],
-     [
-      "Pine Island",
-      "493"
-     ],
-     [
-      "East Limestone Island",
-      "130"
-     ]
-    ],
-    "note": null
-   },
-   "figure": null,
-   "explanation": "Stomatal density “tends to increase with nutrient availability,” and guano is the nutrient source, so if guano drives the shrub’s expansion, density should be high where colonies are very large and low where little guano accumulates. The table shows exactly that: Triangle (390) and Pine (493) are far above the mainland’s 267, smaller Lucy Island (256) is not, and East Limestone, where “little guano (nutrient-rich droppings) accumulates,” has the lowest density, 130. Choice C uses these data to support the conclusion.",
-   "distractors": {
-    "A": {
-     "recipe": "WDIR: the relation applied the wrong way (low density read as burrowing damage)",
-     "why_wrong": "East Limestone’s value is accurate, but reading it as a sign of burrowing damage supports the burrowing explanation the researchers rejected; the passage explains the low value by the lack of guano there."
-    },
-    "B": {
-     "recipe": "OUTS: a change over time the table does not show",
-     "why_wrong": "The table gives one value per location and no measurements from different years, so it cannot show density rising on Triangle Island or staying constant on the mainland."
-    },
-    "D": {
-     "recipe": "INACC: compound with false clauses",
-     "why_wrong": "Lucy Island (256) and East Limestone Island (130) are below the mainland’s 267, and the highest density is on Pine Island (493), not Triangle Island (390)."
-    }
-   },
-   "models": [
-    "3233c162",
-    "cbdd5287",
-    "3.27",
-    "3.22",
-    "3.16"
-   ],
-   "sources": [
-    {
-     "what": "Ydenberg, Leyland, Hipfner, Prins 2021, Ecology and Evolution 11: 'Century-long stomatal density record of the nitrophyte, Rubus spectabilis L., from the Pacific Northwest indicates no effect of changing atmospheric carbon dioxide but a strong response to nutrient subsidy': salmonberry has expanded on Triangle Island; hypotheses climate change, biopedturbation (burrowing) and nutrient input; nutrient hypothesis predicts stomatal density positively related to colony size; Table 1 mean stomatal density (per mm2): baseline coastal herbarium sample 267, Lucy Island 259 and 252 (256 overall; about 10,000 pairs of rhinoceros auklets, smaller colony), Triangle Island 390, Pine Island 493 (Triangle and Pine large colonies), East Limestone Island 130 (ancient murrelets deliver no food to the burrow, so no guano is deposited); data most consistent with the nutrient input hypothesis",
-     "url": "https://doi.org/10.1002/ece3.8405"
-    }
-   ],
-   "notes": "Band-7 moves: the display must be read through two passage relations (nutrients raise density; colony size and murrelet habits set the guano supply); the blank concludes about the cause in the world; options 28 to 33 words. A WDIR (relation turned toward burrowing), B OUTS (time trend not displayed), D INACC compound. 'Mainland coast' is the paper's 267 baseline (herbarium specimens from coastal British Columbia excluding high elevations, small islands and Triangle); Lucy Island is the paper's pooled 256 from two subsamples. Five operations: read five values, compare four with the baseline, find the minimum, and match each to the passage's colony facts.",
-   "word_count": 114
-  },
-  {
-   "id": "command_of_evidence.Q1_P2_extreme.hard.w4b4_10",
-   "template": "Q1_P2_extreme",
-   "subtype": "Data completion: extreme after a filter (the oldest ice among the Greenland cores), with depth as the lure",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Ice cores, cylindrical samples extracted from glaciers and ice sheets, preserve records of past climate in successive layers of compacted snow. Ice located deeper within an ice sheet is generally older, but the depth a core reaches does not by itself determine how far back its record extends: at locations where abundant snowfall generates thick annual layers, such as the WAIS Divide site in West Antarctica, even an exceptionally deep core may contain comparatively recent ice. The Greenland cores in the table display a similar discrepancy, since the oldest ice among them was retrieved from ______",
-   "stem": "Which choice most effectively uses data from the table to complete the statement?",
-   "options": [
-    "NEEM, the shallowest of the three Greenland cores at 2,537 meters.",
-    "NorthGRIP, the deepest of the three Greenland cores at 3,085 meters.",
-    "GRIP, which reached a depth of 3,029 meters in 1992.",
-    "Dome F, which reached ice about 720,000 years old at 3,035 meters."
-   ],
-   "answer_letter": "A",
-   "table": {
-    "title": "Selected Deep Ice Cores",
-    "columns": [
-     "Ice core",
-     "Ice sheet",
-     "Year completed",
-     "Depth reached (meters)",
-     "Age of oldest ice in record (years)"
-    ],
-    "rows": [
-     [
-      "GRIP",
-      "Greenland",
-      "1992",
-      "3,029",
-      "about 100,000"
-     ],
-     [
-      "NorthGRIP",
-      "Greenland",
-      "2003",
-      "3,085",
-      "123,000"
-     ],
-     [
-      "Dome F",
-      "Antarctica",
-      "2006",
-      "3,035",
-      "720,000"
-     ],
-     [
-      "NEEM",
-      "Greenland",
-      "2010",
-      "2,537",
-      "128,500"
-     ],
-     [
-      "WAIS Divide",
-      "Antarctica",
-      "2011",
-      "3,405",
-      "62,000"
-     ]
-    ],
-    "note": null
-   },
-   "figure": null,
-   "explanation": "The blank must name the Greenland core with the oldest ice and show the same mismatch between depth and age that the text describes. Of the three Greenland cores, NEEM reached the oldest ice, about 128,500 years, even though at 2,537 meters it was the shallowest of the three, so choice A completes the statement.",
-   "distractors": {
-    "B": {
-     "recipe": "wrong extreme: deepest taken for oldest",
-     "why_wrong": "NorthGRIP is the deepest Greenland core, but its oldest ice, about 123,000 years, is younger than NEEM’s, and a deepest-and-oldest core would show no mismatch at all."
-    },
-    "C": {
-     "recipe": "wrong group: another Greenland row",
-     "why_wrong": "GRIP’s record reaches back only about 100,000 years, the shortest of the three Greenland cores."
-    },
-    "D": {
-     "recipe": "filter ignored: oldest overall, wrong ice sheet",
-     "why_wrong": "Dome F holds by far the oldest ice in the table, but it was drilled in Antarctica, not Greenland."
-    }
-   },
-   "models": [
-    "3.44",
-    "3.27",
-    "3.22"
-   ],
-   "sources": [
-    {
-     "what": "Wikipedia, Ice core (history section, citing Jouzel 2013 and Langway 2008): GRIP reached bedrock at 3,029 m in 1992 with about 100,000 years of climatic information; NorthGRIP reached 3,085 m in 2003, data back to 123,000 years; NEEM retrieved a 2,537 m core in 2010, record to 128,500 years; Dome F hole reached 3,035 m in 2006, ice estimated 720,000 years old; WAIS Divide completed 2011 at 3,405 m, high snow accumulation so the ice extends back only 62,000 years",
-     "url": "https://en.wikipedia.org/wiki/Ice_core"
-    },
-    {
-     "what": "Jouzel 2013, Climate of the Past 9: 2525-2547, 'A brief history of ice core science over the last 50 yr' (the source cited for the depths and ages)",
-     "url": "https://doi.org/10.5194/cp-9-2525-2013"
-    }
-   ],
-   "notes": "Band 6: filter (Greenland) then extreme (oldest), with depth as the lure and the passage's depth-age point driving the blank. Real values; GRIP's age is given as 'about 100,000' as the source states. Key is not the longest option.",
-   "word_count": 96
-  },
-  {
-   "id": "command_of_evidence.T2_lit_quote.medium.w4b4_11",
-   "template": "T2_lit_quote",
-   "subtype": "Literary quotation illustrates a two-part claim (admits a fault and resolves to change; translated drama)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "The Beneficent Bear is a 1771 play by Carlo Goldoni, translated in an 1892 English edition of his comedies. In the play, Geronte, a wealthy old man known for his outbursts, is about to speak with his niece Angelica, who is afraid to tell him that she wishes to marry. Before she approaches, Geronte admits a fault in himself and resolves to behave differently toward her: ______",
-   "stem": "Which quotation from a translation of The Beneficent Bear most effectively illustrates the claim?",
-   "options": [
-    "“Come, come; he is sometimes a little hasty, but he has not a bad heart.”",
-    "“Yes! you wish to be married! to lose your liberty, your tranquillity! Very well; so much the worse for you. Yes, I will marry you.”",
-    "“It is the first time in my life that—Plague on my temper! … It is Dorval who put me in a passion.”",
-    "“She is right; I sometimes suffer myself to be carried away by my irritable temper. My niece deserves to be treated with tenderness.”"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The claim has two parts: Geronte “admits a fault in himself” and “resolves to behave differently toward” his niece. In choice D he admits that he is sometimes “carried away by my irritable temper” and then says that his niece “deserves to be treated with tenderness,” which covers both parts.",
-   "distractors": {
-    "A": {
-     "recipe": "SUBJ: right content, wrong speaker",
-     "why_wrong": "This line describes Geronte’s hasty temper and good heart, but someone else is speaking about him (“he is”), so it is not Geronte admitting a fault of his own."
-    },
-    "B": {
-     "recipe": "OFF: gruff but generous, no admission or resolution",
-     "why_wrong": "Geronte agrees, grumpily, to let Angelica marry, but he neither admits a fault nor resolves to treat her more gently."
-    },
-    "C": {
-     "recipe": "HALF: admits the temper but blames someone else and resolves nothing",
-     "why_wrong": "Geronte curses his temper, but he blames Dorval for his anger and says nothing about treating anyone differently."
-    }
-   },
-   "models": [
-    "2.26",
-    "2.36",
-    "2.13",
-    "2.20"
-   ],
-   "sources": [
-    {
-     "what": "Carlo Goldoni, The Beneficent Bear (Il burbero benefico / Le Bourru bienfaisant, first written in French and staged in Paris in 1771), in The Comedies of Carlo Goldoni, edited by Helen Zimmern (London: David Stott, 1892); Geronte's soliloquy in Act I; Angelica is the sister of his nephew Dalancourt; all quotations checked as exact substrings of the Gutenberg text (a stage direction in C replaced by an ellipsis; double hyphen set as an em dash)",
-     "url": "https://www.gutenberg.org/ebooks/33575"
-    }
-   ],
-   "notes": "Medium two-part claim; half-match and wrong-speaker distractors as in the bank's medium literary items. The 1892 edition names Zimmern as editor, not translator, so the passage says 'translated in an 1892 English edition'.",
-   "word_count": 67
-  },
-  {
-   "id": "command_of_evidence.T1_single.medium.w4b4_12",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a physiological hypothesis (with a comparison group)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Tinamous, ground-dwelling birds of Central and South America, take flight only in brief bursts. Relative to body size, their hearts are the smallest documented in any bird, about 0.3% of body mass, compared with an average of roughly 0.8% in pheasants and their relatives. Studying ornate and Chilean tinamous, physiologist Jordi Altimiras and colleagues hypothesized that these diminutive hearts cannot supply enough oxygen to the birds’ muscles during strenuous exertion. The team compared the tinamous with red junglefowl, which also fly in short bursts from the ground but have larger hearts.",
-   "stem": "Which finding, if true, would most directly support Altimiras and colleagues’ hypothesis?",
-   "options": [
-    "While resting quietly, tinamous maintained blood pressures similar to those measured in red junglefowl, even though the junglefowl’s hearts are larger.",
-    "After being chased for three minutes, tinamous had far more lactate, a substance that builds up when muscles work without enough oxygen, in their blood than red junglefowl did.",
-    "After being chased for three minutes, tinamous and red junglefowl took about the same amount of time to return to their normal rates of oxygen use.",
-    "As young tinamous grow, their hearts increase in size relative to their bodies in a pattern resembling that seen in young alligators."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The team hypothesized that tinamous’ small hearts “cannot supply enough oxygen to the birds’ muscles during strenuous exertion.” Lactate builds up when muscles work without enough oxygen, so if tinamous built up far more lactate than red junglefowl, whose hearts are larger, after the same exertion, their muscles were short of oxygen, as the hypothesis predicts.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: the wrong condition (rest, not exertion)",
-     "why_wrong": "The hypothesis is about strenuous exertion; similar blood pressures at rest say nothing about whether the heart can meet the muscles’ needs during hard activity."
-    },
-    "C": {
-     "recipe": "OPP: no difference where the hypothesis predicts one",
-     "why_wrong": "If tinamous recovered as quickly as red junglefowl, their muscles would not seem to have run short of oxygen during the chase, which would weaken rather than support the hypothesis."
-    },
-    "D": {
-     "recipe": "OFF: true detail about heart growth, not oxygen supply",
-     "why_wrong": "How tinamou hearts grow in relation to body size does not show whether the adult heart can supply enough oxygen during exertion."
-    }
-   },
-   "models": [
-    "2.7",
-    "2.21",
-    "2.38",
-    "2.6"
-   ],
-   "sources": [
-    {
-     "what": "Altimiras, Lindgren, Giraldo-Deck, Matthei, Garitano-Zavala 2017, Scientific Reports 7: 16043, 'Aerobic performance in tinamous is limited by their small heart. A novel hypothesis in the evolution of avian flight': tinamous have the smallest relative heart among birds, 0.3% of body mass vs 0.81% average in phasianids; only short burst flights from the ground; ornate and Chilean tinamous compared with red junglefowl (larger heart, similar burst flights); when challenged to fly the heart cannot support aerobic metabolism: quick exhaustion, lactate 18.7 and 15.7 mM vs 9.2 mM in junglefowl after a 3-min chase, EPOC about 6-fold larger; resting perfusion pressures not limited; crocodilian-like cardiac growth (compared with alligators)",
-     "url": "https://doi.org/10.1038/s41598-017-16297-2"
-    }
-   ],
-   "notes": "Medium. Key matches the real result. A is a real finding (pressures not limited) and C is the reverse of a real finding (EPOC much larger), both stated as hypotheticals; D is real but off-target. Central and South America: tinamous are Neotropical; the two species studied live in the Andes and Chile.",
-   "word_count": 91
-  },
-  {
-   "id": "command_of_evidence.T1_single.medium.w4b4_13",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a claim about change over time (needs the older-versus-newer comparison)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Fragments of ochre and ostrich eggshell engraved with crosshatched and parallel lines have been excavated at two South African sites, Blombos Cave and Diepkloof Rock Shelter; the oldest are roughly 100,000 years old, and together they span more than 30,000 years. Whether such marks were symbols or decoration is debated, but cognitive scientist Kristian Tylén and colleagues addressed a different question by presenting the engravings to present-day participants in a series of experiments. Tylén’s team concluded that the engravings changed over the millennia in ways that made them better suited to human perception and memory.",
-   "stem": "Which finding, if true, would most directly support Tylén and colleagues’ conclusion?",
-   "options": [
-    "Participants could tell engravings from Blombos Cave apart from engravings from Diepkloof Rock Shelter more easily than they could tell apart engravings from the same site.",
-    "Participants rated the engravings from both sites as more visually striking than random scratches that researchers had made on similar pieces of ochre and eggshell.",
-    "After briefly viewing the engravings, participants were later able to recognize the more recent engravings more accurately than they could recognize the older ones.",
-    "When asked to copy the engravings by hand, participants reproduced the oldest engravings just as accurately as they reproduced the most recent ones."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The team concluded that “the engravings changed over the millennia in ways that made them better suited to human perception and memory.” If participants recognized the more recent engravings more accurately than the older ones, the later engravings were easier to remember, which is the change over time that the conclusion describes.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: compares sites, not periods",
-     "why_wrong": "How easily the two sites’ engravings can be told apart concerns a difference between places, not a change over time in how well the engravings suit perception and memory."
-    },
-    "B": {
-     "recipe": "PART: no comparison across time",
-     "why_wrong": "Engravings seeming more striking than random scratches says nothing about whether later engravings suited perception better than earlier ones."
-    },
-    "D": {
-     "recipe": "OPP: no difference where the conclusion predicts one",
-     "why_wrong": "If the oldest engravings were copied as accurately as the newest, the engravings would not seem to have become easier to reproduce over time, which would cut against the conclusion."
-    }
-   },
-   "models": [
-    "2.1",
-    "2.33",
-    "2.43",
-    "2.38"
-   ],
-   "sources": [
-    {
-     "what": "Tylén, Fusaroli, Rojo, Heimann, Fay, Johannsen, Riede, Lombard 2020, PNAS 117(9): 4578-4584, 'The evolution of early symbolic behavior in Homo sapiens': engraved ochre and ostrich eggshell from Blombos Cave and Diepkloof Rock Shelter, dating up to about 100,000 years ago and spanning more than 30,000 years; five experiments with modern participants suggest the engravings became more salient, memorable, reproducible and expressive of intent over time (better suited to human perception and cognition), but not more discriminable",
-     "url": "https://doi.org/10.1073/pnas.1910880117"
-    }
-   ],
-   "notes": "Medium. Key matches the real finding (more memorable over time). A echoes the real non-finding on discriminability, B lacks the time comparison, D the reverse of the real reproducibility result stated as a hypothetical.",
-   "word_count": 95
-  },
-  {
-   "id": "command_of_evidence.Q1_P3_pairwise.medium.w4b4_14",
-   "template": "Q1_P3_pairwise",
-   "subtype": "Data completion: two pairwise comparisons that reverse across columns",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "In a secondary forest in the Cantabrian Mountains of northern Spain, several thrush species consume the fruits of hawthorn, holly, and yew trees and later deposit the seeds away from the parent trees. Drawing on three years of observations of the birds’ movements, ecologist Juan Manuel Morales and colleagues modeled how far each thrush species transports the seeds of each tree. Which thrush carried seeds farther often depended on the tree: for example, the blackbird ______",
-   "stem": "Which choice most effectively uses data from the table to complete the example?",
-   "options": [
-    "carried yew seeds farther, on average, than the redwing did, but the redwing carried hawthorn seeds farther than the blackbird did.",
-    "carried both yew seeds and hawthorn seeds farther, on average, than the redwing did.",
-    "carried yew seeds a shorter distance, on average, than the redwing did, but carried hawthorn seeds farther than the redwing did.",
-    "carried both yew seeds and hawthorn seeds a shorter distance, on average, than the redwing did."
-   ],
-   "answer_letter": "A",
-   "table": {
-    "title": "Modeled Mean Distances (in Meters) That Thrushes Carried Seeds of Three Tree Species",
-    "columns": [
-     "Thrush species",
-     "Hawthorn",
-     "Holly",
-     "Yew"
-    ],
-    "rows": [
-     [
-      "Redwing",
-      "89.5",
-      "80.7",
-      "68.4"
-     ],
-     [
-      "Song thrush",
-      "81.6",
-      "72.4",
-      "61.1"
-     ],
-     [
-      "Blackbird",
-      "87.2",
-      "82.1",
-      "86.3"
-     ],
-     [
-      "Fieldfare",
-      "113.5",
-      "109.1",
-      "117.1"
-     ],
-     [
-      "Mistle thrush",
-      "94.1",
-      "89.5",
-      "85.7"
-     ]
-    ],
-    "note": null
-   },
-   "figure": null,
-   "explanation": "The example must show that which thrush carried seeds farther depended on the tree. The blackbird carried yew seeds 86.3 meters on average, farther than the redwing’s 68.4 meters, but the redwing carried hawthorn seeds 89.5 meters, farther than the blackbird’s 87.2 meters. Choice A reports this reversal accurately.",
-   "distractors": {
-    "B": {
-     "recipe": "wrong direction (one of two comparisons reversed)",
-     "why_wrong": "The blackbird did carry yew seeds farther, but it carried hawthorn seeds a shorter distance than the redwing did (87.2 versus 89.5 meters), and two wins would not show any dependence on the tree."
-    },
-    "C": {
-     "recipe": "wrong direction (both comparisons reversed)",
-     "why_wrong": "The table shows the opposite on both counts: the blackbird carried yew seeds farther than the redwing (86.3 versus 68.4 meters) and hawthorn seeds a shorter distance (87.2 versus 89.5 meters)."
-    },
-    "D": {
-     "recipe": "wrong direction (one of two comparisons reversed)",
-     "why_wrong": "The blackbird carried hawthorn seeds a shorter distance than the redwing, but it carried yew seeds farther (86.3 versus 68.4 meters)."
-    }
-   },
-   "models": [
-    "2.32",
-    "2.18",
-    "2.24",
-    "1.3"
-   ],
-   "sources": [
-    {
-     "what": "Morales, García, Martínez, Rodríguez-Pérez, Herrera 2013, PLoS ONE 8(6): e65216, 'Frugivore behavioural details matter for seed dispersal: a multi-species model for Cantabrian thrushes and trees': three years of field observations of six thrushes (redwing, song thrush, blackbird, fieldfare, ring ouzel, mistle thrush) and three trees (Crataegus monogyna, Ilex aquifolium, Taxus baccata) in a secondary forest of the Cantabrian range; Table 2 mean dispersal distances (m), e.g. redwing 89.47/80.65/68.41, blackbird 87.17/82.05/86.33",
-     "url": "https://doi.org/10.1371/journal.pone.0065216"
-    }
-   ],
-   "notes": "Values rounded to one decimal from Table 2 (ring ouzel row left out). Options are the full two-comparison factorial, as in the bank's pairwise items; only A is true and only a reversal shows dependence on the tree.",
-   "word_count": 76
-  },
-  {
-   "id": "command_of_evidence.Q1_P4_trend.medium.w4b4_15",
-   "template": "Q1_P4_trend",
-   "subtype": "Data completion: change over time in one series (endpoints), with other series as lures",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "Populations throughout East and Southeast Asia have aged considerably since 1990 as birth rates declined and life expectancy increased, but the pace of this demographic transformation has varied substantially from country to country. In Vietnam, for instance, the share of residents aged 65 or older increased only modestly between 1990 and 2020, whereas in Thailand that share ______",
-   "stem": "Which choice most effectively uses data from the graph to complete the statement?",
-   "options": [
-    "rose from about 5 percent in 1990 to about 8 percent in 2020.",
-    "rose from about 12 percent in 1990 to nearly 30 percent in 2020.",
-    "rose from about 5 percent in 1990 to about 16 percent in 2020.",
-    "more than tripled, from about 4 percent in 1990 to about 13 percent in 2020."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": {
-    "kind": "line graph",
-    "title": "Share of Population Aged 65 or Older in Four Asian Countries, 1990–2020",
-    "x_axis": "Year",
-    "y_axis": "Percentage of population",
-    "description": "A line graph shows the percentage of the population aged 65 or older in four countries every five years from 1990 to 2020. Japan: 1990, 12.2%, 1995, 14.7%, 2000, 17.4%, 2005, 20.3%, 2010, 23.1%, 2015, 26.9%, 2020, 28.9%. South Korea: 1990, 4.9%, 1995, 5.8%, 2000, 7.1%, 2005, 9.0%, 2010, 11.0%, 2015, 12.9%, 2020, 15.8%. Thailand: 1990, 4.0%, 1995, 4.8%, 2000, 6.1%, 2005, 7.5%, 2010, 8.6%, 2015, 10.3%, 2020, 12.9%. Vietnam: 1990, 5.5%, 1995, 5.6%, 2000, 6.0%, 2005, 6.2%, 2010, 6.0%, 2015, 6.5%, 2020, 7.6%.",
-    "data": [
-     {
-      "series": "Japan",
-      "points": [
-       [
-        "1990",
-        12.2
-       ],
-       [
-        "1995",
-        14.7
-       ],
-       [
-        "2000",
-        17.4
-       ],
-       [
-        "2005",
-        20.3
-       ],
-       [
-        "2010",
-        23.1
-       ],
-       [
-        "2015",
-        26.9
-       ],
-       [
-        "2020",
-        28.9
-       ]
-      ]
-     },
-     {
-      "series": "South Korea",
-      "points": [
-       [
-        "1990",
-        4.9
-       ],
-       [
-        "1995",
-        5.8
-       ],
-       [
-        "2000",
-        7.1
-       ],
-       [
-        "2005",
-        9.0
-       ],
-       [
-        "2010",
-        11.0
-       ],
-       [
-        "2015",
-        12.9
-       ],
-       [
-        "2020",
-        15.8
-       ]
-      ]
-     },
-     {
-      "series": "Thailand",
-      "points": [
-       [
-        "1990",
-        4.0
-       ],
-       [
-        "1995",
-        4.8
-       ],
-       [
-        "2000",
-        6.1
-       ],
-       [
-        "2005",
-        7.5
-       ],
-       [
-        "2010",
-        8.6
-       ],
-       [
-        "2015",
-        10.3
-       ],
-       [
-        "2020",
-        12.9
-       ]
-      ]
-     },
-     {
-      "series": "Vietnam",
-      "points": [
-       [
-        "1990",
-        5.5
-       ],
-       [
-        "1995",
-        5.6
-       ],
-       [
-        "2000",
-        6.0
-       ],
-       [
-        "2005",
-        6.2
-       ],
-       [
-        "2010",
-        6.0
-       ],
-       [
-        "2015",
-        6.5
-       ],
-       [
-        "2020",
-        7.6
-       ]
-      ]
-     }
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w4b4",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q1_P67_criterion",
+        "name": "Data completion: passage criterion or presence/absence combined with the display"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control (treated vs untreated, gap between conditions, design wrinkle)"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one named cell, reverse lookup, or filter)"
+      }
     ]
-   },
-   "explanation": "The statement contrasts Vietnam’s modest change with Thailand’s. The graph shows Thailand’s share at about 4 percent in 1990 and about 13 percent in 2020, more than three times as large, so choice D completes the contrast accurately.",
-   "distractors": {
-    "A": {
-     "recipe": "wrong group: Vietnam’s line",
-     "why_wrong": "A rise from about 5 to about 8 percent describes Vietnam, the country the text says changed only modestly, not Thailand."
-    },
-    "B": {
-     "recipe": "wrong group: Japan’s line",
-     "why_wrong": "A rise from about 12 percent to nearly 30 percent describes Japan; Thailand’s share was about 4 percent in 1990."
-    },
-    "C": {
-     "recipe": "wrong group: South Korea’s line",
-     "why_wrong": "A rise from about 5 to about 16 percent describes South Korea; Thailand reached only about 13 percent by 2020."
-    }
-   },
-   "models": [
-    "2.15",
-    "2.34",
-    "2.40"
-   ],
-   "sources": [
-    {
-     "what": "World Bank, World Development Indicators, Population ages 65 and above (% of total population), SP.POP.65UP.TO.ZS: Japan 12.16 (1990) to 28.92 (2020); Korea, Rep. 4.89 to 15.82; Thailand 3.95 to 12.9; Viet Nam 5.47 to 7.57 (five-year values plotted, rounded to one decimal)",
-     "url": "https://api.worldbank.org/v2/country/JPN;KOR;THA;VNM/indicator/SP.POP.65UP.TO.ZS?format=json&date=1990:2020"
-    }
-   ],
-   "notes": "Real World Bank data (UN population estimates). Every wrong option is another country's line, as in the bank's trend completions.",
-   "word_count": 58
   },
-  {
-   "id": "command_of_evidence.Q2_P8_multipart.medium.w4b4_16",
-   "template": "Q2_P8_multipart",
-   "subtype": "Data description: two-part claim (a pattern in every row, and its largest case)",
-   "tier": "medium",
-   "band_target": null,
-   "passage": "In many lower-income countries, agriculture employs a far larger share of the workforce than its share of total economic output. Economists interpret this disparity as evidence that agricultural workers produce considerably less per person than workers in manufacturing or services. After examining World Bank data for 2019, a student concluded that in each of five countries she studied, agriculture accounted for a much greater share of jobs than of output, and that the imbalance was most pronounced in Lao PDR.",
-   "stem": "Which choice best describes data from the table that support the student’s conclusion?",
-   "options": [
-    "Burundi had both the largest share of workers employed in agriculture, about 85%, and the largest share of output from agriculture, about 34%.",
-    "In every country, agriculture’s share of employment was more than twice its share of output, and the gap was widest in Lao PDR, at about 69% versus 16%.",
-    "About 69% of workers in Lao PDR were employed in agriculture in 2019, compared with only about 50% of workers in Myanmar that year.",
-    "In every country, agriculture’s share of output was larger than its share of employment, and the difference between the two was greatest in Lao PDR."
-   ],
-   "answer_letter": "B",
-   "table": {
-    "title": "Agriculture’s Share of Employment and of Economic Output in Five Countries, 2019",
-    "columns": [
-     "Country",
-     "Share of employment in agriculture (%)",
-     "Share of GDP from agriculture (%)"
-    ],
-    "rows": [
-     [
-      "Burundi",
-      "85.0",
-      "34.3"
-     ],
-     [
-      "Lao PDR",
-      "69.4",
-      "16.1"
-     ],
-     [
-      "Madagascar",
-      "70.9",
-      "23.0"
-     ],
-     [
-      "Mozambique",
-      "71.8",
-      "24.8"
-     ],
-     [
-      "Myanmar",
-      "49.8",
-      "20.8"
-     ]
-    ],
-    "note": null
-   },
-   "figure": null,
-   "explanation": "The conclusion has two parts: in each country agriculture’s share of jobs is much greater than its share of output, and the imbalance is largest in Lao PDR. Every country’s employment share is more than twice its share of GDP (for example, 49.8% against 20.8% in Myanmar), and Lao PDR’s gap, 69.4% against 16.1%, is the widest. Choice B states both parts.",
-   "distractors": {
-    "A": {
-     "recipe": "IRREL: accurate extremes that do not bear on the imbalance",
-     "why_wrong": "Burundi’s figures are accurate, but having the highest values on both measures says nothing about whether employment outweighs output everywhere or where the imbalance is largest."
-    },
-    "C": {
-     "recipe": "PART: one measure, two countries",
-     "why_wrong": "The employment figures are accurate, but they leave out agriculture’s share of output, so they cannot show any imbalance between jobs and output."
-    },
-    "D": {
-     "recipe": "INACC: comparison reversed",
-     "why_wrong": "In every country the share of employment is larger than the share of output, not the other way around."
-    }
-   },
-   "models": [
-    "2.8",
-    "2.42",
-    "3.24"
-   ],
-   "sources": [
+  "items": [
     {
-     "what": "World Bank, World Development Indicators, 2019: Employment in agriculture (% of total employment, modeled ILO estimate) SL.AGR.EMPL.ZS: Burundi 85.04, Lao PDR 69.36, Madagascar 70.88, Mozambique 71.77, Myanmar 49.76; Agriculture, forestry, and fishing, value added (% of GDP) NV.AGR.TOTL.ZS: Burundi 34.25, Lao PDR 16.05, Madagascar 22.96, Mozambique 24.77, Myanmar 20.84",
-     "url": "https://api.worldbank.org/v2/country/BDI;LAO;MDG;MOZ;MMR/indicator/SL.AGR.EMPL.ZS?format=json&date=2019"
+      "id": "command_of_evidence.T1_single.hard.w4b4_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a two-part dating claim (more recent than thought, and a response to a datable event)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The rice terraces of Ifugao Province, in the mountains of northern Luzon in the Philippines, are often described as about 2,000 years old. That estimate, however, rests largely on early twentieth-century calculations of how long constructing such an extensive system would have taken. After excavating at Old Kiyyangan, a village first settled roughly 1,000 years ago, archaeologist Stephen Acabado and colleagues concluded that wet-rice cultivation on the terraces is far more recent. In their view, it developed as a response to the Spanish colonization of the Philippine lowlands, which began in the 1570s.",
+      "stem": "Which finding, if true, would most directly support Acabado and colleagues’ conclusion?",
+      "options": [
+        "Pollen from rice grown in flooded fields first appears in soil layers at Old Kiyyangan dating to about 1300 CE, some three centuries after the village was settled.",
+        "Small terraces for growing taro, a crop that does not require flooded fields, were built at Old Kiyyangan centuries before any Spanish expedition reached Luzon.",
+        "Unambiguous traces of wet rice at Old Kiyyangan first appear in layers dating to about 1650, when the village’s terraced fields also began to expand rapidly.",
+        "Charcoal found beneath the stone walls of Old Kiyyangan’s oldest wet-rice terraces dates to about 1,000 years ago, when the village was first settled."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Acabado and colleagues conclude that wet-rice cultivation on the terraces “is far more recent” than 2,000 years and that it “developed as a response to the Spanish colonization of the Philippine lowlands, which began in the 1570s.” Wet rice first appearing around 1650, with the terraces expanding at the same time, is both far younger than 2,000 years and comes a few decades after colonization began, so choice C supports both parts of the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: supports “more recent” but not the colonial link",
+          "why_wrong": "Wet rice around 1300 CE would be younger than 2,000 years, but it would predate the Spanish colonization of the 1570s by nearly three centuries, so it could not have been a response to that colonization."
+        },
+        "B": {
+          "recipe": "TRAP: true but not what is asked (a different crop)",
+          "why_wrong": "Early taro terraces say nothing about when wet rice, which needs flooded fields, was taken up, so the finding does not bear on the timing the conclusion is about."
+        },
+        "D": {
+          "recipe": "OPP: would weaken",
+          "why_wrong": "Wet-rice terraces dating to about 1,000 years ago would be centuries older than the Spanish colonization, which would cut against the claim that wet-rice cultivation was a response to it."
+        }
+      },
+      "models": [
+        "3.12",
+        "3.31",
+        "3.28",
+        "3.36"
+      ],
+      "sources": [
+        {
+          "what": "Acabado, Koller, Liu, Farahani, Barretto-Tesoro, Reyes, Martin, Peterson 2019, Journal of Field Archaeology 44(3): 195-214, 'The Short History of the Ifugao Rice Terraces: A Local Response to the Spanish Conquest' (abstract): local histories place the terraces at 2,000 to 3,000 years old; the authors argue wet-rice cultivation is much more recent, a response to the intrusion of the Spanish Empire into the northern highlands",
+          "url": "https://oasis.library.unlv.edu/anthro_fac_articles/501"
+        },
+        {
+          "what": "Archaeology magazine on Acabado's Ifugao work: the 2,000-year figure rests on early twentieth-century estimates of construction time; Old Kiyyangan, the first Ifugao village, settled about 1,000 years ago; clear wet rice from about 1650; earlier small terraces for taro",
+          "url": "https://archaeology.org/issues/online/collection/philippines-ifugao-rice-terraces/"
+        }
+      ],
+      "notes": "Band 6. The key needs two linked steps: 1650 is after the 1570s, and both far younger than 2,000 years. A HALF (younger but pre-colonial), B TRAP (true, other crop), D OPP. Spanish colonization of the Philippines began with Legazpi in 1565 (Cebu) and Manila in 1571; the passage says lowland colonization began in the 1570s, which fits the Luzon lowlands. Hypothetical findings only; the 1650 date in C matches Acabado's reported result.",
+      "word_count": 93,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. The key needs two linked date steps (after the 1570s, and far younger than 2,000 years); A is a fair HALF and B a true-but-off TRAP, but A and D each fall to one date comparison, so it does not reach 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
     {
-     "what": "Agriculture value added share of GDP, same countries and year",
-     "url": "https://api.worldbank.org/v2/country/BDI;LAO;MDG;MOZ;MMR/indicator/NV.AGR.TOTL.ZS?format=json&date=2019"
-    }
-   ],
-   "notes": "Real World Bank values rounded to one decimal. Differences: Burundi 50.8, Lao PDR 53.3, Madagascar 47.9, Mozambique 47.0, Myanmar 29.0; ratios 2.5, 4.3, 3.1, 2.9, 2.4, so Lao PDR is largest on either measure. The GDP column counts agriculture, forestry, and fishing, as the World Bank series does.",
-   "word_count": 80
-  },
-  {
-   "id": "command_of_evidence.T1_single.easy.w4b4_19",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a hypothesis about how animals choose (one step)",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "Female Japanese yellow swallowtail butterflies (Papilio xuthus) lay their eggs on the leaves of citrus trees. Their caterpillars later eat those leaves. Biologists Hiromi Nagaya, Finlay Stewart, and Michiyo Kinoshita placed individual females in a cage with a potted citrus tree. The butterflies strongly favored just two of the tree’s 102 leaves for their eggs. Because the butterflies flew fairly directly toward these leaves from a distance, the researchers hypothesized that females choose where to lay eggs based on the leaves’ appearance.",
-   "stem": "Which finding, if true, would most directly support the researchers’ hypothesis?",
-   "options": [
-    "Caterpillars that hatched on the two favored leaves grew at about the same rate as caterpillars that hatched on other leaves of the tree.",
-    "Females laid more eggs during the first few days of the experiment than they did during the last few days.",
-    "Females that were unable to see the tree laid eggs on the same two leaves as often as females that could see it.",
-    "Leaves that were brighter and reflected more green light received more eggs than duller leaves on the same tree."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers hypothesized that females choose egg-laying sites “based on the leaves’ appearance.” If brighter, greener leaves received more eggs than duller ones, the butterflies’ choices followed how the leaves looked, which supports the hypothesis.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: caterpillar growth, not how leaves are chosen",
-     "why_wrong": "How fast the caterpillars grew says nothing about whether the females picked the leaves by how they looked."
+      "id": "command_of_evidence.T1_single.hard.w4b4_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports an explanatory hypothesis (the comparison must isolate temperature and tie it to escape)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Female horseflies (tabanids), which feed on blood, attack sunlit, dark-coated horses and cattle more often than shaded or pale ones. Shiny dark surfaces reflect strongly polarized light, which the flies are known to seek out. Yet biologist Gábor Horváth and his colleagues have found that tabanids also prefer warm black targets to cool ones with identical optical properties. Warmer animals might simply provide a more accessible meal, but the researchers hypothesize that this thermal preference arises because warmth improves a fly’s chances of surviving its host’s defensive reactions, such as the swishing of a tail or the twitching of skin.",
+      "stem": "Which finding from Horváth and colleagues’ field experiments, if true, would most directly support their hypothesis?",
+      "options": [
+        "Flies on black barrels warmed with heated air escaped a researcher’s attempts to catch them more often than flies on identical barrels cooled with water did.",
+        "Thermal images taken on a sunny day showed that the backs of black horses reached higher surface temperatures than the backs of white horses, at times exceeding 50°C.",
+        "Flies feeding on warmer animals obtained a full meal of blood more quickly than flies feeding on cooler animals did, because warmth widens the blood vessels near the skin.",
+        "More flies landed on black barrels placed in direct sunlight than on otherwise identical black barrels placed in the shade of nearby trees on the same afternoons."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers hypothesize that tabanids prefer warmth “because warmth improves a fly’s chances of surviving its host’s defensive reactions.” A researcher trying to catch a landed fly stands in for a host trying to dislodge it, and the warm and cool barrels looked the same, so only temperature differed. If flies on the warm barrels escaped more often, warmth helped them survive an attack, as the hypothesis predicts, so choice A supports it.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: accurate but insufficient (shows the host difference, not its benefit)",
+          "why_wrong": "Warmer coats on black horses explain why a fly that prefers warmth would choose dark hosts, but the finding says nothing about whether warmth helps flies survive a host’s defenses, which is the reason the hypothesis gives."
+        },
+        "C": {
+          "recipe": "OPP: the rival explanation",
+          "why_wrong": "A quicker meal on warmer animals points to the alternative the text mentions, that warmer animals “provide a more accessible meal,” rather than to any benefit in escaping a host’s defenses."
+        },
+        "D": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Sunlit barrels are both warmer and more strongly polarizing than shaded ones, and a landing count shows only where flies go, not whether warmth helps them escape, so the finding cannot support the hypothesis."
+        }
+      },
+      "models": [
+        "3.42",
+        "3.39",
+        "3.45",
+        "3.28",
+        "5b74feb9"
+      ],
+      "sources": [
+        {
+          "what": "Horváth, Pereszlényi, Egri, Tóth, Jánosi 2020, PLoS ONE 15(5): e0233038, 'Why do biting horseflies prefer warmer hosts? tabanids can escape easier from warmer targets': tabanids prefer sunlit, darker, warmer hosts; shiny dark targets reflect highly polarized light that host-seeking females prefer; earlier work showed a preference for warm black targets over cold ones with the same optics; hypothesis that warmer wing muscles and nervous system let flies avoid host defensive reactions by prompt takeoff (alternative noted: wider capillaries in warmer hosts); a blind experimenter tried to capture flies landed on warm (air-filled) and cold (water-filled) shiny black barrels with a tea strainer; escape success fell as target temperature fell; thermography of sunlit horses, black up to 54.6°C",
+          "url": "https://doi.org/10.1371/journal.pone.0233038"
+        }
+      ],
+      "notes": "Band-7 moves: stem names the study and claimants (15 words); key needs two bridges the passage does not state (a capture attempt stands in for a host's defense; identical barrels isolate temperature from optics). B TRAP accurate but insufficient (a real thermography result), C OPP (the rival named in the passage, also raised in the paper), D TRAP fits both (sun changes warmth and polarization). Key is the paper's real result.",
+      "word_count": 100,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "passage no longer says the researchers reject the meal account: the paper lists wider capillaries in warmer hosts as another possible reason (PMC7219777); now \"Warmer animals might simply provide a more accessible meal, but the researchers hypothesize...\"; C why_wrong reworded to match"
+        ],
+        "status": "fixed",
+        "note": "Neighbour kept: live command_of_evidence w2b3_08 is striped cattle and biting flies (Kojima 2019); this item is thermal preference and escape, a different finding."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 100 words, stem 14 words naming the study; the key supplies two unstated bridges (a capture attempt stands in for a host defense; warm and cool barrels with the same optics isolate temperature); B and D are TRAPs (accurate thermography, sun versus shade confounds warmth and polarization), C the rival."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
     },
-    "B": {
-     "recipe": "OFF: timing of egg laying",
-     "why_wrong": "A change in the number of eggs over the experiment does not show what features of the leaves the females used to choose them."
-    },
-    "C": {
-     "recipe": "OPP: would weaken",
-     "why_wrong": "If females that could not see the tree chose the same leaves, they must have relied on something other than appearance, which would weaken the hypothesis."
-    }
-   },
-   "models": [
-    "1.1",
-    "1.5",
-    "1.8",
-    "1.29"
-   ],
-   "sources": [
     {
-     "what": "Nagaya, Stewart, Kinoshita 2021, Insects 12(11): 1047, 'Swallowtail Butterflies Use Multiple Visual Cues to Select Oviposition Sites': one female at a time in a small cage with a potted citrus tree; females significantly favored two of 102 leaves; butterflies descended fairly directly toward the leaves from a distance, so the authors hypothesized visual cues; eggs per leaf correlated positively with height, flatness, green reflectance and brightness, negatively with degree of polarization",
-     "url": "https://doi.org/10.3390/insects12111047"
-    }
-   ],
-   "notes": "Easy, one step. Key matches the real finding (green reflectance and brightness).",
-   "word_count": 82
-  },
-  {
-   "id": "command_of_evidence.T2_lit_quote.easy.w4b4_21",
-   "template": "T2_lit_quote",
-   "subtype": "Literary quotation illustrates a single-trait claim (poem)",
-   "tier": "easy",
-   "band_target": null,
-   "passage": "“The Patchwork Quilt” is a 1909 poem by Effie Waller Smith. The poem describes a woman who sewed a quilt as a girl and kept it all her life. The speaker suggests that the quilt was made from fabric that once belonged to the people around the girl: ______",
-   "stem": "Which quotation from “The Patchwork Quilt” most effectively illustrates the claim?",
-   "options": [
-    "“Pieces given by friend and neighbor, / Blended by her curious labor / With the grandame’s gown of gray, / And the silken bonnet gay / That the baby’s head hath crowned, / In the quaint design are found.”",
-    "“Sat a girl of long ago, / With her sunny head bent low / Where her fingers flitted white / Through a maze of patchwork bright.”",
-    "“Brilliant still the fabrics shine / Of the quilt’s antique design, / As she folds it, soft and warm, / Round a fair child’s sleeping form.”",
-    "“Worn its textures are and frayed, / But the hands upon them laid, / Creased with toils of many a year, / Still more worn and old appear.”"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The claim is that the quilt was made from fabric “that once belonged to the people around the girl.” Choice A lists pieces “given by friend and neighbor,” the grandmother’s gray gown, and the baby’s silk bonnet, all sewn into the quilt’s design.",
-   "distractors": {
-    "B": {
-     "recipe": "OFF: describes the girl sewing, not where the fabric came from",
-     "why_wrong": "These lines show the girl working on the patchwork, but they say nothing about whose clothing the pieces came from."
+      "id": "command_of_evidence.T1_compete.hard.w4b4_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates between two accounts of a volcanic flank collapse (single sudden failure vs. a series of small slides)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Sometime between 65,000 and 124,000 years ago, much of the eastern flank of Fogo, a volcanic island in Cape Verde, collapsed into the Atlantic Ocean. Some geologists have proposed that the flank failed through a succession of relatively small landslides, each displacing too little water to generate more than a modest tsunami. Volcanologist Ricardo Ramalho and colleagues, who examined deposits on Santiago Island, approximately 55 kilometers east of the collapse site, dispute this interpretation. They argue that the collapse began with a single catastrophic failure of an immense volume of rock and that the resulting wave was far larger than any that a succession of small landslides could have produced.",
+      "stem": "Which finding about Santiago Island, if true, would most directly support Ramalho and colleagues’ argument?",
+      "options": [
+        "Sand and broken seashells that could only have come from the seafloor were deposited around the time of the collapse across low-lying land on the side of Santiago that faces Fogo.",
+        "Deposits laid down on Santiago around the time of the collapse show that at least two separate waves struck the island, one shortly after the other.",
+        "None of the deposits on Santiago that date to the time of the collapse lie more than a few meters above the level at which the sea stood when Fogo’s flank failed.",
+        "Around the time of the collapse, blocks of rock weighing over 100 tons were torn from Santiago’s sea cliffs and left on a plateau up to 200 meters above sea level."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Ramalho and colleagues argue that the collapse “began with a single catastrophic failure of an immense volume of rock” and that the resulting wave “was far larger than any that a succession of small landslides could have produced.” Only an enormous wave could tear blocks weighing over 100 tons from sea cliffs and carry them uphill onto a plateau 200 meters above the sea, so choice D shows that a giant wave struck Santiago when Fogo’s flank failed, as the single-failure account predicts and the small-landslides account rules out.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Seafloor sand and shells spread over low-lying coastal land show only that some tsunami reached Santiago; a modest wave from a small landslide could have left them, so the finding does not favor a single catastrophic failure."
+        },
+        "B": {
+          "recipe": "TRAP: consistent with both explanations (number of waves, not their size)",
+          "why_wrong": "Two waves in quick succession fit a series of landslides, and they also fit one great failure followed by smaller ones; the finding says nothing about how large either wave was, which is what separates the two accounts."
+        },
+        "C": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "Deposits no more than a few meters above the sea would point to modest waves, which is what the small-landslides account predicts, so this finding would weaken rather than support Ramalho and colleagues’ argument."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.48",
+        "3.14",
+        "0c622cfb",
+        "0240d11c"
+      ],
+      "sources": [
+        {
+          "what": "Ramalho et al. 2015, Science Advances 1(9): e1500456, 'Hazard potential of volcanic flank collapses raised by new megatsunami evidence': Fogo's eastern flank collapsed (earlier estimates 65,000 to 124,000 years ago); earlier work suggested successive small retrogressive failures and no megatsunami; Santiago lies 55 km from the collapse site; megaclasts of about 1 to 700 tonnes quarried from the cliff edge and carried uphill onto the plateau, up to 220 m elevation (a 185 t block at 215 m), dated by cosmogenic 3He to about 73,000 years ago; authors conclude at least one fast, voluminous failure produced a giant tsunami, possibly followed by smaller ones",
+          "url": "https://doi.org/10.1126/sciadv.1500456"
+        }
+      ],
+      "notes": "Band-7 moves: two named views; the key supplies the unstated bridge (only a giant wave can lift 100-ton blocks 200 m uphill) and matches the paper's real evidence. A TRAP fits both, B TRAP fits both (the earlier two-wave evidence, which the authors fold into a big-then-smaller sequence), C OPP. Stem 15 words, narrowed and naming the claimants. Three steps: blocks moved uphill by water, so wave enormous, so not small slides.",
+      "word_count": 110,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Two named views; the key needs the unstated mechanism that only a giant wave can lift 100-ton blocks onto a 200 m plateau 55 km away; A and B fit both accounts (any tsunami leaves seafloor sand; two waves fit a series or a big-then-small sequence), C is the rival. The key numbers make it salient, so a low 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
     },
-    "C": {
-     "recipe": "OFF: a later use of the quilt",
-     "why_wrong": "These lines describe the quilt’s bright fabrics and its use as a cover for a sleeping child, not the people whose clothes it was made from."
-    },
-    "D": {
-     "recipe": "LURE: mentions the textures, but describes age and wear",
-     "why_wrong": "These lines compare the worn quilt with the woman’s aging hands; they do not say where the fabric came from."
-    }
-   },
-   "models": [
-    "1.36",
-    "1.11",
-    "1.16",
-    "1.42"
-   ],
-   "sources": [
     {
-     "what": "Effie Waller Smith (published as Effie Smith), Rosemary and Pansies (Boston: Richard G. Badger, The Gorham Press, 1909), 'The Patchwork Quilt'; all four quotations checked line by line against the Gutenberg text",
-     "url": "https://www.gutenberg.org/ebooks/63790"
+      "id": "command_of_evidence.T1_compete.hard.w4b4_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates between an energy limit and a time limit on foraging",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Flapping flight is fast but energetically costly, whereas soaring on thermals (columns of rising warm air) conserves energy but is comparatively slow, a disadvantage that is especially pronounced for small species. Because lesser kestrels (Falco naumanni), small insectivorous falcons that breed in colonies in southern Spain, can carry only a single prey item to their nestlings per foraging trip, researchers anticipated that the birds would favor flapping flight, maximizing the frequency of their deliveries. Tracking kestrels from two colonies near Seville with GPS devices, Jesús Hernández-Pliego and colleagues instead concluded that during the breeding season the birds are constrained more by energy than by time.",
+      "stem": "Which finding, if true, would most directly support Hernández-Pliego and colleagues’ conclusion?",
+      "options": [
+        "When thermals were available, kestrels generally kept flapping to hunting areas close to the colony, which allowed them to return to their nestlings more often.",
+        "Once thermals formed each day, kestrels soared to hunting areas far from the colony, even though this lowered how often they delivered prey to their nestlings.",
+        "Early in the morning, before any thermals had formed, kestrels flapped their wings when traveling between the colony and the areas where they hunted.",
+        "Kestrels from the colony surrounded by poor hunting habitat traveled farther from the nest on foraging trips than kestrels from the colony in better habitat did."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers conclude that the kestrels are “constrained more by energy than by time.” If the birds switched to slow, energy-saving soaring as soon as thermals allowed it, even at the cost of delivering prey to their nestlings less often, they gave up time to save energy, which is what an energy limit predicts. Choice B therefore supports the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "Choosing to flap when soaring was possible, so as to deliver food more often, would show the birds saving time at the cost of energy, which fits the expectation the researchers rejected."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations (no choice available)",
+          "why_wrong": "Before thermals form, flapping is the only way to travel, so flapping then reveals nothing about whether the birds put energy or time first."
+        },
+        "D": {
+          "recipe": "TRAP: consistent with both explanations (habitat, not flight choice)",
+          "why_wrong": "Birds from a poorer habitat might travel farther simply because prey nearby is scarce, whether they are limited by energy or by time, so the difference does not favor either view."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.10",
+        "3.15",
+        "3.9",
+        "0240d11c"
+      ],
+      "sources": [
+        {
+          "what": "Hernández-Pliego, Rodríguez, Bustamante 2015, PLoS ONE 10(12): e0145402, 'Why Do Kestrels Soar?': flapping costs more energy than soaring-gliding, which is slower especially for small species; 35 lesser kestrels from two colonies near Seville (one urban, 50 km apart) tracked with GPS over four breeding seasons; contrary to expectations they relied on thermal soaring, flapping to nearby areas when thermals were absent and soaring to distant areas once thermals formed, which reduced chick provisioning rate; kestrels carry a single prey per trip; conclusion: more energy than time-constrained in the breeding season",
+          "url": "https://doi.org/10.1371/journal.pone.0145402"
+        }
+      ],
+      "notes": "Band 6. Two views (time limit expected, energy limit concluded). Key is the paper's real result. A OPP, C TRAP (no choice when thermals absent), D TRAP (habitat effect, also real: the urban colony in poor habitat showed the pattern more strongly). Each wrong option is accurate or plausible in its first part and fails on the link to energy versus time.",
+      "word_count": 105,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Two views with an OPP (A) and two TRAPs (no choice before thermals; habitat), but the key states the trade-off openly (\"even though this lowered how often they delivered prey\"), one step from the claim."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w4b4_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates an indirect claim (Elizabethan drama; the key carries the claim in figurative language)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "A Woman Killed with Kindness is a 1603 play by Thomas Heywood. In the play, Frankford learns that his wife has betrayed him with Wendoll, a friend whom he had welcomed into his household. When his wife pleads for his pardon, Frankford intimates that he, rather than she, will bear the shame of her betrayal: ______",
+      "stem": "Which quotation from A Woman Killed with Kindness most effectively illustrates the claim?",
+      "options": [
+        "“O God! O God! that it were possible / To undo things done; to call back yesterday! / That Time could turn up his swift sandy glass, / To untell the days, and to redeem these hours!”",
+        "“Yet for these infants, these young harmless souls, / On whose white brows thy shame is charactered, / And grows in greatness as they wax in years,— / Look but on them, and melt away in tears.”",
+        "“Spare thou thy tears, for I will weep for thee: / And keep thy countenance, for I’ll blush for thee.”",
+        "“Go, villain, and my wrongs sit on thy soul / As heavy as this grief doth upon mine!”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Frankford suggests he, “rather than she, will bear the shame of her betrayal.” In choice C he tells his wife to hold back her tears because he will weep for her, and to keep her composure (“keep thy countenance”) because he will blush for her: he takes on the tears and the blush of shame that should be hers.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: nearby emotion (regret)",
+          "why_wrong": "Frankford wishes he could turn back time and undo what has happened, which expresses regret, not that he will carry his wife’s shame in her place."
+        },
+        "B": {
+          "recipe": "LURE and wrong subject: shares the word “shame” but places it on the children",
+          "why_wrong": "Frankford says the shame is written on his children’s brows and urges his wife to weep, so the shame falls on the children and the tears on her, not on him in her place."
+        },
+        "D": {
+          "recipe": "OPP: wishes the burden onto the offender",
+          "why_wrong": "Frankford wishes that the wrongs done to him would weigh on the offender’s soul as heavily as his grief weighs on his own, which places the burden on the other person rather than taking it on himself."
+        }
+      },
+      "models": [
+        "3.37",
+        "3.17",
+        "3.11",
+        "3.34",
+        "3.35"
+      ],
+      "sources": [
+        {
+          "what": "Thomas Heywood, A Woman Killed with Kindness, Mermaid Series edition by A. Wilson Verity (Vizetelly, 1888), Act IV, Scene VI; Henslowe's Diary payments to Heywood for the play in February and March 1603; all four quotations checked as exact substrings of the Gutenberg text (double hyphen set as an em dash)",
+          "url": "https://www.gutenberg.org/ebooks/67267"
+        }
+      ],
+      "notes": "Band-7 moves: pre-1929 drama in Elizabethan English; the claim uses an indirect verb (intimates); the key states the claim only through figurative language (weep for thee, blush for thee); distractors are the same speaker in nearby emotions (regret, reproach over the children with the word shame, grief and wished revenge). Wendoll is listed in the play as Frankford's friend; the wife is named only as Mistress Frankford (Nan) in this edition, so the passage says his wife. Work not used by any official item (grep of cb_api and transcripts for Heywood: none) or by our bank.",
+      "word_count": 56,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Matches 3.37: pre-1929 drama, indirect verb (intimates), key carries the claim only figuratively (weep for thee, blush for thee); B shares the word shame but places it on the children, A and D are the same speaker in nearby emotions (regret, wished burden on the offender). All four lines exact in Gutenberg 67267, all spoken by Frankford."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w4b4_06",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: condition vs control with a reverse-scored measure, compared across subgroups (difference of differences), with a second measure as a lure",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "After the Crystal Bridges Museum of American Art opened in 2011, demand for its free school tours was so high that not all groups could be accommodated, so education researchers Jay P. Greene, Brian Kisida, and Daniel H. Bowen assigned applicant groups by lottery either to tour the museum that semester or to have their tours postponed. Weeks later, students indicated their agreement with survey statements, including one gauging interest in museums (recommending art museums to friends) and one gauging tolerance (excluding artwork critical of America from museums), for which agreement signals intolerance. The researchers concluded that the tour increased students’ tolerance and that this benefit was greater for rural students and students attending high-poverty schools than for students overall.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "The gap between tour and control students in agreement with the statement about critical artwork was wider among rural students and among students at high-poverty schools than among all students, with a smaller share of tour students agreeing in each case.",
+        "The gap between tour and control students in agreement with the statement about recommending art museums to friends was wider among rural students and among students at high-poverty schools than among all students, with a larger share of tour students agreeing in each case.",
+        "In each of the three groups of students shown, a smaller percentage of the students who toured the museum than of the students in the control group agreed with the statement about critical artwork.",
+        "Among the students who toured the museum, rural students agreed with the statement about critical artwork less often than students overall did, while students at high-poverty schools agreed with it more often."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Percentage of Students Agreeing with Two Survey Statements",
+        "columns": [
+          "Statement and group",
+          "All students (%)",
+          "Rural students (%)",
+          "Students at high-poverty schools (%)"
+        ],
+        "rows": [
+          [
+            "Would recommend art museums to friends (tour group)",
+            "70",
+            "73",
+            "74"
+          ],
+          [
+            "Would recommend art museums to friends (control group)",
+            "66",
+            "63",
+            "68"
+          ],
+          [
+            "Artwork critical of America should be excluded from museums (tour group)",
+            "32",
+            "30",
+            "32"
+          ],
+          [
+            "Artwork critical of America should be excluded from museums (control group)",
+            "35",
+            "34",
+            "37"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: the tour “increased students’ tolerance” and “this benefit was greater for rural students and students attending high-poverty schools than for students overall.” Because “agreement signals intolerance” for the statement about critical artwork, a tolerance benefit shows up as fewer tour students than control students agreeing with it. That gap is 35 − 32 = 3 points for all students, 34 − 30 = 4 points for rural students, and 37 − 32 = 5 points for students at high-poverty schools. Choice A states both parts: a smaller share of tour students agrees in every group, and the gap is wider in the rural and high-poverty groups than among all students.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: the same accurate difference of differences on the other measure (interest in museums, not tolerance)",
+          "why_wrong": "The figures are accurate (gaps of 4, 10, and 6 points), but the statement about recommending art museums to friends gauges interest in museums, not tolerance, so it cannot show that touring increased students’ tolerance."
+        },
+        "C": {
+          "recipe": "HALF: accurate, shows the tolerance benefit in every group but not that it was greater for rural and high-poverty students",
+          "why_wrong": "This is true (32% vs. 35%, 30% vs. 34%, 32% vs. 37%) and supports the first part of the conclusion, but it does not compare the size of the benefit across groups, so it does not show that the benefit was greater for rural students and students at high-poverty schools."
+        },
+        "D": {
+          "recipe": "INACC: wrong cells (tour group only, across subgroups) with a false clause",
+          "why_wrong": "Tour students at high-poverty schools agreed at the same rate as tour students overall (32%), not more often; and comparing tour students with one another, without the control group, cannot show any effect of touring the museum."
+        }
+      },
+      "models": [
+        "7dab4d5d",
+        "d5b9ed0d",
+        "3.43",
+        "3.5",
+        "3.1"
+      ],
+      "sources": [
+        {
+          "what": "Greene, Kisida, Bowen, 'The Educational Value of Field Trips', Education Next 14(1), Winter 2014: Crystal Bridges opened 2011; tours free to schools and in high demand, not all groups could be accommodated right away; applicant groups matched in pairs and assigned by lottery to a tour that semester or a deferred tour; students surveyed about three weeks (some up to eight weeks) after the tour; tolerance items include 'Artists whose work is critical of America should not be allowed to have their work shown in art museums': control 35% vs treatment 32% agree; rural 34% vs 30%; high-poverty 37% vs 32%; interest item 'I would tell my friends they should visit an art museum': all 70% vs 66%, rural 73% vs 63%, high-poverty 74% vs 68%; tolerance benefits 'much larger for students in disadvantaged groups' (rural 13% and high-poverty 9% of an SD vs 7% overall)",
+          "url": "https://www.educationnext.org/the-educational-value-of-field-trips/"
+        }
+      ],
+      "notes": "Band-7 moves (spec/rw/band7/command_of_evidence.md 5, Q2_P5): design wrinkle of two outcome measures where only one bears on the claim, plus a proxy stated in an earlier sentence (agreement = less tolerance, a reverse-scored item). The key needs six reads, three subtractions, two comparisons and the proxy (difference of differences). B IRREL is an accurate statement in the key's frame on the wrong measure; C HALF is accurate and supports only the first part; D INACC uses wrong cells (tour only) with one false clause (32 = 32). All percentages are the article's, rounded as published; SD effect sizes are left out of the table. The minority group is omitted because the article gives no tolerance percentages for it. 'Weeks later' covers the article's three weeks on average (some groups up to eight); the paraphrased statements in the table and passage keep the meaning of the survey wording quoted in sources.",
+      "word_count": 120,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Reverse-scored proxy in an earlier sentence (agreement signals intolerance) and two outcome measures; B is an accurate difference of differences on the wrong measure, C an accurate HALF; key needs 6 reads, 3 subtractions and 2 comparisons; passage 120 words. Percentages confirmed in the Education Next article."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w4b4_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a person supports a claim made inside the author’s rebuttal of a common reading",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 1951, while living in Denmark and exhibiting with the avant-garde collective CoBrA, South African artist Ernest Mancoba carved Sculpture, a diminutive, vaguely figurelike form cut from a single block of wood. Several critics characterized Mancoba’s “little wooden images” as expressions of his “strong African origins.” That interpretation may seem plausible, given that Mancoba first learned woodcarving at an Anglican mission college in South Africa, but it confines the significance of his work to his birthplace. Mancoba himself attached little importance to geography; what mattered to him was a lineage connecting artists, regardless of origin, who endeavored to reconcile the spiritual and the material.",
+      "stem": "Which quotation from an art historian would most directly support the claim made in the text?",
+      "options": [
+        "“Whatever Mancoba absorbed in Paris and Copenhagen, the carving of Sculpture belongs to the devotional workshops of South Africa where he trained, and it is as a record of those workshops, and of the land that produced them, that the work most rewards close attention.”",
+        "“Mancoba left the marks of his chisel visible on a form that only half resembles a living body, so that Sculpture seems caught between a block of wood and a sacred image, an object at once stubbornly physical and quietly devotional.”",
+        "“Critics need not choose between Mancoba’s African and European identities: Sculpture is the work of a man formed equally by a South African youth and a Danish maturity, and viewers who keep both chapters of that biography in mind will see the most in it.”",
+        "“Mancoba felt as close to the unknown carvers of Inuit amulets as to the sculptors of his native South Africa; what united such makers, in his view, was a shared struggle to give the invisible life of the spirit a shape in wood or stone.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text claims that Mancoba “attached little importance to geography” and valued “a lineage connecting artists, regardless of origin, who endeavored to reconcile the spiritual and the material.” Choice D says he felt as close to Inuit carvers as to South African ones, so origin did not decide his kinship, and that what united such artists was a struggle to give the life of the spirit a shape in wood or stone, which is the reconciling of the spiritual and the material.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: sides with the reading the text rejects",
+          "why_wrong": "The quotation ties the work’s meaning to the South African workshops and “the land that produced them,” which is the birthplace-centered interpretation the text argues against."
+        },
+        "B": {
+          "recipe": "HALF: the spiritual and the material without the kinship across origins",
+          "why_wrong": "The quotation describes Sculpture as both physical and devotional, but it says nothing about Mancoba’s sense of kinship with artists regardless of where they came from, the main point of the claim."
+        },
+        "C": {
+          "recipe": "TRAP: a reconciliation that still reads the work through geography",
+          "why_wrong": "The quotation replaces one birthplace with two places, South Africa and Denmark, so it still locates the work’s meaning in the artist’s biography and geography rather than in a lineage of artists from any origin."
+        }
+      },
+      "models": [
+        "ca9dc00f",
+        "3.3",
+        "3.21",
+        "3.32",
+        "3.33"
+      ],
+      "sources": [
+        {
+          "what": "Art Institute of Chicago, Ernest Mancoba, Sculpture (1951), wood: his last known sculpture, carved from a single wood block, a diminutive, vaguely lifelike form; reflects Christian icons and South African devotional sculpture; critics viewed his “little wooden images” as evidence of his “strong African origins,” but for Mancoba it was not geography that mattered but the shared lineage with artists who could reconcile the spiritual and the material",
+          "url": "https://www.artic.edu/artworks/255263/sculpture"
+        },
+        {
+          "what": "Wikipedia, Ernest Mancoba: learned woodcarving at Grace Dieu, an Anglican diocesan training college; moved to Denmark in 1947 with Sonja Ferlov and joined Asger Jorn's circle, which became CoBrA (1948); his carving of this period inspired by Inuit art as much as by African sculpture",
+          "url": "https://en.wikipedia.org/wiki/Ernest_Mancoba"
+        }
+      ],
+      "notes": "Band-7 moves: the claim sits inside the author's rebuttal of a common reading (model ca9dc00f); quotations of about 45 words that argue; A OPP (sides with the rejected view), B HALF (spiritual and material only), C TRAP (reconciliation that misses the claim, as in ca9dc00f B). Quotations are attributed to an unnamed art historian and are invented, as T3 allows. The critics' phrases are quoted as the museum quotes them.",
+      "word_count": 104,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Claim sits inside the author's rebuttal (model ca9dc00f); arguing quotations of about 45 words; A sides with the rejected reading, C reconciles through two geographies, B matches only the spiritual and material half; the key needs both kinship across origins and spirit given form. Core claim confirmed on the Art Institute record."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w4b4_08",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description: quantified claim (the same two plants dominate each introduced bird’s diet) plus a contrast with the native bird",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Of Hawaii’s native fruit-eating birds, only the Omao, a thrush found on Hawaii Island, survives in numbers large enough to disperse the seeds of native plants, and its range has contracted to less than half its original extent. Two introduced birds, the Japanese white-eye and the red-billed leiothrix, are now abundant throughout the islands. To determine whether they could assume the Omao’s ecological role, ecologist Liba Pejchar identified the seeds in droppings collected from all three species. She concluded that the introduced birds depend on a narrow set of food plants—the same two widespread species in each case—whereas the Omao distributes its feeding more evenly across native plants.",
+      "stem": "Which choice best describes data from the table that support Pejchar’s conclusion?",
+      "options": [
+        "Rubus hawaiensis made up more than 85% of the seeds in the Japanese white-eye’s diet, while Vaccinium calycinum made up nearly 70% of the seeds in the red-billed leiothrix’s diet.",
+        "Rubus hawaiensis and Vaccinium calycinum together made up more than 90% of the seeds in each introduced bird’s diet, whereas no plant species made up more than about a third of the seeds in the Omao’s diet.",
+        "A single plant species, Rubus hawaiensis, made up most of the seeds in the diets of both introduced birds, whereas Ilex anomala made up about a third of the seeds in the Omao’s diet.",
+        "Ilex anomala made up about a third of the seeds in the Omao’s diet but was absent from both introduced birds’ diets, which alone included seeds of the introduced plant Rubus rosifolius."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Percentage of Seeds from Each Plant Species in Droppings of Three Bird Species on Hawaii Island",
+        "columns": [
+          "Plant species",
+          "Omao (%)",
+          "Japanese white-eye (%)",
+          "Red-billed leiothrix (%)"
+        ],
+        "rows": [
+          [
+            "Rubus hawaiensis",
+            "14.6",
+            "85.9",
+            "22.7"
+          ],
+          [
+            "Vaccinium calycinum",
+            "22.2",
+            "4.5",
+            "69.4"
+          ],
+          [
+            "Cheirodendron trigynum",
+            "20.1",
+            "6.2",
+            "1.8"
+          ],
+          [
+            "Ilex anomala",
+            "34.0",
+            "0",
+            "0"
+          ],
+          [
+            "Styphelia tameiameiae",
+            "2.1",
+            "0",
+            "0"
+          ],
+          [
+            "Psychotria species",
+            "6.9",
+            "0",
+            "0"
+          ],
+          [
+            "Perrottetia sandwicensis",
+            "0",
+            "0.6",
+            "0.3"
+          ],
+          [
+            "Rubus rosifolius (introduced)",
+            "0",
+            "2.8",
+            "5.7"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: each introduced bird depends on “the same two widespread species,” and the Omao feeds “more evenly across native plants.” Rubus hawaiensis and Vaccinium calycinum make up 85.9% + 4.5% = 90.4% of the white-eye’s seeds and 22.7% + 69.4% = 92.1% of the leiothrix’s, while the Omao’s largest share for any plant is 34.0%. Choice B states both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: each bird’s single top plant, accurate but insufficient",
+          "why_wrong": "Both figures are accurate, but they name a different plant for each bird, so they do not show that the same two plants dominate both diets, and they say nothing about the Omao."
+        },
+        "C": {
+          "recipe": "INACC: misread the leiothrix column",
+          "why_wrong": "Rubus hawaiensis makes up only 22.7% of the leiothrix’s seeds, not most of them; that bird’s diet is dominated by Vaccinium calycinum."
+        },
+        "D": {
+          "recipe": "IRREL: accurate differences in which plants are eaten, not in how concentrated the diets are",
+          "why_wrong": "The figures are accurate, but which plants each bird eats or avoids does not show whether the introduced birds’ diets are concentrated on two plants or whether the Omao’s is spread evenly."
+        }
+      },
+      "models": [
+        "3.24",
+        "3.20",
+        "3.23",
+        "3.30"
+      ],
+      "sources": [
+        {
+          "what": "Pejchar 2015, AoB PLANTS 7: plv072, 'Introduced birds incompletely replace seed dispersal by a native frugivore': Omao is the only native frugivore persisting in sufficient numbers, restricted to less than half its original range; two introduced frugivores abundant; >90% of seeds dispersed by introduced birds from two ubiquitous small-seeded species; Table 2 per cent of seeds by plant species in diet (faecal) samples: R. hawaiensis 14.6/85.9/22.7, Vaccinium calycinum 22.2/4.5/69.4, C. trigynum 20.1/6.2/1.8, I. anomala 34.0/0/0, R. rosifolius (introduced) 0/2.8/5.7 for Omao/Japanese White-eye/Red-billed Leiothrix",
+          "url": "https://doi.org/10.1093/aobpla/plv072"
+        }
+      ],
+      "notes": "Band-7 moves: two-part quantified claim (each introduced bird, the same two plants) plus a contrast; the key needs two sums and a column maximum (four operations). A PART (each bird's top plant only, true), C INACC (wrong column read), D IRREL (true, wrong property). All eight rows of the paper's Table 2 are shown (review added Styphelia, Psychotria and P. sandwicensis), so each column sums to about 100% and the key's Omao maximum of 34.0 can be read off the table.",
+      "word_count": 108,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "added the three Table 2 rows the draft omitted (Styphelia tameiameiae 2.1/0/0, Psychotria species 6.9/0/0, Perrottetia sandwicensis 0/0.6/0.3) and dropped the \"not all species shown\" note, so the key's \"no plant species made up more than about a third\" can be read off the table instead of inferred from a subtotal (Pejchar 2015, Table 2); title and notes updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The passage does not name the two plants, so the student must find the same pair in both introduced columns, sum both pairs (90.4, 92.1) and take the Omao maximum (34.0); A (each bird's top plant) and D (which plants are eaten) are accurate but insufficient, C misreads a column."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P67_criterion.hard.w4b4_09",
+      "template": "Q1_P67_criterion",
+      "subtype": "Data completion: passage relations (nutrients raise stomatal density; colony size and nesting habits set the guano supply) applied to the display to support a conclusion about the world",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "On Triangle Island, a seabird colony in Canada’s Pacific waters, the shrub salmonberry has spread in recent decades across ground where seabirds excavate their nesting burrows. To evaluate explanations for this expansion, ecologist Ron Ydenberg and colleagues measured salmonberry’s stomatal density (the number of pores per square millimeter of leaf surface), which tends to increase with nutrient availability. Triangle and Pine Islands host very large seabird colonies, whereas Lucy Island hosts a much smaller one of about 10,000 pairs; on East Limestone Island, the nesting ancient murrelets never deliver food to their burrows, so little guano (nutrient-rich droppings) accumulates. The researchers concluded that guano, rather than burrowing, best explains the shrub’s expansion, since ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "density on East Limestone Island was far below the level on the mainland coast, indicating that the murrelets’ burrowing had damaged salmonberry roots there more severely than burrowing had on any other island.",
+        "density on Triangle Island has risen as its seabird colony has grown, whereas density on the mainland coast has remained nearly constant since the early twentieth century.",
+        "density was well above the mainland level only on the two islands with very large colonies and was lowest of all on East Limestone Island, where little guano accumulates.",
+        "density on every island with a seabird colony exceeded the level on the mainland coast, and it was highest on Triangle Island, which hosts one of the two largest colonies."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Mean Stomatal Density of Salmonberry Leaves at Five Locations in British Columbia",
+        "columns": [
+          "Location",
+          "Mean stomatal density (pores per square millimeter)"
+        ],
+        "rows": [
+          [
+            "Mainland coast (no seabird colony)",
+            "267"
+          ],
+          [
+            "Lucy Island",
+            "256"
+          ],
+          [
+            "Triangle Island",
+            "390"
+          ],
+          [
+            "Pine Island",
+            "493"
+          ],
+          [
+            "East Limestone Island",
+            "130"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Stomatal density “tends to increase with nutrient availability,” and guano is the nutrient source, so if guano drives the shrub’s expansion, density should be high where colonies are very large and low where little guano accumulates. The table shows exactly that: Triangle (390) and Pine (493) are far above the mainland’s 267, smaller Lucy Island (256) is not, and East Limestone, where “little guano (nutrient-rich droppings) accumulates,” has the lowest density, 130. Choice C uses these data to support the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: the relation applied the wrong way (low density read as burrowing damage)",
+          "why_wrong": "East Limestone’s value is accurate, but reading it as a sign of burrowing damage supports the burrowing explanation the researchers rejected; the passage explains the low value by the lack of guano there."
+        },
+        "B": {
+          "recipe": "OUTS: a change over time the table does not show",
+          "why_wrong": "The table gives one value per location and no measurements from different years, so it cannot show density rising on Triangle Island or staying constant on the mainland."
+        },
+        "D": {
+          "recipe": "INACC: compound with false clauses",
+          "why_wrong": "Lucy Island (256) and East Limestone Island (130) are below the mainland’s 267, and the highest density is on Pine Island (493), not Triangle Island (390)."
+        }
+      },
+      "models": [
+        "3233c162",
+        "cbdd5287",
+        "3.27",
+        "3.22",
+        "3.16"
+      ],
+      "sources": [
+        {
+          "what": "Ydenberg, Leyland, Hipfner, Prins 2021, Ecology and Evolution 11: 'Century-long stomatal density record of the nitrophyte, Rubus spectabilis L., from the Pacific Northwest indicates no effect of changing atmospheric carbon dioxide but a strong response to nutrient subsidy': salmonberry has expanded on Triangle Island; hypotheses climate change, biopedturbation (burrowing) and nutrient input; nutrient hypothesis predicts stomatal density positively related to colony size; Table 1 mean stomatal density (per mm2): baseline coastal herbarium sample 267, Lucy Island 259 and 252 (256 overall; about 10,000 pairs of rhinoceros auklets, smaller colony), Triangle Island 390, Pine Island 493 (Triangle and Pine large colonies), East Limestone Island 130 (ancient murrelets deliver no food to the burrow, so no guano is deposited); data most consistent with the nutrient input hypothesis",
+          "url": "https://doi.org/10.1002/ece3.8405"
+        }
+      ],
+      "notes": "Band-7 moves: the display must be read through two passage relations (nutrients raise density; colony size and murrelet habits set the guano supply); the blank concludes about the cause in the world; options 28 to 33 words. A WDIR (relation turned toward burrowing), B OUTS (time trend not displayed), D INACC compound. 'Mainland coast' is the paper's 267 baseline (herbarium specimens from coastal British Columbia excluding high elevations, small islands and Triangle); Lucy Island is the paper's pooled 256 from two subsamples. Five operations: read five values, compare four with the baseline, find the minimum, and match each to the passage's colony facts.",
+      "word_count": 114,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Two passage relations must be applied to the display (nutrients raise stomatal density; colony size and murrelet feeding habits set the guano supply); five reads and comparisons with the baseline plus the minimum; options 28 to 33 words; A WDIR, B OUTS, D INACC. Values match Ydenberg et al. 2021 Table 1."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.hard.w4b4_10",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: extreme after a filter (the oldest ice among the Greenland cores), with depth as the lure",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Ice cores, cylindrical samples extracted from glaciers and ice sheets, preserve records of past climate in successive layers of compacted snow. Ice located deeper within an ice sheet is generally older, but the depth a core reaches does not by itself determine how far back its record extends: at locations where abundant snowfall generates thick annual layers, such as the WAIS Divide site in West Antarctica, even an exceptionally deep core may contain comparatively recent ice. The Greenland cores in the table display a similar discrepancy, since the oldest ice among them was retrieved from ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "NEEM, the shallowest of the three Greenland cores at 2,537 meters.",
+        "NorthGRIP, the deepest of the three Greenland cores at 3,085 meters.",
+        "GRIP, which reached a depth of 3,029 meters in 1992.",
+        "Dome F, which reached ice about 720,000 years old at 3,035 meters."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Selected Deep Ice Cores",
+        "columns": [
+          "Ice core",
+          "Ice sheet",
+          "Year completed",
+          "Depth reached (meters)",
+          "Age of oldest ice in record (years)"
+        ],
+        "rows": [
+          [
+            "GRIP",
+            "Greenland",
+            "1992",
+            "3,029",
+            "about 100,000"
+          ],
+          [
+            "NorthGRIP",
+            "Greenland",
+            "2003",
+            "3,085",
+            "123,000"
+          ],
+          [
+            "Dome F",
+            "Antarctica",
+            "2006",
+            "3,035",
+            "720,000"
+          ],
+          [
+            "NEEM",
+            "Greenland",
+            "2010",
+            "2,537",
+            "128,500"
+          ],
+          [
+            "WAIS Divide",
+            "Antarctica",
+            "2011",
+            "3,405",
+            "62,000"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The blank must name the Greenland core with the oldest ice and show the same mismatch between depth and age that the text describes. Of the three Greenland cores, NEEM reached the oldest ice, about 128,500 years, even though at 2,537 meters it was the shallowest of the three, so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong extreme: deepest taken for oldest",
+          "why_wrong": "NorthGRIP is the deepest Greenland core, but its oldest ice, about 123,000 years, is younger than NEEM’s, and a deepest-and-oldest core would show no mismatch at all."
+        },
+        "C": {
+          "recipe": "wrong group: another Greenland row",
+          "why_wrong": "GRIP’s record reaches back only about 100,000 years, the shortest of the three Greenland cores."
+        },
+        "D": {
+          "recipe": "filter ignored: oldest overall, wrong ice sheet",
+          "why_wrong": "Dome F holds by far the oldest ice in the table, but it was drilled in Antarctica, not Greenland."
+        }
+      },
+      "models": [
+        "3.44",
+        "3.27",
+        "3.22"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Ice core (history section, citing Jouzel 2013 and Langway 2008): GRIP reached bedrock at 3,029 m in 1992 with about 100,000 years of climatic information; NorthGRIP reached 3,085 m in 2003, data back to 123,000 years; NEEM retrieved a 2,537 m core in 2010, record to 128,500 years; Dome F hole reached 3,035 m in 2006, ice estimated 720,000 years old; WAIS Divide completed 2011 at 3,405 m, high snow accumulation so the ice extends back only 62,000 years",
+          "url": "https://en.wikipedia.org/wiki/Ice_core"
+        },
+        {
+          "what": "Jouzel 2013, Climate of the Past 9: 2525-2547, 'A brief history of ice core science over the last 50 yr' (the source cited for the depths and ages)",
+          "url": "https://doi.org/10.5194/cp-9-2525-2013"
+        }
+      ],
+      "notes": "Band 6: filter (Greenland) then extreme (oldest), with depth as the lure and the passage's depth-age point driving the blank. Real values; GRIP's age is given as 'about 100,000' as the source states. Key is not the longest option.",
+      "word_count": 96,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Filter (Greenland) then extreme (oldest) with depth and the overall maximum as lures, but the passage's depth-age point steers toward the shallowest core; a strong 6, without the sharper trap of 3.44."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w4b4_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (admits a fault and resolves to change; translated drama)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "The Beneficent Bear is a 1771 play by Carlo Goldoni, translated in an 1892 English edition of his comedies. In the play, Geronte, a wealthy old man known for his outbursts, is about to speak with his niece Angelica, who is afraid to tell him that she wishes to marry. Before she approaches, Geronte admits a fault in himself and resolves to behave differently toward her: ______",
+      "stem": "Which quotation from a translation of The Beneficent Bear most effectively illustrates the claim?",
+      "options": [
+        "“Come, come; he is sometimes a little hasty, but he has not a bad heart.”",
+        "“Yes! you wish to be married! to lose your liberty, your tranquillity! Very well; so much the worse for you. Yes, I will marry you.”",
+        "“It is the first time in my life that—Plague on my temper! … It is Dorval who put me in a passion.”",
+        "“She is right; I sometimes suffer myself to be carried away by my irritable temper. My niece deserves to be treated with tenderness.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Geronte “admits a fault in himself” and “resolves to behave differently toward” his niece. In choice D he admits that he is sometimes “carried away by my irritable temper” and then says that his niece “deserves to be treated with tenderness,” which covers both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "SUBJ: right content, wrong speaker",
+          "why_wrong": "This line describes Geronte’s hasty temper and good heart, but someone else is speaking about him (“he is”), so it is not Geronte admitting a fault of his own."
+        },
+        "B": {
+          "recipe": "OFF: gruff but generous, no admission or resolution",
+          "why_wrong": "Geronte agrees, grumpily, to let Angelica marry, but he neither admits a fault nor resolves to treat her more gently."
+        },
+        "C": {
+          "recipe": "HALF: admits the temper but blames someone else and resolves nothing",
+          "why_wrong": "Geronte curses his temper, but he blames Dorval for his anger and says nothing about treating anyone differently."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.36",
+        "2.13",
+        "2.20"
+      ],
+      "sources": [
+        {
+          "what": "Carlo Goldoni, The Beneficent Bear (Il burbero benefico / Le Bourru bienfaisant, first written in French and staged in Paris in 1771), in The Comedies of Carlo Goldoni, edited by Helen Zimmern (London: David Stott, 1892); Geronte's soliloquy in Act I; Angelica is the sister of his nephew Dalancourt; all quotations checked as exact substrings of the Gutenberg text (a stage direction in C replaced by an ellipsis; double hyphen set as an em dash)",
+          "url": "https://www.gutenberg.org/ebooks/33575"
+        }
+      ],
+      "notes": "Medium two-part claim; half-match and wrong-speaker distractors as in the bank's medium literary items. The 1892 edition names Zimmern as editor, not translator, so the passage says 'translated in an 1892 English edition'.",
+      "word_count": 67,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w4b4_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a physiological hypothesis (with a comparison group)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Tinamous, ground-dwelling birds of Central and South America, take flight only in brief bursts. Relative to body size, their hearts are the smallest documented in any bird, about 0.3% of body mass, compared with an average of roughly 0.8% in pheasants and their relatives. Studying ornate and Chilean tinamous, physiologist Jordi Altimiras and colleagues hypothesized that these diminutive hearts cannot supply enough oxygen to the birds’ muscles during strenuous exertion. The team compared the tinamous with red junglefowl, which also fly in short bursts from the ground but have larger hearts.",
+      "stem": "Which finding, if true, would most directly support Altimiras and colleagues’ hypothesis?",
+      "options": [
+        "While resting quietly, tinamous maintained blood pressures similar to those measured in red junglefowl, even though the junglefowl’s hearts are larger.",
+        "After being chased for three minutes, tinamous had far more lactate, a substance that builds up when muscles work without enough oxygen, in their blood than red junglefowl did.",
+        "After being chased for three minutes, tinamous and red junglefowl took about the same amount of time to return to their normal rates of oxygen use.",
+        "As young tinamous grow, their hearts increase in size relative to their bodies in a pattern resembling that seen in young alligators."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The team hypothesized that tinamous’ small hearts “cannot supply enough oxygen to the birds’ muscles during strenuous exertion.” Lactate builds up when muscles work without enough oxygen, so if tinamous built up far more lactate than red junglefowl, whose hearts are larger, after the same exertion, their muscles were short of oxygen, as the hypothesis predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: the wrong condition (rest, not exertion)",
+          "why_wrong": "The hypothesis is about strenuous exertion; similar blood pressures at rest say nothing about whether the heart can meet the muscles’ needs during hard activity."
+        },
+        "C": {
+          "recipe": "OPP: no difference where the hypothesis predicts one",
+          "why_wrong": "If tinamous recovered as quickly as red junglefowl, their muscles would not seem to have run short of oxygen during the chase, which would weaken rather than support the hypothesis."
+        },
+        "D": {
+          "recipe": "OFF: true detail about heart growth, not oxygen supply",
+          "why_wrong": "How tinamou hearts grow in relation to body size does not show whether the adult heart can supply enough oxygen during exertion."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.21",
+        "2.38",
+        "2.6"
+      ],
+      "sources": [
+        {
+          "what": "Altimiras, Lindgren, Giraldo-Deck, Matthei, Garitano-Zavala 2017, Scientific Reports 7: 16043, 'Aerobic performance in tinamous is limited by their small heart. A novel hypothesis in the evolution of avian flight': tinamous have the smallest relative heart among birds, 0.3% of body mass vs 0.81% average in phasianids; only short burst flights from the ground; ornate and Chilean tinamous compared with red junglefowl (larger heart, similar burst flights); when challenged to fly the heart cannot support aerobic metabolism: quick exhaustion, lactate 18.7 and 15.7 mM vs 9.2 mM in junglefowl after a 3-min chase, EPOC about 6-fold larger; resting perfusion pressures not limited; crocodilian-like cardiac growth (compared with alligators)",
+          "url": "https://doi.org/10.1038/s41598-017-16297-2"
+        }
+      ],
+      "notes": "Medium. Key matches the real result. A is a real finding (pressures not limited) and C is the reverse of a real finding (EPOC much larger), both stated as hypotheticals; D is real but off-target. Central and South America: tinamous are Neotropical; the two species studied live in the Andes and Chile.",
+      "word_count": 91,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w4b4_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about change over time (needs the older-versus-newer comparison)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Fragments of ochre and ostrich eggshell engraved with crosshatched and parallel lines have been excavated at two South African sites, Blombos Cave and Diepkloof Rock Shelter; the oldest are roughly 100,000 years old, and together they span more than 30,000 years. Whether such marks were symbols or decoration is debated, but cognitive scientist Kristian Tylén and colleagues addressed a different question by presenting the engravings to present-day participants in a series of experiments. Tylén’s team concluded that the engravings changed over the millennia in ways that made them better suited to human perception and memory.",
+      "stem": "Which finding, if true, would most directly support Tylén and colleagues’ conclusion?",
+      "options": [
+        "Participants could tell engravings from Blombos Cave apart from engravings from Diepkloof Rock Shelter more easily than they could tell apart engravings from the same site.",
+        "Participants rated the engravings from both sites as more visually striking than random scratches that researchers had made on similar pieces of ochre and eggshell.",
+        "After briefly viewing the engravings, participants were later able to recognize the more recent engravings more accurately than they could recognize the older ones.",
+        "When asked to copy the engravings by hand, participants reproduced the oldest engravings just as accurately as they reproduced the most recent ones."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The team concluded that “the engravings changed over the millennia in ways that made them better suited to human perception and memory.” If participants recognized the more recent engravings more accurately than the older ones, the later engravings were easier to remember, which is the change over time that the conclusion describes.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: compares sites, not periods",
+          "why_wrong": "How easily the two sites’ engravings can be told apart concerns a difference between places, not a change over time in how well the engravings suit perception and memory."
+        },
+        "B": {
+          "recipe": "PART: no comparison across time",
+          "why_wrong": "Engravings seeming more striking than random scratches says nothing about whether later engravings suited perception better than earlier ones."
+        },
+        "D": {
+          "recipe": "OPP: no difference where the conclusion predicts one",
+          "why_wrong": "If the oldest engravings were copied as accurately as the newest, the engravings would not seem to have become easier to reproduce over time, which would cut against the conclusion."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.33",
+        "2.43",
+        "2.38"
+      ],
+      "sources": [
+        {
+          "what": "Tylén, Fusaroli, Rojo, Heimann, Fay, Johannsen, Riede, Lombard 2020, PNAS 117(9): 4578-4584, 'The evolution of early symbolic behavior in Homo sapiens': engraved ochre and ostrich eggshell from Blombos Cave and Diepkloof Rock Shelter, dating up to about 100,000 years ago and spanning more than 30,000 years; five experiments with modern participants suggest the engravings became more salient, memorable, reproducible and expressive of intent over time (better suited to human perception and cognition), but not more discriminable",
+          "url": "https://doi.org/10.1073/pnas.1910880117"
+        }
+      ],
+      "notes": "Medium. Key matches the real finding (more memorable over time). A echoes the real non-finding on discriminability, B lacks the time comparison, D the reverse of the real reproducibility result stated as a hypothetical.",
+      "word_count": 95,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "note": "Neighbour kept: live inferences.S7.medium is the Blombos ochre-processing workshop (Henshilwood 2011); this item is a different finding (Tylen 2020 experiments on engraving change over time)."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w4b4_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two pairwise comparisons that reverse across columns",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In a secondary forest in the Cantabrian Mountains of northern Spain, several thrush species consume the fruits of hawthorn, holly, and yew trees and later deposit the seeds away from the parent trees. Drawing on three years of observations of the birds’ movements, ecologist Juan Manuel Morales and colleagues modeled how far each thrush species transports the seeds of each tree. Which thrush carried seeds farther often depended on the tree: for example, the blackbird ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "carried yew seeds farther, on average, than the redwing did, but the redwing carried hawthorn seeds farther than the blackbird did.",
+        "carried both yew seeds and hawthorn seeds farther, on average, than the redwing did.",
+        "carried yew seeds a shorter distance, on average, than the redwing did, but carried hawthorn seeds farther than the redwing did.",
+        "carried both yew seeds and hawthorn seeds a shorter distance, on average, than the redwing did."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Modeled Mean Distances (in Meters) That Thrushes Carried Seeds of Three Tree Species",
+        "columns": [
+          "Thrush species",
+          "Hawthorn",
+          "Holly",
+          "Yew"
+        ],
+        "rows": [
+          [
+            "Redwing",
+            "89.5",
+            "80.7",
+            "68.4"
+          ],
+          [
+            "Song thrush",
+            "81.6",
+            "72.4",
+            "61.1"
+          ],
+          [
+            "Blackbird",
+            "87.2",
+            "82.1",
+            "86.3"
+          ],
+          [
+            "Fieldfare",
+            "113.5",
+            "109.1",
+            "117.1"
+          ],
+          [
+            "Mistle thrush",
+            "94.1",
+            "89.5",
+            "85.7"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must show that which thrush carried seeds farther depended on the tree. The blackbird carried yew seeds 86.3 meters on average, farther than the redwing’s 68.4 meters, but the redwing carried hawthorn seeds 89.5 meters, farther than the blackbird’s 87.2 meters. Choice A reports this reversal accurately.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong direction (one of two comparisons reversed)",
+          "why_wrong": "The blackbird did carry yew seeds farther, but it carried hawthorn seeds a shorter distance than the redwing did (87.2 versus 89.5 meters), and two wins would not show any dependence on the tree."
+        },
+        "C": {
+          "recipe": "wrong direction (both comparisons reversed)",
+          "why_wrong": "The table shows the opposite on both counts: the blackbird carried yew seeds farther than the redwing (86.3 versus 68.4 meters) and hawthorn seeds a shorter distance (87.2 versus 89.5 meters)."
+        },
+        "D": {
+          "recipe": "wrong direction (one of two comparisons reversed)",
+          "why_wrong": "The blackbird carried hawthorn seeds a shorter distance than the redwing, but it carried yew seeds farther (86.3 versus 68.4 meters)."
+        }
+      },
+      "models": [
+        "2.32",
+        "2.18",
+        "2.24",
+        "1.3"
+      ],
+      "sources": [
+        {
+          "what": "Morales, García, Martínez, Rodríguez-Pérez, Herrera 2013, PLoS ONE 8(6): e65216, 'Frugivore behavioural details matter for seed dispersal: a multi-species model for Cantabrian thrushes and trees': three years of field observations of six thrushes (redwing, song thrush, blackbird, fieldfare, ring ouzel, mistle thrush) and three trees (Crataegus monogyna, Ilex aquifolium, Taxus baccata) in a secondary forest of the Cantabrian range; Table 2 mean dispersal distances (m), e.g. redwing 89.47/80.65/68.41, blackbird 87.17/82.05/86.33",
+          "url": "https://doi.org/10.1371/journal.pone.0065216"
+        }
+      ],
+      "notes": "Values rounded to one decimal from Table 2 (ring ouzel row left out). Options are the full two-comparison factorial, as in the bank's pairwise items; only A is true and only a reversal shows dependence on the tree.",
+      "word_count": 76,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w4b4_15",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion: change over time in one series (endpoints), with other series as lures",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Populations throughout East and Southeast Asia have aged considerably since 1990 as birth rates declined and life expectancy increased, but the pace of this demographic transformation has varied substantially from one country in the region to another. In Vietnam, for instance, the share of residents aged 65 or older increased only modestly between 1990 and 2020, whereas in Thailand that share ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "rose from about 5 percent in 1990 to about 8 percent in 2020.",
+        "rose from about 12 percent in 1990 to nearly 30 percent in 2020.",
+        "rose from about 5 percent in 1990 to about 16 percent in 2020.",
+        "more than tripled, from about 4 percent in 1990 to about 13 percent in 2020."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Share of Population Aged 65 or Older in Four Asian Countries, 1990–2020",
+        "x_axis": "Year",
+        "y_axis": "Percentage of population",
+        "description": "A line graph shows the percentage of the population aged 65 or older in four countries every five years from 1990 to 2020. Japan: 1990, 12.2%, 1995, 14.7%, 2000, 17.4%, 2005, 20.3%, 2010, 23.1%, 2015, 26.9%, 2020, 28.9%. South Korea: 1990, 4.9%, 1995, 5.8%, 2000, 7.1%, 2005, 9.0%, 2010, 11.0%, 2015, 12.9%, 2020, 15.8%. Thailand: 1990, 4.0%, 1995, 4.8%, 2000, 6.1%, 2005, 7.5%, 2010, 8.6%, 2015, 10.3%, 2020, 12.9%. Vietnam: 1990, 5.5%, 1995, 5.6%, 2000, 6.0%, 2005, 6.2%, 2010, 6.0%, 2015, 6.5%, 2020, 7.6%.",
+        "data": [
+          {
+            "series": "Japan",
+            "points": [
+              [
+                "1990",
+                12.2
+              ],
+              [
+                "1995",
+                14.7
+              ],
+              [
+                "2000",
+                17.4
+              ],
+              [
+                "2005",
+                20.3
+              ],
+              [
+                "2010",
+                23.1
+              ],
+              [
+                "2015",
+                26.9
+              ],
+              [
+                "2020",
+                28.9
+              ]
+            ]
+          },
+          {
+            "series": "South Korea",
+            "points": [
+              [
+                "1990",
+                4.9
+              ],
+              [
+                "1995",
+                5.8
+              ],
+              [
+                "2000",
+                7.1
+              ],
+              [
+                "2005",
+                9.0
+              ],
+              [
+                "2010",
+                11.0
+              ],
+              [
+                "2015",
+                12.9
+              ],
+              [
+                "2020",
+                15.8
+              ]
+            ]
+          },
+          {
+            "series": "Thailand",
+            "points": [
+              [
+                "1990",
+                4.0
+              ],
+              [
+                "1995",
+                4.8
+              ],
+              [
+                "2000",
+                6.1
+              ],
+              [
+                "2005",
+                7.5
+              ],
+              [
+                "2010",
+                8.6
+              ],
+              [
+                "2015",
+                10.3
+              ],
+              [
+                "2020",
+                12.9
+              ]
+            ]
+          },
+          {
+            "series": "Vietnam",
+            "points": [
+              [
+                "1990",
+                5.5
+              ],
+              [
+                "1995",
+                5.6
+              ],
+              [
+                "2000",
+                6.0
+              ],
+              [
+                "2005",
+                6.2
+              ],
+              [
+                "2010",
+                6.0
+              ],
+              [
+                "2015",
+                6.5
+              ],
+              [
+                "2020",
+                7.6
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The statement contrasts Vietnam’s modest change with Thailand’s. The graph shows Thailand’s share at about 4 percent in 1990 and about 13 percent in 2020, more than three times as large, so choice D completes the contrast accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong group: Vietnam’s line",
+          "why_wrong": "A rise from about 5 to about 8 percent describes Vietnam, the country the text says changed only modestly, not Thailand."
+        },
+        "B": {
+          "recipe": "wrong group: Japan’s line",
+          "why_wrong": "A rise from about 12 percent to nearly 30 percent describes Japan; Thailand’s share was about 4 percent in 1990."
+        },
+        "C": {
+          "recipe": "wrong group: South Korea’s line",
+          "why_wrong": "A rise from about 5 to about 16 percent describes South Korea; Thailand reached only about 13 percent by 2020."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "sources": [
+        {
+          "what": "World Bank, World Development Indicators, Population ages 65 and above (% of total population), SP.POP.65UP.TO.ZS: Japan 12.16 (1990) to 28.92 (2020); Korea, Rep. 4.89 to 15.82; Thailand 3.95 to 12.9; Viet Nam 5.47 to 7.57 (five-year values plotted, rounded to one decimal)",
+          "url": "https://api.worldbank.org/v2/country/JPN;KOR;THA;VNM/indicator/SP.POP.65UP.TO.ZS?format=json&date=1990:2020"
+        }
+      ],
+      "notes": "Real World Bank data (UN population estimates). Every wrong option is another country's line, as in the bank's trend completions.",
+      "word_count": 62,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.medium.w4b4_16",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: two-part claim (a pattern in every row, and its largest case)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In many lower-income countries, agriculture employs a far larger share of the workforce than its share of total economic output. Economists interpret this disparity as evidence that agricultural workers produce considerably less per person than workers in manufacturing or services. After examining World Bank data for 2019, a student concluded that in each of five countries she studied, agriculture accounted for a much greater share of jobs than of output, and that the imbalance was most pronounced in Lao PDR.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Burundi had both the largest share of workers employed in agriculture, about 85%, and the largest share of output from agriculture, about 34%.",
+        "In every country, agriculture’s share of employment was more than twice its share of output, and the gap was widest in Lao PDR, at about 69% versus 16%.",
+        "About 69% of workers in Lao PDR were employed in agriculture in 2019, compared with only about 50% of workers in Myanmar that year.",
+        "In every country, agriculture’s share of output was larger than its share of employment, and the difference between the two was greatest in Lao PDR."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Agriculture’s Share of Employment and of Economic Output in Five Countries, 2019",
+        "columns": [
+          "Country",
+          "Share of employment in agriculture (%)",
+          "Share of GDP from agriculture (%)"
+        ],
+        "rows": [
+          [
+            "Burundi",
+            "85.0",
+            "34.3"
+          ],
+          [
+            "Lao PDR",
+            "69.4",
+            "16.1"
+          ],
+          [
+            "Madagascar",
+            "70.9",
+            "23.0"
+          ],
+          [
+            "Mozambique",
+            "71.8",
+            "24.8"
+          ],
+          [
+            "Myanmar",
+            "49.8",
+            "20.8"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: in each country agriculture’s share of jobs is much greater than its share of output, and the imbalance is largest in Lao PDR. Every country’s employment share is more than twice its share of GDP (for example, 49.8% against 20.8% in Myanmar), and Lao PDR’s gap, 69.4% against 16.1%, is the widest. Choice B states both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate extremes that do not bear on the imbalance",
+          "why_wrong": "Burundi’s figures are accurate, but having the highest values on both measures says nothing about whether employment outweighs output everywhere or where the imbalance is largest."
+        },
+        "C": {
+          "recipe": "PART: one measure, two countries",
+          "why_wrong": "The employment figures are accurate, but they leave out agriculture’s share of output, so they cannot show any imbalance between jobs and output."
+        },
+        "D": {
+          "recipe": "INACC: comparison reversed",
+          "why_wrong": "In every country the share of employment is larger than the share of output, not the other way around."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.42",
+        "3.24"
+      ],
+      "sources": [
+        {
+          "what": "World Bank, World Development Indicators, 2019: Employment in agriculture (% of total employment, modeled ILO estimate) SL.AGR.EMPL.ZS: Burundi 85.04, Lao PDR 69.36, Madagascar 70.88, Mozambique 71.77, Myanmar 49.76; Agriculture, forestry, and fishing, value added (% of GDP) NV.AGR.TOTL.ZS: Burundi 34.25, Lao PDR 16.05, Madagascar 22.96, Mozambique 24.77, Myanmar 20.84",
+          "url": "https://api.worldbank.org/v2/country/BDI;LAO;MDG;MOZ;MMR/indicator/SL.AGR.EMPL.ZS?format=json&date=2019"
+        },
+        {
+          "what": "Agriculture value added share of GDP, same countries and year",
+          "url": "https://api.worldbank.org/v2/country/BDI;LAO;MDG;MOZ;MMR/indicator/NV.AGR.TOTL.ZS?format=json&date=2019"
+        }
+      ],
+      "notes": "Real World Bank values rounded to one decimal. Differences: Burundi 50.8, Lao PDR 53.3, Madagascar 47.9, Mozambique 47.0, Myanmar 29.0; ratios 2.5, 4.3, 3.1, 2.9, 2.4, so Lao PDR is largest on either measure. The GDP column counts agriculture, forestry, and fishing, as the World Bank series does.",
+      "word_count": 80,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w4b4_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: one named cell (weight of a named monument)",
+      "tier": "easy",
+      "passage": "The colossal stone heads carved by the Olmec civilization of Mexico’s Gulf Coast date from at least 900 BCE. Most were sculpted from basalt boulders transported more than 150 kilometers from volcanic mountains, an extraordinary effort for people who had neither draft animals nor wheeled vehicles. The first of these heads to be found, Tres Zapotes Monument A, lay partially buried for decades until it was excavated in 1939. According to the table, Monument A weighs ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "40 tons.",
+        "7.8 tons.",
+        "25.3 tons.",
+        "1.47 tons."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Selected Olmec Colossal Heads",
+        "columns": [
+          "Site",
+          "Monument",
+          "Height (meters)",
+          "Weight (tons)"
+        ],
+        "rows": [
+          [
+            "San Lorenzo",
+            "Colossal Head 1",
+            "2.84",
+            "25.3"
+          ],
+          [
+            "San Lorenzo",
+            "Colossal Head 4",
+            "1.78",
+            "6"
+          ],
+          [
+            "La Venta",
+            "Monument 1",
+            "2.41",
+            "24"
+          ],
+          [
+            "Tres Zapotes",
+            "Monument A",
+            "1.47",
+            "7.8"
+          ],
+          [
+            "La Cobata",
+            "La Cobata Head",
+            "3.4",
+            "40"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement asks for the weight of Tres Zapotes Monument A. In the table, the row for Monument A at Tres Zapotes gives a weight of 7.8 tons, so choice B completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong group: the La Cobata head's weight",
+          "why_wrong": "40 tons is the weight of the La Cobata Head, not of Tres Zapotes Monument A."
+        },
+        "C": {
+          "recipe": "wrong group: San Lorenzo Colossal Head 1's weight",
+          "why_wrong": "25.3 tons is the weight of San Lorenzo Colossal Head 1, not of Monument A."
+        },
+        "D": {
+          "recipe": "misplaced value: Monument A's height read as its weight",
+          "why_wrong": "1.47 is Monument A’s height in meters, not its weight in tons."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.37",
+        "1.40"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Olmec colossal heads: summary table of heights and weights (San Lorenzo Colossal Head 1 2.84 m, 25.3 t; Colossal Head 4 1.78 m, 6 t; La Venta Monument 1 2.41 m, 24 t; Tres Zapotes Monument A 1.47 m, 7.8 t; La Cobata 3.4 m, 40 t); heads date from at least 900 BCE; basalt from the Sierra de los Tuxtlas transported over 150 km; Olmecs lacked beasts of burden and functional wheels; Monument A was the first head found, discovered by accident in the mid-19th century, half-buried until excavated by Matthew Stirling in 1939",
+          "url": "https://en.wikipedia.org/wiki/Olmec_colossal_heads"
+        }
+      ],
+      "notes": "Value-only options as in the easy lookups (1.30, 1.37): two neighbouring rows' heights and the same row's weight as a misplaced number.",
+      "word_count": 77,
+      "band_target": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "\"They were sculpted from basalt boulders transported more than 150 kilometers\" changed to \"Most were sculpted...\": Wikipedia (Olmec colossal heads) says the stone for the Tres Zapotes heads, Monument A included, and the La Cobata head came from the nearby Tuxtlas; only the San Lorenzo and La Venta stone travelled far"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w4b4_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: reverse lookup (find the row with a given value, report another column)",
+      "tier": "easy",
+      "passage": "Romansh, a language descended from the Latin spoken in the Roman Empire, has long been used in the mountain valleys of Switzerland’s canton of Grisons. During the nineteenth century, better roads, more trade with German-speaking regions, and the growth of tourism made German increasingly useful there, and Romansh speakers came to make up a shrinking share of the canton’s population. In 1880, for example, the 37,794 Romansh speakers in Grisons made up ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "39.8% of the population.",
+        "46.0% of the population.",
+        "47.2% of the population.",
+        "34.9% of the population."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Romansh Speakers in the Canton of Grisons, 1850–1941",
+        "columns": [
+          "Year",
+          "Number of Romansh speakers",
+          "Romansh speakers (% of population)",
+          "German speakers (% of population)"
+        ],
+        "rows": [
+          [
+            "1850",
+            "42,439",
+            "47.2",
+            "39.5"
+          ],
+          [
+            "1880",
+            "37,794",
+            "39.8",
+            "46.0"
+          ],
+          [
+            "1900",
+            "36,472",
+            "34.9",
+            "46.7"
+          ],
+          [
+            "1920",
+            "39,127",
+            "32.7",
+            "51.2"
+          ],
+          [
+            "1941",
+            "40,187",
+            "31.3",
+            "54.9"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example gives the year 1880 and its 37,794 Romansh speakers. In the 1880 row of the table, Romansh speakers made up 39.8% of the population, so choice A completes the example.",
+      "distractors": {
+        "B": {
+          "recipe": "misplaced value: the German column of the same row",
+          "why_wrong": "46.0% is the share of German speakers in 1880, not of Romansh speakers."
+        },
+        "C": {
+          "recipe": "wrong group: the 1850 row",
+          "why_wrong": "47.2% is the Romansh share in 1850, when there were 42,439 speakers, not in 1880."
+        },
+        "D": {
+          "recipe": "wrong group: the 1900 row",
+          "why_wrong": "34.9% is the Romansh share in 1900, when there were 36,472 speakers, not in 1880."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.37",
+        "1.40"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Romansh language: table 'Number of Romansh speakers in the Grisons 1803-1980' (Coray 2008, p. 86): 1850 42,439 / 47.2% / German 39.5%; 1880 37,794 / 39.8% / 46.0%; 1900 36,472 / 34.9% / 46.7%; 1920 39,127 / 32.7% / 51.2%; 1941 40,187 / 31.3% / 54.9%; Romansh descends from the spoken Latin of the Roman Empire; 19th-century shift driven by contact and commerce with German-speaking regions, improved infrastructure, and tourism making German an economic necessity",
+          "url": "https://en.wikipedia.org/wiki/Romansh_language"
+        }
+      ],
+      "notes": "Reverse lookup as in 1.37 (given one value, report another column of the same row). The 1803 row (c. 50%) is left out because it is approximate. Percentages are shares of the canton's population as the source table gives them.",
+      "word_count": 73,
+      "band_target": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w4b4_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a hypothesis about how animals choose (one step)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Female Japanese yellow swallowtail butterflies (Papilio xuthus) lay their eggs on the leaves of citrus trees. Their caterpillars later eat those leaves. Biologists Hiromi Nagaya, Finlay Stewart, and Michiyo Kinoshita placed individual females in a cage with a potted citrus tree. The butterflies strongly favored just two of the tree’s 102 leaves for their eggs. Because the butterflies flew fairly directly toward these leaves from a distance, the researchers hypothesized that females choose where to lay eggs based on the leaves’ appearance.",
+      "stem": "Which finding, if true, would most directly support the researchers’ hypothesis?",
+      "options": [
+        "Caterpillars that hatched on the two favored leaves grew at about the same rate as caterpillars that hatched on other leaves of the tree.",
+        "Females laid more eggs during the first few days of the experiment than they did during the last few days.",
+        "Females that were unable to see the tree laid eggs on the same two leaves as often as females that could see it.",
+        "Leaves that were brighter and reflected more green light received more eggs than duller leaves on the same tree."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers hypothesized that females choose egg-laying sites “based on the leaves’ appearance.” If brighter, greener leaves received more eggs than duller ones, the butterflies’ choices followed how the leaves looked, which supports the hypothesis.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: caterpillar growth, not how leaves are chosen",
+          "why_wrong": "How fast the caterpillars grew says nothing about whether the females picked the leaves by how they looked."
+        },
+        "B": {
+          "recipe": "OFF: timing of egg laying",
+          "why_wrong": "A change in the number of eggs over the experiment does not show what features of the leaves the females used to choose them."
+        },
+        "C": {
+          "recipe": "OPP: would weaken",
+          "why_wrong": "If females that could not see the tree chose the same leaves, they must have relied on something other than appearance, which would weaken the hypothesis."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.5",
+        "1.8",
+        "1.29"
+      ],
+      "sources": [
+        {
+          "what": "Nagaya, Stewart, Kinoshita 2021, Insects 12(11): 1047, 'Swallowtail Butterflies Use Multiple Visual Cues to Select Oviposition Sites': one female at a time in a small cage with a potted citrus tree; females significantly favored two of 102 leaves; butterflies descended fairly directly toward the leaves from a distance, so the authors hypothesized visual cues; eggs per leaf correlated positively with height, flatness, green reflectance and brightness, negatively with degree of polarization",
+          "url": "https://doi.org/10.3390/insects12111047"
+        }
+      ],
+      "notes": "Easy, one step. Key matches the real finding (green reflectance and brightness).",
+      "word_count": 82,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w4b4_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a survey respondent illustrates a single-part claim",
+      "tier": "easy",
+      "passage": "Studies have linked creative activities with better health, but less is known about the benefits of particular crafts. To learn how knitting affects wellbeing, Jill Riley and her colleagues posted an online survey on a knitting website and received answers from 3,545 knitters around the world. Respondents commonly reported knitting for relaxation and stress relief, and those who knit more often tended to report feeling calmer and happier. The researchers also claim that knitting in a group improved respondents’ social contact and communication with others.",
+      "stem": "Which quotation from a survey respondent would best illustrate the researchers’ claim?",
+      "options": [
+        "“Knitting by myself in the evenings has become the calmest part of my day, since counting stitches keeps me from replaying my worries over and over again.”",
+        "“Since I joined a knitting group at a nearby café, I talk every week with people I would never have met otherwise, and we often trade news and advice.”",
+        "“Our knitting group has made more than two hundred hats for newborns at the local hospital, and I’m proud of how much we’ve produced.”",
+        "“Following complicated lace patterns keeps my mind sharp, because I have to track every row carefully and remember exactly where each pattern repeats.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that “knitting in a group improved respondents’ social contact and communication with others.” Choice B describes knitting with a group and says that, as a result, the respondent now talks every week with people they would not otherwise have met and trades news and advice with them, which illustrates improved social contact and communication.",
+      "distractors": {
+        "A": {
+          "recipe": "off-target: the relaxation benefit the passage also reports, from knitting alone",
+          "why_wrong": "The respondent knits alone and describes feeling calm, a benefit the text mentions, but says nothing about knitting in a group or about contact with other people."
+        },
+        "C": {
+          "recipe": "keyword lure: a group, but its output and pride rather than social contact",
+          "why_wrong": "The respondent knits with a group but describes how much the group has produced and a feeling of pride, not new contact or communication with others."
+        },
+        "D": {
+          "recipe": "off-target: a mental benefit of knitting, not a social one",
+          "why_wrong": "The respondent describes how knitting keeps the mind sharp, which has nothing to do with knitting in a group or with social contact."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.26",
+        "1.32"
+      ],
+      "sources": [
+        {
+          "what": "Riley, Corkhill, Morris 2013, British Journal of Occupational Therapy 76(2): 50-57 (abstract via Crossref): online survey through an internet knitting site, 3,545 knitters worldwide; most knit for relaxation, stress relief and creativity; significant relationship between knitting frequency and feeling calm and happy; 'Knitting in a group impacted significantly on perceived happiness, improved social contact and communication with others'; Jill Riley, Lecturer in Occupational Therapy, Cardiff University",
+          "url": "https://doi.org/10.4276/030802213X13603244419077"
+        }
+      ],
+      "notes": "Respondent quotations are invented and unattributed, as T3 allows. Single-part claim, as in the easy respondent items (1.13, 1.26, 1.32); A uses a benefit the passage itself states, so it is on topic but off the claim.",
+      "word_count": 85,
+      "band_target": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w4b4_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a single-trait claim (poem)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "“The Patchwork Quilt” is a 1909 poem by Effie Waller Smith. The poem describes a woman who sewed a quilt as a girl and kept it all her life. The speaker suggests that the quilt was made from fabric that once belonged to the people around the girl: ______",
+      "stem": "Which quotation from “The Patchwork Quilt” most effectively illustrates the claim?",
+      "options": [
+        "“Pieces given by friend and neighbor, / Blended by her curious labor / With the grandame’s gown of gray, / And the silken bonnet gay / That the baby’s head hath crowned, / In the quaint design are found.”",
+        "“In an ancient window seat, / Where the breeze of morning beat / ’Gainst her face, demure and sweet, / Sat a girl of long ago, / With her sunny head bent low / Where her fingers flitted white / Through a maze of patchwork bright.”",
+        "“Brilliant still the fabrics shine / Of the quilt’s antique design, / As she folds it, soft and warm, / Round a fair child’s sleeping form.”",
+        "“Worn its textures are and frayed, / But the hands upon them laid, / Creased with toils of many a year, / Still more worn and old appear.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the quilt was made from fabric “that once belonged to the people around the girl.” Choice A lists pieces “given by friend and neighbor,” the grandmother’s gray gown, and the baby’s silk bonnet, all sewn into the quilt’s design.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: describes the girl sewing, not where the fabric came from",
+          "why_wrong": "These lines show the girl working on the patchwork, but they say nothing about whose clothing the pieces came from."
+        },
+        "C": {
+          "recipe": "OFF: a later use of the quilt",
+          "why_wrong": "These lines describe the quilt’s bright fabrics and its use as a cover for a sleeping child, not the people whose clothes it was made from."
+        },
+        "D": {
+          "recipe": "LURE: mentions the textures, but describes age and wear",
+          "why_wrong": "These lines compare the worn quilt with the woman’s aging hands; they do not say where the fabric came from."
+        }
+      },
+      "models": [
+        "1.36",
+        "1.11",
+        "1.16",
+        "1.42"
+      ],
+      "sources": [
+        {
+          "what": "Effie Waller Smith (published as Effie Smith), Rosemary and Pansies (Boston: Richard G. Badger, The Gorham Press, 1909), 'The Patchwork Quilt'; all four quotations checked line by line against the Gutenberg text",
+          "url": "https://www.gutenberg.org/ebooks/63790"
+        }
+      ],
+      "notes": "Easy, single trait. The book was published under the name Effie Smith; she is known today as Effie Waller Smith (1879-1960), an African American poet from Kentucky. Work not used by any official item or by our bank.",
+      "word_count": 49,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "B extended to the whole first stanza (checked against Gutenberg 63790): it began mid-sentence (\"Sat a girl of long ago\"), and A was much the longest option (batch key-longest 8 of 22 against CB 26%)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.easy.w4b4_22",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: compare two groups within each condition (high- vs low-SES households, cash and card envelopes)",
+      "tier": "easy",
+      "passage": "Some studies have suggested that people of higher socioeconomic status (SES) tend to be less generous toward others. To test this idea, economists James Andreoni, Nikos Nikiforakis, and Jan Stoop deliberately delivered envelopes to the wrong addresses, choosing high-SES and low-SES households at random in a Dutch city. Each envelope held a handwritten postcard from a grandfather to his grandson, along with either a banknote or a bank-transfer card of the same value that only the intended recipient could use. The researchers concluded that high-SES households were more likely than low-SES households to return an envelope, whatever it contained.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Low-SES households returned 47.8% of the envelopes containing a bank-transfer card but only 27.8% of the envelopes containing a banknote.",
+        "High-SES households returned 85.6% of the envelopes containing a bank-transfer card and 76.7% of the envelopes containing a banknote.",
+        "For both kinds of envelopes, high-SES households returned a greater percentage of the envelopes than low-SES households did.",
+        "Low-SES households returned a greater percentage of the envelopes containing a banknote than high-SES households returned."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Percentage of Misdelivered Envelopes Returned, by Contents and Household SES",
+        "columns": [
+          "Envelope contents",
+          "High-SES households (%)",
+          "Low-SES households (%)"
+        ],
+        "rows": [
+          [
+            "Banknote",
+            "76.7",
+            "27.8"
+          ],
+          [
+            "Bank-transfer card",
+            "85.6",
+            "47.8"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion compares high-SES and low-SES households for an envelope “whatever it contained,” so the data must show high-SES households returning more envelopes of each kind. High-SES households returned 76.7% of banknote envelopes against 27.8% for low-SES households, and 85.6% of card envelopes against 47.8%. Choice C states this comparison for both kinds of envelopes.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison of contents within one group",
+          "why_wrong": "The figures are accurate, but they compare two kinds of envelopes within low-SES households only, so they say nothing about whether high-SES households returned more envelopes than low-SES households."
+        },
+        "B": {
+          "recipe": "PART: accurate values for one group with no comparison group",
+          "why_wrong": "The figures are accurate, but they describe high-SES households alone; without the low-SES figures they cannot show that high-SES households were more likely to return envelopes."
+        },
+        "D": {
+          "recipe": "INACC: reversed comparison",
+          "why_wrong": "Low-SES households returned 27.8% of banknote envelopes, far less than the 76.7% returned by high-SES households."
+        }
+      },
+      "models": [
+        "1.22",
+        "1.28"
+      ],
+      "sources": [
+        {
+          "what": "Andreoni, Nikiforakis, Stoop 2021, Nature Communications 12: 4266, 'Higher socioeconomic status does not predict decreased prosocial behavior in a field experiment' (PMC8275767): envelopes misdelivered to 180 randomly selected high-SES and 180 low-SES households in a medium-sized Dutch city; each held a handwritten postcard from a grandfather to his grandson and either cash or a bank-transfer card of equivalent value claimable only by the intended recipient; returned: cash, high SES 76.7% vs low SES 27.8%; BTC, high 85.6% vs low 47.8%; misdelivered letters substantially more likely to be returned from high- than low-SES households",
+          "url": "https://doi.org/10.1038/s41467-021-24519-5"
+        }
+      ],
+      "notes": "As in 1.22 and 1.28: two accurate distractors that compare the wrong cells (contents within one group; one group alone) and one reversed reading. The table has no pooled row, so no option can lean on combined data.",
+      "word_count": 99,
+      "band_target": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "Echo check: live boundaries w2b1_24 is the koban police-box item; the Milgram lost-letter subject was withdrawn before drafting (claims.txt line 856), and no live or official item uses lost or misdelivered letters, so the subject stands."
+      }
     }
-   ],
-   "notes": "Easy, single trait. The book was published under the name Effie Smith; she is known today as Effie Waller Smith (1879-1960), an African American poet from Kentucky. Work not used by any official item or by our bank.",
-   "word_count": 49
-  }
- ],
- "done": false
+  ],
+  "done": true
 }
