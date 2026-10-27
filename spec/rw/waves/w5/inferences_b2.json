@@ -1,0 +1,1211 @@
+{
+  "skill": "Inferences",
+  "slug": "inferences",
+  "part": "w5b2",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1",
+        "name": "Controlled comparison of two groups"
+      },
+      {
+        "code": "S2",
+        "name": "Principle plus case leads to consequence (S10 trade-off folded in)"
+      },
+      {
+        "code": "S3",
+        "name": "Rule or timeline plus observation rejects a premise"
+      },
+      {
+        "code": "S4",
+        "name": "Elimination of alternatives"
+      },
+      {
+        "code": "S5",
+        "name": "Undercut leads to a hedged conclusion"
+      },
+      {
+        "code": "S6",
+        "name": "X but not Y, so Z"
+      },
+      {
+        "code": "S7",
+        "name": "Two cases or two accounts lead to a conditional or a common ground"
+      },
+      {
+        "code": "S8",
+        "name": "Co-occurrence or repeated pattern leads to a link"
+      },
+      {
+        "code": "S9",
+        "name": "Behaviour, design or content reveals a motive or belief (S12 example folded in)"
+      },
+      {
+        "code": "S11",
+        "name": "Received view plus counterevidence leads to revision"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "inferences.S2.hard.w5b2_01",
+      "template": "S2",
+      "subtype": "T3 consequence: a root signal that recruits nematodes, applied to a farmer switching to lines that lack it",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "When larvae of the beetle Diabrotica virgifera virgifera feed on maize roots, the roots of certain maize varieties emit (E)-β-caryophyllene, a volatile compound that diffuses through the soil and attracts nematodes that parasitize and kill the larvae. Investigating this belowground signaling, Sergio Rasmann, Ted Turlings, and colleagues determined that teosinte, the wild ancestor of maize, and most European varieties readily emit the compound when attacked, whereas most North American varieties—which apparently lost the trait during commercial breeding—do not. After D. v. virgifera spread into European cornfields, a European farmer who replaced a local variety with a typical North American one would therefore likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "find that the new plants, like the old ones, emit the compound only once larvae have begun feeding on their roots.",
+        "receive less assistance from soil nematodes in limiting the damage that the beetle’s larvae inflict on the crop.",
+        "observe less damage from the larvae, since North American varieties were bred where the beetle has long been a pest.",
+        "attract more of the nematodes to the field, since larvae would feed more heavily on the new plants’ roots."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The compound “attracts nematodes that parasitize and kill the larvae,” most European varieties “readily emit the compound when attacked,” and most North American varieties “do not.” A farmer who swaps a local variety for a North American one would lose the signal that draws the nematodes, so the crop would likely get less help from them against the larvae, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Emitting the compound once larvae feed is what European varieties do; the text says most North American varieties “do not” emit it at all, so the new plants would not behave “like the old ones.”"
+        },
+        "C": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text gives no reason to think North American breeding added resistance to the larvae; it says only that these varieties “apparently lost the trait during commercial breeding,” which removes a defense rather than adding one."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Nematodes are drawn by the compound, not by feeding as such, and the text says most North American varieties “do not” emit it, so heavier feeding on the new plants would not draw more nematodes."
+        }
+      },
+      "models": [
+        "03701ef3",
+        "2a075bd1",
+        "4b3d6062"
+      ],
+      "word_count": 103,
+      "sources": [
+        {
+          "what": "Rasmann et al. 2005, Nature 434: 732-737: maize roots release (E)-beta-caryophyllene when D. v. virgifera larvae feed, attracting an entomopathogenic nematode; most North American lines do not release it, European lines and teosinte do; the beetle is invading Europe; North American lines lost the signal during breeding",
+          "url": "https://doi.org/10.1038/nature03451"
+        }
+      ],
+      "notes": "Area: natural science (plant-insect ecology). S2 hard: the root signal and who has it (principle) applied to a European farmer switching lines (case); two links (switch removes the signal, signal is what recruits the nematodes). Distractors: MIX (gives the new line the old line's trait), CAUSE (breeding for resistance), REV (feeding rather than the compound draws nematodes).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 15815622 abstract: EβC released on D. v. virgifera feeding attracts an entomopathogenic nematode; most North American lines do not release it, European lines and teosinte do; North American lines lost the signal during breeding"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (the swap removes the signal; the signal is what recruits the nematodes), the key paraphrased (“less assistance from soil nematodes”). A keeps the feeding trigger but gives the new line the old trait, D keeps the nematode link with the wrong cause, C is a plausible breeding rival."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b2_02",
+      "template": "S2",
+      "subtype": "T2/T3 reasoning of an agent: the ratchet principle applied to a manager who will not face next year's target",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In centrally planned economies, officials commonly set an enterprise’s production target for the coming year partly on the basis of its current output, a practice that economist Martin Weitzman called “an almost universal feature of economic planning.” Under this so-called ratchet principle, a manager rewarded for surpassing this year’s target also had to weigh that reward against the more ambitious target that a substantial surplus would bring the following year. A manager anticipating a transfer to another enterprise before next year’s target took effect would therefore ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "be likely to propose a lower target for the enterprise’s next manager than a manager who stayed would propose.",
+        "have little reason to exceed this year’s target, since the reward for doing so would go to the enterprise’s next manager.",
+        "be less likely than a manager who expected to stay to receive a reward for surpassing this year’s target.",
+        "have less reason than a manager who expected to stay to hold the enterprise’s output near this year’s target."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "A manager “rewarded for surpassing this year’s target” must weigh that reward against “the more ambitious target that a substantial surplus would bring the following year.” A manager who leaves “before next year’s target took effect” would not face that harder target, so the cost of a large surplus falls away for him, and he has less reason than a manager who stays to keep output near the target, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The text says “officials” set the targets; nothing indicates that a departing manager proposes his successor’s target."
+        },
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The reward is for “surpassing this year’s target,” so it goes to the manager who surpasses it now; the harder target, not the reward, is what passes to the next manager."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The reward depends on this year’s output, not on whether the manager stays; the text gives no reason a manager about to leave would be less likely to earn it."
+        }
+      },
+      "models": [
+        "4889580c",
+        "0dccbf17",
+        "3f236877"
+      ],
+      "word_count": 86,
+      "sources": [
+        {
+          "what": "Weitzman 1980, Bell Journal of Economics 11(1): 302-308, abstract: using current performance as a partial basis for setting future targets is an almost universal feature of economic planning; the ratchet principle means higher rewards from better current performance must be weighed against more ambitious future targets",
+          "url": "https://ideas.repec.org/a/rje/bellje/v11y1980ispringp302-308.html"
+        }
+      ],
+      "notes": "Area: social science (economics). S2 hard T2/T3: the ratchet trade-off (principle) applied to a manager who will not be there when the higher target bites (case). Quotation checked against the Weitzman abstract. Distractors: two MIX (targets set by the manager; reward passed to the successor) and OUT (staying affects this year's reward).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "IDEAS/RePEc abstract: “an almost universal feature of economic planning” verbatim; rewards weighed against more ambitious future targets"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (the harder target arrives next year; a departing manager escapes it, so the cost of a surplus falls away), the key paraphrased (“hold output near this year’s target” is not in the text) and comparative. B keeps the timing but moves the reward; A and C are weaker, so not band 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b2_03",
+      "template": "S2",
+      "subtype": "T3 consequence: collective liability with an oath exemption, who bears the fine",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In late Anglo-Saxon and medieval England, many men were enrolled in a tithing, an association of roughly ten men supervised by a chief pledge, and each tithing was collectively responsible for producing in court any member suspected of a crime. Should a suspect fail to appear, the entire tithing could be fined, although under the later form of this institution, the remaining members could avoid the penalty by swearing that they had played no part in his disappearance. Under this later arrangement, the threat of a fine fell principally on members who ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "could not truthfully swear that they had done nothing to help a suspected member evade the court.",
+        "had themselves been suspected of a crime but had appeared in court as their tithing required.",
+        "belonged to a tithing whose suspected member had vanished, whether or not they had assisted his escape.",
+        "served as chief pledge, since that member was answerable to the court for the tithing as a whole."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "At first “the entire tithing could be fined” when a suspect failed to appear, but later “the remaining members could avoid the penalty by swearing that they had played no part in his disappearance.” Members who could honestly swear that oath escaped the fine, so the fine fell mainly on those who could not truthfully swear it, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "A fine arises only “Should a suspect fail to appear”; a member who appeared in court is the case in which no fine arises."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Fining every member regardless of his role was the earlier rule; under the later form, members “could avoid the penalty by swearing that they had played no part in his disappearance.”"
+        },
+        "D": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text says only that a tithing was “supervised by a chief pledge”; it never says the chief pledge alone answered for the group or paid its fines."
+        }
+      },
+      "models": [
+        "0dccbf17",
+        "3f236877",
+        "22b3da87"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Frankpledge: tithings of about ten men under a chief pledge or tithingman, responsible for producing any member suspected of a crime; if he did not appear the group could be fined; in the later system the remaining members could swear they had no part in his escape and so avoid the fine",
+          "url": "https://en.wikipedia.org/wiki/Frankpledge"
+        }
+      ],
+      "notes": "Area: history (medieval English law). S2 hard: collective liability plus the oath exemption (principle) gives who actually bears the fine (consequence); two links. Distractors: MIX (the accused who appeared), REV (the earlier rule), CAUSE (chief pledge liable).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Frankpledge: tithing under a chief-pledge produces suspects, whole group fined; in its ultimate form members could swear they had no hand in the escape"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (the later oath exempts members who can swear; so the threat falls on those who cannot), the key paraphrases the oath. C is the earlier rule (partly right for the first form), B and D swap the liable party."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b2_04",
+      "template": "S2",
+      "subtype": "T2 what an observer wrongly assumes: chance coincidence of dance and music under independent composition",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Choreographer Merce Cunningham regarded dance and music as independent arts: in many of his works, a composer created the score without reference to the choreography, and the two were combined only in performance, when the dancers occasionally heard the score for the first time. A reviewer who saw a dancer in one such work leap at the precise instant a thunderous crash resounded in the music, and who subsequently commended Cunningham for the way the leap responded to the crash, would most likely be ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "correctly recognizing an effect that Cunningham and the composer had coordinated in rehearsal.",
+        "overlooking the composer, who probably wrote the crash to fit a leap he had watched the dancers practice.",
+        "crediting Cunningham with a connection between movement and sound that he never intended.",
+        "mistaken in believing that the leap and the crash actually coincided during the performance."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The score was created “without reference to the choreography,” and the two were “combined only in performance,” when the dancers “occasionally heard the score for the first time.” A leap that lands on a crash is therefore a coincidence of two separately made parts, so praising Cunningham for it credits him with a connection he did not plan, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Nothing was worked out jointly: the score was made “without reference to the choreography,” and the two were “combined only in performance.”"
+        },
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "This shifts the planning from Cunningham to the composer, but the composer created the score “without reference to the choreography,” so he could not have fitted the crash to a leap."
+        },
+        "D": {
+          "recipe": "detail echo (ECHO)",
+          "why_wrong": "The text describes a dancer who leaps “at the precise instant a thunderous crash resounded,” so the coincidence did happen; the reviewer’s error concerns who intended it, not whether it occurred."
+        }
+      },
+      "models": [
+        "0dccbf17",
+        "f9bd4e61",
+        "65502c46"
+      ],
+      "word_count": 84,
+      "sources": [
+        {
+          "what": "EBSCO Research Starters, Cunningham Stages His First Dance Event: the score was composed independently of the dance; elements created separately and assembled for the first time during the performance; the dancers heard the sound score for the first time during the actual performance",
+          "url": "https://www.ebsco.com/research-starters/dance/cunningham-stages-his-first-dance-event"
+        }
+      ],
+      "notes": "Area: humanities (dance). S2 hard T2: independent composition (principle) applied to a reviewer's praise of a coincidence (case). John Cage is not named (he appears in an official RS item); the composer stays generic. Distractors: REV (rehearsed together), MIX (composer fitted it), ECHO (denies the stipulated coincidence).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "EBSCO Research Starters: score composed independently of the dance in most of his work; dancers heard it first in performance"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Someone else’s implicit belief (T2): the reviewer credits Cunningham with an intended link; needs the separate-composition premise plus the stipulated coincidence. D is a careful-reading trap; A and B each fall to “without reference to the choreography,” which keeps it at 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b2_05",
+      "template": "S2",
+      "subtype": "T3 consequence: behavioural fever blocked by the environment rather than by a drug",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The desert iguana Dipsosaurus dorsalis regulates its body temperature primarily by moving between warmer and cooler locations, and when infected with the bacterium Aeromonas hydrophila, it develops a fever of about 2°C by selecting warmer surroundings. Physiologist Matthew Kluger and colleagues found that infected lizards maintained at higher temperatures survived at greater rates than those maintained at lower ones, and that most infected lizards given sodium salicylate, a fever-reducing drug, failed to raise their body temperature and died within three days. An infected iguana housed where every location is held at its usual preferred temperature would therefore likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "develop its usual fever anyway, since only a drug such as sodium salicylate keeps the lizard’s temperature from rising.",
+        "survive at about the same rate as an uninfected iguana, since its temperature would stay at its usual level.",
+        "fare better than an infected iguana given sodium salicylate, since its temperature would not drop below normal.",
+        "be less likely to survive than an infected iguana free to seek warmth, even though it had been given no fever-reducing drug."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The iguana develops its fever “by selecting warmer surroundings,” and infected lizards “maintained at higher temperatures survived at greater rates.” With every location “held at its usual preferred temperature,” the lizard cannot raise its temperature, so, like the salicylate lizards that “failed to raise their body temperature,” it would likely fare worse than an infected lizard able to seek warmth, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The drug is one way to block the fever, but the text says the lizard produces its fever “by selecting warmer surroundings,” so an enclosure with no warmer spot blocks it too."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Staying at the usual temperature is what happened to lizards that did poorly: infected lizards “maintained at higher temperatures survived at greater rates,” and the infection itself remains."
+        },
+        "C": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text never says the drug lowered temperature below normal; the salicylate lizards simply “failed to raise their body temperature,” which is also what the enclosed lizard could not do, so there is no basis for expecting it to fare better."
+        }
+      },
+      "models": [
+        "3f236877",
+        "4b3d6062",
+        "2a075bd1"
+      ],
+      "word_count": 98,
+      "sources": [
+        {
+          "what": "Kluger, Ringler, Anver 1975, Science 188: 166-168: Dipsosaurus dorsalis develops a fever of about 2 C after injection with Aeromonas hydrophila; infected lizards at higher ambient temperatures survived more",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/1114347/"
+        },
+        {
+          "what": "Hacker, Rothenburg, Kluger 1981, American Journal of Physiology 240: R272-R275: infected desert iguanas maintained at temperatures corresponding to those selected during fever (the fever is produced by temperature selection)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/7235044/"
+        },
+        {
+          "what": "Bernheim, Kluger 1976, Science 193: 237-239: of 12 infected lizards given sodium salicylate, five raised body temperature and survived, seven developed no fever and died within 3 days",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/935867/"
+        }
+      ],
+      "notes": "Area: natural science (physiology). S2 hard T3: the fever is behavioural and protective (principle) applied to an enclosure with no warm spot (case); the key needs the link that blocking the behaviour blocks the fever, as the drug did. Selection of warmer surroundings as the route of the fever is reported in the Kluger lab's papers (temperatures 'selected during fever', Hacker, Rothenburg, Kluger 1981). Distractors: MIX (only the drug blocks fever), REV (normal temperature is safe), CMP (better than the drug group).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 1114347 (2 C fever, higher temperatures raise survival) and 935867 (7 of 12 salicylate lizards no fever, died within 3 days)"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two links (fever is produced by selecting warmth; a uniform enclosure blocks it as the drug did; fever aids survival). A keeps the drug but misses the behavioural route, B and C keep the normal temperature with a wrong comparison."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S6.hard.w5b2_06",
+      "template": "S6",
+      "subtype": "X but not Y: men's wage growth slowed, women's did not speed up, so the gap closed without raising women's pay",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "A 2006 Danish law required many firms to provide wage statistics disaggregated by gender. Analyzing employer-employee records, economists Morten Bennedsen, Elena Simintzi, Margarita Tsoutsoura, and Daniel Wolfenzon found that the gender pay gap at affected firms narrowed by about two percentage points relative to unaffected firms, but that the narrowing resulted primarily from slower wage growth for male employees rather than from accelerated wage growth for female employees. These findings suggest that the law ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "reduced the gap between men’s and women’s pay without leaving women’s pay much higher than it otherwise would have been.",
+        "narrowed the gap mainly by leading affected firms to move more women into the kinds of positions that pay the most.",
+        "helped female employees mainly by speeding up their raises rather than by slowing those of men.",
+        "did little to change the gender pay gap, since women’s wages grew no faster at affected firms than at other firms."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The gap “narrowed by about two percentage points,” but the narrowing “resulted primarily from slower wage growth for male employees rather than from accelerated wage growth for female employees.” So the gap shrank because men’s pay grew more slowly, not because women’s pay grew faster, which means women’s pay ended up about where it would otherwise have been, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text attributes the narrowing to the pace of wage growth for each group; it says nothing about moving women into higher-paying positions."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "This reverses the finding: the narrowing “resulted primarily from slower wage growth for male employees rather than from accelerated wage growth for female employees.”"
+        },
+        "D": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "Women’s wages indeed did not grow faster, but the gap still “narrowed by about two percentage points” because men’s wage growth slowed."
+        }
+      },
+      "models": [
+        "5cd55c77",
+        "0dba14e6",
+        "a68fd3e7"
+      ],
+      "word_count": 74,
+      "sources": [
+        {
+          "what": "Bennedsen, Simintzi, Tsoutsoura, Wolfenzon, Do Firms Respond to Gender Pay Gap Transparency? (NBER w25435; Journal of Finance 2022): 2006 Danish law requiring gender-disaggregated wage statistics; gender pay gap falls about 2 percentage points, primarily by slowing wage growth for male employees",
+          "url": "https://www.nber.org/papers/w25435"
+        }
+      ],
+      "notes": "Area: social science (labor economics). S6 hard: two members of one set (men, women) differ on whether their wage growth changed; the key states the implication for women's pay. Distractors: CAUSE (promotion), REV (women's raises), PART (only women's side).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "NBER w25435 abstract: 2006 Danish law, gap down about 2 points, primarily by slowing male wage growth"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Negative key (“without leaving women’s pay much higher”) inferred from the slower male growth; D keeps the true premise about women’s wages but drops the narrowing, C reverses, B a rival mechanism."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S9.hard.w5b2_07",
+      "template": "S9",
+      "subtype": "Content reveals purpose: banker marks used only under pay by measure",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Numerous stones in medieval British churches and castles bear small incised symbols known as masons’ marks. A few, such as numerals inscribed on window jambs, indicated the sequence in which components were to be installed, but most are banker marks, carved by the mason who had shaped, or dressed, the stone at his workbench. Banker marks, historians have determined, were employed only where masons were compensated for stone by measurement, not where they were paid according to the time they had worked, a pattern suggesting that a mason incised a banker mark on a dressed stone primarily so that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the builders on site could tell where in the finished wall each dressed stone was supposed to go.",
+        "people who later visited the building could see which mason had produced the carving on each stone.",
+        "whoever paid for the work could tell how much of the finished stone each mason had produced.",
+        "masons paid by measurement could prove how many hours they had spent dressing each stone."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Banker marks were “carved by the mason who had shaped, or dressed, the stone,” and they were “employed only where masons were compensated for stone by measurement, not where they were paid according to the time they had worked.” A mark used only when pay depended on how much stone each man dressed was most likely there to credit each mason’s output, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Marks that “indicated the sequence in which components were to be installed” are the few numerals on window jambs; the text sets banker marks apart from them."
+        },
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text links banker marks to how masons were paid, not to visitors; a mark meant for visitors would not depend on whether pay was by measure."
+        },
+        "D": {
+          "recipe": "wrong variable (MIX)",
+          "why_wrong": "Banker marks were used where masons were “compensated for stone by measurement,” and under that system the stone produced, not the hours spent, set the pay, so a record of hours would serve no purpose there."
+        }
+      },
+      "models": [
+        "1bf2173e",
+        "cef77aa7",
+        "5d20f560"
+      ],
+      "word_count": 99,
+      "sources": [
+        {
+          "what": "Mason's mark: banker marks identified the banker mason who had prepared the stones for their paymaster, employed only when the stone was paid for by measure rather than by time worked; assembly marks such as Roman numerals on window jambs ensured correct installation",
+          "url": "https://en.wikipedia.org/wiki/Mason%27s_mark"
+        }
+      ],
+      "notes": "Area: history (medieval building). S9 hard: the distribution of the marks (only under pay by measure) reveals their purpose; the key is not stated. Distractors: MIX (assembly marks), CAUSE (signature for visitors), REV (pay by time).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "option D rebuilt as a wrong-variable distractor (hours under pay by measurement) instead of the pay-by-time reversal killed by one clause"
+        ],
+        "status": "fixed",
+        "facts": "Wikipedia Mason’s mark: banker marks identified the mason for the paymaster, only when paid by measure, not by time; Roman numerals on window jambs as assembly marks"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (marks only under pay by measure; so they let the payer count each mason’s output), the key not stated. A is a real function of other marks, D (rebuilt) keeps the right pay system but the wrong variable, B a rival motive the pattern excludes."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S3.hard.w5b2_08",
+      "template": "S3",
+      "subtype": "Timeline rejects a premise: the lost-shoe episode predates the European versions",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Readers acquainted with Cinderella principally through Charles Perrault’s 1697 version, with its glass slipper, sometimes assume that the lost shoe by which a prince identifies the heroine was Perrault’s own invention. Yet the tale of Ye Xian, in which a king searches for the young woman whose foot fits a diminutive golden slipper left behind at a festival, was recorded around 850 by the Tang dynasty scholar Duan Chengshi, and centuries earlier, the Greek geographer Strabo had documented a story in which an eagle deposited a woman’s sandal in a king’s lap, prompting the king to locate and marry its owner. These accounts suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "Duan Chengshi’s account of Ye Xian is the earliest known story in which a ruler finds a woman by means of her shoe.",
+        "Perrault was not the first to tell of a man who finds a woman by means of her shoe.",
+        "Perrault most likely took the episode of the shoe from Strabo, whose account is centuries older than Duan Chengshi’s.",
+        "the story that Strabo documented was probably adapted from an earlier version of the tale of Ye Xian."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Readers “sometimes assume” that the lost shoe “was Perrault’s own invention.” Yet Duan Chengshi recorded the Ye Xian tale, in which a king searches for the woman whose foot fits “a diminutive golden slipper,” “around 850,” and Strabo had documented a sandal story “centuries earlier.” Both accounts predate “Charles Perrault’s 1697 version,” so Perrault was not the first to tell of a man who finds a woman by means of her shoe, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The Ye Xian tale does predate Perrault’s version, but the text says that “centuries earlier” Strabo had documented a story in which a king finds a woman through her sandal, so Duan Chengshi’s account is not the earliest known."
+        },
+        "C": {
+          "recipe": "rescue by another route (MIX)",
+          "why_wrong": "Strabo’s account is indeed the older one, but the text never says that Perrault knew it; the accounts show only that such stories existed before him, not where he found the episode."
+        },
+        "D": {
+          "recipe": "sequence swap (REV)",
+          "why_wrong": "The only dates the text gives put Strabo’s account “centuries earlier” than Duan Chengshi’s, and nothing in the text points to an earlier form of the Ye Xian tale from which Strabo’s story could have come."
+        }
+      },
+      "models": [
+        "5c7e0d62",
+        "aaddd60f",
+        "b5e9f3c2"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "Ye Xian: tale first published in Duan Chengshi's Tang dynasty Miscellaneous Morsels from Youyang, written around 850; Ye Xian loses a golden slipper at the festival and the king searches for the woman it fits",
+          "url": "https://en.wikipedia.org/wiki/Ye_Xian"
+        },
+        {
+          "what": "Cinderella: Perrault's Cendrillon published in 1697 in Histoires ou contes du temps passe; Ye Xian in Duan Chengshi's Miscellaneous Morsels from Youyang",
+          "url": "https://en.wikipedia.org/wiki/Cinderella"
+        },
+        {
+          "what": "Rhodopis: Strabo (late 1st century BCE or early 1st century CE) records that an eagle stole her sandal and dropped it in the lap of the king, who had its owner found and married her",
+          "url": "https://en.wikipedia.org/wiki/Rhodopis"
+        }
+      ],
+      "notes": "Area: humanities (literature, folklore). S3 hard: dated records reject the premise that the shoe episode is a European invention; the second account (Strabo) blocks the overreach that it began in China. Perrault 1697 from the Cinderella article. Not a forgery or anachronism frame. Distractors: EXT (China first), OUT (Perrault borrowed), CAUSE (Perrault's motive). Review: premise changed from \"a European invention\" to \"Perrault’s own invention\" (Strabo was a Greek writer, so the accounts did not cleanly reject a European origin); options rebuilt: A earliest-known overreach, C route rescue, D sequence swap.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "premise “a European invention” changed to “Perrault’s own invention” (Strabo, a Greek writer, made the European-origin rejection unclean)",
+          "options rebuilt: key paraphrased as a negative (“Perrault was not the first to tell of a man who...”; “man” covers both the kings and Perrault’s prince), A earliest-known overreach killed by the Strabo date, C route rescue, D sequence swap (old A died on one word, C and D were two plain OUTs)"
+        ],
+        "status": "fixed",
+        "facts": "Wikipedia Ye Xian (Duan Chengshi about 850, golden slipper, king searches for the foot that fits), Rhodopis (Strabo, eagle drops sandal in king’s lap, he marries her), Cinderella (Perrault 1697)"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "After the rebuild: three dates (Strabo, about 850, 1697) and a negative key; A keeps the true Ye Xian date but fails on Strabo, C keeps Strabo’s priority but invents Perrault’s source, D swaps the order. Still a fairly direct premise rejection, so a plain band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S11.hard.w5b2_09",
+      "template": "S11",
+      "subtype": "Received view plus counterevidence, negative frame: giant current ripples against ordinary river processes",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In the 1920s, geologist J Harlen Bretz proposed that catastrophic floods had carved the Channeled Scablands, a region of dry canyons and exposed basalt in eastern Washington State. Many geologists dismissed the proposal, maintaining that the region, like most landscapes, had been shaped by processes still operating today, such as ordinary river erosion. Among the features subsequently documented in the Scablands, however, are current ripples, undulating ridges built by flowing water, that measure between 1 and 15 meters high and dwarf those found in ordinary streams—a finding that undermines the view that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the Scablands were shaped only by flows no larger than those of the region’s present-day rivers.",
+        "the undulating ridges found in the Scablands were built by flowing water rather than by some other force.",
+        "processes still operating today, such as river erosion, played at least some part in shaping the Scablands.",
+        "most landscapes other than the Scablands were shaped by processes still operating today."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Bretz’s critics held that the region “had been shaped by processes still operating today, such as ordinary river erosion.” Yet the Scablands contain current ripples that “measure between 1 and 15 meters high and dwarf those found in ordinary streams,” so the water that built them must have flowed far more powerfully than ordinary rivers do. That undermines the view that the region was shaped only by flows no greater than those of today’s rivers, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "polarity trap (POL)",
+          "why_wrong": "The text defines current ripples as “undulating ridges built by flowing water,” so the finding supports this view; the frame asks which view the finding undermines."
+        },
+        "C": {
+          "recipe": "half the claim (PART)",
+          "why_wrong": "Giant ripples show that some features needed flows far larger than ordinary streams, but not that ordinary processes played no part at all; they undermine only the view that such processes did all the work."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The critics said the Scablands, “like most landscapes,” were shaped by present-day processes, but the ripples are evidence about the Scablands alone and say nothing about other landscapes."
+        }
+      },
+      "models": [
+        "e185a21f",
+        "a13c1c66",
+        "55688b3c"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "J Harlen Bretz: 1923 paper argued the Channeled Scablands were carved by massive flooding; opposed under the prevailing uniformitarianism; vindicated by the 1950s with Pardee's glacial Lake Missoula as the source",
+          "url": "https://en.wikipedia.org/wiki/J_Harlen_Bretz"
+        },
+        {
+          "what": "Channeled Scablands: giant current ripples between 3 and 49 feet (1 and 15 m) high, needing vast volumes of flowing water; critics argued for uniformitarian processes still operating today",
+          "url": "https://en.wikipedia.org/wiki/Channeled_Scablands"
+        }
+      ],
+      "notes": "Area: natural science (geology). S11 hard, negative frame: the received view (ordinary present-day processes) is undercut by ripple size; the student must judge that 1 to 15 m ripples exceed ordinary river flow. Distractors: POL (the supported view), OUT (relative timing), CAUSE (wind). Review: distractors rebuilt (old B mirrored the key, old C was a plain OUT, old D died on one phrase): B polarity, C some vs only, D other landscapes.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "distractors rebuilt so two are partly right: B polarity (ridges built by flowing water), C some vs only, D other landscapes; old B mirrored the key, old C was a plain OUT, old D died on “built by flowing water”"
+        ],
+        "status": "fixed",
+        "facts": "Wikipedia Channeled Scablands: giant current ripples 1 to 15 m, much larger than on ordinary rivers; critics argued for processes still acting today"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Negative frame plus scope: the key needs “only” against two scope traps (C some part, D other landscapes) and a polarity trap (B); fame of the Bretz case helps a little, so not higher."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S4.hard.w5b2_10",
+      "template": "S4",
+      "subtype": "Elimination: two sources of a uranium-235 shortfall, the isotopic signature of fission products decides",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In 1972, analyses at a French uranium-processing facility revealed that ore from the Oklo deposit in Gabon contained noticeably less uranium-235 than the approximately 0.72 percent found in natural uranium elsewhere. Such facilities must account for all their fissionable uranium to ensure that none is diverted to make weapons, so the shortfall had to be explained. One possibility was that fission had once occurred within the deposit itself. Analyses also showed that neodymium in the ore contained less than 6 percent neodymium-142, an isotope that fission does not produce, compared with about 27 percent in ordinary neodymium. Provided that this neodymium originated within the deposit rather than being introduced from outside, these measurements indicate that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the Oklo deposit formed with less uranium-235 than other deposits did, as its low share of neodymium-142 indicates.",
+        "some of the ore’s uranium-235 was removed while the ore was being handled at the French processing plant.",
+        "much of the uranium-235 in the Oklo ore gradually turned into neodymium-142 over a very long period.",
+        "the ore lost some of its uranium-235 to fission before it was ever mined."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Neodymium in the ore contained “less than 6 percent neodymium-142,” against “about 27 percent in ordinary neodymium,” and neodymium-142 is “an isotope that fission does not produce.” Neodymium so poor in that isotope must be largely a product of fission, and since it “originated within the deposit,” fission took place in the ore while it was still in the ground, which accounts for the missing uranium-235, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The neodymium figure points to fission, since the scarce isotope is “an isotope that fission does not produce”; it says nothing about how much uranium-235 the deposit held when it formed."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Loss during handling is what the facility had to rule out, but handling would not leave neodymium nearly free of neodymium-142, the signature of fission products; since that neodymium “originated within the deposit,” the signature points to fission in the ground."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The text says neodymium-142 is “an isotope that fission does not produce,” and the ore had little of it, so uranium-235 did not turn into neodymium-142."
+        }
+      },
+      "models": [
+        "f1bfbed3",
+        "58e9e497"
+      ],
+      "word_count": 115,
+      "sources": [
+        {
+          "what": "Natural nuclear fission reactor: 1972 Pierrelatte measurements found Oklo uranium with less U-235 than the usual 0.72 percent; Oklo neodymium has less than 6 percent Nd-142 against about 27 percent in natural neodymium, fission not producing Nd-142, confirming natural reactors about 2 billion years ago",
+          "url": "https://en.wikipedia.org/wiki/Natural_nuclear_fission_reactor"
+        }
+      ],
+      "notes": "Area: natural science (physics, geology). S4 hard: two explanations named, the isotope signature plus the barring clause eliminate the human one; the student must read low Nd-142 as fission-made neodymium. Review: the source gives diversion as the reason the shortfall had to be explained and fission as 'a possible explanation'; the passage now says exactly that (it no longer lists human interference as a hypothesis), and 'Investigators then discovered' became 'Analyses also showed' (the source gives no sequence). Distractors: MIX x2 (formation; decay into Nd-142), REV (the eliminated explanation).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "“Possible explanations included human interference” stated more than the source: now the facility had to account for fissionable uranium so none was diverted, and fission is “one possibility” (source wording); “Investigators then discovered” to “Analyses also showed”; key D paraphrased away from the passage (“lost some of its uranium-235 to fission before it was ever mined”); sentence split for length"
+        ],
+        "status": "fixed",
+        "facts": "Wikipedia Natural nuclear fission reactor (raw text): 0.60 vs 0.72 percent; discrepancy required explanation because facilities must ensure none is diverted; fission “a possible explanation”; Oklo Nd under 6 percent Nd-142 vs 27 percent, Nd-142 not produced by fission"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (Nd-142-poor neodymium is fission-made; given its origin in the deposit, fission happened in the ground), the key paraphrased. B is the rival the facility had to rule out, A and C misuse the neodymium figure."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S11.medium.w5b2_11",
+      "template": "S11",
+      "subtype": "Received view plus counterevidence, negative frame: the attribution of chant to Gregory I",
+      "tier": "medium",
+      "passage": "Gregorian chant, the unaccompanied melodies traditionally sung in the Latin liturgy of the Western Church, is named for Pope Gregory I, who died in 604, and medieval artists frequently depicted him receiving the melodies from a dove representing the Holy Spirit. Yet Gregory’s ninth-century biographer claimed only that the pope had compiled an anthology of chants, and many scholars now maintain that the repertory emerged around 750 in the Frankish kingdom, where Roman chant was synthesized with the regional Gallican tradition. This account calls into question the belief that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "singers in the Frankish kingdom played a part in shaping the chant repertory.",
+        "medieval artists knew little about the history of the music that they depicted.",
+        "Gregory himself composed the melodies that have come to bear his name.",
+        "Gallican chant was sung more widely than Roman chant during Gregory’s lifetime."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Gregory “died in 604,” his biographer “claimed only that the pope had compiled an anthology of chants,” and scholars now hold that the repertory “emerged around 750 in the Frankish kingdom.” Melodies that took shape nearly 150 years after his death, and that his own biographer did not credit to him, are unlikely to be his compositions, so the account calls C into question.",
+      "distractors": {
+        "A": {
+          "recipe": "polarity trap (POL)",
+          "why_wrong": "The scholars’ account supports this idea: the repertory “emerged around 750 in the Frankish kingdom”; the frame asks what the account calls into question."
+        },
+        "B": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text reports how artists showed Gregory but says nothing about what they knew of the music’s history."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text says only that Roman chant “was synthesized with the regional Gallican tradition” in the Frankish kingdom; it never compares how widely each was sung in Gregory’s time."
+        }
+      },
+      "models": [
+        "55688b3c",
+        "bcf2f169",
+        "3190835d"
+      ],
+      "word_count": 89,
+      "sources": [
+        {
+          "what": "Gregorian chant: popular legend credits Gregory I; his biographer John the Deacon (c. 872) claimed only that he compiled an antiphonary; Gregory often depicted receiving the chant from a dove; scholarly consensus that the chant developed around 750 from a synthesis of Roman and Gallican chant in Carolingian lands",
+          "url": "https://en.wikipedia.org/wiki/Gregorian_chant"
+        }
+      ],
+      "notes": "Area: humanities (music history). S11 medium, negative frame. Distractors: POL (Frankish role, supported), OUT (artists' knowledge), CMP (Gallican vs Roman).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Gregorian chant: John the Deacon (c. 872) says Gregory compiled an antiphonary; dove depictions; consensus of development around 750 from Roman and Gallican chant in Carolingian lands"
+      }
+    },
+    {
+      "id": "inferences.S2.medium.w5b2_12",
+      "template": "S2",
+      "subtype": "Principle plus case: general average applied to a merchant whose goods were jettisoned",
+      "tier": "medium",
+      "passage": "The maritime law of the ancient island of Rhodes has been lost, but one of its provisions survives because Roman jurists quoted it, and an excerpt was subsequently preserved in the Digest compiled under the emperor Justinian in the sixth century CE. According to the jurist Julius Paulus, when cargo was jettisoned to lighten an endangered vessel, “the loss is made good by the assessment of all which is made for the benefit of all.” Under this provision, a merchant whose merchandise was thrown overboard to keep a vessel afloat during a violent storm would consequently have ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "had to bear the entire loss himself, since only his merchandise had been sacrificed to save the vessel.",
+        "been compensated in part by others who had benefited from the sacrifice of his goods.",
+        "been repaid in full by the shipowner, who was responsible for deciding which cargo to throw overboard.",
+        "been allowed to recover his goods from the seabed once the storm had passed and the vessel was safe."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Paulus says that when cargo is jettisoned to save a ship, “the loss is made good by the assessment of all which is made for the benefit of all.” Everyone who gained from saving the vessel shares the cost, so the merchant whose goods were sacrificed would be partly repaid by the others, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The rule says the loss is “made good by the assessment of all,” so the merchant does not bear it alone."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The cost is shared by “all,” not placed on the shipowner alone, and the text says nothing about who decided what to throw overboard."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about recovering cargo from the sea; the rule concerns how the loss is shared."
+        }
+      },
+      "models": [
+        "299c5303",
+        "6409016a",
+        "db876fd5"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "General average: the Lex Rhodia (Rhodian sea law) is lost; Julius Paulus (c. 230 CE) quoted its jettison rule, 'the loss is made good by the assessment of all which is made for the benefit of all'; an excerpt survives in Justinian's 6th-century Digest",
+          "url": "https://en.wikipedia.org/wiki/General_average"
+        }
+      ],
+      "notes": "Area: history (ancient law, trade). S2 medium: a stated rule applied to one merchant. The Paulus wording is quoted as the source gives it in English translation. Distractors: REV, MIX (shipowner alone), OUT (recovering goods).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia General average: Paulus quotation verbatim; Lex Rhodia lost; excerpt in Justinian’s Digest"
+      }
+    },
+    {
+      "id": "inferences.S5.medium.w5b2_13",
+      "template": "S5",
+      "subtype": "Undercut: a structure identical to sponge fossils, but other organisms make look-alikes",
+      "tier": "medium",
+      "passage": "In younger rocks, a distinctive network of tiny branching tubes known as vermiform microstructure has been identified as the fossilized remains of keratose sponges, which lack the mineral spicules that preserve many other sponges. In 2021, geologist Elizabeth Turner reported networks identical to vermiform microstructure in 890-million-year-old reefs in northwestern Canada, roughly 350 million years older than the oldest undisputed sponge fossils. Paleontologist Jonathan Antcliffe has observed, however, that bacteria, algae, fungi, plants, and animals can all make structures that look like these networks. Therefore, the networks ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "do not by themselves establish that animals were living 890 million years ago.",
+        "were most likely produced by bacteria or algae rather than by early sponges.",
+        "show that the vermiform microstructure found in younger rocks has been misidentified.",
+        "suggest that sponges first evolved in reefs that formed about 890 million years ago."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Turner’s networks match a structure that, “In younger rocks,” has been identified as sponge remains, but Antcliffe observes that “bacteria, algae, fungi, plants, and animals can all make structures that look like these networks.” Since look-alikes can come from many kinds of life, the networks fall short of proving that animals existed 890 million years ago, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Antcliffe says other organisms “can” make similar structures, which leaves the question open; it does not make bacteria or algae the likely makers."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Antcliffe’s point concerns the 890-million-year-old networks; the text gives no reason to doubt the identification of the structure “In younger rocks.”"
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Even if the networks are sponges, the text gives no basis for saying sponges first evolved at that time rather than earlier."
+        }
+      },
+      "models": [
+        "5105ca38",
+        "485962a6",
+        "d8b78a2b"
+      ],
+      "word_count": 87,
+      "sources": [
+        {
+          "what": "Turner 2021, Nature 596: 87-91: vermiform microstructure, known in Phanerozoic carbonates as the body fossil of keratose demosponges, found in about 890-million-year-old reefs; if it is sponge tissue it is the oldest body-fossil evidence of animals",
+          "url": "https://doi.org/10.1038/s41586-021-03773-z"
+        },
+        {
+          "what": "National Geographic: Jonathan Antcliffe, a paleontologist at the University of Lausanne, says bacteria, algae, fungi, plants and animals can all make things that look like this; oldest undisputed sponge fossils are spicules from Iran about 535 million years old",
+          "url": "https://www.nationalgeographic.com/science/article/890-million-year-old-sponge-fossil-may-be-the-earliest-animal-known"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). S5 medium: identical structure (support) plus a rival origin (undercut) gives a hedged key. Antcliffe's point is paraphrased, not quoted. Distractor wording kept away from the official 'eliminates the possibility' / 'would be difficult to account for' set. Distractors: EXT x2, MIX.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex abstract of Turner 2021 (Nature): vermiform microstructure identical, about 890 Ma reefs; National Geographic: Antcliffe quote, oldest convincing sponge spicules about 535 Ma"
+      }
+    },
+    {
+      "id": "inferences.S8.medium.w5b2_14",
+      "template": "S8",
+      "subtype": "Repeated co-occurrence: eruptions, weak floods, revolt and the end of wars",
+      "tier": "medium",
+      "passage": "Agriculture in ancient Egypt relied on the Nile’s summer flood, which is fed by monsoon rainfall far to the south. Historian Joseph Manning and colleagues compared ice-core records of explosive volcanic eruptions with Nilometer measurements, climate simulations, and contemporaneous Egyptian documents from the Ptolemaic period (305–30 BCE). They determined that major eruptions were followed by diminished floods, that revolts against the ruling elite tended to begin in the years following eruptions, and that wars between the Ptolemaic state and its rival, the Seleukid Empire, tended to cease around the same times. These findings suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "Ptolemaic rulers learned to expect weak floods after eruptions and began storing extra grain in advance.",
+        "the Ptolemaic state was more vulnerable to weak Nile floods than its rival, the Seleukid Empire, was.",
+        "volcanic eruptions in Egypt itself damaged farmland and so drove many Egyptian farmers to revolt.",
+        "volcanic eruptions may have influenced both unrest in Egypt and its wars by weakening the Nile’s flood."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Eruptions “were followed by diminished floods,” revolts “tended to begin in the years following eruptions,” and wars with the Seleukid Empire “tended to cease around the same times.” Since farming “relied on the Nile’s summer flood,” the pattern links eruptions, through poorer floods, to both unrest and the end of wars, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "speculative future (FUT)",
+          "why_wrong": "The text says nothing about rulers predicting floods or storing grain."
+        },
+        "B": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text reports how Egypt fared after eruptions but never measures how weak floods affected the Seleukid Empire."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The text ties eruptions to “diminished floods,” not to damage in Egypt itself, and it never places the eruptions in Egypt; they are known from “ice-core records.”"
+        }
+      },
+      "models": [
+        "7afdcca2",
+        "7ae8065c"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Manning, Ludlow, Stine, Boos, Sigl, Marlon 2017, Nature Communications 8: 900: explosive volcanism suppressed Nile summer flooding via the African monsoon (ice-core forcing, Nilometer data, climate models, Egyptian writings); in Ptolemaic Egypt (305-30 BCE) eruptions were associated with revolt onset and the cessation of warfare with the Seleukid Empire",
+          "url": "https://doi.org/10.1038/s41467-017-00957-y"
+        }
+      ],
+      "notes": "Area: history (ancient Egypt, climate). S8 medium: repeated co-occurrence gives a hedged link. J. G. Manning is a Yale historian. Distractors: FUT (grain storage), CMP (Seleukids), MIX (eruptions in Egypt).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex abstract of Manning et al. 2017: eruptions suppress Nile flood; revolt onset and cessation of warfare with the Seleukid Empire"
+      }
+    },
+    {
+      "id": "inferences.S1.medium.w5b2_15",
+      "template": "S1",
+      "subtype": "Controlled comparison: randomized music vs sedative before surgery",
+      "tier": "medium",
+      "passage": "Patients awaiting surgery frequently experience anxiety, and they are often administered a sedative such as midazolam beforehand, although such medications can sometimes produce undesirable side effects. Researchers at a hospital in Sweden randomly assigned 372 patients scheduled for elective operations to receive either an oral dose of midazolam or a period of listening to relaxing music before surgery. The patients rated their anxiety on a standardized questionnaire immediately before and immediately after the intervention. Anxiety scores declined in both groups, but the decline was significantly greater among the patients who had listened to music than among those who had received the drug. These results suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "music should replace sedatives for every patient about to undergo surgery of any kind.",
+        "patients who listen to relaxing music before surgery tend to recover from their operations more quickly.",
+        "for patients facing elective surgery, relaxing music may ease anxiety at least as well as midazolam does.",
+        "giving patients both midazolam and relaxing music would lower their anxiety more than either one alone."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Patients were randomly assigned to “receive either an oral dose of midazolam or a period of listening to relaxing music,” and the decline in anxiety “was significantly greater among the patients who had listened to music.” For patients like these, music may ease anxiety at least as well as the drug, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The study involved patients “scheduled for elective operations,” and it measured anxiety only; it cannot support replacing sedatives for every patient and every kind of surgery."
+        },
+        "B": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The study measured anxiety “immediately before and immediately after the intervention,” not how quickly patients recovered from surgery."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "No group received both treatments, so the text gives no basis for judging the combination."
+        }
+      },
+      "models": [
+        "5432d1de",
+        "575e67df"
+      ],
+      "word_count": 106,
+      "sources": [
+        {
+          "what": "Bringman, Giesecke, Thorne, Bringman 2009, Acta Anaesthesiologica Scandinavica 53: 759-764: 372 elective surgery patients randomised to oral midazolam or relaxing music; STAI-state anxiety fell significantly more in the music group",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/19388893/"
+        }
+      ],
+      "notes": "Area: social science (psychology, medicine). S1 medium: random assignment, one factor, one outcome; key generalizes one step and stays hedged. Team left unnamed (Sodertalje Hospital). Distractors: EXT, VAR (recovery), CMP (combination).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 19388893: 372 elective patients randomised to oral midazolam or relaxing music; STAI decline significantly greater with music"
+      }
+    },
+    {
+      "id": "inferences.S7.medium.w5b2_16",
+      "template": "S7",
+      "subtype": "Time sequence to a bound: a signature present in older rocks and absent in younger ones",
+      "tier": "medium",
+      "passage": "When ultraviolet sunlight breaks apart sulfur-bearing gases high in the atmosphere, the reactions can leave an anomalous pattern in the relative abundances of sulfur’s isotopes, and that pattern can subsequently be recorded in minerals that form at Earth’s surface. Geochemist James Farquhar and colleagues argued that detecting this pattern in an ancient mineral implies that the atmosphere contained little oxygen when the mineral formed. Analyzing sulfide and sulfate minerals from Precambrian rocks, the team identified the pattern in rocks older than about 2,450 million years but not in rocks younger than about 2,090 million years. The researchers therefore concluded that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the atmosphere already contained abundant oxygen when the oldest rocks that the team analyzed were forming.",
+        "the way sulfur cycled between the atmosphere and the surface shifted between about 2,450 and 2,090 million years ago.",
+        "ultraviolet sunlight first began breaking apart sulfur-bearing gases in the atmosphere about 2,090 million years ago.",
+        "rocks that formed after about 2,090 million years ago contain no sulfide or sulfate minerals whatsoever."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The team found the pattern “in rocks older than about 2,450 million years but not in rocks younger than about 2,090 million years.” The process that marked surface sulfur with this pattern therefore stopped operating between those dates, so the sulfur cycle changed within that interval, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The oldest rocks contain the pattern, and the researchers argued that the pattern “implies that the atmosphere contained little oxygen,” not abundant oxygen."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The pattern left when ultraviolet sunlight “breaks apart sulfur-bearing gases” is found in the older rocks, so this was already happening well before 2,090 million years ago."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The text says the younger rocks lack the isotope pattern, not that they lack sulfur minerals; the team analyzed “sulfide and sulfate minerals from Precambrian rocks.”"
+        }
+      },
+      "models": [
+        "3882ddf6",
+        "cac82f9b"
+      ],
+      "word_count": 100,
+      "sources": [
+        {
+          "what": "Farquhar, Bao, Thiemens 2000, Science 289: 756-759: mass-independent sulfur isotope signatures in Precambrian sulfides and sulfates show a change in the sulfur cycle between 2090 and 2450 Ma; before 2450 Ma the cycle was influenced by gas-phase atmospheric reactions, implying low atmospheric oxygen",
+          "url": "https://doi.org/10.1126/science.289.5480.756"
+        }
+      ],
+      "notes": "Area: natural science (geochemistry). S7 medium: a feature present in one dated group and absent in a later one gives an interval bound, as in the Aarons model; the key is the paper's own conclusion, paraphrased. The ultraviolet mechanism is the standard reading of the signature (photochemistry); the passage keeps the oxygen link as the authors' argument. Distractors: REV x2, EXT.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex abstract of Farquhar, Bao, Thiemens 2000: sulfur cycle changed between 2090 and 2450 Ma; implies low oxygen before"
+      }
+    },
+    {
+      "id": "inferences.S1.easy.w5b2_17",
+      "template": "S1",
+      "subtype": "Controlled comparison with two controls: note plus request vs request alone vs blank note",
+      "tier": "easy",
+      "passage": "Getting people to fill out and return a survey that comes in the mail can be difficult. A psychology researcher investigated whether a small sticky note could make a measurable difference. In a series of studies, he compared how often participants returned surveys mailed in different kinds of packets. Some packets had a sticky note attached with a short message asking the person to complete the survey. Others had the same message written on the packet’s cover sheet, a blank sticky note, or no note or message. Across the studies, participants who received the sticky note with the message returned the survey significantly more often than those who received any of the other packets. This finding suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "a request on a sticky note may make people more likely to return a survey than the same request alone.",
+        "people are more likely to return surveys that are short and easy to complete than surveys that are long.",
+        "a blank sticky note attached to a survey packet is enough to make people more likely to return the survey.",
+        "people would be more likely to complete a survey sent by email than one sent to them through the mail."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Packets with “a sticky note attached with a short message” were returned “significantly more often” than packets with “the same message written on the packet’s cover sheet,” a blank sticky note, or no note or message. Neither the message alone nor the note alone did as well, so a request on a sticky note may make people more likely to return a survey than the same request without the note, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The text compares only packets that differed in their notes and messages; it says nothing about how long the surveys were."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says only that people who got a blank sticky note returned the survey less often than people whose note carried the message; it never shows that a blank note by itself raised returns."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text discusses only surveys sent by mail; it never compares email with mail."
+        }
+      },
+      "models": [
+        "01989d77",
+        "6bc0e595",
+        "5b4829d2"
+      ],
+      "word_count": 118,
+      "sources": [
+        {
+          "what": "Garner 2005, Journal of Consumer Psychology 15(3): 230-237, Post-it Note Persuasion: A Sticky Influence: packets with an affixed Post-it note request had significantly higher return rates than identical surveys with no sticky note, the same message on the cover sheet, or a blank Post-it",
+          "url": "https://doi.org/10.1207/s15327663jcp1503_8"
+        }
+      ],
+      "notes": "Area: social science (psychology). S1 easy. The researcher is left unnamed (an official Inferences item names a different Garner). Review: the abstract reports four studies, each comparing the sticky-note request with other packets; the passage now describes a series of studies and the comparisons across them, not one four-group mailing. Distractors: VAR, REV, OUT.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "passage described one four-group mailing; the source reports four studies, so it now describes a series of studies and the comparisons across them (no note, cover-sheet message, blank note)",
+          "why_wrong for B no longer claims the study varied only the note (the real studies varied survey length), C reworded to what the text shows"
+        ],
+        "status": "fixed",
+        "facts": "Crossref abstract of Garner 2005: four studies; Post-it request beat no note, same message on cover sheet, blank Post-it"
+      }
+    },
+    {
+      "id": "inferences.S9.easy.w5b2_18",
+      "template": "S9",
+      "subtype": "Design and content reveal a reason: what the misericord was used for explains its subjects",
+      "tier": "easy",
+      "passage": "In many medieval churches, the choir, where the clergy sang several times a day, had rows of wooden seats that could be tipped up. Underneath each seat was a small ledge called a misericord, which let a person lean his weight on it throughout long services while still appearing to stand. Misericords were often skillfully carved, but they rarely show religious scenes, even though carvings elsewhere in the same churches often do. Historians think that carvers avoided religious images on misericords because ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "religious scenes had too many small details to be carved on such a little wooden ledge.",
+        "the clergy who used the choir seats liked folk tales and jokes better than religious stories.",
+        "people would have been resting their bodies on whatever image was carved on the ledge.",
+        "church leaders did not allow religious images to be carved anywhere inside their churches."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "A misericord “let a person lean his weight on it throughout long services.” A holy image where people rested their bodies would have seemed disrespectful, which explains why carvers avoided religious scenes there, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text says misericords “were often skillfully carved,” so their size did not keep carvers from detailed work."
+        },
+        "B": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about what the clergy liked; it explains only how the seats were used."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says that “carvings elsewhere in the same churches often do” show religious scenes."
+        }
+      },
+      "models": [
+        "25893fc7",
+        "7a895def",
+        "787729be"
+      ],
+      "word_count": 82,
+      "sources": [
+        {
+          "what": "Misericord: shelves on the underside of hinged choir seats that support a person leaning in a partly standing position during long prayers; because people rested against them, religious motifs were considered inappropriate, so they usually show secular life and folklore",
+          "url": "https://en.wikipedia.org/wiki/Misericord"
+        }
+      ],
+      "notes": "Area: humanities (art and architecture). S9 easy: the object's use gives the reason for its imagery. Distractors: CAUSE (size), OUT (clergy taste), REV (no religious carving anywhere).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Misericord: religious motifs thought inappropriate because people rested against them"
+      }
+    },
+    {
+      "id": "inferences.S6.easy.w5b2_19",
+      "template": "S6",
+      "subtype": "X but not Y: ice in permanently shadowed crater floors but not on sunlit ground",
+      "tier": "easy",
+      "passage": "Mercury orbits nearer to the Sun than the other planets do, so much of its surface gets extremely hot during the day. Near its poles, however, the floors of some craters are permanently in shadow, because the Sun never rises high enough to shine into them. In the 1990s, radar signals transmitted from Earth revealed unusually bright patches near the poles. Later, measurements by NASA’s MESSENGER spacecraft showed that the patches lie in the permanently shadowed parts of craters, not on the sunlit ground surrounding them, and that they very likely contain water ice. This suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "water ice is more common on Mercury than it is on any other planet in the solar system.",
+        "ice on Mercury’s surface may last only in places that are shielded from sunlight.",
+        "the Sun’s heat produces the ice that is found in the shadowed parts of Mercury’s craters.",
+        "Mercury’s shadowed craters will someday be completely filled with water ice."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The ice-rich patches “lie in the permanently shadowed parts of craters, not on the sunlit ground surrounding them,” while much of the surface “gets extremely hot during the day.” Ice is found only where sunlight never reaches, so it may survive only in such shielded places, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text discusses only Mercury and never compares its ice with that of other planets."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The ice lies in craters where “the Sun never rises high enough to shine into them,” so sunlight is what the ice is shielded from, not what produces it."
+        },
+        "D": {
+          "recipe": "speculative future (FUT)",
+          "why_wrong": "The text says nothing about how the deposits will change in the future."
+        }
+      },
+      "models": [
+        "493c46bc",
+        "9077be25"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "Lawrence et al. 2013, Science 339: 292-296: MESSENGER Neutron Spectrometer data from Mercury's north polar region are consistent with water ice in permanently shadowed regions; the radar-bright polar deposits contain a hydrogen-rich layer best matched by nearly pure water ice",
+          "url": "https://doi.org/10.1126/science.1229953"
+        }
+      ],
+      "notes": "Area: natural science (planetary science). S6 easy. Radar-bright deposits were first seen from Arecibo and Goldstone in the early 1990s. Distractors: CMP, REV, FUT.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "OpenAlex summary of Lawrence et al. 2013: 1990s radar-bright polar deposits; MESSENGER confirms water ice in permanently shadowed regions"
+      }
+    }
+  ],
+  "done": true
+}

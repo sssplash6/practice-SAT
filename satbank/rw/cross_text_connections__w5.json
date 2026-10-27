@@ -1,0 +1,2195 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "w5",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_concede_rebut",
+        "name": "Respond: concede part of the target, rebut the rest (two-part options)"
+      },
+      {
+        "code": "S1_solution",
+        "name": "Respond: one text supplies a solution to the other's problem"
+      },
+      {
+        "code": "S2_joint_inference",
+        "name": "Agree: joint inference from two compatible studies"
+      },
+      {
+        "code": "S3_difference",
+        "name": "Difference: how the two authors view an object, compared on one axis"
+      },
+      {
+        "code": "S2_hidden_assumption",
+        "name": "Agree: shared methodological assumption under a dispute"
+      },
+      {
+        "code": "S1_counterexample",
+        "name": "Respond: counterexample to a 'first', 'only' or 'requires' claim"
+      },
+      {
+        "code": "S1_limit_degree",
+        "name": "Respond: limit the degree or scope of the target claim"
+      },
+      {
+        "code": "S1_second_factor",
+        "name": "Respond: target is incomplete, a second cause or source"
+      },
+      {
+        "code": "S1_case_fits_frame",
+        "name": "Respond (Text 1 speaking): Text 2's case fits Text 1's general frame"
+      },
+      {
+        "code": "S2_shared_premise",
+        "name": "Agree: shared premise beneath a visible disagreement"
+      },
+      {
+        "code": "S1_refute_data",
+        "name": "Respond: target refuted by new data"
+      },
+      {
+        "code": "S1_alt_explanation",
+        "name": "Respond: the behavior might be explained without the target's interpretation"
+      },
+      {
+        "code": "S4_relate",
+        "name": "Relationship: function of each text"
+      },
+      {
+        "code": "S1_rival_hypothesis",
+        "name": "Respond: rival hypothesis with evidence the target does not account for"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w5b1_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nIn the 1970s, Atlantic smooth cordgrass was introduced to San Francisco Bay to help reclaim marshland, and it soon hybridized with the bay’s native cordgrass. The vigorous hybrid colonized hundreds of acres of tidal marsh and mudflat, displacing native vegetation. Because invasive plants degrade the habitats on which native wildlife depends, <u>eradicating an invader as rapidly and completely as possible is the most reliable way to help a marsh’s native species recover</u>.\n\nText 2\n\nFew ecologists would dispute that invasive plants can harm native species, and the hybrid cordgrass is no exception. Yet after managers began eradicating it in 2005, populations of the endangered California Ridgway’s rail, a marsh bird that had come to nest in the dense hybrid stands, declined. Modeling the situation, Adam Lampert and colleagues concluded that removal should proceed gradually, synchronized with the restoration of native cordgrass.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By agreeing that the hybrid cordgrass has degraded the bay’s marshes but arguing that managers should halt its removal now that the rail depends on it",
+        "By accepting that invasive plants can harm native wildlife but disputing that eradicating an invader without delay always best serves a marsh’s native species",
+        "By conceding that eradicating an invasive plant can endanger native animals but maintaining that the hybrid cordgrass has done little damage to the bay’s marshes",
+        "By acknowledging that the hybrid spread rapidly through the bay but contending that the rail nested primarily in native cordgrass rather than in the dense hybrid stands"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that eradicating an invader “as rapidly and completely as possible” is the most reliable way to help native species recover. The author of Text 2 grants that “invasive plants can harm native species,” but reports that after managers began eradicating the hybrid, populations of an endangered rail that “had come to nest in the dense hybrid stands” declined, and that Lampert’s team concluded that “removal should proceed gradually.” So the author would accept the harm invaders cause while rejecting the idea that the fastest removal is always best.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (right concession, wrong rebuttal)",
+          "why_wrong": "Text 2 does not call for halting removal; Lampert’s team concluded that it “should proceed gradually, synchronized with the restoration of native cordgrass.”"
+        },
+        "C": {
+          "recipe": "D2 wrong side (denial where the author concedes)",
+          "why_wrong": "The author says the hybrid “is no exception” to the rule that invasive plants can harm native species, so the author would not claim it has done little damage."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the rail “had come to nest in the dense hybrid stands,” not mainly in native cordgrass."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.9"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Lampert, Hastings, Grosholz, Jardine, Sanchirico 2014, Science 344: 1028: eradicating invasive hybrid Spartina threatens recovery of an endangered bird that nests in it; optimal management is slower removal paced with native Spartina restoration",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/24876497/"
+        },
+        {
+          "what": "UC Davis release: S. alterniflora brought to the bay in the 1970s, hybridized with native Spartina, about 800 acres; eradication from 2005; California clapper rail relies on hybrid for nesting",
+          "url": "https://www.ucdavis.edu/news/when-eradicating-invasive-species-threatens-endangered-species-recovery"
+        },
+        {
+          "what": "Casazza et al. 2016, Ecology and Society 21(1): 19 (USGS record): hybrid Spartina boosted California Ridgway’s rail numbers; herbicide treatment from 2005 to 2012 removed it; removal of invasive Spartina caused substantial decreases in California rail populations",
+          "url": "https://pubs.usgs.gov/publication/70168703"
+        }
+      ],
+      "notes": "Area: natural science (invasion ecology, conservation). The California clapper rail is now classed as the California subspecies of Ridgway’s rail. Text 1’s rule is unattributed. The concession is the general harm of invaders; the rebuttal needs the rail decline plus the gradual-removal conclusion.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "added Casazza et al. 2016 (USGS) for the rail decline after eradication began in 2005; the other two sources do not state the decline"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Concede-rebut with two-part options. A (halt removal) is the near miss and needs the “gradually” detail to reject; C and D each fall to one stated fact. The key paraphrases rather than echoes, but stays inside the texts, so band 6 (CTC hard cells are planned at 6)."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w5b1_02",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nCompiled around 1268, Étienne Boileau’s Livre des métiers records the statutes of roughly one hundred Parisian crafts. The statutes generally presume that masters, journeymen, and apprentices are men, and many restrict the role that women could play in a trade. It is tempting to infer from such regulations that <u>skilled work in thirteenth-century Paris was almost entirely closed to women</u>.\n\nText 2\n\nGuild statutes leave little doubt that women’s participation in many Parisian crafts was restricted. But statutes prescribe how trades were supposed to be organized; they do not document who actually practiced them. Examining Parisian tax rolls from the late thirteenth century, historian Janice Archer found that unmarried women and widows headed nearly 14 percent of the city’s workshops and that women dominated the Parisian silk industry.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By agreeing that guild statutes restricted women’s work but arguing that those restrictions applied mainly to married women rather than to widows",
+        "By conceding that women headed only a small share of the city’s workshops but maintaining that women made up the majority of its skilled workers",
+        "By acknowledging that women dominated silk production but contending that the Livre des métiers was compiled too early to describe that industry accurately",
+        "By granting that the statutes restricted women but questioning whether such regulations reveal how much skilled work women actually performed"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim infers who did skilled work from the guild rules. The author of Text 2 accepts that the statutes show that “women’s participation in many Parisian crafts was restricted,” but objects that statutes “do not document who actually practiced” the trades, and cites Archer’s finding that unmarried women and widows “headed nearly 14 percent of the city’s workshops” and that women “dominated the Parisian silk industry.” So the author would grant the restrictions while doubting that the rules show how much skilled work women did.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail (right concession, invented rebuttal)",
+          "why_wrong": "Neither text says the restrictions applied mainly to married women; Text 2 reports which women headed workshops, not whom the rules restricted."
+        },
+        "B": {
+          "recipe": "D7 half right (true concession, overreaching rebuttal)",
+          "why_wrong": "Text 2 does report a minority share of workshops, but nothing in it says women made up most of the city’s skilled workers; only the silk industry is said to be dominated by women."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text questions whether the Livre des métiers describes the silk trade or suggests that its date makes it unreliable."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.9"
+      ],
+      "word_count": 127,
+      "sources": [
+        {
+          "what": "Janice Marie Archer, Working Women in Thirteenth-Century Paris, PhD dissertation, University of Arizona, 1995 (repository abstract): the Livre des metiers permitted but restricted women’s participation; the tax rolls (roles de la taille) show actual participation; unmarried women and widows headed 13.6% of Parisian workshops; women monopolized the Parisian silk industry",
+          "url": "https://repository.arizona.edu/handle/10150/187182"
+        },
+        {
+          "what": "Janice Archer, 1995 University of Arizona dissertation (abstract): the Livre des metiers permitted but restricted women’s participation; unmarried women and widows headed 13.6% of Parisian workshops; women monopolized the Parisian silk industry",
+          "url": "https://www.medievalists.net/2014/11/working-women-thirteenth-century-paris/"
+        }
+      ],
+      "notes": "Area: history (medieval social and economic history). Text 1 is the author’s own voice (“It is tempting to conclude”), not attributed to named historians. 13.6% rounded to “nearly 14 percent.” The 1268 date is from Wikipedia (Étienne Boileau); the count of about one hundred crafts is the usual description of the compilation. Text 1’s description of the statutes is kept general to match Archer’s “permitted but restricted.” Review: “records of Parisian workers” narrowed to the tax rolls the abstract names; abstract confirmed on the University of Arizona repository as well as medievalists.net.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "“records of Parisian workers” narrowed to “Parisian tax rolls,” the source the abstract names",
+          "abstract confirmed on the University of Arizona repository (primary) as well as medievalists.net; repository URL added"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Concede-rebut; A (married women) and B (majority of skilled workers) keep a true concession and fail on an inference the text does not license. The key’s “actually performed” is close to Text 2’s “actually practiced,” which keeps it a plain band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w5b1_03",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nGrowth rings in fossilized bones allow paleontologists to estimate a dinosaur’s age at death and its rate of growth, but determining when dinosaurs reached reproductive maturity has proved far more difficult. Body size offers little guidance: living reptiles typically begin breeding long before attaining full size, whereas birds, the dinosaurs’ closest living relatives, generally breed only after they have stopped growing.\n\nText 2\n\nAndrew Lee and Sarah Werning examined fossils of the dinosaurs Allosaurus and Tenontosaurus for medullary bone, a tissue that female birds deposit inside their limb bones as a calcium reserve for producing eggshells. Having identified it in both, they counted the growth rings in the same bones and estimated that the individuals were approximately 10 and 8 years old, respectively, and were still growing when they died.",
+      "stem": "Based on the texts, how would Lee and Werning (Text 2) most likely respond to the problem described in Text 1?",
+      "options": [
+        "They would argue that a tissue associated with egg laying can show that a particular dinosaur had already reached reproductive age.",
+        "They would claim that medullary bone shows that dinosaurs began reproducing on the same schedule that most birds follow today.",
+        "They would contend that growth rings are less reliable than medullary bone for estimating how old a dinosaur was when it died.",
+        "They would suggest that a dinosaur’s body size becomes a dependable guide to its maturity once medullary bone is found in its species."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says that growth rings reveal age but that “determining when dinosaurs reached reproductive maturity has proved far more difficult.” Lee and Werning looked for “medullary bone, a tissue that female birds deposit inside their limb bones as a calcium reserve for producing eggshells,” found it, and then used growth rings in the same bones to estimate the animals’ ages. They would therefore say that this egg-related tissue can mark individual dinosaurs as reproductively mature, which addresses the problem.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1 says birds “breed only after they have stopped growing,” but the dinosaurs in Text 2 “were still growing when they died,” so the finding departs from the bird schedule rather than matching it."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Lee and Werning relied on growth rings to estimate the animals’ ages; Text 2 does not rank the two methods for estimating age."
+        },
+        "D": {
+          "recipe": "D7 half right",
+          "why_wrong": "Text 2 uses medullary bone and growth rings, not body size; nothing suggests that finding the tissue makes size a reliable guide to maturity."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7"
+      ],
+      "word_count": 128,
+      "sources": [
+        {
+          "what": "Lee and Werning 2008, PNAS 105: 582: medullary bone in Allosaurus and Tenontosaurus; growth-line counts show reproductive maturity by about 10 and 8 years, before asymptotic size (unlike birds, like reptiles)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/18195356/"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Text 1’s contrast between reptiles and birds follows the paper’s own framing. Simplified: the paper also reports medullary bone in a T. rex at 18 years; left out, and T. rex is not named.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Solution mapping (a template with band-7 items), but the solution reaches the problem directly, with no unstated link; B reverses the bird schedule and needs the “still growing” detail, the best distractor. Band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w5b1_04",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nWhen researchers report a newly determined DNA sequence, most journals in molecular biology require them first to deposit it in a public database such as GenBank, which assigns the sequence a permanent accession number to be cited in the publication. Because this requirement has been standard practice for decades, a sequence published in the early 1990s remains retrievable today, available to be verified and integrated with newer data by any researcher.\n\nText 2\n\nTimothy Vines and colleagues contacted the authors of 516 biology articles published between 1991 and 2011, requesting the data underlying each study. Availability declined steeply with an article’s age: for every year since publication, the odds that a data set still existed decreased by 17 percent. The probability of reaching any of an article’s authors by e-mail diminished as well.",
+      "stem": "Based on the texts, how would the author of Text 1 most likely respond to the findings in Text 2?",
+      "options": [
+        "By arguing that the authors contacted in Text 2 should have deposited their data in GenBank, since it accepts every type of research data",
+        "By arguing that most data sets more than twenty years old are rarely valuable enough to researchers to justify the cost of preserving them",
+        "By indicating that a condition of publication common in one field keeps its published data from disappearing in the way Text 2 describes",
+        "By noting that the researchers in Text 2 could have retrieved most of the missing data sets from public databases such as GenBank"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 2 shows that data kept by researchers themselves tend to disappear: “the odds that a data set still existed decreased by 17 percent” for every year since publication. Text 1 explains that molecular biology journals “require them first to deposit” sequences in a public database, so that a sequence from the early 1990s “remains retrievable today.” The author of Text 1 would therefore indicate that this publication requirement protects one field’s data from the kind of loss Text 2 reports.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 describes GenBank as a database for DNA sequences; nothing in either text says it accepts every type of research data."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 1 values old data, saying a sequence from the 1990s can be “integrated with newer data”; neither text weighs the cost of preserving data."
+        },
+        "D": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 1 describes public deposit only for DNA sequences; nothing suggests that the varied data sets in Text 2 were placed in GenBank or a similar database."
+        }
+      },
+      "models": [
+        "3.7",
+        "3.6"
+      ],
+      "word_count": 131,
+      "sources": [
+        {
+          "what": "Vines et al. 2014, Current Biology 24: 94: data requested for 516 articles published 2 to 22 years earlier; odds of a data set being extant fell by 17% per year; odds of a working e-mail address fell by 7% per year",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/24361065/"
+        }
+      ],
+      "notes": "Area: natural science (scientific practice, research data). Text 1 is general knowledge about journal deposit requirements (GenBank accession numbers), unattributed. Text 1 speaks about Text 2 (3.7 direction). Vines’s articles were ecology and evolution studies of morphology; simplified to “biology articles.”",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Text 1 speaks about Text 2’s finding; D (data retrievable from GenBank) is a close overreach that needs the DNA-sequence scope noticed. A and B are weaker. Band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_joint_inference.hard.w5b1_05",
+      "template": "S2_joint_inference",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nIn 2015, the Cassini spacecraft passed through the plume of water vapor and ice grains that erupts from fractures near the south pole of Saturn’s moon Enceladus, which conceals an ocean beneath its icy crust. Analyzing the spacecraft’s measurements from that flyby, Hunter Waite and colleagues detected molecular hydrogen in the plume. They concluded that the gas most likely originates in ongoing chemical reactions between the ocean’s water and the rocky material of the moon’s core.\n\nText 2\n\nMany methanogens, single-celled microorganisms that release methane, obtain energy by combining hydrogen with carbon dioxide. Ruth-Sophie Taubner and colleagues cultivated one such organism, Methanothermococcus okinawensis, under pressures, temperatures, and chemical conditions selected to approximate estimates for the ocean of Enceladus, including compounds expected there that could inhibit its growth. The microbe nonetheless produced methane, converting up to 72 percent of the carbon dioxide it was supplied.",
+      "stem": "Based on the texts, if Waite and colleagues (Text 1) and Taubner and colleagues (Text 2) were aware of the findings of both studies, they would most likely agree with which statement?",
+      "options": [
+        "The hydrogen detected in the plume of Enceladus was most likely produced by methanogens living in the moon’s ocean.",
+        "The hydrogen in the plume of Enceladus is produced by the same kind of reaction from which methanogens obtain their energy.",
+        "Methane escaping in the plume of Enceladus shows that microbes like M. okinawensis are already living in the moon’s ocean.",
+        "The ocean of Enceladus appears to contain one of the substances that M. okinawensis uses to make methane."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reports that Waite’s team “detected molecular hydrogen in the plume” and traced the gas to the moon’s ocean. Text 2 explains that many methanogens “obtain energy by combining hydrogen with carbon dioxide” and that one such organism, M. okinawensis, produced methane under conditions “selected to approximate estimates for the ocean of Enceladus.” Combining the two, both teams would agree that the ocean appears to contain one of the substances this microbe uses to make methane, something neither text states on its own.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Waite’s team concluded that the gas “most likely originates in ongoing chemical reactions between the ocean’s water and the rocky material of the moon’s core,” not in microbes; methanogens consume hydrogen rather than produce it."
+        },
+        "B": {
+          "recipe": "D3 twisted detail (conflates the two texts’ reactions)",
+          "why_wrong": "Text 1 traces the hydrogen to reactions “between the ocean’s water and the rocky material of the moon’s core,” whereas methanogens obtain energy by “combining hydrogen with carbon dioxide,” a reaction that uses up hydrogen rather than producing it."
+        },
+        "C": {
+          "recipe": "D5 overstatement built on a passage detail",
+          "why_wrong": "Neither text reports methane in the plume, and the experiment in Text 2 shows only that such microbes could make methane under estimated conditions, not that any live there."
+        }
+      },
+      "models": [
+        "3.4"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Waite et al. 2017, Science 356: 155: Cassini INMS detected molecular hydrogen in the Enceladus plume; most plausible source is ongoing hydrothermal reactions of rock in the core",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/28408597/"
+        },
+        {
+          "what": "Taubner et al. 2018, Nature Communications 9: 748: Methanothermococcus okinawensis produced CH4 under putative Enceladus-like conditions, up to 72% CO2 conversion, with potential inhibitors present",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/29487311/"
+        }
+      ],
+      "notes": "Area: natural science (planetary science, microbiology). The hydrogen measurement came from Cassini’s October 2015 deep flyby (E21). Neither text mentions the other’s finding: Text 1 has no microbes, Text 2 no plume measurement, so the key needs both.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Joint inference whose key needs both texts and appears in neither (the band-7 synthesis check passes), and B conflates the two reactions well. But the key is short (15 words) and A and C fall to one stated fact each, so a strong band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S3_difference.hard.w5b1_06",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nColin Turnbull’s 1972 ethnography The Mountain People depicts the Ik of northeastern Uganda as a people so devastated by starvation that they had abandoned virtually all concern for one another, even for their own children. Yet Turnbull conducted his fieldwork during a severe drought and famine, and some of his informants, including his interpreter, belonged not to the Ik but to a neighboring group. A portrait assembled under such extraordinary conditions, and from such sources, cannot represent Ik society generally.\n\nText 2\n\nMuch of what Turnbull recorded among the Ik probably occurred; the suffering he witnessed was genuine. What is troubling is the use to which he put his observations. Judging that Ik society had collapsed, he recommended that the Ugandan government disperse them and resettle them in groups of no more than ten, a remedy that treated a population in crisis as a problem to be scattered rather than helped.",
+      "stem": "Which choice best describes a difference in how the authors of Text 1 and Text 2 view Colin Turnbull’s The Mountain People?",
+      "options": [
+        "The author of Text 1 doubts that the book’s observations represent Ik life in general, while the author of Text 2 objects chiefly to the course of action Turnbull drew from what he observed.",
+        "The author of Text 1 questions whether Turnbull’s informants were reliable sources, while the author of Text 2 questions whether the suffering Turnbull described actually occurred.",
+        "The author of Text 1 objects that Turnbull studied the Ik during an unusual period, while the author of Text 2 objects that he spent too little time among them to understand them.",
+        "The author of Text 1 questions the book’s account of how the Ik treated their children, while the author of Text 2 credits Turnbull with persuading officials to aid the Ik."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 1 argues that because Turnbull worked “during a severe drought and famine” and relied partly on informants who “belonged not to the Ik,” his portrait “cannot represent Ik society generally.” The author of Text 2 grants that “the suffering he witnessed was genuine” and is troubled instead by “the use to which he put his observations,” his recommendation to disperse the Ik. So Text 1 questions how representative the observations are, while Text 2 objects to the action Turnbull proposed on the basis of them.",
+      "distractors": {
+        "B": {
+          "recipe": "D7 half right (true first half, reversed second half)",
+          "why_wrong": "The first half fits Text 1, which notes that some informants “belonged not to the Ik,” but the second half reverses Text 2, which says “the suffering he witnessed was genuine.”"
+        },
+        "C": {
+          "recipe": "D7 half right (true first half, invented second half)",
+          "why_wrong": "The first half fits Text 1’s point about the “severe drought and famine,” but Text 2 never says Turnbull spent too little time with the Ik; its objection is to his recommendation."
+        },
+        "D": {
+          "recipe": "D7 half right (true detail, wrong second half)",
+          "why_wrong": "Text 1 mentions Turnbull’s claim about children, but its objection is to the conditions and sources behind the whole portrait. Text 2 criticizes Turnbull’s proposal rather than crediting him with helping the Ik."
+        }
+      },
+      "models": [
+        "3.10"
+      ],
+      "word_count": 149,
+      "sources": [
+        {
+          "what": "Wikipedia, Ik people: Turnbull’s fieldwork during a drought and famine in 1965 to 1966; some informants, including his translator, were Diding’a rather than Ik (Heine); Turnbull advocated breaking up the tribe and resettling it with no more than ten people per group",
+          "url": "https://en.wikipedia.org/wiki/Ik_people"
+        }
+      ],
+      "notes": "Area: social science (anthropology). Both texts are the authors’ own evaluations (3.10 pattern: parallel critiques on different grounds). The informant point follows Bernd Heine’s critique; it is stated as fact without attribution. Text 2’s “Judging that Ik society had collapsed” follows the source’s “(apparent) cultural collapse.”",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "S3_difference has no band-7 official item. Each distractor has a true first half and a second half killed by one stated fact, as in CB’s band-6 Tuchman item; the key abstracts “the use to which he put his observations.” Band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_hidden_assumption.hard.w5b1_07",
+      "template": "S2_hidden_assumption",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nThe Bondwoman’s Narrative, a novel composed before the Civil War by an author calling herself Hannah Crafts, was first published in 2002. Its narrator escapes from slavery after serving the wife of a Mr. Wheeler, who is appointed US minister to Nicaragua, a detail corresponding to the diplomatic career of the North Carolina politician John Hill Wheeler. Genealogist Katherine Flynn proposed that the novelist was Jane Johnson, an enslaved woman who secured her freedom in Philadelphia in 1855 while accompanying the Wheelers.\n\nText 2\n\nLiterary scholar Gregg Hecimovich has identified a different candidate: Hannah Bond, who was enslaved on Wheeler’s plantation in Murfreesboro, North Carolina, serving as a lady’s maid to his wife, Ellen, until escaping around 1857. Hecimovich determined that the manuscript was written on a distinctive paper used by the Wheeler family, whose library held many of the books from which the novel borrows passages.",
+      "stem": "Based on the texts, Flynn (Text 1) and Hecimovich (Text 2) would most likely agree with which statement?",
+      "options": [
+        "The paper on which the manuscript was written shows that the novel was composed in the Wheelers’ home in Murfreesboro.",
+        "The narrator of the novel gains her freedom in Philadelphia, as the novel’s author herself did.",
+        "The novel’s connections to John Hill Wheeler point to an author who had been enslaved by his family.",
+        "The novel’s author was most likely a woman who escaped from the Wheelers’ plantation in North Carolina."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Flynn and Hecimovich name different women, but each candidate was enslaved by the Wheelers: Jane Johnson gained her freedom “while accompanying the Wheelers,” and Hannah Bond served “as a lady’s maid to his wife, Ellen.” Both identifications start from the novel’s ties to John Hill Wheeler, the minister to Nicaragua in Text 1 and the family’s paper and “library” in Text 2. So both assume that those ties point to an author who had been enslaved in the Wheeler household.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only, overstated",
+          "why_wrong": "The paper evidence belongs to Hecimovich alone, and even it shows only that the paper was “used by the Wheeler family,” not where the novel was written; Flynn’s candidate had left the Wheelers by 1855."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Philadelphia is where Jane Johnson, Flynn’s candidate, gained her freedom; neither text says where the narrator escapes to, and Hecimovich’s candidate escaped from North Carolina."
+        },
+        "D": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This fits Hecimovich’s candidate, who escaped from the Murfreesboro plantation, but Flynn’s candidate, Jane Johnson, gained her freedom in Philadelphia while traveling with the family, so Flynn would not agree."
+        }
+      },
+      "models": [
+        "3.1"
+      ],
+      "word_count": 146,
+      "sources": [
+        {
+          "what": "Wikipedia, The Bondwoman’s Narrative: Flynn proposed Jane Johnson (freed in Philadelphia in 1855 while traveling with Wheeler’s family) as the novel appeared to be written by someone close to the Wheeler household; Hecimovich (2013) identified Hannah Bond, lady’s maid to Ellen Wheeler in Murfreesboro, escaped about 1857; manuscript paper used by the Wheeler family; books quoted match Wheeler’s library",
+          "url": "https://en.wikipedia.org/wiki/The_Bondwoman%27s_Narrative"
+        }
+      ],
+      "notes": "Area: literature (authorship, literary history). 3.1 pattern: an authorship dispute resting on a shared premise (each side identifies a woman from the Wheeler household). The library match was first shown by Gates and Robbins; Text 2 states it as fact rather than crediting Hecimovich. Review: “nearly all of the literary works” narrowed to “many of the books”: the cited page says only that the paper was kept in the Wheelers’ library and that the author quoted widely from its books (Bleak House was not on Wheeler’s list).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "“nearly all of the literary works” narrowed to “many of the books” and “stationery” to “paper”: the cited page says the paper was a distinctive one kept in the Wheelers’ library and that the author quoted widely from its books (Bleak House was not on Wheeler’s list)",
+          "explanation and A’s why_wrong updated to match"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "S2_hidden_assumption has no band-7 official item. A and D are each true of Hecimovich only and need Flynn’s Philadelphia detail to reject; the key is stated one level above both texts. Band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w5b1_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\n<u>Because anxiety, a persistent state of wariness that continues after a threat has passed, has been documented only in vertebrates, it appears to depend on brain structures that invertebrates lack</u>. In mammals, a region called the amygdala plays a central role in anxious behavior. Moreover, both fish and rodents behave more boldly in standard laboratory tests of anxiety when treated with benzodiazepines, medications prescribed to alleviate anxiety in humans.\n\nText 2\n\nPascal Fossat and colleagues exposed crayfish to a stressful electric field and then placed them in an underwater maze with both darkened and brightly illuminated arms. Afterward, the stressed crayfish consistently avoided the illuminated arms, which crayfish find aversive, whereas unstressed crayfish explored them. This avoidance coincided with elevated serotonin in the crayfish brain and disappeared when the animals were injected with chlordiazepoxide, a benzodiazepine.",
+      "stem": "Based on the texts, what would Fossat and colleagues (Text 2) most likely say about the claim underlined in Text 1?",
+      "options": [
+        "It is largely correct, because the crayfish avoided the illuminated arms only while the electric field was still present.",
+        "It is too narrow, because an animal without a vertebrate brain showed a lasting wariness that responded to an anxiety drug.",
+        "It is mistaken, because serotonin rather than the amygdala produces anxious behavior in mammals.",
+        "It is mostly accurate, because the crayfish’s avoidance of the illuminated arms reflects a dislike of bright light that all crayfish share."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that anxiety “appears to depend on brain structures that invertebrates lack.” Fossat’s team found that stressed crayfish “consistently avoided the illuminated arms” afterward and that the avoidance “disappeared when the animals were injected with chlordiazepoxide, a benzodiazepine,” a drug Text 1 says is prescribed for anxiety. Since crayfish are invertebrates, the researchers would say the claim is too narrow.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The crayfish were tested “Afterward,” once the exposure was over, and still avoided the illuminated arms."
+        },
+        "C": {
+          "recipe": "D3 twisted detail (crayfish finding moved to mammals)",
+          "why_wrong": "Text 2 links serotonin to anxious behavior in crayfish; neither text says serotonin replaces the amygdala in mammals."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Unstressed crayfish “explored them,” so the avoidance came from the stress, not from a dislike shared by all crayfish."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.4"
+      ],
+      "word_count": 134,
+      "sources": [
+        {
+          "what": "Fossat et al. 2014, Science 344: 1293: after stress, crayfish sustainably avoided the illuminated arms of an aquatic plus-maze; correlated with increased brain serotonin; abolished by chlordiazepoxide; anxiety previously characterized in vertebrates but not invertebrates",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/24926022/"
+        }
+      ],
+      "notes": "Area: natural science (neurobiology, animal behavior). Text 1’s claim is framed after the paper’s statement that anxiety had been characterized in vertebrates but not invertebrates; no researcher is named. The target is a brain-structure claim, not insect emotion (kept apart from official 1.10).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w5b1_09",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nFlowering plants frequently attract insect pollinators with scent, and many reward their visitors with nectar or pollen. Because cycads, an ancient lineage of nonflowering seed plants, bear their pollen and seeds in cones, as wind-pollinated conifers do, it might seem natural to suppose that they, too, rely on wind to disperse their pollen. <u>On this view, recruiting animals as pollinators was an innovation of flowering plants</u>.\n\nText 2\n\nIrene Terry and colleagues investigated an Australian cycad of the genus Macrozamia and its specialist pollinator, a minute insect called a thrips. During a daily period of heating, male cones emit such intense scent that pollen-laden thrips are driven away. As the cones cool, emissions decline and thrips are attracted again, including to female cones, which they pollinate. Without the thrips, the cycad cannot reproduce.",
+      "stem": "Based on the texts, how would Terry and colleagues (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Thrips are attracted to Macrozamia cones mainly by the heat the cones give off rather than by their scent.",
+        "Macrozamia cycads probably began relying on thrips by imitating the scents of nearby flowering plants.",
+        "Using scent to manage insect pollinators is not limited to plants that produce flowers.",
+        "Thrips are the only insects known to pollinate any plant that does not produce flowers."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that recruiting animals as pollinators was “an innovation of flowering plants.” Text 2 shows that a cycad, one of the “nonflowering seed plants” described in Text 1, uses changing scent to drive thrips out of male cones and draw them to female cones, and that without the thrips the cycad “cannot reproduce.” Terry and colleagues would therefore say that nonflowering plants also manage insect pollinators with scent.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 ties the thrips’ movements to the cones’ scent: heating cones “emit such intense scent” that thrips leave, and as the cones cool “emissions decline” and thrips return. It does not say heat itself attracts them."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says how the cycad’s relationship with thrips arose or mentions it copying flowering plants."
+        },
+        "D": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 describes one cycad and its thrips; nothing in it suggests that no other insects pollinate nonflowering plants."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 130,
+      "sources": [
+        {
+          "what": "Terry et al. 2007, Science 318: 70: obligate pollination mutualism between an Australian Macrozamia cycad and its thrips pollinator; thermogenic cones repel thrips with high volatile emissions (push), then attract them as emissions fall (pull)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/17916726/"
+        }
+      ],
+      "notes": "Area: natural science (botany, pollination ecology). Text 1’s view is the author’s own supposition (“it might seem natural to suppose”), not attributed to botanists.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "“as conifers do” changed to “as wind-pollinated conifers do”: Text 1’s “they, too, rely on wind” leaned on a fact the text had not stated. The prior view stays the author’s supposition (“it might seem natural to suppose”) and reads fairly: cycads were long assumed to be wind-pollinated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w5b1_10",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nThe American pika, a small relative of rabbits, inhabits cool, rocky slopes in the mountains of western North America. Because pikas do not hibernate and are susceptible to overheating on warm summer days, ecologists consider the species especially vulnerable to climate change. <u>Some have predicted that as temperatures rise, pikas will survive only on the highest, coldest slopes of their range</u>.\n\nText 2\n\nJohanna Varner and colleagues compared pikas inhabiting an unusually low-elevation site with pikas in a typical alpine habitat. The low-elevation pikas devoted more time to feeding and less to gathering vegetation for winter storage, occupied smaller home ranges, and at midday were far more likely to be found in shaded forest away from the rocks. Such behavioral flexibility, the researchers suggest, enables pikas to persist where conditions once seemed unsuitable.",
+      "stem": "Based on the texts, how would Varner and colleagues (Text 2) most likely respond to the underlined prediction in Text 1?",
+      "options": [
+        "By suggesting that it may underestimate pikas’ ability to change their behavior in ways that help them cope with warmer conditions",
+        "By arguing that pikas at low elevations are more likely than alpine pikas to depend on food they have stored for winter",
+        "By pointing out that pikas at high elevations now spend more of their time in forests than they did in the past",
+        "By noting that pikas’ tendency to overheat has been overstated, since the low-elevation pikas remained active in the open throughout the midday heat"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined prediction says that pikas will survive only “on the highest, coldest slopes of their range.” Varner’s team found that low-elevation pikas behaved differently, for example sheltering “in shaded forest away from the rocks” at midday, and suggested that this flexibility “enables pikas to persist where conditions once seemed unsuitable.” So they would suggest that the prediction underestimates how pikas can adjust their behavior.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 wrong side (reversed comparison)",
+          "why_wrong": "Low-elevation pikas devoted “less to gathering vegetation for winter storage,” not more."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "It was the low-elevation pikas that were found in forest; Text 2 says nothing about high-elevation pikas changing over time."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "At midday the low-elevation pikas sheltered in shaded forest, which suggests they were avoiding heat, not that their sensitivity to it is overstated."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.8"
+      ],
+      "word_count": 131,
+      "sources": [
+        {
+          "what": "Varner et al. 2016, Behavioural Processes 125: 63: low-elevation pikas spent more time consuming vegetation and less time caching, were more often in forested microhabitats off the talus at midday, had smaller home ranges; behavioural plasticity lets pikas persist outside their previously appreciated niches",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26851456/"
+        }
+      ],
+      "notes": "Area: natural science (ecology, climate change). Text 1’s prediction is unattributed (“some have predicted”), reflecting the common view of pikas as climate sentinels. 2.9 pattern: a local population adjusting where the general claim expects loss.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "The unattributed prediction (“Some have predicted”) reads fairly: upslope retreat of pikas under warming is a common published expectation, and Varner’s abstract frames its result against “previously appreciated” niches."
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.medium.w5b1_11",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nDuring the eighteenth and nineteenth centuries, Europe’s population grew faster than ever before, and its cities expanded rapidly. Over the same period, the plague epidemics that had repeatedly devastated the continent came to an end, and vaccination against smallpox spread after 1800. <u>The population boom, then, was simply the result of fewer people dying from infectious disease</u>.\n\nText 2\n\nEconomists Nathan Nunn and Nancy Qian took advantage of a historical experiment: the arrival in the Old World (Europe, Asia, and Africa) of the potato, a crop native to the Americas. Comparing regions whose land was well suited to cultivating potatoes with regions where it was not, before and after the crop’s introduction, they found that the potato was responsible for a significant portion of the increase in population and urbanization that occurred during the eighteenth and nineteenth centuries.",
+      "stem": "Based on the texts, how would Nunn and Qian (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By arguing that the potato spread more quickly through Europe’s cities than through its farming regions",
+        "By arguing that the arrival of the potato, rather than any decline in disease, caused the population boom",
+        "By suggesting that population grew fastest in the regions where plague epidemics ended earliest",
+        "By suggesting that a change in the crops people could grow also contributed to the population boom"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that the boom was “simply the result of fewer people dying from infectious disease.” Nunn and Qian found that “the potato was responsible for a significant portion of the increase in population and urbanization” in the same centuries, comparing regions by how well suited their land was to the crop. They would therefore point out that the arrival of a new crop also contributed, so the decline of disease does not explain the growth by itself.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 links the potato to growth in “population and urbanization”; it does not compare how quickly the crop spread through cities and through farming regions."
+        },
+        "B": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Nunn and Qian credit the potato with “a significant portion” of the increase, not all of it, and nothing in Text 2 rules out a role for declining disease."
+        },
+        "C": {
+          "recipe": "D3 twisted detail (joins the two texts)",
+          "why_wrong": "Neither text ties the timing of the end of plague in a region to how fast its population grew; Text 2 compares regions by how well suited their land was to potatoes."
+        }
+      },
+      "models": [
+        "1.15",
+        "2.7"
+      ],
+      "word_count": 136,
+      "sources": [
+        {
+          "what": "Nunn and Qian, “The Potato’s Contribution to Population and Urbanization: Evidence from an Historical Experiment,” NBER Working Paper 15157 (2009; QJE 2011): regional variation in suitability for potatoes plus their introduction to the Old World from the Americas; the potato was responsible for a significant portion of the increase in population and urbanization in the 18th and 19th centuries",
+          "url": "https://www.nber.org/papers/w15157"
+        }
+      ],
+      "notes": "Area: social science (economic history). Replaced in review: the drafted glacier-algae pair (McCutcheon et al. 2021) repeated the premise of a live item, rhetorical_synthesis.EXPL.b7 (pigmented snow algae lower albedo and speed melting). Text 1’s single-cause claim is the author’s own; the end of plague epidemics and the spread of smallpox vaccination are standard background. Text 2 follows the NBER abstract; the published paper’s quarter-of-growth estimate is left out. 1.15 pattern: a single-cause conclusion answered by a study of a second factor; B is the near miss (sole cause).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "subject replaced: the glacier-algae pair repeated the premise of live rhetorical_synthesis.EXPL.b7 (pigmented snow algae darken snow, lower albedo, speed melting; the earlier inferences red-snow item was withdrawn for the same reason). New pair: disease decline vs the potato’s contribution to Old World population growth (Nunn and Qian, NBER abstract fetched). Grepped and claimed in claims.txt; key letter and template kept"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.medium.w5b1_12",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nCane toads were introduced to the sugarcane plantations of Queensland, Australia, in 1935 to control beetles that damaged the crop. They have since expanded across much of northern Australia. <u>The toads have succeeded largely because their new environment suited them: native predators that attack them are frequently poisoned by their toxins, and the warm, humid tropics provide abundant prey and breeding habitat</u>.\n\nText 2\n\nBenjamin Phillips and colleagues determined that the front of the cane toad invasion now advances roughly five times as far annually as it did when the toads first arrived. Toads at the invasion front have longer legs than toads in long-established populations, and longer-legged individuals travel faster and colonize unoccupied areas first. Because these rapid dispersers breed with one another at the front, each successive generation of pioneers tends to be faster than the last.",
+      "stem": "Based on the texts, how would Phillips and colleagues (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Toads at the front of the invasion are less toxic to native predators than toads in older populations are.",
+        "The toads’ rapid spread also reflects changes that have taken place in the toads themselves over the generations since their release.",
+        "The tropics of northern Australia offer the toads less prey and less breeding habitat than Text 1 suggests.",
+        "The toads released in 1935 were chosen for their long legs so that they could spread quickly."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim credits the toads’ success to the fact that “their new environment suited them.” Phillips’s team found that the invasion front “now advances roughly five times as far annually” as it did at first and that toads at the front “have longer legs,” with each generation of pioneers faster than the last. They would therefore add that the toads themselves have changed in ways that speed their spread.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 compares the toads’ legs and speed, not their toxicity."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 does not dispute what Text 1 says about the tropics; it adds a factor rather than rejecting the one Text 1 gives."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Long legs became more common at the front over time because fast toads arrived first and bred together; nothing suggests the original toads were selected for them."
+        }
+      },
+      "models": [
+        "1.15",
+        "2.7"
+      ],
+      "word_count": 137,
+      "sources": [
+        {
+          "what": "Phillips, Brown, Webb, Shine 2006, Nature 439: 803: the toad invasion front’s annual rate of progress has increased about fivefold; toads at the front have longer legs than those in long-established populations, and longer-legged toads move faster and arrive first",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16482148/"
+        }
+      ],
+      "notes": "Area: natural science (invasion biology, evolution). The 1935 release in Queensland to control cane beetles is standard background. The last sentence of Text 2 paraphrases the paper’s spatial selection explanation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w5b1_13",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nOnce a technical standard has been incorporated into equipment across a region, it tends to outlast the circumstances that produced it. Each new device must be compatible with the equipment already installed, and the expense of replacing everything simultaneously increases as the network expands. Consequently, a standard adopted early, and almost by accident, can persist long after its disadvantages have become apparent.\n\nText 2\n\nIn 1895, an electric company in Tokyo installed generators manufactured by the German firm AEG that produced current at 50 hertz; the following year, Osaka installed American generators from General Electric that operated at 60 hertz. More than a century later, eastern Japan still operates at 50 hertz and western Japan at 60. Electricity can pass between the two grids only through a few converter stations, limiting how much power either region can transfer to the other during emergencies.",
+      "stem": "Based on the texts, how would the author of Text 1 most likely regard the situation described in Text 2?",
+      "options": [
+        "As surprising, because the generators installed in Tokyo and Osaka were bought from firms in different countries",
+        "As temporary, because the cost of replacing the equipment in one of the regions will fall as its network grows",
+        "As predictable, because each region’s early choice has persisted in equipment despite the problems it causes",
+        "As justified, because each frequency offers technical advantages that suit the needs of its own region"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 argues that a standard built into a region’s equipment “can persist long after its disadvantages have become apparent,” because new devices must be compatible with old ones and replacement grows costlier. Text 2 describes this pattern: the frequencies chosen in 1895 and 1896 still divide Japan, even though the split limits “how much power either region can transfer to the other during emergencies.” The author of Text 1 would therefore see the situation as just what the pattern predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "D6 right fact, wrong verdict and reason",
+          "why_wrong": "The firms’ origins explain how two standards arose, but Text 1’s pattern makes their persistence expected rather than surprising."
+        },
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1 says the expense of replacing everything “increases as the network expands,” the opposite of falling."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says either frequency has technical advantages; Text 2 presents the split as a drawback."
+        }
+      },
+      "models": [
+        "1.11",
+        "2.2"
+      ],
+      "word_count": 141,
+      "sources": [
+        {
+          "what": "Wikipedia, Electricity sector in Japan: eastern Japan 50 Hz, western Japan 60 Hz, originating from AEG generators bought for Tokyo in 1895 and General Electric generators for Osaka in 1896; four back-to-back HVDC converter stations, total capacity 1.2 GW",
+          "url": "https://en.wikipedia.org/wiki/Electricity_sector_in_Japan"
+        }
+      ],
+      "notes": "Area: social science (history of technology, economics). Text 1 speaks about Text 2 (case fits frame). Text 1 states the frame concretely and never names it (path dependence). The emergency limit is a simplification of the converter bottleneck.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "Checked against the live QWERTY Cross-Text item (w3b2_12): that pair is about the layout’s origin, this one about a standard’s persistence; kept."
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w5b1_14",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nHenderson Island, a raised coral island in the Pitcairn group of the South Pacific, was settled by Polynesians centuries ago but had been abandoned by the 1600s. Bones excavated from settlement sites reveal that several endemic bird species, including three kinds of pigeons and doves, disappeared after humans arrived. Having exhausted these and other food sources on a small, isolated island, the settlers could no longer sustain themselves.\n\nText 2\n\nHenderson lacks stone suitable for toolmaking, so its inhabitants depended on imports obtained primarily from Pitcairn Island, whose own population relied on exchange with the larger island of Mangareva. When the communities on Mangareva and Pitcairn declined, the trading network that supplied Henderson collapsed, leaving its inhabitants isolated from materials essential to survival on the island.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "The inhabitants of Henderson Island eventually lacked resources that they needed in order to remain there.",
+        "The settlers of Henderson Island contributed to the decline of the communities on Pitcairn and Mangareva.",
+        "Tools made from imported stone allowed Henderson’s settlers to hunt the island’s endemic birds to extinction.",
+        "When food on Henderson Island ran out, its settlers moved to Pitcairn Island."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors give different causes for the end of settlement on Henderson. Text 1 says that the settlers, having “exhausted these and other food sources,” “could no longer sustain themselves,” while Text 2 says the collapse of trade left them “isolated from materials essential to survival on the island.” Both therefore agree that the islanders came to lack resources they needed to stay.",
+      "distractors": {
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 treats the decline of Mangareva and Pitcairn as a cause of Henderson’s troubles, not a result of them, and Text 1 does not mention those islands’ decline."
+        },
+        "C": {
+          "recipe": "D3 twisted detail (joins details from both texts)",
+          "why_wrong": "Neither text links the imported stone to hunting; Text 1 says only that the birds disappeared after people arrived."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says where Henderson’s settlers went."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 124,
+      "sources": [
+        {
+          "what": "Wikipedia, Henderson Island (Pitcairn Islands): settled by Polynesians, abandoned by the 1600s; reasons uncertain, possibly exhaustion of resources and the disappearance of the Pitcairn Polynesians on whom Henderson relied, especially for stone for tools; Pitcairn’s decline tied to Mangareva’s; endemic pigeons and doves extinct after Polynesian arrival",
+          "url": "https://en.wikipedia.org/wiki/Henderson_Island_(Pitcairn_Islands)"
+        }
+      ],
+      "notes": "Area: history and archaeology (Pacific settlement). The two texts take the two explanations the source lists as rivals; each is stated as the author’s view. The trade chain (Mangareva, Pitcairn, Henderson) follows the source’s account.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w5b1_15",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nOlder adults recall a disproportionate number of memorable experiences from roughly ages 10 to 30, a pattern called the reminiscence bump. Psychologist Clare Rathbone and colleagues had participants write self-descriptions beginning “I am” and then recall memories linked to each one. The memories clustered around the time each self-image had emerged, suggesting that the bump arises because much of a person’s identity takes shape in youth.\n\nText 2\n\nPsychologists Dorthe Berntsen and David Rubin offer a different account of why the years from about 15 to 30 are so prominent in older people’s memories. Members of a culture share a “life script,” expectations about which major events, such as marriage, a typical life includes and when they occur. Asked to list important events likely to happen in a newborn’s future life, students named events expected between ages 15 and 30 especially often.",
+      "stem": "Based on the texts, Rathbone and colleagues (Text 1) and Berntsen and Rubin (Text 2) would most likely agree with which statement?",
+      "options": [
+        "Memories from youth remain easy to recall mainly because they are linked to self-images formed during those years.",
+        "Older adults remember an unusually large share of events from their adolescence and early adulthood.",
+        "Young people expect most of the important events in their lives to take place after the age of 30.",
+        "The major events that people expect a typical life to include differ widely from one culture to another."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers explain the pattern differently, but both describe the same pattern. Text 1 says that older adults recall “a disproportionate number of memorable experiences from roughly ages 10 to 30,” and Text 2 sets out to explain why “the years from about 15 to 30 are so prominent in older people’s memories.” Both would therefore agree that older adults remember an unusually large share of events from adolescence and early adulthood.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This is Rathbone’s explanation; Berntsen and Rubin “offer a different account,” tracing the pattern to a shared life script rather than to self-images."
+        },
+        "C": {
+          "recipe": "D2 wrong side (reversed finding)",
+          "why_wrong": "In Text 2, students named “events expected between ages 15 and 30” especially often, not events after 30, and Text 1 says nothing about what young people expect."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 says that members of a culture share a life script but never compares cultures, and Text 1 does not discuss culture at all."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "Rathbone, Moulin, Conway 2008, Memory & Cognition 36: 1403: memories peak between ages 10 and 30 (the reminiscence bump); memories generated from “I am” cues clustered around the time each self-image emerged; new self-images are tied to the encoding of self-relevant memories",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/19015500/"
+        },
+        {
+          "what": "Berntsen, Rubin 2004, Memory & Cognition 32: 427: life scripts, culturally shared representations of the timing of major transitional events; undergraduates listed important events likely in a newborn’s life, and whether events were expected between 15 and 30 predicted how often they were listed; life scripts offer an alternative explanation of the reminiscence bump",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/15285126/"
+        }
+      ],
+      "notes": "Area: social science (psychology, memory). Replaced in review: the drafted Hebrew-revival pair joined the saturated language-revival theme (Manx, myaamia, Wampanoag, Chickasaw and Kristang items are live) and is a classroom-famous case. 2.1 pattern: a shared premise beneath rival explanations. Text 2 calls its view “a different account,” as the abstract calls life scripts “an alternative explanation.” The life-script example (marriage) is illustrative; the centenarian estimates in Berntsen and Rubin are left out. That the bump is found in older adults is the standard description.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "subject replaced: Hebrew revival joined the saturated language-revival theme (Manx, myaamia, Wampanoag, Chickasaw, Kristang items live) and is a classroom-famous case. New pair: the reminiscence bump, self-image account (Rathbone, Moulin, Conway 2008) vs cultural life scripts (Berntsen and Rubin 2004), both abstracts fetched from PubMed. Grepped and claimed in claims.txt; key letter and template kept"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_solution.medium.w5b1_16",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIllegal logging is notoriously difficult to prevent in tropical forests. A single reserve may encompass thousands of hectares yet employ only a handful of rangers, and the dense vegetation that conceals loggers also muffles their chainsaws, so trees can be felled within a short walk of a ranger station without detection. By the time the damage is discovered during a subsequent patrol, the loggers have usually departed.\n\nText 2\n\nEngineer Topher White has developed a method for monitoring forests continuously. His organization, Rainforest Connection, reprograms secondhand cell phones to recognize the sounds of chainsaws and motors and powers them with solar panels adapted to the dim light beneath the forest canopy. Each device can detect sounds up to a kilometer away, and when it registers a chainsaw, it immediately transmits an alert to rangers.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the problem presented in Text 1?",
+      "options": [
+        "By recommending that reserves hire more rangers to patrol on foot",
+        "By suggesting that loggers be identified from recordings made after trees are cut",
+        "By supplying additional reasons that illegal logging is difficult to detect",
+        "By describing a way that rangers could learn of illegal logging while it is still happening"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 explains that loggers go unnoticed because few rangers cover large reserves and the forest “muffles their chainsaws,” so the damage is discovered only later. Text 2 describes devices for “monitoring forests continuously” that, on detecting a chainsaw, “immediately” transmit an alert to rangers. The author of Text 2 would therefore offer this as a way for rangers to learn of logging as it happens.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 offers listening devices, not more patrols."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The devices send alerts while chainsaws are running; Text 2 says nothing about identifying loggers from recordings afterward."
+        },
+        "C": {
+          "recipe": "D9 generic move",
+          "why_wrong": "Text 2 presents a response to the problem, not further difficulties."
+        }
+      },
+      "models": [
+        "2.11"
+      ],
+      "word_count": 132,
+      "sources": [
+        {
+          "what": "IEEE Spectrum profile of Topher White and Rainforest Connection: reprogrammed used cellphones listen for chainsaws and motors, solar panels coping with diminished light under the canopy, alerts to rangers, detection up to a kilometer (about 300 hectares per phone); idea from an ape sanctuary in Indonesian Borneo, 2011",
+          "url": "https://spectrum.ieee.org/topher-white-repurposing-cellphones-to-defend-the-rain-forest"
+        }
+      ],
+      "notes": "Area: social science and technology (conservation enforcement). Text 1’s detail of logging within a short walk of a ranger station follows White’s account of his Borneo visit, stated generally. Options are short, as in the 2.11 model.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.easy.w5b1_17",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "easy",
+      "passage": "Text 1\n\nMore than 400 carved stone balls have been discovered in Scotland, nearly all of them in the northeast, in what is now Aberdeenshire. Created as long as 5,000 years ago, most are about seven centimeters across and covered with rounded knobs, and some are decorated with spirals and other patterns. Because carving them required considerable skill, some archaeologists believe they were prized possessions that displayed their owners’ status.\n\nText 2\n\nSome researchers have proposed a practical purpose for carved stone balls: transporting large stones. The balls are remarkably uniform in size, and they are most common in the same part of northeastern Scotland as the region’s numerous stone circles. Placed beneath wooden beams, a set of such balls could have functioned like ball bearings, enabling people to roll massive stones into position.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Carved stone balls have been found mostly in one part of Scotland.",
+        "Carved stone balls were used to move the stones of Scotland’s stone circles.",
+        "The patterns carved on the stone balls show which family owned each one.",
+        "Carved stone balls were made long after Scotland’s stone circles were built."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about what the balls were for, but both place them in the same region. Text 1 says that “nearly all of them” were found “in the northeast,” and Text 2 says the balls are “most common in the same part of northeastern Scotland as the region’s numerous stone circles.”",
+      "distractors": {
+        "B": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This is the proposal in Text 2; the author of Text 1 thinks the balls were prized objects that showed status."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says the patterns identify owners or families."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares when the balls were made with when the stone circles were built."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.12"
+      ],
+      "word_count": 130,
+      "sources": [
+        {
+          "what": "Wikipedia, Carved stone balls: Late Neolithic, up to 5,200 years old; over 425 recorded, nearly all in north-east Scotland, mostly Aberdeenshire; fairly uniform size around 7 cm with 3 to 160 knobs; theories include ceremonial and prestige objects and use like ball bearings for moving megaliths, based on a correlation with stone circles",
+          "url": "https://en.wikipedia.org/wiki/Carved_stone_balls"
+        }
+      ],
+      "notes": "Area: history (archaeology). Both purposes are among the theories the source lists; neither is attributed to a named person.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_refute_data.easy.w5b1_18",
+      "template": "S1_refute_data",
+      "subtype": "Response prediction",
+      "tier": "easy",
+      "passage": "Text 1\n\nMerit Ptah is widely described as the earliest woman physician known by name. According to numerous popular histories and websites, she served as chief physician at the court of an Egyptian king around 2700 BCE, a title her son supposedly recorded on her tomb. Her story has inspired many women entering medicine, and a crater on the planet Venus has been named in her honor.\n\nText 2\n\nHistorian Jakub Kwiecinski traced the story of Merit Ptah to a history of women in medicine published in the 1930s by the physician Kate Campbell Hurd-Mead. Merit Ptah is not mentioned in any ancient Egyptian source. Kwiecinski concluded that Hurd-Mead had misinterpreted a report about a different, genuine ancient Egyptian healer, and that subsequent writers repeated her mistake until it circulated widely.",
+      "stem": "Based on the texts, how would Kwiecinski (Text 2) most likely respond to the account of Merit Ptah presented in Text 1?",
+      "options": [
+        "Merit Ptah worked as a healer but was never given the title of chief physician.",
+        "Women in ancient Egypt were not allowed to work as healers.",
+        "The account of Merit Ptah’s career is not supported by evidence from ancient Egypt.",
+        "The crater on Venus should be renamed in honor of Kate Campbell Hurd-Mead."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 repeats the popular account that Merit Ptah was a royal “chief physician” around 2700 BCE. Kwiecinski found that “Merit Ptah is not mentioned in any ancient Egyptian source” and that the story came from Hurd-Mead’s misreading. He would therefore say that the account is not supported by ancient evidence.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side (keeps part of the myth)",
+          "why_wrong": "Kwiecinski finds no ancient evidence for Merit Ptah at all, so he would not grant that she worked as a healer."
+        },
+        "B": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 says Hurd-Mead misinterpreted a report about “a different, genuine ancient Egyptian healer,” which implies that there were real women healers."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses renaming the crater."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.3"
+      ],
+      "word_count": 127,
+      "sources": [
+        {
+          "what": "Kwiecinski 2020, Journal of the History of Medicine and Allied Sciences 75: 83: Merit Ptah, widely described as the first woman physician, came into being in the 1930s when Kate Campbell Hurd-Mead misinterpreted a report about an authentic ancient Egyptian healer; the error spread through popular histories and the Internet",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31755919/"
+        }
+      ],
+      "notes": "Area: history (history of medicine). The Venus crater and the tomb-inscription story come from the popular account (Wikipedia, Merit-Ptah). The real healer Hurd-Mead described was probably Peseshet; not named, to keep the item easy.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S3_difference.easy.w5b1_19",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "easy",
+      "passage": "Text 1\n\nIn 1917, French composer Erik Satie coined the term “furniture music” for brief compositions intended to be repeated in the background, like wallpaper, while people conversed. In 1920, a set was performed during the intermissions of a comedy at a Paris art gallery, the only documented public performance of furniture music during Satie’s lifetime. The pieces were a playful joke by a composer who enjoyed teasing audiences, and they deserve little attention.\n\nText 2\n\nAfter Satie’s death in 1925, his furniture music was largely forgotten, and the scores were not fully published until decades later. Yet the concept behind it, music intended not to be listened to attentively but to shape the atmosphere of a room, was embraced by later composers such as John Cage. Today it is often described as a forerunner of the background and ambient music that surrounds us.",
+      "stem": "Which choice best describes a difference in how the author of Text 1 and the author of Text 2 view Satie’s furniture music?",
+      "options": [
+        "The author of Text 1 thinks it was performed often in Satie’s lifetime, whereas the author of Text 2 thinks it was performed only once.",
+        "The author of Text 1 considers furniture music unimportant, whereas the author of Text 2 sees it as an idea that went on to influence much later music.",
+        "The author of Text 1 focuses on how its scores were published, whereas the author of Text 2 focuses on its first performance.",
+        "The author of Text 1 believes that Satie wanted audiences to listen closely to it, whereas the author of Text 2 believes that he did not."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 1 calls the pieces “a playful joke” that “deserve little attention.” The author of Text 2 says the idea behind them “was embraced by later composers such as John Cage” and is “often described as a forerunner of the background and ambient music” of today. So Text 1 dismisses furniture music, while Text 2 treats it as influential.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1 says the 1920 concert was “the only documented public performance” in Satie’s lifetime, and Text 2 does not discuss how often the music was played."
+        },
+        "C": {
+          "recipe": "D8 wrong target (swapped details)",
+          "why_wrong": "It is Text 2 that mentions the scores’ publication and Text 1 that describes the 1920 performance."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Both texts describe furniture music as background music not meant for close listening; neither says Satie wanted audiences to listen closely."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.14"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "Wikipedia, Furniture music: term coined by Satie in 1917; second set premiered in 1920 as intermission music to a comedy by Max Jacob at the Galerie Barbazanges, the only documented public performance in Satie’s lifetime; scores hidden for decades, sets 1 and 3 first fully published in the early 1970s; revival largely due to John Cage; seen as a forerunner of minimalist and background music",
+          "url": "https://en.wikipedia.org/wiki/Furniture_music"
+        }
+      ],
+      "notes": "Area: arts (music). Both evaluations are the authors’ own. Satie died in 1925 (standard). The wallpaper comparison is a common description of the idea, not a quotation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w5b2_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nAntibiotic resistance usually comes at a cost to bacteria: genes that protect them from a drug can slow their reproduction when the drug is absent. Many researchers have therefore regarded resistance as reversible, at least in principle. <u>If physicians sharply curtail prescriptions of a particular antibiotic, susceptible strains should gradually outcompete resistant ones, and the drug should regain its effectiveness.</u>\n\nText 2\n\nResistance often does burden bacteria, and restricting prescriptions is a reasonable response. But after a national restriction in the United Kingdom, annual sulfonamide prescriptions fell from over three million in 1991 to fewer than 80,000 in 1999, and when Vivienne Enne and colleagues tested E. coli from a London hospital, they found that resistance to sulfonamides had not declined. The genes for it were often carried alongside genes that protect bacteria against other drugs.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By accepting that sulfonamide prescriptions declined sharply in the United Kingdom but arguing that resistant bacteria grow faster than susceptible ones even without the drug",
+        "By disputing that resistance genes slow the growth of bacteria and observing that resistance to sulfonamides remained common after prescriptions fell",
+        "By granting that resistance can put bacteria at a disadvantage but cautioning that using a drug far less does not reliably restore its power against them",
+        "By endorsing the reasoning behind limiting prescriptions but suggesting that samples from a single London hospital may not reflect bacteria elsewhere"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that if physicians “sharply curtail prescriptions” of an antibiotic, susceptible strains “should gradually outcompete resistant ones” and the drug “should regain its effectiveness.” The author of Text 2 grants that resistance “often does burden bacteria,” but reports that UK sulfonamide prescriptions “fell from over three million in 1991 to fewer than 80,000 in 1999” while resistance “had not declined,” since the genes for it were “carried alongside genes that protect bacteria against other drugs.” So the author would accept the cost of resistance while denying that cutting use reliably brings a drug back.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (true first part, invented second part)",
+          "why_wrong": "Prescriptions did fall, but Text 2 never says resistant bacteria outgrow susceptible ones; it grants that resistance “often does burden bacteria.”"
+        },
+        "B": {
+          "recipe": "D2 denial where the author concedes",
+          "why_wrong": "The second half matches Text 2, but the author agrees that resistance “often does burden bacteria,” so the author would not dispute that resistance genes slow growth."
+        },
+        "D": {
+          "recipe": "D7 half right (right concession, wrong rebuttal: a sampling caveat Text 2 never raises)",
+          "why_wrong": "Text 2 calls restricting prescriptions “a reasonable response,” but its objection rests on linked resistance genes, not on doubts about where the samples came from."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.13"
+      ],
+      "word_count": 138,
+      "sources": [
+        {
+          "what": "Enne, Livermore, Stephens, Hall 2001, Lancet 357: 1325: UK sulphonamide prescriptions fell from 3,208,000 a year (1991) to 77,000 (1999), yet resistance in E. coli at the Royal London Hospital stayed high (46.0% vs 39.7%); sul genes on plasmids linked to other resistance determinants",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/11343738/"
+        }
+      ],
+      "notes": "Area: natural science (microbiology, medicine). Text 1’s reasoning is unattributed; the fitness cost of resistance is the general premise Enne’s background states (whether a reduction in use can reverse resistance “is less clear”). “Same pieces of DNA” simplifies plasmid linkage. The rebuttal needs the prescription drop plus the unchanged resistance.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Concede-rebut with two-part options: A and D keep a true concession (the prescription drop, the reasonableness of restriction) and fail in the rebuttal, B rebuts the right fact but denies what Text 2 grants. The key needs the prescription drop plus unchanged resistance and is paraphrased (“does not reliably restore its power”)."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w5b2_02",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nThe History of Mary Prince (1831), the first published account of an enslaved Black woman’s life in Britain, reached readers only through intermediaries. Prince, who was illiterate, dictated her story in London to Susanna Strickland; Thomas Pringle, secretary of the Anti-Slavery Society, then edited and published it to advance the abolitionist campaign. <u>The narrative should therefore be considered a record of how abolitionists wished an enslaved woman to sound, not of Prince’s own voice.</u>\n\nText 2\n\nThe editorial shaping of The History of Mary Prince is undeniable: Pringle edited and annotated the account for a British readership he hoped to persuade. Nevertheless, passages such as Prince’s insistence that “I have been a slave myself—I know what slaves feel” possess a directness distinct from the more elaborate prose of the period, and Pringle himself remarked that such forceful expressions were reproduced exactly as she uttered them.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By acknowledging that the narrative was shaped by others to serve a political cause but contending that parts of it likely preserve Prince’s own manner of speaking",
+        "By agreeing that Pringle prepared the narrative for a British audience but arguing that his editing made Prince’s account more persuasive than she could have made it",
+        "By conceding that Prince’s own words survive in parts of the narrative but arguing that Pringle’s notes show that he altered most of them",
+        "By rejecting the view that the narrative was shaped to advance the antislavery campaign but noting that Pringle’s comments differ in style from Prince’s words"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says the narrative is a record of how abolitionists “wished an enslaved woman to sound, not of Prince’s own voice.” The author of Text 2 grants that the account was shaped, since Pringle “edited and annotated the account for a British readership he hoped to persuade,” but points to passages with “a directness distinct from the more elaborate prose of the period” and to Pringle’s remark that such expressions “were reproduced exactly as she uttered them.” So the author accepts the editing but holds that some of Prince’s own voice survives.",
+      "distractors": {
+        "B": {
+          "recipe": "D7 half right (right concession, invented rebuttal)",
+          "why_wrong": "Text 2 says nothing about Pringle’s editing improving the account; it argues that Prince’s own directness comes through despite the editing."
+        },
+        "C": {
+          "recipe": "D7 recombined halves (key’s rebuttal used as the concession, contradicted rebuttal)",
+          "why_wrong": "Pringle’s remark in Text 2 says that forceful expressions “were reproduced exactly as she uttered them,” the opposite of showing that he altered most of her words."
+        },
+        "D": {
+          "recipe": "D2 denial where the author concedes",
+          "why_wrong": "The author of Text 2 accepts that Pringle edited the account “for a British readership he hoped to persuade,” so the author would not reject the view that it was shaped for the campaign."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.2"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "The History of Mary Prince (1831): first account of the life of a Black enslaved woman published in the UK; Prince dictated it to Susanna Strickland in Thomas Pringle’s household; Pringle, secretary of the Anti-Slavery Society, edited it; quotation “I have been a slave myself—I know what slaves feel”; Pringle’s footnote that strong expressions are “given verbatim as uttered by Mary Prince”; tone described as direct, unlike the more laboured style of the day",
+          "url": "https://en.wikipedia.org/wiki/The_History_of_Mary_Prince"
+        }
+      ],
+      "notes": "Area: literature (slave narrative, editing and authorship). Both evaluations are the authors’ own. The quotation is Prince’s, copied as the source gives it. The concession is the editing for a political audience; the rebuttal needs the passage’s directness plus Pringle’s own note.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Concede-rebut; B keeps the right concession with an invented rebuttal, C recombines the halves. The key needs the directness of the passage plus Pringle’s note, paraphrased as “manner of speaking.”"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w5b2_03",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nAlong the Pacific coast from northern California to Vancouver Island, buried marsh soils and stands of dead trees in tidal mud indicate that the land abruptly subsided during an enormous earthquake on the Cascadia subduction zone several centuries ago. <u>Determining precisely when that earthquake occurred has proved difficult, however, because the region lacks written records from the period and radiocarbon dating of buried vegetation is accurate only to within several decades.</u>\n\nText 2\n\nSeismologist Kenji Satake and colleagues examined historical documents from communities along Japan’s Pacific coast. These records describe a tsunami that inundated fields and dwellings in January 1700, a wave unaccompanied by any earthquake felt in Japan. By modeling the wave’s transpacific travel, the researchers concluded that it originated in a magnitude 9 Cascadia earthquake on the evening of January 26, 1700.",
+      "stem": "Based on the texts, how would Satake and colleagues (Text 2) most likely respond to the underlined portion of Text 1?",
+      "options": [
+        "They would argue that the dead trees along the Cascadia coast were killed by the tsunami rather than by the sinking of the land.",
+        "They would contend that radiocarbon dates from the Cascadia coast become reliable once they are checked against tsunamis recorded in Japan.",
+        "They would suggest that the records from Japan confirm that the Cascadia coast subsided but cannot show when the subsidence took place.",
+        "They would point out that evidence preserved across the ocean makes it possible to date the event more precisely than the region’s own record allows."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined portion says that dating the Cascadia earthquake is hard because the region “lacks written records from the period” and radiocarbon dating “is accurate only to within several decades.” Satake’s team used “historical documents” from Japan describing a tsunami “unaccompanied by any earthquake felt in Japan” and, by modeling “the wave’s transpacific travel,” dated the earthquake to “the evening of January 26, 1700.” So they would say that records kept on the other side of the Pacific supply the precise date that local evidence cannot.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says the land “abruptly subsided” during the earthquake; Text 2 says nothing about the tsunami killing the trees in Cascadia."
+        },
+        "B": {
+          "recipe": "D6 right idea, wrong mechanism",
+          "why_wrong": "Text 2 dates the earthquake from the Japanese records and a model of the wave, not by making radiocarbon dates reliable."
+        },
+        "C": {
+          "recipe": "D7 half right (plausible link, wrong conclusion)",
+          "why_wrong": "The Japanese records describe a tsunami, not the subsidence itself, and the team used them to date the earthquake precisely, to “the evening of January 26, 1700.”"
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7"
+      ],
+      "word_count": 136,
+      "sources": [
+        {
+          "what": "1700 Cascadia earthquake: timing inferred from Japanese records of a tsunami with no local earthquake (the orphan tsunami), Satake et al. 1996 Nature; about 9 pm Pacific time on January 26, 1700; ghost forests of red cedars with last rings from 1699; Atwater et al. 2005 USGS Professional Paper 1707",
+          "url": "https://en.wikipedia.org/wiki/1700_Cascadia_earthquake"
+        }
+      ],
+      "notes": "Area: natural science (earth science, with historical records). The radiocarbon limit is simplified to “within several decades.” Magnitude 9 and the evening of January 26, 1700 are Satake’s published estimate.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Solution mapping (3.6, 3.7). B (radiocarbon made reliable by the Japanese records) is a close wrong mechanism and C a near-miss reading of what the records show; the key is phrased one level up (“evidence preserved across the ocean”)."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_joint_inference.hard.w5b2_04",
+      "template": "S2_joint_inference",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nKoalas subsist almost exclusively on eucalyptus foliage, which is fibrous and laden with defensive chemicals, and they depend on gut microbes to digest it. Before a juvenile koala, or joey, begins eating leaves, it consumes pap, a soft, microbe-rich form of feces produced by its mother. In a study of captive koalas published in 2022, researchers determined that each joey’s gut microbiome came to resemble its own mother’s more closely than those of other adults.\n\nText 2\n\nMany wild koalas reject eucalyptus species that other individuals readily consume, even when facing starvation. A team led by Michaela Blyton determined that wild koalas feeding primarily on manna gum harbored gut microbiomes distinct from those of koalas feeding primarily on messmate, a less preferred species. After manna gum eaters received capsules of feces from messmate eaters, the more their microbiomes shifted toward those of messmate eaters, the more messmate they subsequently consumed.",
+      "stem": "Based on the texts, if the authors of Text 1 and Text 2 were aware of the findings of both studies, they would most likely agree with which statement?",
+      "options": [
+        "Pap contains a greater number of microbes than the capsules of feces that Blyton’s team gave to the koalas feeding on manna gum did.",
+        "A joey whose mother feeds mainly on messmate is probably better equipped to eat messmate than a joey whose mother feeds mainly on manna gum.",
+        "Because a koala’s gut microbes are inherited from its mother, changing an adult koala’s microbes is unlikely to affect which eucalyptus species it eats.",
+        "Messmate leaves probably contain more of the defensive chemicals found in eucalyptus than manna gum leaves do."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reports that joeys consume their mother’s pap and that each joey’s gut microbiome “came to resemble its own mother’s.” Text 2 reports that manna gum eaters “harbored gut microbiomes distinct from those of koalas feeding primarily on messmate” and that the more their microbiomes shifted toward those of messmate eaters, “the more messmate they subsequently consumed.” Together, the findings suggest that a joey inherits microbes suited to its mother’s diet, so a joey of a messmate eater is likely better prepared to eat messmate.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail (comparison neither text makes)",
+          "why_wrong": "Text 1 calls pap “microbe-rich,” but neither text measures the microbes in the capsules, so no comparison can be drawn."
+        },
+        "C": {
+          "recipe": "D7 half right (true Text 1 premise, conclusion Text 2 contradicts)",
+          "why_wrong": "Text 1 does show that a joey’s microbiome comes to resemble its mother’s, but Text 2 shows that an adult’s microbiome can be shifted and that “the more their microbiomes shifted toward those of messmate eaters, the more messmate they subsequently consumed.”"
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 calls messmate “a less preferred species,” but neither text compares the chemical content of the two species’ leaves."
+        }
+      },
+      "models": [
+        "3.4"
+      ],
+      "word_count": 152,
+      "sources": [
+        {
+          "what": "Blyton, Soo, Hugenholtz, Moore 2022 (Epub 2021), Environmental Microbiology 24: 475: joeys inoculated by feeding on maternal faeces (pap), which has higher microbial density; captive joeys’ microbiomes more similar to their mothers’ than to other koalas’",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/34863030/"
+        },
+        {
+          "what": "Blyton et al. 2019, Animal Microbiome 1: 6: microbiomes of wild koalas feeding on manna gum distinct from those feeding on messmate; faecal inoculations from messmate eaters; the greater the microbiome change, the more messmate consumed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33499955/"
+        }
+      ],
+      "notes": "Area: natural science (animal physiology, microbiology). Both studies share a lead author (Blyton); Text 1 leaves its team unnamed, and the stem asks about the two texts’ authors, in the 3.4 “aware of the findings of both” form. The key needs both texts: maternal inheritance of microbes (Text 1) and microbes linked to which species a koala eats (Text 2); neither states the joey inference.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "replaced C (joeys raised apart refuse every species, a one-fact overstatement) with a half-right joint inference: true Text 1 premise, conclusion contradicted by Text 2’s inoculation result; re-solved cold: B"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Joint inference (3.4 form): the key is in neither text alone. A and D are cross-text comparisons neither study makes (D tempts by joining “defensive chemicals” to “less preferred”), new C needs Text 2 to reject."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S3_difference.hard.w5b2_05",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nHenry Rowe Schoolcraft’s Algic Researches (1839), a collection of Ojibwe narratives compiled while he served as a federal Indian agent in northern Michigan, is valuable chiefly as a record of traditions that might otherwise have vanished. As a record, however, it is unreliable: Schoolcraft adapted the narratives into the polished literary English his audience expected, so the volume preserves his versions rather than the stories as their tellers recounted them.\n\nText 2\n\nAlgic Researches achieved renown as a principal source for Henry Wadsworth Longfellow’s The Song of Hiawatha, but the volume misrepresents its own origins. Many of its stories were collected, translated, and occasionally composed by Schoolcraft’s wife, Jane Johnston Schoolcraft, an Ojibwe writer whose family supplied much of his knowledge of Ojibwe culture. Nevertheless, the stories appeared under his name alone, without acknowledgment of her contributions.",
+      "stem": "Which choice best describes a difference in how the authors of Text 1 and Text 2 view Henry Rowe Schoolcraft’s Algic Researches?",
+      "options": [
+        "The author of Text 1 values the book mainly for preserving Ojibwe stories, whereas the author of Text 2 values it mainly for its influence on a celebrated poem.",
+        "The author of Text 1 regards the book as an unreliable record of Ojibwe stories, whereas the author of Text 2 regards it as reliable because Jane Johnston Schoolcraft collected many of them.",
+        "The author of Text 1 praises Schoolcraft for making Ojibwe stories accessible to a wide audience, whereas the author of Text 2 criticizes him for relying too heavily on one family’s knowledge.",
+        "The author of Text 1 faults the book for altering the stories it presents, whereas the author of Text 2 faults it for concealing who collected and wrote many of them."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 1 calls the book “unreliable” as a record because Schoolcraft “adapted the narratives into the polished literary English his audience expected,” so it preserves “his versions rather than the stories as their tellers recounted them.” The author of Text 2 objects instead that the volume “misrepresents its own origins”: many stories “were collected, translated, and occasionally composed” by Jane Johnston Schoolcraft, yet they “appeared under his name alone, without acknowledgment of her contributions.” One author faults how the stories were changed; the other faults how their sources were credited.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (right Text 1 half, wrong axis for Text 2)",
+          "why_wrong": "Text 1 does value the book as a record, but Text 2 mentions Longfellow only to note the book’s fame; its point is that the book fails to credit Jane Johnston Schoolcraft."
+        },
+        "B": {
+          "recipe": "D7 half right (right Text 1 half, invented Text 2 half)",
+          "why_wrong": "Text 1 does call the book unreliable, but Text 2 never says it is reliable; it says the volume “misrepresents its own origins.”"
+        },
+        "C": {
+          "recipe": "D3 twisted details on both sides",
+          "why_wrong": "Text 1 faults the “polished literary English” rather than praising it, and Text 2 mentions the family’s knowledge only to show whose work went uncredited, not to criticize Schoolcraft for using it."
+        }
+      },
+      "models": [
+        "3.10"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Robert Dale Parker (University of Illinois, 2007): Jane Johnston Schoolcraft collected and wrote many stories that her husband published in adapted, unattributed versions in Algic Researches, a key source for Longfellow’s Hiawatha; Henry’s editing obscured the contributions of Jane and other Indian people",
+          "url": "https://las.illinois.edu/news/2007-05-01/shores-gitche-gumee"
+        },
+        {
+          "what": "Henry Rowe Schoolcraft: Algic Researches (2 vols., 1839), Native stories many of which his wife Jane Johnston Schoolcraft told him or translated for him; Indian agent at Sault Ste. Marie",
+          "url": "https://en.wikipedia.org/wiki/Henry_Rowe_Schoolcraft"
+        }
+      ],
+      "notes": "Area: literature (literary history, authorship). Both evaluations are the authors’ own; Text 1’s “adapted” follows Parker’s description of the published versions. Axis: what each author holds is wrong with the book (the stories’ form versus their credit).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Difference on one axis (3.10): A and B get the Text 1 half right and miss on Text 2, C twists details on both sides; the student must see that both authors fault the book but for different things."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_alt_explanation.hard.w5b2_06",
+      "template": "S1_alt_explanation",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nDogs, horses, and goats faced with food sealed in a container often look back and forth between it and a nearby person, behavior commonly interpreted as an attempt to communicate and thought to have emerged through domestication. In 2020, Alan McElligott and colleagues reported that 10 of 11 captive kangaroos given an unopenable box of food gazed at the experimenter, and 9 alternated their gaze between box and person. The researchers suggest that kangaroos, though never domesticated, may likewise direct communication toward humans.\n\nText 2\n\nAn animal glancing from a stuck food container to a nearby person invites an obvious reading: a request for help. Yet captive animals fed by people throughout their lives may simply have learned to orient toward a person whenever food is out of reach, much as they might glance toward the spot where food usually appears, without any intention of signaling.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the researchers’ interpretation in Text 1 of the kangaroos’ behavior?",
+      "options": [
+        "That behavior may reflect a habit formed through the kangaroos’ past experience with people rather than an effort to communicate with the experimenter.",
+        "That behavior likely shows that the kangaroos expected the experimenter to open the box, since a person was responsible for placing the food inside it.",
+        "That behavior might have occurred because the kangaroos were wary of an unfamiliar person and watched the experimenter for signs of danger.",
+        "That behavior is likely a request for help, though one the kangaroos learned from people rather than inherited through domestication."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers in Text 1 suggest that kangaroos “may likewise direct communication toward humans.” The author of Text 2 grants that such a glance “invites an obvious reading: a request for help” but notes that captive animals “fed by people throughout their lives may simply have learned to orient toward a person whenever food is out of reach,” “without any intention of signaling.” So the author would say the gazing might be explained by learned habit rather than by an attempt to communicate.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 wrong side (supports the intent Text 2 doubts)",
+          "why_wrong": "An expectation that the person would open the box is the kind of intent Text 2 questions; the author says the glance may come “without any intention of signaling.”"
+        },
+        "C": {
+          "recipe": "D1 unaddressed alternative (hedged like the key)",
+          "why_wrong": "Text 2 offers an alternative explanation, but it rests on rewards from people, not on fear of a stranger, which neither text mentions."
+        },
+        "D": {
+          "recipe": "D7 half right (learning kept, communication kept too)",
+          "why_wrong": "Text 2 does point to learning from people, but it says the learned glance may come “without any intention of signaling,” so it would not call the behavior a request for help."
+        }
+      },
+      "models": [
+        "3.12"
+      ],
+      "word_count": 148,
+      "sources": [
+        {
+          "what": "McElligott, O’Keeffe, Green 2020, Biology Letters 16: 20200607: 10 of 11 kangaroos gazed at the experimenter during an unsolvable problem task and 9 showed gaze alternations; such gazing is often interpreted as referential intentional communication; challenges the notion that it results from domestication; subjects were captive, habituated kangaroos",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33321066/"
+        }
+      ],
+      "notes": "Area: natural science (animal cognition). Text 2 is the author’s own caution; the paper itself notes that learning through positive interactions with humans may matter. The key and distractor C are both hedged so that hedging is not the tell.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Alternative explanation (3.12): D keeps learning but also keeps the request for help, B and C supply other intents or motives; key hedged like C so hedging is not the tell."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S4_relate.hard.w5b2_07",
+      "template": "S4_relate",
+      "subtype": "Relationship",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nA nearly complete skeleton of Thescelosaurus, a small plant-eating dinosaur nicknamed Willo, was recovered in South Dakota with an iron-cemented mass lodged in its chest. In 2000, after examining the mass with computed tomography (CT) scans, Paul Fisher and colleagues interpreted it as a fossilized four-chambered heart with a single aorta—an arrangement found today only in birds and mammals, both of which are warm-blooded. The finding, they proposed, supported the idea that some dinosaurs had elevated metabolic rates.\n\nText 2\n\nTimothy Cleland and colleagues reexamined the mass in 2011 using higher-resolution CT scans. The scans revealed the same three low-density regions seen earlier and none of the additional cavities that a heart would be expected to show. Microscopic examination of a fragment found a structure consistent with cemented sand grains, and chemical analyses detected no signal of biological origin.",
+      "stem": "Which choice best describes how Text 1 and Text 2 relate to each other?",
+      "options": [
+        "Text 1 presents an argument about dinosaur metabolism, whereas Text 2 accepts that the mass found in Willo is a heart but questions what that heart reveals about metabolism.",
+        "Text 1 describes an interpretation of a fossil structure and a broader conclusion drawn from it, whereas Text 2 reports analyses that undercut that interpretation.",
+        "Text 1 reports how researchers identified a structure inside a fossil, whereas Text 2 faults the earlier CT scans for missing the low-density regions within that structure.",
+        "Text 1 presents evidence that some dinosaurs were warm-blooded, whereas Text 2 presents evidence that Thescelosaurus was instead cold-blooded."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 describes how Fisher’s team “interpreted” the mass in Willo’s chest “as a fossilized four-chambered heart” and took the finding to support “the idea that some dinosaurs had elevated metabolic rates.” Text 2 reports that Cleland’s team found “none of the additional cavities that a heart would be expected to show,” a structure “consistent with cemented sand grains,” and “no signal of biological origin.” Text 2 therefore undercuts the interpretation on which Text 1’s broader conclusion rests.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (moves Text 2’s doubt from the identification to the implication)",
+          "why_wrong": "Text 2 does not accept that the mass is a heart; its findings suggest the mass is cemented sand with “no signal of biological origin.”"
+        },
+        "C": {
+          "recipe": "D3 twisted detail (recycles the scans)",
+          "why_wrong": "Text 2 says the newer scans “revealed the same three low-density regions seen earlier,” so it does not fault the earlier scans for missing them; it faults the reading of those regions as a heart."
+        },
+        "D": {
+          "recipe": "D7 half right (fair Text 1 half, overreaching Text 2 half)",
+          "why_wrong": "Text 1 does treat the finding as support for elevated metabolic rates, but Text 2 only undercuts the evidence for a heart; it draws no conclusion about how warm-blooded Thescelosaurus was."
+        }
+      },
+      "models": [
+        "3.11"
+      ],
+      "word_count": 141,
+      "sources": [
+        {
+          "what": "Cleland, Stoskopf, Schweitzer 2011, Naturwissenschaften 98: 203: reexamination of the iron-cemented thoracic structure in a Thescelosaurus hypothesized to be a four-chambered heart (linked to endothermy); higher-resolution CT showed the same three low-density areas and no additional ones; fragment consistent with cemented sand grains; no chemical signal of biological origin",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/21279321/"
+        },
+        {
+          "what": "Thescelosaurus specimen Willo (NCSM 15728), Hell Creek Formation, South Dakota; Fisher et al. 2000 heart interpretation and elevated metabolic rate; later reexaminations",
+          "url": "https://en.wikipedia.org/wiki/Thescelosaurus"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Text 1 holds a finding, its interpretation, and the broader conclusion; Text 2 undercuts the interpretation, so distractor A (doubt moved to the conclusion) is the close trap. The 2001 Rowe et al. critique is left out to keep one challenger.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "rebuilt C (Text 2 confirms the heart, killed by one word) as a twisted detail about the earlier scans and D (CT cannot show soft tissue, killed by Text 2’s own scans) as a half-right option that turns undercut evidence into evidence of cold blood; re-solved cold: B"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Relate (3.11, itself band 5): A moves Text 2’s doubt to the conclusion, new C needs the “same three low-density regions seen earlier” detail, new D tempts by treating weakened evidence as contrary evidence. Template has a band-5 model only, so a strong band 6 is the ceiling."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w5b2_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nOn land, many flowering plants depend on animals such as bees, birds, and bats to carry pollen from one flower to another. Seagrasses, the only flowering plants that live fully submerged in the ocean and form vast meadows in coastal waters, are generally described as a striking exception. <u>Because no pollinating animals work underwater, marine flowering plants have been thought to rely entirely on water currents to transport their pollen.</u>\n\nText 2\n\nBrigitta van Tussenbroek and colleagues studied turtle grass, a seagrass of shallow Caribbean waters whose male flowers open at night and release pollen embedded in a sticky mucilage. In aquarium tanks without any water flow, the researchers observed small crustaceans and worms visiting the flowers and carrying the pollen-filled mucilage to female flowers, where pollen tubes then formed on the stigmas, indicating that pollination had succeeded.",
+      "stem": "Based on the texts, how would van Tussenbroek and colleagues (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Turtle grass flowers open at night because ocean currents are usually weakest then.",
+        "Seagrasses kept in tanks without water flow are generally unable to form pollen tubes.",
+        "Animals can play a part in pollinating at least some of the flowering plants that live in the sea.",
+        "Water currents play no part in carrying the pollen of turtle grass from flower to flower."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says marine flowering plants “rely entirely on water currents to transport their pollen.” Van Tussenbroek’s team saw “small crustaceans and worms” carry “the pollen-filled mucilage to female flowers” of turtle grass in tanks “without any water flow,” after which “pollen tubes then formed on the stigmas.” This counterexample shows that animals can help pollinate at least one marine flowering plant.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 says the flowers open at night but gives no reason, and it says nothing about when currents are weakest."
+        },
+        "B": {
+          "recipe": "D2 reversal of the finding",
+          "why_wrong": "In the tanks without water flow, pollen tubes did form, “indicating that pollination had succeeded.”"
+        },
+        "D": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "The researchers removed water flow to test the animals’ role; Text 2 does not claim that currents never carry turtle grass pollen."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "van Tussenbroek, Villamil, Marquez-Guzman, Wong, Monroy-Velazquez, Solis-Weiss 2016, Nature Communications 7: 12980: animals thought not to be involved in pollination in the sea; Thalassia testudinum male flowers release pollen in mucilage at night; in the absence of water flow invertebrates carried mucilage with pollen to female stigmas; pollen tubes formed; mixed abiotic-biotic pollination",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/27680661/"
+        }
+      ],
+      "notes": "Area: natural science (marine botany). Text 1’s view is the one the paper describes as the standing assumption. Seagrasses are described as the only fully marine flowering plants, a simplification.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "“usually described” to “generally described” (register: keeps the medium long-word share at CB’s floor after the item 13 swap)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w5b2_09",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nRising temperatures and drier soils are projected to reduce yields of major grain crops by 2050. Many crop models predict, however, that these losses will be offset by increasing concentrations of atmospheric carbon dioxide, which plants use in photosynthesis. The models’ estimates of this fertilization effect derive largely from experiments, conducted mostly in the 1980s, in which crops were grown in greenhouses or closed chambers enriched with additional carbon dioxide.\n\nText 2\n\nFree-air concentration enrichment (FACE) experiments release carbon dioxide over crops growing in open fields, exposing them to ordinary wind, pests, and weather. Reviewing results from FACE trials of the major grain crops, plant biologist Stephen Long and colleagues found that elevated carbon dioxide increased yields by only about half as much as it had in the earlier enclosure studies.",
+      "stem": "Based on the texts, how would Long and colleagues (Text 2) most likely respond to the predictions of the crop models discussed in Text 1?",
+      "options": [
+        "By arguing that elevated carbon dioxide lowers grain yields when crops are grown in open fields",
+        "By recommending that future enclosure experiments expose crops to the wind, pests, and weather found in open fields",
+        "By pointing out that rising temperatures harm crops in open fields more than crops in greenhouses",
+        "By suggesting that extra carbon dioxide may do less to offset climate-related losses than the models assume"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The models in Text 1 predict that crop losses “will be offset” by rising carbon dioxide, using estimates from crops grown “in greenhouses or closed chambers.” Long’s team found that in open fields, elevated carbon dioxide raised yields “by only about half as much as it had in the earlier enclosure studies.” They would therefore suggest that the benefit is real but smaller than the models assume.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 reversal",
+          "why_wrong": "Text 2 says elevated carbon dioxide still “increased yields,” only by less than in enclosures."
+        },
+        "B": {
+          "recipe": "D9 generic research move",
+          "why_wrong": "Text 2 reviews trials already run in open fields; it makes no recommendation about future enclosure experiments."
+        },
+        "C": {
+          "recipe": "D8 wrong target",
+          "why_wrong": "Text 2 compares the effect of carbon dioxide in fields and enclosures, not the effect of rising temperatures."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.9"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Long, Ainsworth, Leakey, Nosberger, Ort 2006, Science 312: 1918: models project CO2 fertilization will offset temperature and soil-moisture losses by 2050; fertilization factors came from enclosure studies; in FACE trials of major grain crops, elevated CO2 enhanced yield about 50% less than in enclosure studies",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16809532/"
+        }
+      ],
+      "notes": "Area: natural science (agronomy, climate). Limit of degree: the effect is real but smaller. “Long and colleagues” is the paper’s author group.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w5b2_10",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nBefore a study appears in a medical journal, editors typically send the manuscript to independent experts for peer review. Because these reviewers scrutinize a study’s design, analysis, and conclusions, many readers regard publication in a peer-reviewed journal as assurance that any serious methodological flaws have been identified and corrected. As a result, doctors, reporters, and public officials often rely on peer review to decide which findings they can trust.\n\nText 2\n\nTo test how well peer review catches mistakes, Sara Schroter and colleagues sent more than 600 reviewers for the medical journal The BMJ a test manuscript into which they had deliberately inserted nine major methodological errors, such as biased randomization. On average, the reviewers identified only about 2.6 of the nine errors, and brief training improved their performance only slightly.",
+      "stem": "Based on the texts, how would Schroter and colleagues (Text 2) most likely respond to the view of peer review described in Text 1?",
+      "options": [
+        "By arguing that peer reviewers tend to reject flawed studies rather than help authors correct them",
+        "By suggesting that peer review may detect only a fraction of the serious flaws in a study",
+        "By recommending that journals replace peer review with brief training programs for their editors",
+        "By pointing out that biased randomization is the only major error that most reviewers fail to notice"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says many readers treat peer review as “assurance that any serious methodological flaws have been identified and corrected.” Schroter’s team found that reviewers given a manuscript with “nine major methodological errors” identified “only about 2.6 of the nine,” and that training helped “only slightly.” They would therefore suggest that peer review catches some serious flaws but far from all of them.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 reports how many errors reviewers found; it says nothing about whether reviewers reject studies or help authors."
+        },
+        "C": {
+          "recipe": "D3 twisted detail (training)",
+          "why_wrong": "Text 2 mentions training for reviewers, which helped “only slightly”; it does not propose replacing peer review or training editors."
+        },
+        "D": {
+          "recipe": "D3 twisted detail (example turned into the whole)",
+          "why_wrong": "Biased randomization is given as one example of the nine inserted errors; Text 2 does not say it was the only error reviewers missed."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.9"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Schroter, Black, Evans, Godlee, Osorio, Smith 2008, Journal of the Royal Society of Medicine 101: 507: 607 BMJ reviewers sent test papers with nine major and five minor methodological errors inserted; at baseline reviewers found an average of 2.58 of the nine major errors; training had only a slight impact; biased randomization one of the errors",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/18840867/"
+        }
+      ],
+      "notes": "Area: social science (research practice, science studies). Text 1’s view is general and unattributed. Limit of degree: peer review catches some flaws, not most.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "plainer wording (“To test how well”, “brief training”), no change in meaning"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.medium.w5b2_11",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nThe influenza pandemic of 1918–1919 killed tens of millions of people worldwide and was unusually deadly for young, healthy adults. Many accounts attribute this extraordinary toll to the virus itself. An exceptionally virulent strain, they argue, invaded the lungs so aggressively and provoked such a violent immune response that it killed many patients directly, often within days of their first symptoms.\n\nText 2\n\nA team at the US National Institutes of Health led by David Morens examined preserved lung tissue from 58 people who died during the pandemic and reviewed more than 8,000 autopsy reports published at the time. The tissue samples uniformly showed severe bacterial pneumonia, and the reports implicated common bacteria, which had invaded lungs already damaged by the virus, in most of the deaths, in an era before antibiotics could treat such infections.",
+      "stem": "Based on the texts, how would Morens and colleagues (Text 2) most likely respond to the accounts discussed in Text 1?",
+      "options": [
+        "By cautioning that the accounts overlook the part that bacterial infections played in most of the deaths",
+        "By arguing that the 1918 virus was too mild to damage the lungs of healthy young adults on its own",
+        "By pointing out that young adults were more likely than older people to have their lungs examined after death",
+        "By suggesting that the pandemic’s death toll has been overestimated because many autopsy reports were lost"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The accounts in Text 1 attribute the pandemic’s toll “to the virus itself,” which they say “killed many patients directly.” Morens’s team found that tissue samples “uniformly showed severe bacterial pneumonia” and that the reports implicated “common bacteria” in “most of the deaths.” The team would say the accounts leave out a second cause: bacteria that invaded lungs the virus had already damaged.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 overcorrection (denies the first cause)",
+          "why_wrong": "Text 2 says the bacteria invaded “lungs already damaged by the virus,” so the team does not claim the virus was harmless on its own."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says nothing about which age groups were examined after death; the young adults appear only in Text 1."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 questions the cause of the deaths, not their number, and it does not mention lost reports."
+        }
+      },
+      "models": [
+        "2.7",
+        "1.15"
+      ],
+      "word_count": 138,
+      "sources": [
+        {
+          "what": "Morens, Taubenberger, Fauci 2008, Journal of Infectious Diseases 198: 962: lung tissue sections from 58 autopsies and 109 published autopsy series covering 8,398 autopsies from the 1918–1919 pandemic; samples uniformly showed bacterial pneumonia; secondary bacterial pneumonia from common upper respiratory bacteria implicated in most deaths; era before antibiotics",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/18710327/"
+        }
+      ],
+      "notes": "Area: natural science and history (medicine, epidemiology). Text 1 is the general virus-centered account (unusual virulence, immune overreaction), unattributed. The team is named by its first author to keep the subject little-known.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w5b2_12",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn a 1983 essay, historian Eric Hobsbawm observed that many traditions that appear or claim to be old are actually quite recent in origin, and some were deliberately invented. Such traditions, he argued, tend to emerge when rapid social transformation erodes established customs. They typically seek to establish continuity with a historic past that a community regards as its own.\n\nText 2\n\nThe Welsh national costume—a tall black hat, a shawl, and a woolen skirt and apron—is now worn on Saint David’s Day as an emblem of Welsh heritage. Its components derive from the everyday clothing of rural Welsh women. However, the tall hat became fashionable only in the 1830s, and the ensemble was adopted as national dress in the late 1800s, a period of rapid industrialization, after such everyday clothing had largely disappeared.",
+      "stem": "Based on the texts, how would Hobsbawm (Text 1) most likely regard the Welsh national costume described in Text 2?",
+      "options": [
+        "As an invented tradition, because its elements were designed by artists who had never seen rural Welsh dress",
+        "As an authentic survival from the distant past, because rural Welsh women had worn its elements in daily life",
+        "As a tradition that is younger than it looks, because it became national dress only in the late 1800s",
+        "As an unusual case, because traditions that emerge during periods of rapid change seldom involve clothing"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Hobsbawm held that traditions that “appear or claim to be old are actually quite recent in origin” and tend to emerge “when rapid social transformation erodes established customs.” Text 2 says the costume, now “an emblem of Welsh heritage,” was “adopted as national dress in the late 1800s, a period of rapid industrialization, after such everyday clothing had largely disappeared.” Hobsbawm would see it as a tradition younger than it appears.",
+      "distractors": {
+        "A": {
+          "recipe": "D6 right label, wrong reason",
+          "why_wrong": "Text 2 says the costume’s elements “derive from the everyday clothing of rural Welsh women,” not from artists unfamiliar with that dress."
+        },
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Hobsbawm’s point is that such traditions are recent; Text 2 shows the outfit became national dress only in the late 1800s, with a hat fashionable only from the 1830s."
+        },
+        "D": {
+          "recipe": "D6 attitude with an invented reason",
+          "why_wrong": "Text 1 says nothing about clothing being rare in such traditions, and the costume’s history fits the frame rather than standing apart from it."
+        }
+      },
+      "models": [
+        "1.11",
+        "2.2"
+      ],
+      "word_count": 136,
+      "sources": [
+        {
+          "what": "Welsh national costume: worn by rural women; traditional dress largely out of common use by the mid-19th century; from the 1880s selected elements adopted as a National Costume, linked to Welsh nationalism and concern over industrialisation; Lady Llanover’s influence greatly exaggerated; Welsh hat appears in the 1830s",
+          "url": "https://en.wikipedia.org/wiki/Welsh_national_costume"
+        },
+        {
+          "what": "Hobsbawm and Ranger, eds., The Invention of Tradition (1983): traditions which appear or claim to be old are often quite recent in origin and sometimes invented",
+          "url": "https://en.wikipedia.org/wiki/Invented_tradition"
+        }
+      ],
+      "notes": "Area: history (Welsh cultural history). Text 1 speaks about Text 2. Hobsbawm’s point is paraphrased from his introduction to The Invention of Tradition; the rapid-transformation and continuity points are also from that introduction. Lady Llanover, named in the claim line, is left out because the source says her role was exaggerated. Reviewer: industrialization now dates the adoption rather than causing the clothing’s disappearance, as the source has it (adoption coincided with industrialisation seen as a threat).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "last sentence no longer says the everyday clothing disappeared amid industrialization (the source ties industrialization to the adoption, not to the disappearance); “elements” to “components”; explanation updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w5b2_13",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nEconomists have long struggled to determine how much residents value the services that local governments provide. In 1956, economist Charles Tiebout proposed a solution. Where a metropolitan area is divided into numerous municipalities, each offering its own combination of taxes and services, households choose among them as shoppers choose among stores. By relocating to the municipality whose mix best suits their preferences, residents reveal how much they value what it provides.\n\nText 2\n\nEconomist Sandra Black compared sale prices of houses on the boundaries between elementary school attendance zones within individual school districts. Houses on opposite sides of a boundary share a neighborhood and identical taxes, differing primarily in which school children attend. Black found that purchasers would pay about 2.5 percent more for a house assigned to a school whose test scores were 5 percent higher.",
+      "stem": "Based on the texts, what would the author of Text 1 most likely say about Black’s findings in Text 2?",
+      "options": [
+        "They show that houses located on attendance-zone boundaries tend to sell for less than houses located farther from them.",
+        "They suggest that municipalities with stronger schools must charge higher taxes than municipalities with weaker schools do.",
+        "They indicate that buyers cared more about a house’s neighborhood than about the school its children would attend.",
+        "They are consistent with the idea that where people choose to live reveals how much they value local services."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 1 presents Tiebout’s view that residents choose “the municipality whose mix best suits their preferences” and so “reveal how much they value what it provides.” Black compared houses that “share a neighborhood and identical taxes,” differing “primarily in which school children attend,” and found that purchasers “would pay about 2.5 percent more” for a house assigned to a school with higher test scores. The author would see this as buyers revealing, through where they choose to live, how much they value a local service: schooling.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail (recycles the boundaries)",
+          "why_wrong": "Black compared houses on opposite sides of each boundary with one another; Text 2 does not compare houses on boundaries with houses farther away."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on (borrows Text 1’s taxes)",
+          "why_wrong": "The houses Black compared paid “identical taxes,” and neither text says that municipalities with better schools must charge more."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Houses on either side of a boundary “share a neighborhood,” so the price difference points to the school, not the neighborhood."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Black 1999, Quarterly Journal of Economics 114(2): 577-599, “Do Better Schools Matter? Parental Valuation of Elementary Education”: houses on attendance district boundaries within school districts differ only by the elementary school attended, removing variation in neighborhoods, taxes and school spending; parents are willing to pay 2.5 percent more for a 5 percent increase in test scores",
+          "url": "https://ideas.repec.org/a/oup/qjecon/v114y1999i2p577-599..html"
+        },
+        {
+          "what": "Tiebout model: Charles Tiebout, “A Pure Theory of Local Expenditures” (1956); municipalities offer varying baskets of services at different tax rates, people move to the community that suits them, which addresses preference revelation",
+          "url": "https://en.wikipedia.org/wiki/Tiebout_model"
+        }
+      ],
+      "notes": "Area: social science (economics). Text 1 holds the general frame in the author’s voice (Tiebout’s 1956 model) and speaks about Text 2’s case, as in 2.2 and 2.6. Reviewer-written replacement for a Red Queen snail item (third snail subject in reach of the batch and a textbook frame). Where Black’s data came from is left out because the abstract does not say.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "subject replaced: the Red Queen snail item was the third snail subject near this batch (with item 16 and six live snail items) and rests on a textbook frame; new subject Tiebout sorting and Sandra Black’s attendance-zone house prices (social science), same template, models, stem form and key letter; claim withdrawn and new claim appended in claims.txt; reviewer-written, so every option was tested for a second defensible reading"
+        ],
+        "status": "fixed",
+        "note": "Original item blind-solved D, agreeing with its key; the replacement is reviewer-written and was checked option by option rather than blind-solved."
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w5b2_14",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nCambodian American families own most of California’s independent doughnut shops—perhaps 80 to 90 percent, by one filmmaker’s estimate—and that dominance can be traced largely to one entrepreneur. After fleeing the Khmer Rouge in 1975, Ted Ngoy trained at a doughnut chain and in 1977 purchased his own shop in La Habra. He subsequently acquired dozens more, leasing them to fellow refugees and sponsoring more than 100 families.\n\nText 2\n\nCrediting Ngoy alone overlooks why doughnut shops in particular suited refugee families. A shop required little capital, and its long overnight hours could be covered by parents, children, and cousins working in shifts. Families who prospered then brought relatives into the trade, so ownership spread from household to household through networks of kinship and friendship.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Ted Ngoy was chiefly responsible for the large number of Cambodian-owned doughnut shops in California.",
+        "Personal connections among Cambodian refugees helped doughnut shop ownership spread within their community.",
+        "Cambodian-owned doughnut shops succeeded mainly by charging lower prices than national doughnut chains did.",
+        "Most of the refugees who opened doughnut shops in California had already run similar businesses before leaving Cambodia."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 credits Ngoy, who leased shops “to fellow refugees” and sponsored “more than 100 families.” Text 2 rejects crediting Ngoy alone but says ownership “spread from household to household through networks of kinship and friendship.” The authors disagree about how much one man mattered, yet both describe ties among refugees as a way the business spread.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only (the conflict point)",
+          "why_wrong": "Text 1 makes this claim, but Text 2 objects that crediting Ngoy alone “overlooks why doughnut shops in particular suited refugee families.”"
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses prices or competition with chains."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says what work the refugees did before leaving Cambodia; Text 1 says Ngoy himself trained at a chain after arriving."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 126,
+      "sources": [
+        {
+          "what": "LAist 2020: filmmaker Alice Gu’s research suggests maybe 80 to 90 percent of California doughnut shops are owned by Cambodian Americans, mostly thanks to Ngoy; he leased shops to other Cambodian immigrants who ran them with their families; sponsored more than 100 families",
+          "url": "https://laist.com/news/food/donut-king-ted-ngoys-life-was-even-crazier-than-the-documentary-about-him-reveals"
+        },
+        {
+          "what": "Ted Ngoy: fled the Khmer Rouge in 1975; trained at Winchell’s; bought Christy’s Donuts in La Habra by 1977; leased shops to relatives and Cambodian refugees; sponsored more than 100 families",
+          "url": "https://en.wikipedia.org/wiki/Ted_Ngoy"
+        }
+      ],
+      "notes": "Area: social science (economic sociology, immigration). Text 2’s structural account is the author’s own argument. Shared premise: ties among refugees spread ownership (leasing and sponsorship in Text 1, kin networks in Text 2).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "“went on to acquire” to “subsequently acquired” (register floor)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_solution.medium.w5b2_15",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nSurveys are a fundamental tool for estimating how common a behavior is, but they perform poorly for sensitive behaviors such as tax evasion or academic cheating. Respondents who fear embarrassment or punishment frequently give the answer they consider socially acceptable rather than the truthful one. As a result, surveys tend to underestimate how often such behaviors occur, sometimes considerably.\n\nText 2\n\nIn 1965, statistician Stanley Warner proposed the randomized response technique. Each respondent privately uses a chance device, such as a die, to determine whether to answer a sensitive statement or its opposite, and the interviewer never learns which statement was answered. Because the probability of each statement is known in advance, researchers can still calculate the overall rate of the behavior across the group.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the problem described in Text 1?",
+      "options": [
+        "By presenting a way to estimate how common a behavior is without revealing what any one respondent has done",
+        "By suggesting that researchers study sensitive behaviors through direct observation instead of surveys",
+        "By arguing that respondents will answer sensitive questions honestly as long as they first roll a die",
+        "By recommending that surveys about sensitive behaviors promise to keep respondents’ names private"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says that on sensitive topics, respondents give “the answer they consider socially acceptable,” so surveys “tend to underestimate” such behaviors. In Warner’s technique, “the interviewer never learns which statement was answered,” yet researchers “can still calculate the overall rate of the behavior across the group.” The author of Text 2 would offer this method as a way around the problem.",
+      "distractors": {
+        "B": {
+          "recipe": "D9 generic research move",
+          "why_wrong": "Text 2 keeps the survey and changes how questions are answered; it does not propose observation instead."
+        },
+        "C": {
+          "recipe": "D3 twisted detail (mechanism misread)",
+          "why_wrong": "The die decides which statement a respondent answers; honesty follows because the interviewer cannot tell which statement was answered, not from rolling the die itself."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 protects respondents by hiding the meaning of each answer, not by promising to keep names off the record, which neither text mentions."
+        }
+      },
+      "models": [
+        "2.11"
+      ],
+      "word_count": 127,
+      "sources": [
+        {
+          "what": "Randomized response: Warner 1965, Journal of the American Statistical Association 60: 63, a survey technique for eliminating evasive answer bias; a randomizing device decides, unknown to the interviewer, whether the respondent answers the sensitive statement or its complement; the known probability lets the true proportion be estimated",
+          "url": "https://en.wikipedia.org/wiki/Randomized_response"
+        }
+      ],
+      "notes": "Area: social science (survey methods, statistics). Text 1’s problem is general and unattributed. The die example follows the source’s illustration.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_rival_hypothesis.medium.w5b2_16",
+      "template": "S1_rival_hypothesis",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn the margins of numerous Gothic manuscripts, armored knights are depicted battling snails, sometimes kneeling before them or fleeing in apparent terror. Some art historians interpret these whimsical scenes as satire aimed at the knightly class itself: a warrior who could be routed by the slowest of creatures, they suggest, was a fitting object of ridicule.\n\nText 2\n\nArt historian Lilian Randall cataloged about 70 snail combats in 29 manuscripts and found that most were produced between about 1290 and 1310, primarily in northern France, Flanders, and England. She proposed that the snail represented the Lombards, Italian merchants and moneylenders widely resented in northern Europe at the time. As support, she noted that a twelfth-century Latin poem had already linked a Lombard with a snail.",
+      "stem": "Based on the texts, how would Randall (Text 2) most likely respond to the interpretation presented in Text 1?",
+      "options": [
+        "By agreeing that the scenes ridicule knights but adding that the knights depicted in them represent Lombards",
+        "By pointing out that Lombard merchants commissioned most of the manuscripts that contain snail combats",
+        "By contending that it overlooks evidence associating the snail with a particular group of people",
+        "By insisting that the artists who painted the snail combats never intended them to be humorous"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reads the scenes as satire of knights routed “by the slowest of creatures.” Randall instead proposed that “the snail represented the Lombards,” a group “widely resented in northern Europe at the time,” and noted that a twelfth-century poem “had already linked a Lombard with a snail.” She would therefore argue that the interpretation in Text 1 does not account for evidence tying the snail to a particular group.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail (roles swapped)",
+          "why_wrong": "In Randall’s reading the snail, not the knight, stands for the Lombards."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 says where and when the manuscripts were made, not who commissioned them, and the Lombards it mentions were resented, not patrons."
+        },
+        "D": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Randall changes what the snail stands for; nothing in Text 2 suggests the scenes were not meant to mock anyone."
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 127,
+      "sources": [
+        {
+          "what": "Lilian Randall, “The Snail in Gothic Marginal Warfare,” Speculum 37 (1962): about 70 snail-and-knight scenes in 29 manuscripts, mostly about 1290–1310, northern French, Franco-Flemish and English; snail read as the Lombards, resented in northern Europe as foreigners, usurers and pawnbrokers; literary support from the pseudo-Ovidian De Lombardo et lumaca (late twelfth century); other readings include parody of armored knights",
+          "url": "https://differentvisions.org/i-have-the-high-ground/"
+        },
+        {
+          "what": "British Library Medieval Manuscripts blog, “Knight v Snail” (2013): Lilian Randall proposed that the snail was a symbol of the Lombards, vilified for usury and non-chivalrous conduct",
+          "url": "https://blogs.bl.uk/digitisedmanuscripts/2013/09/knight-v-snail.html"
+        }
+      ],
+      "notes": "Area: arts (art history, medieval manuscripts). Text 1 states one of the other readings in the literature (the armored-knight joke), unattributed. The poem is described only as linking a Lombard with a snail, since its plot was not checked.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "added the British Library blog as a second source: it states the premise in the passage’s words (the snail as a symbol of the Lombards), which the first source gives only as a reference to the Lombards; “roughly” to “about”, “chiefly” to “primarily”"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.easy.w5b2_17",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "easy",
+      "passage": "Text 1\n\nThe aloha shirt, a loose, short-sleeved garment printed with vivid designs, is frequently credited to Ellery Chun, a Honolulu merchant. Chun began selling such shirts at his clothing store in Waikiki in the early 1930s, and in 1937 he registered the name “Aloha Shirt” as a trademark, which he held for two decades. For these reasons, many popular accounts identify him as the shirt’s inventor.\n\nText 2\n\nCredit for the aloha shirt probably belongs to several people. Even before Chun’s trademark, Kōichirō Miyamoto’s Honolulu shop, Musa-Shiya, was producing shirts from colorful Japanese fabrics, and the name “aloha shirt” first appeared in print in a 1935 advertisement for Musa-Shiya. Local residents initially considered the designs too wild, but visitors to the islands embraced the bright patterns and contributed to the shirt’s growing popularity.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "The aloha shirt was first designed for tourists rather than for people living in Hawaii.",
+        "Ellery Chun was the first person to use the name “aloha shirt” in print.",
+        "The earliest aloha shirts were made from fabric that was printed in Honolulu.",
+        "Shirts of the kind now known as aloha shirts were already being sold in Honolulu by the 1930s."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says Chun “began selling such shirts” in Waikiki “in the early 1930s.” Text 2 says Musa-Shiya, a “Honolulu shop,” was “producing shirts from colorful Japanese fabrics” before Chun’s trademark and advertised them in 1935. Although the authors disagree about who deserves credit, both agree that the shirts were on sale in Honolulu by the 1930s.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says visitors “embraced the bright patterns,” not that the shirt was designed for them, and Text 1 does not mention visitors."
+        },
+        "B": {
+          "recipe": "D4 one text only, contradicted by the other",
+          "why_wrong": "Text 2 says the name “first appeared in print in a 1935 advertisement for Musa-Shiya,” two years before Chun’s trademark."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on, contradicted",
+          "why_wrong": "Text 2 says Musa-Shiya used “colorful Japanese fabrics,” and Text 1 says nothing about where the fabric was printed."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.6"
+      ],
+      "word_count": 134,
+      "sources": [
+        {
+          "what": "Aloha shirt: Musa-Shiya (Koichiro Miyamoto) made shirts from colorful Japanese prints in the 1920s or early 1930s; the term first appeared in print in a June 28, 1935 Musa-Shiya advertisement; Ellery Chun of King-Smith Clothiers in Waikiki sold the shirts from the early 1930s and trademarked “Aloha Shirt” in 1937; tourists embraced the bright designs",
+          "url": "https://en.wikipedia.org/wiki/Aloha_shirt"
+        }
+      ],
+      "notes": "Area: arts and history (fashion, Hawaii). Both texts state real accounts; Text 2’s “more than one person” is the author’s view. Shared premise: the shirts were sold in Honolulu by the 1930s.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.easy.w5b2_18",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "easy",
+      "passage": "Text 1\n\nThe didgeridoo, a wind instrument developed by Aboriginal peoples of northern Australia, is traditionally made from a eucalyptus branch hollowed out by termites. A player produces its deep, droning sound by vibrating the lips at one end. Many listeners assume that the instrument’s wide range of tones depends mainly on the tube itself: the length and width of the hollow, they suppose, determine the sound.\n\nText 2\n\nA team of Australian physicists recorded the sound of a didgeridoo while at the same time measuring the acoustics of the player’s mouth and throat. They found that the strongest components of the sound matched features of the player’s vocal tract, much as vowel sounds do in speech. Experienced players, the researchers concluded, use their own vocal tracts to shape the instrument’s tone.",
+      "stem": "Based on the texts, how would the researchers in Text 2 most likely respond to the assumption described in Text 1?",
+      "options": [
+        "By arguing that termites determine the length and width of each didgeridoo’s hollow",
+        "By noting that the player’s own body also helps determine the instrument’s tones",
+        "By claiming that experienced players prefer didgeridoos with narrow tubes",
+        "By suggesting that the player’s lips have little effect on the didgeridoo’s sound"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says many people assume the didgeridoo’s tones depend “mainly on the tube itself.” The researchers in Text 2 found that “the strongest components of the sound matched features of the player’s vocal tract” and concluded that experienced players “use their own vocal tracts to shape the instrument’s tone.” So they would say the tube is not the only thing that shapes the sound.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says termites hollow the branch, but Text 2 is about the player, not about how the hollow is formed."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says anything about which tubes players prefer."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1 says the sound is produced by “vibrating the lips,” and Text 2 adds the vocal tract; neither downplays the lips."
+        }
+      },
+      "models": [
+        "1.15"
+      ],
+      "word_count": 132,
+      "sources": [
+        {
+          "what": "Tarnopolsky, Fletcher, Hollenberg, Lange, Smith, Wolfe 2005, Nature 436: 39 (University of New South Wales): sound of the didgeridoo (yidaki) measured with the acoustic impedance of the player’s vocal tract; maxima in the sound spectrum associated with minima in vocal-tract impedance, similar to vowels; experienced players use the vocal tract to accentuate the instrument’s tonal variation",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16001056/"
+        }
+      ],
+      "notes": "Area: arts and science (music, acoustics). Text 1’s assumption is general and unattributed. “Vocal tract” is kept plain for the easy tier.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Text 2’s conclusion softened from players “reshaping their own vocal tracts” to players who “use their own vocal tracts to shape the instrument’s tone” (the paper says players use the glottis subconsciously); explanation updated"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}

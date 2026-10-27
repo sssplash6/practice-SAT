@@ -62,3 +62,17 @@ Finish with a reply under 10 lines: items written per tier, subjects you could n
 - **claims.txt is append-only** while writers run in parallel: never rewrite it or edit a line in place (sed -i, rewrite);
   withdraw a claim by appending a WITHDRAWN line.
 - **Hard FSS tense cells** stay easier than band 6 (CB has no tense item above band 5): do not plan them as hard.
+
+## Wave 4 lessons (2026-10-27, apply from wave 5)
+
+- **Fame:** reviewers replaced textbook-famous subjects (Braess's paradox, the Qingming scroll, the Terracotta Army). A hard
+  item on a subject students meet in class can be answered from background knowledge; pick little-known cases.
+- **Duplicates by concept, not just by name:** reviewers caught a tiny-mammal EMPH item cloning a live one (Kitti's bat
+  vs the Etruscan shrew), a fifth stilt-houses-over-water subject, a fossil-feather colour premise that is an official
+  Inferences item, and the Manyoshu written twice under two spellings. Grep the idea and its spelling variants.
+- **Words in Context register:** literary excerpts pull a tier's average register down, and writers then padded the
+  other passages to pass check_rw. Keep the literary share near CB's (about 5 of 28 medium) instead of padding.
+- **Saturated themes, add:** sign language (about 8 live items), stilt houses over water, stepwells, a language kept alive by
+  learners after its last native speaker (Livonian, Kaurna, myaamia, Yurok), organic residues found in ancient pottery (5 items) (pick others).
+- **Band 6 by plan:** hard cells on templates with no band-7 official item now come planned as band_target 6, and hard
+  FSS tense cells are planned as medium (make_plan.py).

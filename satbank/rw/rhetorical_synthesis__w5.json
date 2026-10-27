@@ -1,0 +1,2504 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": "w5",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)"
+      },
+      {
+        "code": "OVERVIEW",
+        "name": "Overview or summary"
+      },
+      {
+        "code": "SIM",
+        "name": "Similarity"
+      },
+      {
+        "code": "EXAMPLE",
+        "name": "Example, or explanation plus example"
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference"
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience"
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute"
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience"
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree"
+      },
+      {
+        "code": "QUOTE",
+        "name": "Quotation"
+      },
+      {
+        "code": "SPEC",
+        "name": "Specify or identify a single fact"
+      },
+      {
+        "code": "DESC",
+        "name": "Describe"
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.EXPL.hard.w5b1_01",
+      "template": "EXPL",
+      "subtype": "Explain how (chain of three bullets)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Meteorologists have long used the Campbell-Stokes recorder to measure daily hours of bright sunshine.\n• Its principal component, a solid glass sphere, functions as a lens, concentrating sunlight onto a treated card set behind it.\n• The concentrated rays scorch a thin line into the card.\n• As the Sun moves across the sky, the focal point gradually shifts, lengthening the scorched line.\n• Passing clouds interrupt the scorching; observers measure the line’s total length to calculate sunshine duration.",
+      "stem": "The student wants to explain how the Campbell-Stokes recorder measures hours of sunshine. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Used by meteorologists to measure daily hours of bright sunshine, the Campbell-Stokes recorder consists of a solid glass sphere that functions as a lens and a treated card mounted behind it.",
+        "By concentrating sunlight onto a treated card, the recorder’s glass sphere scorches a line whose darkness indicates how many hours of bright sunshine a location received.",
+        "The recorder’s glass sphere focuses sunlight onto a card, scorching a line that grows as the Sun moves and breaks when clouds pass; the line’s length shows how long the Sun shone.",
+        "Because the focal point of the recorder’s glass sphere shifts as the Sun moves, the scorched line on the card grows all day, so its length shows the hours since sunrise."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain how the recorder measures hours of sunshine. The notes give a chain: the sphere “functions as a lens, concentrating sunlight onto a treated card,” the rays “scorch a thin line,” the focal point shifts “As the Sun moves across the sky,” “lengthening the scorched line,” and “Passing clouds interrupt the scorching,” so observers “measure the line’s total length to calculate sunshine duration.” Choice C follows that whole chain from the focused sunlight to the measured length.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (what the device is, not how it works)",
+          "why_wrong": "It names the recorder’s purpose and parts but never explains how they produce a measurement of sunshine hours."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: wrong measure)",
+          "why_wrong": "It explains a mechanism, but the notes say observers measure the line’s “total length,” not its darkness."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: true first link, cloud link dropped)",
+          "why_wrong": "Its first part is accurate, but the notes say “Passing clouds interrupt the scorching,” so the line does not grow all day, and its length gives sunshine duration, not the hours since sunrise."
+        }
+      },
+      "models": [
+        "3.17",
+        "ee51ad04",
+        "3.23"
+      ],
+      "word_count": 92,
+      "sources": [],
+      "notes": "Subject: science and technology (the Campbell-Stokes sunshine recorder, a real meteorological instrument; no figures, no named people beyond the instrument’s name). Band 7 moves: how-goal over a four-bullet chain (focus, scorch, Sun moves, clouds break the line); two goal-shaped FALSE options (B swaps length for darkness, D reverses the cloud link) and one OG description, as in ee51ad04.",
+      "band_target": 7,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "rebuilt D: the old D (scorching only while clouds block the Sun) died on common sense; the new D keeps a true first link and drops the cloud link (hours since sunrise)",
+          "paraphrased key C off the notes (“shows how long the Sun shone”)",
+          "plainer bullets (mounted to set, narrow line into the card’s surface to thin line into the card); explanation quotes updated"
+        ],
+        "status": "fixed",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "How-goal over a four-bullet chain as in ee51ad04; two goal-shaped FALSE options that fail at different links (B the wrong measure, darkness; D a true first link that drops the cloud link) and one OG description; key paraphrased off the notes."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.hard.w5b1_02",
+      "template": "STUDY",
+      "subtype": "Present the aim and methodology",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Sunlit winter bark on fruit trees can warm considerably above the air temperature, then freeze fast at sunset.\n• This repeated cycle can split the bark, damage known as sunscald.\n• Researchers investigated whether painting trunks with diluted white latex, a traditional orchard practice, prevents sunscald.\n• They painted the lower trunks of 40 apple trees, left 40 neighbors unpainted, and put temperature sensors under each tree’s bark.\n• Painted trunks stayed up to 9°C cooler on sunny afternoons and split one-third as often.",
+      "stem": "The student wants to present the aim and methodology of the study. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "To test whether painting trunks with diluted white latex prevents sunscald, researchers painted 40 apple trees’ lower trunks, left 40 unpainted, and placed sensors beneath the bark.",
+        "Researchers painted the lower trunks of 40 apple trees with diluted white latex and inserted temperature sensors beneath the bark of these trees and of 40 unpainted neighbors.",
+        "Seeking to learn whether painting trunks with diluted white latex prevents sunscald, researchers found that painted trunks split only one-third as frequently as unpainted trunks did.",
+        "Because sunscald results when sunlit bark freezes fast at sunset, painted trunks, which remained up to 9°C cooler on sunny afternoons, split one-third as frequently as unpainted ones."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: the study’s aim and its methodology. The researchers “investigated whether painting trunks with diluted white latex ... prevents sunscald,” and to find out, “They painted the lower trunks of 40 apple trees, left 40 neighbors unpainted, and put temperature sensors under each tree’s bark.” Choice A gives both the aim and the method.",
+      "distractors": {
+        "B": {
+          "recipe": "PART (method without aim)",
+          "why_wrong": "It describes what the researchers did but never says what they were trying to find out."
+        },
+        "C": {
+          "recipe": "OG (aim plus results instead of method)",
+          "why_wrong": "It gives the aim but follows it with a finding, so it never presents how the study was carried out."
+        },
+        "D": {
+          "recipe": "OG (background plus results)",
+          "why_wrong": "It explains what causes sunscald and reports the results; it gives neither the aim nor the method."
+        }
+      },
+      "models": [
+        "3.10",
+        "8d1ddd1b",
+        "3.1"
+      ],
+      "word_count": 96,
+      "sources": [],
+      "notes": "Subject: natural science (sunscald on fruit trees and the orchard practice of painting trunks white). Unnamed, generic study with invented figures (40 trees, 9°C, one-third as often), per WAVE.md. Band 6 shape (8d1ddd1b, 2.21): two-part aim-and-method goal; distractors are method only, aim plus results, background plus results, all accurate.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "plainer bullets (rapidly to fast, every to each) and D to match; explanation quote updated"
+        ],
+        "status": "fixed",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6: aim-and-method goal with three accurate study-slot distractors (method only, aim plus results, background plus results) is the band-6 shape (band7 section 6 check 2); a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.hard.w5b1_03",
+      "template": "OVERVIEW",
+      "subtype": "Historical overview",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Early nineteenth-century voters often announced choices aloud or submitted party-printed ballots, frequently colored so observers could identify each voter’s preference.\n• In 1856, the Australian colony of Victoria introduced a secret ballot that was printed by the government, listed all the candidates, and was marked in private.\n• Britain adopted a similar system in its Ballot Act of 1872.\n• American cities and states began using such ballots in 1888; most remaining states followed during the 1890s.\n• The system is still sometimes called the Australian ballot.",
+      "stem": "The student wants to provide a historical overview of the secret ballot. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In 1856, the Australian colony of Victoria introduced a secret ballot, which Britain and most US states then adopted within the next two decades.",
+        "First adopted under Britain’s Ballot Act of 1872, the secret ballot spread from there to the colony of Victoria and, beginning in 1888, to American cities and states.",
+        "The secret ballot, also called the Australian ballot, lists every candidate and is marked privately, unlike the colored ballots that political parties once printed.",
+        "Introduced in Victoria in 1856, the secret ballot reached Britain in 1872 and American cities and states in 1888, replacing spoken votes and party-printed ballots."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a historical overview of the secret ballot, so the sentence must trace it over time. Choice D starts with Victoria, which “introduced a secret ballot” in 1856, follows it to Britain’s “Ballot Act of 1872” and to the United States, where “American cities and states began using such ballots in 1888,” and notes what it replaced: choices “announced ... aloud” and “party-printed ballots.”",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: number misread)",
+          "why_wrong": "It opens accurately, but American cities and states only “began using such ballots in 1888,” more than thirty years after 1856, and most states followed in the 1890s, so the system did not spread to most US states within two decades."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: order reversed)",
+          "why_wrong": "It traces a history, but the wrong one: Victoria introduced the secret ballot in 1856, sixteen years before Britain’s Ballot Act of 1872, so the system did not spread from Britain to Victoria."
+        },
+        "C": {
+          "recipe": "OG (definition and contrast)",
+          "why_wrong": "It explains what a secret ballot is and how it differs from party ballots, but it gives no history of when and where it was adopted."
+        }
+      },
+      "models": [
+        "964c6055",
+        "3.8",
+        "3.22"
+      ],
+      "word_count": 98,
+      "sources": [],
+      "notes": "Subject: history and social science (the secret ballot: Victoria 1856, UK Ballot Act 1872, US cities and states from 1888, most by the 1890s). Standard dates, no other figures. Band 7 move (section 5, OVERVIEW): band-6 arc kept (PART origin only, OG definition) plus a goal-shaped FALSE option (B tells the history in reverse order). The key does not depend on knowing the term Australian ballot.",
+      "band_target": 7,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "A turned from origin-only PART into a goal-shaped FALSE overview (most US states within two decades)",
+          "B rewritten so the reversed order (Britain before Victoria) must be checked against two bullets",
+          "key D made exact on the US (“most US states during the 1890s” stretched “most remaining states”); explanation and why_wrong updated",
+          "plainer bullets (every candidate to all the candidates, through to in)"
+        ],
+        "status": "fixed",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Historical overview as in 964c6055 with two goal-shaped FALSE overviews (A misreads the timing, B reverses Victoria and Britain) and one OG definition; the key spans origin, spread and what the system replaced, a derived relation."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.hard.w5b1_04",
+      "template": "SIM",
+      "subtype": "Significance of a similarity",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Hoodoos are slender rock spires that develop as precipitation and repeated freezing gradually erode soft sedimentary layers.\n• Some are topped by an erosion-resistant block, called a caprock, that shields the underlying softer rock.\n• Geologists compared photographs of three hoodoos in a western US canyon taken three decades apart.\n• Hoodoo 1, measuring 14 meters, has a caprock and lost 4 centimeters (cm) of height.\n• Hoodoo 2, measuring 9 meters, lacks a caprock and lost 52 cm.\n• Hoodoo 3, measuring 8 meters, has a caprock and lost 6 cm.",
+      "stem": "The student wants to emphasize the significance of a similarity between two of the hoodoos. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Hoodoos 1 and 3, both more than 10 meters tall, lost less height than the shorter Hoodoo 2, suggesting that taller hoodoos erode more slowly.",
+        "Shielded by their caprocks, Hoodoos 1 and 3 each lost only a few centimeters of height in three decades, far less than the uncapped Hoodoo 2.",
+        "Hoodoos 1 and 2 each lost less than 10 cm of height over three decades, indicating that both were shielded from erosion by their caprocks.",
+        "Like Hoodoo 1, Hoodoo 3 lost some of its height during the three decades between the two sets of photographs."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks for the significance of a similarity, not just the similarity. Hoodoos 1 and 3 both have a caprock, which “shields the underlying softer rock,” and they lost only 4 and 6 cm, while Hoodoo 2, which “lacks a caprock,” lost 52 cm. Choice B links the shared caprock to the much smaller loss of height.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: misread number, wrong cause)",
+          "why_wrong": "It offers a significance, but Hoodoo 3 measures 8 meters, less than Hoodoo 2, so the two are not both more than 10 meters tall, and the notes credit the caprock, not height."
+        },
+        "C": {
+          "recipe": "FALSE (numbers and trait misattached)",
+          "why_wrong": "Hoodoo 2 lost 52 cm, not less than 10 cm, and it “lacks a caprock.”"
+        },
+        "D": {
+          "recipe": "PART (true similarity, no significance)",
+          "why_wrong": "It is accurate, but all three hoodoos lost height, so the similarity it names has no significance and it ignores the caprocks."
+        }
+      },
+      "models": [
+        "19b08ead",
+        "3.18",
+        "2.46"
+      ],
+      "word_count": 104,
+      "sources": [],
+      "notes": "Subject: natural science (hoodoo erosion and caprocks). Unnamed, generic photo survey with invented figures, per WAVE.md. Band 7 moves (section 5, SIM): goal asks for the significance of a similarity; the key derives it from the caprock bullet and the three loss figures; two FALSE options carry the numbers (A misreads Hoodoo 3’s height and credits height, C pairs the wrong hoodoos), one true but trivial similarity. Heights deliberately do not track erosion, so the height reading fails on the numbers.",
+      "band_target": 7,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Significance-of-a-similarity goal as in 19b08ead; the key derives the caprock's effect from the shield bullet and three figures; A and C are goal-shaped FALSE options with misread numbers, D a true similarity without significance; heights do not track erosion, so the height reading fails."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.hard.w5b1_05",
+      "template": "EXAMPLE",
+      "subtype": "Use one example to illustrate a practice",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Spolia (Latin for “spoils”) are columns, carved stones, or other architectural elements taken from older structures and reused in new buildings.\n• Rome’s Arch of Constantine, completed in 315 CE, commemorates the emperor Constantine.\n• Several of its sculpted reliefs were taken from earlier monuments honoring the emperors Trajan, Hadrian, and Marcus Aurelius.\n• Tunisia’s Great Mosque of Kairouan was extensively rebuilt in the 830s.\n• Many marble columns supporting its prayer hall originated in Roman and Byzantine buildings at sites such as Carthage.",
+      "stem": "The student wants to use one of the structures to illustrate the use of spolia. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Completed in 315 CE, Rome’s Arch of Constantine commemorates the emperor Constantine and is decorated with sculpted reliefs.",
+        "The Arch of Constantine illustrates the use of spolia, since several of its sculpted reliefs were taken from Roman and Byzantine buildings at sites such as Carthage.",
+        "In the Great Mosque of Kairouan, many of the marble columns supporting the prayer hall are spolia, taken from older Roman and Byzantine buildings and reused.",
+        "The Great Mosque of Kairouan illustrates the use of spolia, since many of its marble columns were later removed and reused in buildings at Carthage."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To illustrate spolia, the sentence must show one structure built with “architectural elements taken from older structures and reused in new buildings.” Choice C does this with the Great Mosque of Kairouan, whose “marble columns supporting its prayer hall originated in Roman and Byzantine buildings at sites such as Carthage.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (describes the structure, no spolia)",
+          "why_wrong": "It describes the Arch of Constantine but never says that its reliefs came from older monuments, so it does not illustrate spolia."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: sources swapped)",
+          "why_wrong": "The arch’s reliefs came from “earlier monuments honoring the emperors Trajan, Hadrian, and Marcus Aurelius”; the Roman and Byzantine buildings at Carthage supplied the mosque’s columns."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: direction reversed)",
+          "why_wrong": "The notes say the columns came from buildings at Carthage and were reused in the mosque, not that they were taken from the mosque and reused elsewhere."
+        }
+      },
+      "models": [
+        "ec03f090",
+        "3.4"
+      ],
+      "word_count": 96,
+      "sources": [],
+      "notes": "Subject: arts and architecture history (spolia: the Arch of Constantine, 315 CE, with Trajanic, Hadrianic and Aurelian reliefs; the Great Mosque of Kairouan, rebuilt in 836, with reused Roman and Byzantine columns). Well-known art history, no figures. EXAMPLE has no band-7 official item (band7/rhetorical_synthesis.md), so this is a strong band 6 on ec03f090 (one OG, two goal-shaped FALSE options that swap or reverse a detail); band_target 6 against the plan’s 7.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "plainer first bullet (removed to taken); explanation quote updated"
+        ],
+        "status": "fixed",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "EXAMPLE has no band-7 official item, so it cannot be band 7; a strong band 6 on ec03f090 (one OG, two goal-shaped FALSE options that swap or reverse a source)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b1_06",
+      "template": "DIFF",
+      "subtype": "Difference between two methods",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Etching and mezzotint are two techniques for producing prints from metal plates.\n• In etching, acid eats lines drawn through a waxy coating into the plate.\n• Darker areas of an etching are built up from closely spaced lines.\n• Ludwig von Siegen developed mezzotint in the 1640s.\n• A mezzotint artist first roughens the whole plate to print solid black, then smooths areas to create lighter tones.",
+      "stem": "The student wants to emphasize a difference between how artists work in etching and in mezzotint. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Etching and mezzotint are both techniques that artists use to produce prints from metal plates.",
+        "Whereas an etcher builds dark areas from closely spaced lines, a mezzotint artist starts with a plate that prints solid black and works toward light.",
+        "In mezzotint, a technique developed in the 1640s by Ludwig von Siegen, an artist roughens the whole plate and then smooths some areas to create lighter tones.",
+        "Etching and mezzotint are different techniques, and each gives an artist a distinct way of working on a metal plate."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to emphasize a difference between the two techniques. Choice B contrasts them with “Whereas”: in etching, “Darker areas ... are built up from closely spaced lines,” but a mezzotint artist “first roughens the whole plate to print solid black, then smooths areas to create lighter tones.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (similarity instead of difference)",
+          "why_wrong": "It states what the two techniques have in common, not how they differ."
+        },
+        "C": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It describes only mezzotint and says nothing about etching."
+        },
+        "D": {
+          "recipe": "VAGUE (says they differ without saying how)",
+          "why_wrong": "It asserts that the techniques are different but never states what the difference is."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11"
+      ],
+      "word_count": 80,
+      "sources": [],
+      "notes": "Subject: arts (printmaking: etching vs mezzotint; Ludwig von Siegen developed mezzotint in the 1640s). Standard art-history facts. Medium DIFF mix: REL, PART, VAGUE.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b1_07",
+      "template": "DIFF",
+      "subtype": "Difference between two designs",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The high-wheeler, nicknamed the penny-farthing, dominated cycling in the 1870s.\n• Its pedals were attached directly to an enormous front wheel, positioning riders high above the ground.\n• Riders who struck obstacles could be thrown over the handlebars.\n• The safety bicycle, introduced in the 1880s, had two similarly sized wheels.\n• Its pedals powered the rear wheel through a chain, so riders sat much closer to the ground.",
+      "stem": "The student wants to emphasize a difference in how the pedals of the two bicycles turned their wheels. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Both the penny-farthing and the safety bicycle relied on pedals that the rider turned to make the bicycle move.",
+        "The penny-farthing’s pedals were attached directly to an enormous front wheel, positioning its riders high above the ground.",
+        "Penny-farthing riders sat high above the ground and could be thrown over the handlebars, whereas safety bicycle riders sat much closer to the ground.",
+        "While the penny-farthing’s pedals were attached directly to its front wheel, the safety bicycle’s pedals powered its rear wheel through a chain."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a difference in how each bicycle’s pedals turned its wheels. Choice D contrasts the penny-farthing, whose pedals “were attached directly to an enormous front wheel,” with the safety bicycle, whose pedals “powered the rear wheel through a chain.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (similarity instead of difference)",
+          "why_wrong": "It names something the two bicycles share rather than a difference between them."
+        },
+        "B": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It describes only the penny-farthing’s pedals and says nothing about the safety bicycle."
+        },
+        "C": {
+          "recipe": "REL (difference on the wrong dimension)",
+          "why_wrong": "It contrasts where riders sat and how safe they were, not how the pedals turned the wheels."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.41",
+        "2.44"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: history of technology (the high-wheeler or penny-farthing of the 1870s vs the chain-driven safety bicycle of the 1880s). Standard history. Medium DIFF with a wrong-dimension contrast (C, as in 2.44 D) beside REL and PART.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b1_08",
+      "template": "DIFF",
+      "subtype": "Difference between two mechanisms",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The seeds of many plants are dispersed by wind.\n• Distant seeds face less competition from the parent plant for light and water.\n• A maple seed is attached to a single papery wing.\n• As it falls, the wing spins it like a helicopter blade, slowing its descent.\n• A dandelion seed hangs beneath a pappus, a tuft of roughly 100 fine bristles that acts like a parachute.",
+      "stem": "The student wants to emphasize a difference between how maple seeds and dandelion seeds slow their fall. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "A maple seed slows its fall by spinning on a single wing, whereas a dandelion seed drifts beneath a parachute-like tuft of bristles.",
+        "Both maple seeds and dandelion seeds are dispersed by wind, which carries them away from the parent plant.",
+        "As a maple seed falls, its single papery wing spins it like a helicopter blade, slowing its descent.",
+        "Seeds dispersed by wind can travel far from the parent plant, which reduces the competition they face for light and water as they grow."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a difference in how the two seeds slow their fall. Choice A uses “whereas” to contrast the maple seed, whose wing “spins it like a helicopter blade, slowing its descent,” with the dandelion seed, which “hangs beneath a pappus” that “acts like a parachute.”",
+      "distractors": {
+        "B": {
+          "recipe": "REL (similarity instead of difference)",
+          "why_wrong": "It states what the two seeds have in common, dispersal by wind, not how they differ."
+        },
+        "C": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It explains only how the maple seed slows its fall and leaves out the dandelion seed."
+        },
+        "D": {
+          "recipe": "OG (why wind dispersal helps)",
+          "why_wrong": "It explains an advantage of wind dispersal in general and names neither kind of seed."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.38"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: natural science (wind-dispersed seeds: the spinning maple samara vs the dandelion pappus). Textbook-level botany kept to plain, well-established facts; no named researchers. Medium DIFF mix: REL, PART, OG.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w5b1_09",
+      "template": "AUD_NEW",
+      "subtype": "Describe a work to an audience unfamiliar with its maker",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Fe del Mundo (1911–2011) was a Filipino pediatrician, a physician specializing in children’s health.\n• In 1957, she founded the first pediatric hospital in the Philippines.\n• Electric incubators, which keep premature infants warm, could not be used in rural communities lacking electricity.\n• Del Mundo designed an incubator constructed from bamboo.\n• Her bamboo incubator kept premature infants warm without requiring electricity.",
+      "stem": "The student wants to describe the bamboo incubator to an audience unfamiliar with Fe del Mundo. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Del Mundo’s bamboo incubator kept premature infants warm in rural communities that lacked the electricity that electric incubators required.",
+        "Fe del Mundo, a Filipino pediatrician, founded the first pediatric hospital in the Philippines in 1957.",
+        "Filipino pediatrician Fe del Mundo designed a bamboo incubator that kept premature infants warm without requiring electricity.",
+        "In rural communities lacking electricity, electric incubators could not be used to keep premature infants warm."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The audience does not know Fe del Mundo, so the sentence must say who she is as well as describe the incubator. Choice C identifies her as a “Filipino pediatrician” and describes her “incubator constructed from bamboo” that “kept premature infants warm without requiring electricity.”",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (no identification)",
+          "why_wrong": "It describes the incubator but refers to “Del Mundo” without saying who she is, which an unfamiliar audience needs."
+        },
+        "B": {
+          "recipe": "OG (introduces her, not the incubator)",
+          "why_wrong": "It identifies del Mundo and names another accomplishment but never describes the incubator."
+        },
+        "D": {
+          "recipe": "PART (the problem only)",
+          "why_wrong": "It explains why electric incubators could not be used but never mentions the bamboo incubator or del Mundo."
+        }
+      },
+      "models": [
+        "2.34",
+        "2.36"
+      ],
+      "word_count": 75,
+      "sources": [],
+      "notes": "Subject: science and medicine (Fe del Mundo, 1911 to 2011, Filipino pediatrician; founded the first pediatric hospital in the Philippines in 1957; designed a bamboo incubator for rural areas without electricity). Real, well-documented person; facts kept to the widely reported ones. Medium AUD_NEW: AUD, OG, PART.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w5b1_10",
+      "template": "AUD_NEW",
+      "subtype": "Describe a work to an audience unfamiliar with its maker",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Moshe Safdie is an Israeli-born Canadian architect.\n• As a student at McGill University, he proposed housing assembled from stacked, factory-made units.\n• That proposal became Habitat 67, a housing complex built in Montreal for the 1967 world’s fair.\n• Habitat 67 consists of 354 identical prefabricated concrete modules.\n• The modules are stacked at varying angles, so one unit’s roof serves as another’s garden.",
+      "stem": "The student wants to describe Habitat 67 to an audience unfamiliar with Moshe Safdie. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Designed by Israeli-born Canadian architect Moshe Safdie, Habitat 67 is a Montreal housing complex of concrete modules stacked so that one unit’s roof serves as another’s garden.",
+        "Safdie’s Habitat 67 consists of 354 identical prefabricated concrete modules stacked at varying angles, so one unit’s roof serves as another’s garden.",
+        "As a student at McGill University, Moshe Safdie proposed housing assembled from stacked, factory-made units.",
+        "Habitat 67, a housing complex in Montreal, was built for the 1967 world’s fair."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The audience does not know Safdie, so the sentence must identify him while describing Habitat 67. Choice A calls him an “Israeli-born Canadian architect” and describes the complex as “prefabricated concrete modules” stacked “so one unit’s roof serves as another’s garden.”",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (no identification)",
+          "why_wrong": "It describes Habitat 67 well but calls it “Safdie’s” without saying who Safdie is."
+        },
+        "C": {
+          "recipe": "OG (his student proposal, not the building)",
+          "why_wrong": "It identifies Safdie by his student proposal but never describes Habitat 67."
+        },
+        "D": {
+          "recipe": "PART (location and occasion only)",
+          "why_wrong": "It says where and why the complex was built but describes nothing about it and never mentions Safdie."
+        }
+      },
+      "models": [
+        "2.36",
+        "2.34"
+      ],
+      "word_count": 77,
+      "sources": [],
+      "notes": "Subject: arts and architecture (Moshe Safdie, Habitat 67, Montreal, Expo 67; 354 prefabricated concrete modules; roof gardens). Real, well-documented building. Medium AUD_NEW: AUD, OG, PART.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w5b1_11",
+      "template": "EXPL",
+      "subtype": "Explain a reason",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Covered bridges were common in the United States during the 1800s, when many bridges were built of wood.\n• A covered bridge’s walls and roof enclose its truss, the framework of wooden beams supporting it.\n• Wood that is repeatedly soaked by rain and snow eventually rots.\n• Uncovered wooden bridges often lasted only 10 to 20 years.\n• With their trusses protected from moisture, covered bridges could last more than a century.",
+      "stem": "The student wants to explain why covered bridges were built with roofs. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "A covered bridge’s truss, the framework of wooden beams supporting it, is enclosed by walls and a roof.",
+        "Covered bridges, which were common in the United States during the 1800s, could last more than a century.",
+        "Many bridges in the United States during the 1800s were built of wood, a material that eventually rots when it is repeatedly soaked by rain and snow.",
+        "Covered bridges were roofed to keep their wooden trusses dry, protecting them from the rot that limited many uncovered bridges to 10 to 20 years."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain why covered bridges had roofs, so the sentence must link the roof to its purpose. Wood “repeatedly soaked by rain and snow eventually rots,” uncovered bridges “often lasted only 10 to 20 years,” and covered bridges, “With their trusses protected from moisture,” lasted far longer. Choice D makes that link.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (what the roof covers, not why)",
+          "why_wrong": "It says what the walls and roof enclose but never explains why the truss needed covering."
+        },
+        "B": {
+          "recipe": "PART (outcome without the reason)",
+          "why_wrong": "It reports how long covered bridges lasted but does not connect that to the roof keeping the wood dry."
+        },
+        "C": {
+          "recipe": "OG (both facts, no link)",
+          "why_wrong": "It gives the background about wood and rot but never mentions roofs or covered bridges."
+        }
+      },
+      "models": [
+        "2.31",
+        "2.13"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: history and technology (US covered bridges; the roof keeps the wooden truss dry; the 10 to 20 year figure for uncovered bridges is the commonly cited one). Medium EXPL: OG, PART, and both-facts-no-link OG.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w5b1_12",
+      "template": "EMPH",
+      "subtype": "Emphasize a quantity",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• China’s Loess Plateau is blanketed by thick deposits of loess, a fine, wind-blown soil.\n• For thousands of years, residents have carved homes called yaodong into the region’s hillsides.\n• Surrounded by thick earth, yaodong stay cool in summer and warm in winter.\n• Many yaodong have arched ceilings and a wooden lattice window at the entrance.\n• As of 2006, an estimated 40 million people lived in yaodong.",
+      "stem": "The student wants to emphasize how common yaodong have been as homes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Residents of China’s Loess Plateau have been carving yaodong into the region’s hillsides for thousands of years.",
+        "As recently as 2006, yaodong carved into the hillsides of China’s Loess Plateau were home to an estimated 40 million people.",
+        "Because they are surrounded by thick earth, yaodong stay cool in summer and warm in winter.",
+        "Many yaodong, the homes that residents have carved into the hillsides of China’s Loess Plateau, have arched ceilings and a wooden lattice window at the entrance."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To emphasize how common yaodong have been, the sentence needs the figure that shows their reach. Choice B notes that “As of 2006, an estimated 40 million people lived in yaodong,” stressing with “As recently as” that the number is not just historical.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (how long, not how common)",
+          "why_wrong": "It emphasizes how long people have carved yaodong, not how many people live in them."
+        },
+        "C": {
+          "recipe": "OG (climate advantage)",
+          "why_wrong": "It explains why yaodong are comfortable, not how common they are."
+        },
+        "D": {
+          "recipe": "OG (appearance)",
+          "why_wrong": "It describes what many yaodong look like but says nothing about how many people use them."
+        }
+      },
+      "models": [
+        "2.40",
+        "2.20"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: social science and culture (yaodong cave dwellings of the Loess Plateau; the 2006 estimate of about 40 million residents is the widely cited figure). Medium EMPH: three OG options for neighboring goals (duration, climate, appearance).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w5b1_13",
+      "template": "EMPH",
+      "subtype": "Emphasize size, with a time filter",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Jetavanaramaya is a stupa, a dome-shaped Buddhist monument, in Anuradhapura, Sri Lanka.\n• Construction began in the 200s CE under King Mahasena.\n• When completed, the stupa stood about 122 meters tall, among the tallest structures in the ancient world.\n• Its builders used roughly 93 million fired bricks.\n• Today, the partly ruined stupa stands about 71 meters tall.",
+      "stem": "The student wants to emphasize the size of the Jetavanaramaya when it was first completed. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Built from roughly 93 million bricks, the Jetavanaramaya stood about 122 meters tall when completed, among the tallest structures in the ancient world.",
+        "Though partly ruined, the Jetavanaramaya still stands about 71 meters tall in the ancient city of Anuradhapura, Sri Lanka.",
+        "Construction of the Jetavanaramaya, a dome-shaped Buddhist monument in the ancient city of Anuradhapura, Sri Lanka, began in the 200s CE under King Mahasena.",
+        "A stupa is a dome-shaped Buddhist monument, and the Jetavanaramaya in Sri Lanka is one example."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is the stupa’s size when it was first completed. Choice A gives the original height, noting that “When completed, the stupa stood about 122 meters tall, among the tallest structures in the ancient world,” and adds the “roughly 93 million fired bricks” used to build it.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (size today, not when completed)",
+          "why_wrong": "It emphasizes the stupa’s present height of “about 71 meters,” not its size when it was first completed."
+        },
+        "C": {
+          "recipe": "OG (when and under whom it was built)",
+          "why_wrong": "It gives the date and the king but says nothing about the stupa’s size."
+        },
+        "D": {
+          "recipe": "OG (definition)",
+          "why_wrong": "It defines a stupa and names the Jetavanaramaya as one but gives no sense of its size."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.40"
+      ],
+      "word_count": 73,
+      "sources": [],
+      "notes": "Subject: history and architecture (the Jetavanaramaya stupa, Anuradhapura; begun under King Mahasena, reigned 273 to 301 CE; about 122 m originally, about 71 m today; roughly 93 million bricks, the commonly cited figures). Medium EMPH with a time filter (2.14): B emphasizes size but at the wrong time.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium.w5b1_14",
+      "template": "EXAMPLE",
+      "subtype": "Explanation and an example",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In some dry regions, bands of vegetation alternate with strips of bare ground in regular patterns.\n• Such patterned vegetation develops on gentle slopes where rainfall is scarce.\n• Rainwater runs off the bare strips and soaks into the vegetated bands just downhill.\n• One example is tiger bush, which grows on plateaus in southwestern Niger.\n• From above, its dark shrub bands and pale soil strips resemble a tiger’s stripes.",
+      "stem": "The student wants to provide an explanation and an example of patterned vegetation. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Tiger bush, which grows on plateaus in southwestern Niger, is named for its resemblance to a tiger’s stripes when seen from above.",
+        "In some dry regions with gentle slopes and scarce rainfall, bands of vegetation alternate with strips of bare ground in regular patterns.",
+        "On gentle slopes in dry regions, rainwater runs off strips of bare ground and soaks into the bands of plants just downhill.",
+        "Patterned vegetation, in which bands of plants alternate with strips of bare ground, includes the tiger bush of southwestern Niger."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: an explanation of patterned vegetation and an example of it. Choice D explains it as “bands of vegetation” that “alternate with strips of bare ground” and gives the example of “tiger bush, which grows on plateaus in southwestern Niger.”",
+      "distractors": {
+        "A": {
+          "recipe": "PART (example only)",
+          "why_wrong": "It names tiger bush and explains its name, but it never says what patterned vegetation is or presents tiger bush as an example of it."
+        },
+        "B": {
+          "recipe": "PART (explanation only)",
+          "why_wrong": "It explains patterned vegetation but gives no example."
+        },
+        "C": {
+          "recipe": "OG (how water moves)",
+          "why_wrong": "It describes how rainwater moves between the strips and bands but neither defines patterned vegetation nor names an example."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.42"
+      ],
+      "word_count": 83,
+      "sources": [],
+      "notes": "Subject: natural science (banded or patterned vegetation in drylands; tiger bush, brousse tigree, on the plateaus of southwestern Niger). Well-established ecology, no figures or names. Medium EXAMPLE: PART example only, PART explanation only, OG.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "option A rewritten as plainly example-only (named for a tiger’s stripes), so it no longer describes the banding that doubles as an explanation"
+        ],
+        "status": "fixed",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w5b1_15",
+      "template": "STUDY",
+      "subtype": "Present the results",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Forest kindergartens, which originated in Denmark, keep young children outdoors most of the day in all weather.\n• Researchers wanted to know whether attending a forest kindergarten affects children’s motor skills.\n• They tested the balance and coordination of 5-year-olds at three forest kindergartens and three conventional ones.\n• Each child was tested at the beginning and end of a school year.\n• Balance scores rose an average of 18 percent at forest kindergartens, compared with 7 percent at conventional ones.",
+      "stem": "The student wants to present the study’s results. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The researchers wanted to know whether attending a forest kindergarten, where children spend most of the day outdoors, affects motor skills.",
+        "The researchers tested the balance and coordination of 5-year-olds at six kindergartens at the beginning and end of a school year.",
+        "Over a school year, 5-year-olds at forest kindergartens improved their balance scores by an average of 18 percent, compared with 7 percent at conventional kindergartens.",
+        "Forest kindergartens, which originated in Denmark, keep young children outdoors for most of the school day, whatever the weather."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is the study’s results. Choice C reports what the researchers found: “Balance scores rose an average of 18 percent at forest kindergartens, compared with 7 percent at conventional ones.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (aim instead of results)",
+          "why_wrong": "It states what the researchers wanted to know, not what they found."
+        },
+        "B": {
+          "recipe": "OG (method instead of results)",
+          "why_wrong": "It describes how the children were tested, not what the tests showed."
+        },
+        "D": {
+          "recipe": "OG (background)",
+          "why_wrong": "It describes forest kindergartens in general and says nothing about the study."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.21",
+        "2.2"
+      ],
+      "word_count": 93,
+      "sources": [],
+      "notes": "Subject: social science and education (forest kindergartens, which began in Denmark). Unnamed, generic study with invented figures (18 and 7 percent), per WAVE.md. Medium STUDY: slot swaps (aim, method) and background.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w5b1_16",
+      "template": "AUD_FAM",
+      "subtype": "Present findings to a familiar audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A Stevenson screen is a white, slatted box that shields thermometers from direct sunlight while letting air circulate.\n• Weather stations have used wooden Stevenson screens since the late 1800s.\n• Many are switching to plastic screens, which are cheaper and need less maintenance.\n• Researchers operated wooden and plastic screens side by side at one station for a year.\n• On sunny afternoons, the plastic screen’s thermometer read an average of 0.4°C higher.",
+      "stem": "The student wants to present the study’s findings to an audience already familiar with Stevenson screens. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In a yearlong test of Stevenson screens, white slatted boxes that shield thermometers from direct sunlight, a plastic screen read 0.4°C higher than a wooden one on sunny afternoons.",
+        "In a yearlong side-by-side test, the thermometer in a plastic Stevenson screen read an average of 0.4°C higher on sunny afternoons than the one in a wooden screen.",
+        "A Stevenson screen is a white, slatted box that shields thermometers from sunlight, and many weather stations are switching from wooden screens to plastic ones.",
+        "To compare the two types of Stevenson screens, researchers operated a wooden screen and a plastic screen side by side at one weather station for a year."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The audience already knows what a Stevenson screen is, so the sentence should give the finding without explaining the term. Choice B uses “Stevenson screen” without a definition and reports that “the plastic screen’s thermometer read an average of 0.4°C higher” on sunny afternoons.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (re-explains the familiar term)",
+          "why_wrong": "It reports the finding but spends words defining Stevenson screens, which this audience already knows."
+        },
+        "C": {
+          "recipe": "AUD (definition and background, no finding)",
+          "why_wrong": "It defines a Stevenson screen for an audience that knows it and gives no result from the study."
+        },
+        "D": {
+          "recipe": "PART (method without finding)",
+          "why_wrong": "It describes how the study was set up but not what it found."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.28"
+      ],
+      "word_count": 86,
+      "sources": [],
+      "notes": "Subject: natural science (Stevenson screens, the louvered thermometer shelters used since the late 1800s; stations switching to plastic). Unnamed, generic comparison with an invented figure (0.4°C), per WAVE.md. Medium AUD_FAM: two AUD options (A is otherwise complete, the cleanest audience test, as 2.1 D) and one PART.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium.w5b1_17",
+      "template": "SIM",
+      "subtype": "Similarity between two traditions",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Family surnames in many countries pass unchanged from one generation to the next.\n• Most Icelanders’ last names combine a parent’s first name, usually the father’s, with -son (“son”) or -dóttir (“daughter”).\n• For example, a daughter of a man named Jón is Jónsdóttir.\n• In Ethiopia, a person’s given name is typically followed by the father’s given name, unaltered.\n• Ethiopians often add the paternal grandfather’s given name as well.",
+      "stem": "The student wants to emphasize a similarity between Icelandic and Ethiopian naming traditions. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Icelandic last names add -son or -dóttir to a parent’s first name, whereas Ethiopian names follow a given name with the father’s given name unaltered.",
+        "In Iceland, a daughter of a man named Jón has the last name Jónsdóttir, formed from her father’s first name.",
+        "In many countries, a family surname passes unchanged from one generation to the next.",
+        "In both Iceland and Ethiopia, the name that follows a person’s given name is typically formed from the father’s given name."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a similarity between the two traditions. Choice D uses “both” to show what they share: in Iceland, last names come from “a parent’s first name, usually the father’s,” and in Ethiopia “a person’s given name is typically followed by the father’s given name.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (difference instead of similarity)",
+          "why_wrong": "It contrasts the two traditions with “whereas” instead of stating what they share."
+        },
+        "B": {
+          "recipe": "PART (one tradition only)",
+          "why_wrong": "It gives an Icelandic example and says nothing about Ethiopian names."
+        },
+        "C": {
+          "recipe": "OG (the contrasting custom)",
+          "why_wrong": "It describes the inherited-surname custom of many countries, which neither tradition follows, and names neither one."
+        }
+      },
+      "models": [
+        "2.30",
+        "2.46"
+      ],
+      "word_count": 83,
+      "sources": [],
+      "notes": "Subject: social science and culture (Icelandic patronymic last names; Ethiopian names formed from the father’s and grandfather’s given names). Well-known naming customs. Medium SIM: REL, PART, OG.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium.w5b1_18",
+      "template": "RANK",
+      "subtype": "Order of two events",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Spain’s Royal Academy, established in Madrid in 1713, set out to fix standards for the Spanish language.\n• Its first dictionary, the Diccionario de autoridades, appeared in six volumes between 1726 and 1739.\n• It supported definitions with quotations from respected writers, called “authorities.”\n• Samuel Johnson’s A Dictionary of the English Language was published in London in 1755.\n• Like the Spanish dictionary, it illustrated its roughly 40,000 words with quotations from writers.",
+      "stem": "The student wants to emphasize the order in which the two dictionaries were completed. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Both Johnson’s dictionary and the Diccionario de autoridades illustrated their definitions with quotations from writers.",
+        "Spain’s Royal Academy was founded in 1713, more than forty years before Johnson’s dictionary was published in 1755.",
+        "The Diccionario de autoridades was completed in 1739, more than fifteen years before Johnson’s dictionary appeared.",
+        "Johnson’s dictionary, which was published in London in 1755, illustrated its roughly 40,000 words with quotations from writers."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is the order in which the two dictionaries were completed. The Diccionario de autoridades “appeared in six volumes between 1726 and 1739,” and Johnson’s dictionary “was published in London in 1755.” Choice C states that the Spanish dictionary was finished “more than fifteen years before” Johnson’s.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (similarity, not order)",
+          "why_wrong": "It points out what the two dictionaries share rather than which was completed first."
+        },
+        "B": {
+          "recipe": "REL (wrong pair of events)",
+          "why_wrong": "It compares the founding of the academy with Johnson’s dictionary, not the completion of the two dictionaries."
+        },
+        "D": {
+          "recipe": "PART (one dictionary only)",
+          "why_wrong": "It describes Johnson’s dictionary alone, so it cannot show the order of the two."
+        }
+      },
+      "models": [
+        "2.44",
+        "2.27"
+      ],
+      "word_count": 86,
+      "sources": [],
+      "notes": "Subject: history (Johnson’s Dictionary, 1755; the Royal Spanish Academy, founded 1713, and its Diccionario de autoridades, 1726 to 1739). Standard dates; about 40,000 words is the usual round figure for Johnson. Medium RANK: the key derives the gap (1739 to 1755) without restating both dates; B compares the wrong events (2.44 D).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.medium.w5b1_19",
+      "template": "QUOTE",
+      "subtype": "Quotation that explains why",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Machiya are traditional wooden townhouses in Kyoto, Japan, with narrow street fronts and long, deep interiors.\n• Thousands of machiya have been demolished since the 1990s, many replaced by apartments.\n• One carpenter who restores machiya joins beams with interlocking wooden joints rather than metal fasteners.\n• “A joint can be taken apart and a damaged piece replaced, so the house can be repaired again and again,” he explains.\n• He also observes that “every machiya on a street was built to share its walls with the houses beside it.”",
+      "stem": "The student wants to provide a quotation from the carpenter that explains why he uses interlocking wooden joints. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Explaining his use of interlocking wooden joints, the carpenter says, “A joint can be taken apart and a damaged piece replaced, so the house can be repaired again and again.”",
+        "Unlike metal fasteners, the interlocking wooden joints that the carpenter uses can be taken apart so that damaged pieces can be replaced.",
+        "The carpenter, who restores machiya in Kyoto, observes that “every machiya on a street was built to share its walls with the houses beside it.”",
+        "Since the 1990s, thousands of Kyoto’s machiya, traditional wooden townhouses with narrow street fronts, have been demolished."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal calls for a quotation that explains why the carpenter uses interlocking joints. Choice A quotes his reason: “A joint can be taken apart and a damaged piece replaced, so the house can be repaired again and again.”",
+      "distractors": {
+        "B": {
+          "recipe": "NOQ (paraphrase, no quotation)",
+          "why_wrong": "It gives the reason in its own words but includes no quotation from the carpenter."
+        },
+        "C": {
+          "recipe": "NOQ (a quotation that does another job)",
+          "why_wrong": "It quotes the carpenter, but the quotation is about how machiya share walls, not about why he uses interlocking joints."
+        },
+        "D": {
+          "recipe": "OG (background)",
+          "why_wrong": "It reports the loss of machiya and neither quotes the carpenter nor mentions his joints."
+        }
+      },
+      "models": [
+        "2.29",
+        "2.9"
+      ],
+      "word_count": 102,
+      "sources": [],
+      "notes": "Subject: arts and architecture (Kyoto machiya townhouses and their demolition since the 1990s). The carpenter is unnamed and his quotations are invented, per WAVE.md (never a real named person). Medium QUOTE: one paraphrase without a quotation, one real quotation doing a different job (2.29 D), one OG.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.medium.w5b1_20",
+      "template": "SPEC",
+      "subtype": "Specify a location",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Codex Gigas was created in the early 1200s at a Bohemian monastery.\n• Nearly a meter tall and weighing about 75 kilograms, it is the largest surviving medieval manuscript.\n• Its pages include a complete Latin Bible.\n• In 1648, during the Thirty Years’ War, Swedish soldiers seized the manuscript in Prague.\n• Sweden’s National Library, in Stockholm, now houses it.",
+      "stem": "The student wants to specify where the Codex Gigas is kept today. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Codex Gigas was created in the early 1200s at a monastery in Bohemia.",
+        "Sweden’s National Library, in Stockholm, now houses the Codex Gigas.",
+        "In 1648, during the Thirty Years’ War, Swedish soldiers seized the Codex Gigas in Prague.",
+        "Nearly a meter tall and weighing about 75 kilograms, the Codex Gigas is the largest surviving medieval manuscript."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks where the manuscript is kept today. The notes say that “Sweden’s National Library, in Stockholm, now houses it,” and Choice B gives exactly that location.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (where it was made)",
+          "why_wrong": "It names the place where the manuscript was created, not where it is kept now."
+        },
+        "C": {
+          "recipe": "OG (where it was taken from)",
+          "why_wrong": "It says where Swedish soldiers seized the manuscript in 1648, not where it is kept today."
+        },
+        "D": {
+          "recipe": "OG (size)",
+          "why_wrong": "It describes the manuscript’s size and gives no location."
+        }
+      },
+      "models": [
+        "2.45",
+        "2.39"
+      ],
+      "word_count": 74,
+      "sources": [],
+      "notes": "Subject: history and arts (the Codex Gigas, Bohemia, early 1200s; taken from Prague in 1648; National Library of Sweden). Standard facts. Medium SPEC with two location traps (place made, place seized) beside the size fact.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.easy.w5b1_21",
+      "template": "SPEC",
+      "subtype": "Specify a place of origin",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Kokeshi are wooden dolls with a rounded head and a cylindrical, armless body.\n• Woodworkers shape them on a spinning lathe.\n• The dolls first appeared in the Tōhoku region of northern Japan during the 1800s.\n• They were sold as souvenirs to travelers visiting the region’s hot spring resorts.\n• Most kokeshi are decorated with painted faces and flowers.",
+      "stem": "The student wants to specify where kokeshi dolls originated. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Kokeshi are wooden dolls, and woodworkers shape them on a spinning lathe.",
+        "Kokeshi dolls were sold as souvenirs to travelers visiting hot spring resorts.",
+        "Most kokeshi have a rounded head, an armless body, and painted flowers.",
+        "Kokeshi dolls first appeared in the Tōhoku region of northern Japan."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks where kokeshi originated. The notes say, “The dolls first appeared in the Tōhoku region of northern Japan,” and Choice D gives that region.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (how they are made)",
+          "why_wrong": "It explains how kokeshi are made, not where they came from."
+        },
+        "B": {
+          "recipe": "OG (how they were sold)",
+          "why_wrong": "It says the dolls were sold at hot spring resorts but not where they first appeared."
+        },
+        "C": {
+          "recipe": "OG (appearance)",
+          "why_wrong": "It describes what kokeshi look like and gives no place."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.5"
+      ],
+      "word_count": 73,
+      "sources": [],
+      "notes": "Subject: arts and crafts (kokeshi dolls, Tohoku region, 1800s, sold at hot spring resorts). Standard facts. Easy SPEC: the key restates one bullet; the others serve neighboring goals.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "plainer last bullet (floral designs to flowers) and option C to match"
+        ],
+        "status": "fixed",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy.w5b1_22",
+      "template": "EMPH",
+      "subtype": "Emphasize how few",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Stave churches are wooden churches built around a frame of vertical posts called staves.\n• They were built across northern Europe during the Middle Ages.\n• Historians estimate that Norway alone once had more than 1,000 stave churches.\n• Only 28 of Norway’s stave churches survive today.\n• Many were torn down in the 1800s and replaced with larger buildings.",
+      "stem": "The student wants to emphasize how few of Norway’s stave churches remain. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Stave churches are wooden churches built around a frame of vertical posts called staves.",
+        "During the Middle Ages, stave churches were built across northern Europe.",
+        "Of the more than 1,000 stave churches that historians estimate Norway once had, only 28 survive today.",
+        "Historians estimate that Norway alone once had more than 1,000 stave churches."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To emphasize how few stave churches remain, the sentence should set the survivors against the original number. Choice C does this: Norway “once had more than 1,000 stave churches,” but “Only 28” of them “survive today.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (definition)",
+          "why_wrong": "It explains what a stave church is, not how few remain."
+        },
+        "B": {
+          "recipe": "OG (when and where they were built)",
+          "why_wrong": "It says where and when the churches were built but nothing about how many survive."
+        },
+        "D": {
+          "recipe": "OPP (emphasizes how many there were)",
+          "why_wrong": "It stresses how many stave churches Norway once had and never mentions how few are left."
+        }
+      },
+      "models": [
+        "1.16",
+        "1.15"
+      ],
+      "word_count": 71,
+      "sources": [],
+      "notes": "Subject: history and architecture (Norwegian stave churches: about 1,000 or more once, 28 standing today, the standard figures). Easy EMPH: OG, OG, and an opposite-emphasis option (D), as in 1.7 C.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "plainer last bullet (demolished to torn down)"
+        ],
+        "status": "fixed",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.easy.w5b1_23",
+      "template": "DESC",
+      "subtype": "Describe a shape",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Musgum people live along the Logone River in northern Cameroon.\n• They traditionally built houses called teleuk from sun-dried mud mixed with grass.\n• A teleuk is shaped like a tall dome that narrows toward a rounded top.\n• Raised ridges in geometric patterns cover its outer walls.\n• Builders used the ridges as footholds while working on the upper walls.",
+      "stem": "The student wants to describe the shape of a teleuk. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Built from sun-dried mud, a teleuk is shaped like a tall dome that narrows toward a rounded top.",
+        "The Musgum people, who built teleuk, live along the Logone River in Cameroon.",
+        "Builders working on a teleuk’s upper walls used its raised ridges as footholds.",
+        "Teleuk were traditionally made from sun-dried mud mixed with grass."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to describe a teleuk’s shape. Choice A gives it: “A teleuk is shaped like a tall dome that narrows toward a rounded top.”",
+      "distractors": {
+        "B": {
+          "recipe": "OG (who built them and where)",
+          "why_wrong": "It identifies the Musgum people and where they live but does not describe the shape of a teleuk."
+        },
+        "C": {
+          "recipe": "OG (use of the ridges)",
+          "why_wrong": "It explains how builders used the ridges, not what shape the house has."
+        },
+        "D": {
+          "recipe": "OG (material)",
+          "why_wrong": "It names what teleuk are made of, not their shape."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.18"
+      ],
+      "word_count": 74,
+      "sources": [],
+      "notes": "Subject: social science and architecture (Musgum teleuk houses of northern Cameroon, along the Logone River; sun-dried mud and grass; tall pointed domes; raised ridges used as footholds). Standard facts. Easy DESC: three OG options.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.easy.w5b1_24",
+      "template": "RANK",
+      "subtype": "Order of two events",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 1957, the Soviet Union launched Sputnik 1, the first artificial satellite.\n• Over the next ten years, the United States and France also launched satellites on their own rockets.\n• Japan launched its first satellite, Ohsumi, in February 1970.\n• China launched its first satellite, Dong Fang Hong 1, in April 1970.\n• Dong Fang Hong 1 broadcast the song “The East Is Red” back to Earth.",
+      "stem": "The student wants to emphasize the order in which Japan and China launched their first satellites. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The first artificial satellite, Sputnik 1, was launched by the Soviet Union in 1957.",
+        "Japan launched its first satellite, Ohsumi, two months before China launched Dong Fang Hong 1.",
+        "China’s first satellite, Dong Fang Hong 1, broadcast the song “The East Is Red” back to Earth.",
+        "Japan and China both launched their first satellites in 1970."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is the order of the two launches. Japan launched Ohsumi “in February 1970,” and China launched Dong Fang Hong 1 “in April 1970.” Choice B states the order directly: Japan launched “two months before” China.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (an earlier launch by another country)",
+          "why_wrong": "It describes the Soviet Union’s 1957 launch and mentions neither Japan nor China."
+        },
+        "C": {
+          "recipe": "PART (one satellite only)",
+          "why_wrong": "It gives a detail about China’s satellite and says nothing about Japan’s, so it shows no order."
+        },
+        "D": {
+          "recipe": "VAGUE (same year, no order)",
+          "why_wrong": "It says both launched in 1970 but not which came first."
+        }
+      },
+      "models": [
+        "1.17",
+        "1.20"
+      ],
+      "word_count": 79,
+      "sources": [],
+      "notes": "Subject: science and technology (first satellites: Sputnik 1, 1957; Ohsumi, Japan, 11 February 1970; Dong Fang Hong 1, China, 24 April 1970, which played The East Is Red). Standard dates. Easy RANK: OG, PART, and a same-year option that gives no order.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "plainer second bullet (decade to ten years)"
+        ],
+        "status": "fixed",
+        "note": "Rhetorical Synthesis: no fact-checking (WAVE.md); named people are real and credited only with their documented work, studies are unnamed and generic, no invented names, no literary text."
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.hard.w5b2_01",
+      "template": "EXPL",
+      "subtype": "Explain how (mechanism across three bullets)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In the third century CE, Chinese engineers constructed the south-pointing chariot, a two-wheeled vehicle topped by a carved figure.\n• Unlike a compass, the chariot used no magnets; before departure, its operator set the figure’s arm to point south.\n• An arrangement of interlocking gears connected the figure to both wheels.\n• During a turn, the chariot’s outer wheel traveled farther than its inner wheel.\n• The gears translated this difference into an equal rotation of the figure in the opposite direction, keeping its arm pointed southward.",
+      "stem": "The student wants to explain how the south-pointing chariot kept its figure pointing south. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Built by Chinese engineers in the third century CE, the south-pointing chariot used no magnets, relying instead on an operator who set its figure to point south before departure.",
+        "Gears connecting the figure to both wheels kept the wheels traveling equal distances during every turn, so the figure never rotated and its arm continued to point south.",
+        "During a turn, gears linked to both wheels rotated the figure in the opposite direction by an amount matching how much farther the outer wheel traveled, keeping the arm pointed south.",
+        "Whenever the chariot turned, its outer wheel traveled farther than its inner wheel, and the operator then used the gears to turn the figure back toward the south."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain how the chariot kept its figure pointing south. The notes give a chain: gears “connected the figure to both wheels,” “During a turn, the chariot’s outer wheel traveled farther than its inner wheel,” and “The gears translated this difference into an equal rotation of the figure in the opposite direction.” Choice C follows that whole chain from the turn to the figure’s matching counterturn.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (what the device is and how it was set up, not how it kept pointing)",
+          "why_wrong": "It describes the chariot and how the operator set the figure “before departure,” but it never explains what kept the figure pointing south once the chariot began turning."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: denies the wheel difference)",
+          "why_wrong": "It explains a mechanism, but the notes say “the chariot’s outer wheel traveled farther than its inner wheel,” so the wheels did not travel equal distances, and the figure did rotate."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: wrong agent)",
+          "why_wrong": "It credits the operator with turning the figure during the journey, but the notes say the operator only set the arm “before departure”; the gears did the turning."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.2",
+        "ee51ad04"
+      ],
+      "word_count": 99,
+      "sources": [],
+      "notes": "Subject: history of technology (the south-pointing chariot, a real non-magnetic Chinese device; mechanism stated as in modern gear reconstructions; no named people). Band 6 (EXPL has band-7 officials but the plan sets 6): how-goal over a three-bullet chain; two goal-shaped FALSE options (B denies the wheel difference, D swaps the agent) and one OG setup option.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes trimmed toward CB length (traveled farther than); quotes in explanation and B updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6 (EXPL has band-7 officials, the plan set 6). How-goal over a three-bullet chain with two goal-shaped FALSE options (B denies the wheel difference, D gives the turning to the operator) and one OG setup option; the key paraphrases the chain rather than copying it. A strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.hard.w5b2_02",
+      "template": "STUDY",
+      "subtype": "Present the findings (two numeric findings)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Floating solar farms are photovoltaic panels mounted on platforms that float on reservoirs.\n• In a 2021 study, engineers compared panels on a floating solar farm with identical panels installed on nearby land.\n• The floating panels generated 6% more electricity than the land-based panels.\n• Water beneath the floating panels lost 40% less to evaporation than open water nearby.\n• The engineers attributed the higher output to the water, which kept the floating panels cooler.",
+      "stem": "The student wants to present the findings of the study. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The engineers found that the floating panels generated more electricity than identical panels on land and that the water beneath them lost less to evaporation.",
+        "According to the 2021 study, the floating panels generated 40% more electricity than identical land-based panels because the water kept them cooler.",
+        "The engineers found that the floating panels generated 6% more electricity and cut the reservoir’s total evaporation by 40%.",
+        "Engineers compared panels on a floating solar farm with identical panels installed on nearby land to learn whether the water beneath them would affect how much electricity they produced."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The study had two findings: the floating panels “generated 6% more electricity than the land-based panels,” and water beneath them “lost 40% less to evaporation than open water nearby.” Choice A presents both findings accurately, dropping the figures rather than misattaching them.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (goal-shaped: number attached to the wrong finding)",
+          "why_wrong": "It moves the 40% figure from evaporation to electricity; the notes say the floating panels “generated 6% more electricity,” and it leaves out the evaporation finding."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: scope shift of a figure)",
+          "why_wrong": "It presents both findings but misstates the second: only water “beneath the floating panels” lost 40% less to evaporation than open water nearby, not the whole reservoir."
+        },
+        "D": {
+          "recipe": "PART (method and interpretation, no findings)",
+          "why_wrong": "It describes how the study was set up and what the engineers wanted to learn, but it reports no result: neither the higher output nor the reduced evaporation appears, so it does not present the findings."
+        }
+      },
+      "models": [
+        "5645f119",
+        "3.10",
+        "3.1"
+      ],
+      "word_count": 88,
+      "sources": [],
+      "notes": "Subject: science and technology (floating solar panels). Unnamed, generic study with invented figures (WAVE.md: invented numbers only on an unnamed, plainly generic study). Band 7 moves (from 5645f119, without its Finding labels or key frame): two numeric findings, key drops the numbers, two goal-shaped FALSE options misattach or rescope them, one PART that gives method plus interpretation.",
+      "band_target": 7,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Follows 5645f119: two numeric findings, the key drops both numbers, B moves the 40% to electricity and C rescopes the evaporation figure to the whole reservoir (two goal-shaped FALSE options), and D gives method plus one finding, incomplete like the model’s A."
+      },
+      "safety_fix": "2026-10-27 lead: safety judged old D defensible (it reported the higher output inside the engineers' explanation). D rebuilt as method plus aim with no result.",
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [
+          "D"
+        ],
+        "unfair": "D also presents a study finding (higher output) plus the engineers' attributed cause; it is not just the method, so the method-only distractor does not cleanly fail the goal.",
+        "lead_override": "2026-10-27 lead: safety and gate run 2 found old D defensible; D rebuilt as method plus aim with no result (see safety_fix). Key A stands."
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.hard.w5b2_03",
+      "template": "OVERVIEW",
+      "subtype": "Overview of a trade chain",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Cowrie shells, produced by a small marine snail, circulated as currency throughout parts of Africa and Asia for centuries.\n• Many of these shells were harvested in the shallow lagoons of the Maldives, an archipelago in the Indian Ocean.\n• Beginning in the 1500s, European merchants purchased enormous quantities of the shells at ports in India.\n• They transported the shells to West Africa, frequently using them as ballast to stabilize their ships.\n• In West African markets, cowries purchased everyday goods and settled debts.",
+      "stem": "The student wants to provide an overview of the cowrie shell trade. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In West African markets, cowrie shells, which arrived aboard European ships, were used to purchase everyday goods and to settle debts.",
+        "Beginning in the 1500s, European merchants harvested cowrie shells in West African lagoons and transported them as ballast to the Maldives, where the shells then circulated as currency.",
+        "Cowrie shells, which are produced by a small marine snail, circulated as currency for centuries throughout parts of both Africa and Asia.",
+        "Harvested in the Maldives and purchased by European merchants in India, cowrie shells were shipped to West Africa, where they served as money in markets."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An overview of the trade has to follow the shells from start to finish. The notes say the shells “were harvested in the shallow lagoons of the Maldives,” that European merchants “purchased enormous quantities of the shells at ports in India,” that “They transported the shells to West Africa,” and that there “cowries purchased everyday goods.” Choice D covers each stage in one sentence.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (one end of the chain)",
+          "why_wrong": "It covers only how the shells were used once they reached West Africa; it leaves out where they were gathered and bought."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: route reversed)",
+          "why_wrong": "It sketches the whole route, but backward: the shells were harvested in the Maldives and transported “to West Africa,” not harvested in West Africa and carried to the Maldives."
+        },
+        "C": {
+          "recipe": "OG (general background on cowries)",
+          "why_wrong": "It says what cowrie shells are and where they served as money, but it says nothing about the trade that carried them from the Maldives to West Africa."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.9",
+        "964c6055"
+      ],
+      "word_count": 97,
+      "sources": [],
+      "notes": "Subject: history (the cowrie shell trade from the Maldives via Indian ports to West Africa; real, well-documented; no named people). Band 6 shape of the commodity-chain model 3.8 (PART one end, OG definition) plus one goal-shaped FALSE with the route reversed.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. OVERVIEW band-6 shape (PART one end of the chain, OG background on cowries) plus a goal-shaped FALSE with the route reversed, as section 5 asks; every stage of the key needs three bullets combined."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.hard.w5b2_04",
+      "template": "DIFF",
+      "subtype": "Contrast on a non-obvious dimension (what shapes each)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Approaching the Sun, a comet releases gas and dust, which can form two distinct tails.\n• The dust tail consists of microscopic solid particles pushed gently outward by the pressure of sunlight.\n• Traveling slowly, these particles gradually lag behind the comet, so the dust tail curves along its trajectory.\n• The ion tail consists of electrically charged gas accelerated by the solar wind, the Sun’s outflowing stream of particles.\n• Consequently, this tail remains perfectly straight, pointing directly away from the Sun.",
+      "stem": "The student wants to contrast how the two tails get their shapes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "While sunlight sweeps a comet’s ion tail into a straight line pointing away from the Sun, the solar wind pushes the dust tail’s particles into a curve along the comet’s trajectory.",
+        "Whereas sunlight gently pushes the dust tail’s slow particles, which lag behind the comet in a curve, the solar wind drives the ion tail straight away from the Sun.",
+        "A comet’s two tails differ in their composition: the dust tail is made of microscopic solid particles, while the ion tail is made of electrically charged gas.",
+        "Whereas the dust tail curves because sunlight pushes its particles faster than the comet travels, the ion tail stays straight because the solar wind drives its charged gas directly away from the Sun."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To contrast how the tails get their shapes, a sentence must give each tail’s cause and result. The notes say the dust tail’s particles are “pushed gently outward by the pressure of sunlight” and “gradually lag behind the comet, so the dust tail curves,” while the ion tail is “accelerated by the solar wind” and “remains perfectly straight, pointing directly away from the Sun.” Choice B sets these side by side.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: forces swapped)",
+          "why_wrong": "It makes the right kind of contrast but swaps the causes: the notes say sunlight pushes the dust tail and “the solar wind” accelerates the ion tail."
+        },
+        "C": {
+          "recipe": "REL (true difference on the wrong dimension)",
+          "why_wrong": "It contrasts what the tails are made of, which the notes do state, but it does not say how either tail gets its shape."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: right forces, reason for the dust tail’s curve reversed)",
+          "why_wrong": "It names the right force for each tail, but it misstates why the dust tail curves: the notes say the particles are “Traveling slowly” and “gradually lag behind the comet,” not that sunlight pushes them faster than the comet travels."
+        }
+      },
+      "models": [
+        "c34d6bff",
+        "459df2ba",
+        "8e9e473d"
+      ],
+      "word_count": 95,
+      "sources": [],
+      "notes": "Subject: science (comet dust and ion tails, astronomy well known to me; no figures or people). Band 7 moves: the compared dimension is the cause of each shape, not composition or color; A is goal-shaped and false (agents swapped), C is a true difference on the wrong dimension (459df2ba C pattern), D (rewritten at review) is a second goal-shaped FALSE with the right forces but the dust tail’s reason reversed. Background knowledge agrees with the notes, so it cannot rescue a wrong option.",
+      "band_target": 7,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "D was a vague both-plus option no student keeps; rewritten as a second goal-shaped FALSE (right forces, the dust tail’s curve credited to particles moving faster than the comet, against “Traveling slowly”), so two FALSE options die on different bullets"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix. The compared dimension is the cause of each shape; A swaps the two forces and the new D keeps the forces but reverses why the dust tail curves (the notes say its particles are traveling slowly and lag), so two goal-shaped FALSE options die on different bullets, and C is a true difference on the wrong dimension (composition). Before the fix D was a vague both-plus option no student keeps, which read band 6. Comet tails are classroom astronomy, but every fact needed is in the notes, so background knowledge only confirms them."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.hard.w5b2_05",
+      "template": "QUOTE",
+      "subtype": "Use a quotation to emphasize a risk",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Assisted migration is the deliberate relocation of species to regions whose future climate is expected to suit them.\n• Some foresters now transplant seedlings hundreds of miles north of their current ranges.\n• Forest ecologist Ingrid Solberg argues that the practice could help trees “keep pace with a climate shifting faster than their seeds can travel.”\n• Conservation biologist Rafael Quintero acknowledges that the practice “has won over many land managers.”\n• But he warns that a relocated species “may thrive too well, crowding out the plants and animals already living there.”",
+      "stem": "The student wants to use a quotation to emphasize a potential risk of assisted migration. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Solberg argues that trees need help to “keep pace with a climate shifting faster than their seeds can travel,” a problem that assisted migration could address.",
+        "Although Quintero warns that relocated species could crowd out the plants and animals already living in their new regions, he acknowledges that assisted migration “has won over many land managers.”",
+        "Quintero cautions that a species relocated through assisted migration “may thrive too well, crowding out the plants and animals already living there.”",
+        "Planting seedlings hundreds of miles north of their current ranges could harm the plants and animals already living in those regions if the newcomers spread too widely."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal calls for a quotation that points to a risk of assisted migration itself. Quintero warns that a relocated species “may thrive too well, crowding out the plants and animals already living there.” Choice C quotes exactly those words and ties them to assisted migration.",
+      "distractors": {
+        "A": {
+          "recipe": "NOQ (a quotation doing another job)",
+          "why_wrong": "It quotes Solberg on a problem trees face from a fast-shifting climate, a problem the practice is meant to solve, not a risk of the practice."
+        },
+        "B": {
+          "recipe": "NOQ (risk in the writer’s own words, quotation on popularity)",
+          "why_wrong": "It mentions the risk only in its own words; the words it quotes, that the practice “has won over many land managers,” stress how popular assisted migration has become, and that popularity is the sentence’s main point."
+        },
+        "D": {
+          "recipe": "NOQ (paraphrase with no quotation)",
+          "why_wrong": "It describes a risk the notes support, but it uses no quotation, which the goal requires."
+        }
+      },
+      "models": [
+        "3.6",
+        "e8494245",
+        "2.9"
+      ],
+      "word_count": 104,
+      "sources": [],
+      "notes": "Subject: science and conservation (assisted migration, a real practice). Ingrid Solberg and Rafael Quintero are invented names with invented quotations (RS: no fact-checking); each was searched once and no ecologist or conservation biologist with the name turned up. No QUOTE item sits at band 7, so written as a strong band 6 (WAVE.md): A quotes a problem the practice addresses, B (rewritten at review, e8494245 B pattern) names the risk in its own words but quotes Quintero on popularity, D does the goal's job without a quotation.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "notes trimmed toward CB length (now transplant, the practice, But he warns)",
+          "B quoted popularity alone and its why_wrong called Quintero “the critic”; B now paraphrases the risk and quotes the popularity line (e8494245 B pattern), why_wrong rewritten",
+          "invented names searched once (Ingrid Solberg, Rafael Quintero): no real person in the field turned up; no change"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "No QUOTE item sits at band 7, so it cannot be band 7. Hardened to a strong band 6 on the e8494245 pattern: B now states the risk in its own words but quotes the popularity line, A quotes the benefit, D states the risk with no quotation."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b2_06",
+      "template": "DIFF",
+      "subtype": "Emphasize a difference (parallel pair)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Mason bees and wool carder bees are solitary: each female builds and stocks her own nest.\n• Both often nest inside hollow plant stems or old beetle tunnels.\n• A mason bee divides her nest into chambers with walls of mud.\n• A wool carder bee lines each chamber with soft hairs she scrapes from leaves.\n• In each chamber, the female leaves a ball of pollen and lays a single egg.",
+      "stem": "The student wants to emphasize a difference between the nests of mason bees and those of wool carder bees. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Whereas mason bees separate the chambers of their nests with walls of mud, wool carder bees line theirs with soft hairs scraped from leaves.",
+        "Mason bees and wool carder bees both nest inside hollow plant stems, and in each chamber the female leaves a ball of pollen and lays a single egg.",
+        "A female mason bee builds her own nest, dividing it into separate chambers with walls of mud.",
+        "As solitary insects, mason bees and wool carder bees each build nests, though they do not build them in the same way."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To emphasize a difference, the sentence must contrast the two nests on the same feature. The notes say a mason bee divides her nest into chambers “with walls of mud,” while a wool carder bee “lines each chamber with soft hairs she scrapes from leaves.” Choice A sets these two building materials against each other with “Whereas.”",
+      "distractors": {
+        "B": {
+          "recipe": "REL (similarity instead of difference)",
+          "why_wrong": "It describes what the two nests have in common, the hollow stems and the pollen and egg in each chamber, so it emphasizes a similarity."
+        },
+        "C": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It describes only the mason bee’s nest, so there is nothing to contrast it with."
+        },
+        "D": {
+          "recipe": "VAGUE (difference with no content)",
+          "why_wrong": "It says the bees construct their nests differently but never says how."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.17",
+        "2.10"
+      ],
+      "word_count": 84,
+      "sources": [],
+      "notes": "Subject: science (mason bees, Osmia, and the wool carder bee, Anthidium manicatum, which lines its cells with plant hairs; common biology, no named people). Replaced at review: the leafcutter side repeated the live Central Ideas item on leafcutter bee nests built from cut leaves. Parallel-pair arc with one shared trait (stems, pollen and egg) for the REL option.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "leafcutter bees replaced by wool carder bees: a live Central Ideas item (central_ideas_and_details.T1.easy) is about leafcutter bee nests built from cut leaves; new pair grepped and claimed",
+          "notes plained and trimmed (builds and stocks, divides her nest into chambers, old beetle tunnels, leaves a ball of pollen)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b2_07",
+      "template": "DIFF",
+      "subtype": "Emphasize how X differs from Y",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Painting conservators sometimes fill damaged areas with new paint, a process called inpainting.\n• In invisible inpainting, new paint matches the original so precisely that the repair cannot be detected.\n• Tratteggio, a technique developed in Rome in the mid-1900s, fills gaps with fine vertical lines of pure color.\n• From a distance, these lines blend into the surrounding image.\n• Up close, however, viewers can distinguish restored areas from original ones.",
+      "stem": "The student wants to emphasize how tratteggio differs from invisible inpainting. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Inpainting, the process of filling gaps in damaged paintings with new paint, is something conservators can do in more than one way.",
+        "Like invisible inpainting, tratteggio produces repairs that blend into the surrounding image when seen from a distance.",
+        "Developed in Rome in the mid-1900s, tratteggio fills gaps in damaged paintings with fine vertical lines of pure color.",
+        "Unlike invisible inpainting, whose repairs cannot be detected, tratteggio leaves repairs that viewers can spot up close."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The difference the notes set up is visibility. In invisible inpainting “the repair cannot be detected,” whereas with tratteggio, “Up close, however, viewers can distinguish restored areas from original ones.” Choice D contrasts the two methods on exactly this point.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (definition of the general process)",
+          "why_wrong": "It defines inpainting in general and says it can be done in different ways, but it never says how tratteggio differs from invisible inpainting."
+        },
+        "B": {
+          "recipe": "REL (similarity instead of difference)",
+          "why_wrong": "It points out something the two methods share, that from a distance the repair blends in, so it emphasizes a similarity."
+        },
+        "C": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It describes tratteggio alone and never compares it with invisible inpainting."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.17",
+        "2.23"
+      ],
+      "word_count": 84,
+      "sources": [],
+      "notes": "Subject: arts (tratteggio, a real painting-conservation method developed in Rome in the mid-twentieth century; no named people). The distance bullet gives a true shared trait for the REL option.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes trimmed toward the models’ median (fill damaged areas, a process called inpainting)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w5b2_08",
+      "template": "AUD_NEW",
+      "subtype": "Describe a work to an audience unfamiliar with the artist",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Magdalena Abakanowicz (1930–2017) was an influential Polish sculptor.\n• She first gained recognition in the 1960s for enormous hanging sculptures woven from natural fibers such as sisal.\n• Her installation Agora (2006) occupies a section of Grant Park in Chicago, Illinois.\n• It consists of 106 cast-iron figures, each approximately nine feet tall.\n• The figures lack heads and arms, and their surfaces are deeply textured, resembling tree bark.",
+      "stem": "The student wants to describe Agora to an audience unfamiliar with Magdalena Abakanowicz. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The 106 cast-iron figures of Agora, which occupies a section of Chicago’s Grant Park, lack heads and arms.",
+        "Agora, a 2006 work by Polish sculptor Magdalena Abakanowicz, consists of 106 headless, armless cast-iron figures in Chicago’s Grant Park.",
+        "Polish sculptor Magdalena Abakanowicz first gained recognition in the 1960s for enormous hanging sculptures woven from natural fibers.",
+        "Abakanowicz’s Agora, which stands in Chicago’s Grant Park, consists of 106 nine-foot cast-iron figures whose textured surfaces resemble tree bark."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience unfamiliar with Abakanowicz needs to be told who she is as well as what Agora looks like. Choice B identifies her as a “Polish sculptor” and describes the installation’s “106 cast-iron figures,” which “lack heads and arms.”",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (work described, artist left out)",
+          "why_wrong": "It describes Agora but never says who made it, so a new audience learns nothing about Abakanowicz."
+        },
+        "C": {
+          "recipe": "OG (the artist’s earlier work)",
+          "why_wrong": "It introduces Abakanowicz but describes her 1960s fiber sculptures, not Agora."
+        },
+        "D": {
+          "recipe": "AUD (artist named, not identified)",
+          "why_wrong": "It describes Agora well but uses Abakanowicz’s name as if the audience already knew who she was."
+        }
+      },
+      "models": [
+        "2.34",
+        "2.36"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: arts (Magdalena Abakanowicz and Agora, Grant Park, Chicago, 2006; facts I know well: 106 headless, armless cast-iron figures about nine feet tall; Abakans woven from sisal and other fibers). Two AUD options as in 2.36.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w5b2_09",
+      "template": "AUD_NEW",
+      "subtype": "Introduce a concept to an unfamiliar audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Universal design is an approach that aims to make buildings and products accessible to as many people as possible.\n• American architect Ronald Mace introduced the term in the 1980s.\n• One example is the curb cut, a small ramp connecting a sidewalk to the street.\n• Originally intended for wheelchair users, curb cuts also benefit pedestrians pushing strollers.\n• Lever door handles, which are easier to grip than round knobs, are another example.",
+      "stem": "The student wants to introduce universal design to an audience unfamiliar with the concept. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Curb cuts, small ramps connecting sidewalks to streets, benefit wheelchair users as well as pedestrians pushing strollers.",
+        "American architect Ronald Mace introduced the term “universal design” in the 1980s.",
+        "Universal design, an approach that aims to make buildings and products accessible to as many people as possible, includes features like curb cuts.",
+        "Like lever door handles, which are easier to grip than round knobs, curb cuts, the small ramps connecting sidewalks to streets, are an example of universal design."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience unfamiliar with universal design needs to know what it is. Choice C explains that it is “an approach that aims to make buildings and products accessible to as many people as possible” and then gives a familiar example, the curb cut.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (example with no concept)",
+          "why_wrong": "It describes curb cuts but never mentions universal design, so the audience is not introduced to the concept."
+        },
+        "B": {
+          "recipe": "OG (who named it)",
+          "why_wrong": "It says who introduced the term but not what universal design is."
+        },
+        "D": {
+          "recipe": "AUD (concept named, not explained)",
+          "why_wrong": "It uses the term “universal design” as if the audience already understood it, offering examples without saying what the approach is."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.43",
+        "2.8"
+      ],
+      "word_count": 86,
+      "sources": [],
+      "notes": "Subject: social science and design (universal design; the term coined by architect Ronald Mace in the 1980s, which I know well). Concept-introduction shape of 2.43: two AUD options and one OG.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes trimmed toward the models’ median (two curb-cut bullets shortened)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w5b2_10",
+      "template": "EXPL",
+      "subtype": "Explain the origin of a name",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Vanadium is a hard, silvery metal often added to steel to strengthen it.\n• In 1801, mineralogist Andrés Manuel del Río identified the element in Mexico, naming it erythronium because its salts turned red when heated.\n• Other chemists persuaded him it was impure chromium.\n• In 1830, Swedish chemist Nils Gabriel Sefström rediscovered it.\n• He named it for Vanadís, a Norse goddess of beauty, because its compounds come in many brilliant colors.",
+      "stem": "The student wants to explain the origin of vanadium’s name. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Del Río named the element erythronium because its salts turned red when heated, though other chemists believed it was only impure chromium.",
+        "Vanadium, a hard, silvery metal often added to steel, was rediscovered in 1830 by Swedish chemist Nils Gabriel Sefström.",
+        "The name vanadium, which was chosen by Sefström in 1830, has a different origin from the name that del Río had given the element.",
+        "Sefström named vanadium for Vanadís, a Norse goddess of beauty, because the element’s compounds come in many brilliant colors."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "To explain the origin of the name, a sentence must say what it honors and why. The notes say Sefström “named it for Vanadís, a Norse goddess of beauty, because its compounds come in many brilliant colors.” Choice D gives both the source of the name and the reason for it.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (origin of a different name)",
+          "why_wrong": "It explains where the name erythronium came from, del Río’s earlier name for the element, not the name vanadium."
+        },
+        "B": {
+          "recipe": "OG (who rediscovered it)",
+          "why_wrong": "It says what vanadium is and who rediscovered it, but not where its name came from."
+        },
+        "C": {
+          "recipe": "VAGUE (an origin claimed, not given)",
+          "why_wrong": "It says the name has its own origin but never says what that origin is."
+        }
+      },
+      "models": [
+        "2.13",
+        "2.7"
+      ],
+      "word_count": 86,
+      "sources": [],
+      "notes": "Subject: science and history (the naming of vanadium; del Río’s erythronium of 1801 and Sefström’s 1830 name after Vanadís, both well known to me). Trap: A explains the origin of the element’s other name.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w5b2_11",
+      "template": "EXPL",
+      "subtype": "Explain an advantage",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In the 1700s, shipworms, wood-boring clams, severely damaged the hulls of many wooden vessels.\n• Seaweed and barnacles also accumulated on hulls, slowing ships considerably.\n• In the 1760s, Britain’s Royal Navy began fastening thin copper sheets to the underwater portions of its ships.\n• Copper is toxic to shipworms and to many of the organisms that attach themselves to hulls.\n• By the 1780s, the majority of Royal Navy ships had copper-sheathed hulls.",
+      "stem": "The student wants to explain an advantage of covering ships’ hulls with copper. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Because copper is toxic to shipworms and to many organisms that attach themselves to hulls, copper sheets protected ships from damage and from growths that slowed them.",
+        "In the 1760s, Britain’s Royal Navy began fastening thin copper sheets to the underwater portions of its wooden ships.",
+        "Shipworms, wood-boring clams, severely damaged ships’ wooden hulls, while seaweed and barnacles accumulated on the hulls and slowed the ships.",
+        "By the 1780s, the majority of the ships in Britain’s Royal Navy had copper-sheathed hulls, a change that the navy had first begun to make in the 1760s."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An advantage has to link the copper to a benefit. The notes say “Copper is toxic to shipworms and to many of the organisms that attach themselves to hulls,” and that shipworms “severely damaged the hulls” while seaweed and barnacles were “slowing ships considerably.” Choice A connects the copper to protection from both problems.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (when the practice began)",
+          "why_wrong": "It says when and how the navy started using copper sheets but not what the copper did for the ships."
+        },
+        "C": {
+          "recipe": "PART (the problem without the solution)",
+          "why_wrong": "It describes the damage and slowing that ships suffered but never mentions copper, so it gives no advantage of it."
+        },
+        "D": {
+          "recipe": "OG (how widely it spread)",
+          "why_wrong": "It says how far the practice spread in the navy, not why copper helped."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.31"
+      ],
+      "word_count": 86,
+      "sources": [],
+      "notes": "Subject: history of technology (copper sheathing of Royal Navy hulls from the 1760s; widespread by the 1780s; well known to me). Problem-without-solution PART option as in 2.3 C.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w5b2_12",
+      "template": "EMPH",
+      "subtype": "Emphasize duration",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Brothers Jacob and Wilhelm Grimm are best known for their collections of fairy tales.\n• In 1838, they began compiling the Deutsches Wörterbuch, a dictionary documenting the history of every German word.\n• Wilhelm died in 1859, having completed the entries for the letter D.\n• Jacob died in 1863, partway through the entry for Frucht (fruit).\n• Successive generations of scholars continued the project, finally completing it in 1961.",
+      "stem": "The student wants to emphasize how long it took to complete the dictionary. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Jacob Grimm died in 1863 while writing the Deutsches Wörterbuch’s entry for Frucht, four years after the death of his brother Wilhelm.",
+        "Begun by the Grimm brothers in 1838, the Deutsches Wörterbuch was not completed until 1961, more than a century later.",
+        "Best known for their fairy tales, Jacob and Wilhelm Grimm also began compiling a dictionary documenting the history of every German word.",
+        "After the deaths of both Grimm brothers, successive generations of scholars continued their work on a dictionary of the German language."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To emphasize how long the dictionary took, a sentence should give its start and finish. The notes say the brothers began it “In 1838” and that later scholars finished it “in 1961.” Choice B gives both dates and stresses the span with “not completed until” and “more than a century later.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (when the brothers died)",
+          "why_wrong": "It gives the dates of the brothers’ deaths, which do not show how long the whole project took."
+        },
+        "C": {
+          "recipe": "OG (who began it and what it covers)",
+          "why_wrong": "It says what the dictionary traces and who began it, but nothing about how long it took to finish."
+        },
+        "D": {
+          "recipe": "PART (suggests length without the span)",
+          "why_wrong": "It hints that the work went on for a long time but gives neither when it began nor when it was finished."
+        }
+      },
+      "models": [
+        "2.20",
+        "2.6",
+        "2.40"
+      ],
+      "word_count": 82,
+      "sources": [],
+      "notes": "Subject: humanities and history (the Grimms' Deutsches Wörterbuch, begun 1838, finished 1961; Wilhelm wrote D, Jacob died at Frucht; well known to me). An official Boundaries item mentions the Grimms' fairy tales, a different subject.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w5b2_13",
+      "template": "EMPH",
+      "subtype": "Emphasize size",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Completed in 2013, the Great Tapestry of Scotland is an embroidered artwork depicting the history of Scotland.\n• Novelist Alexander McCall Smith conceived the project, and artist Andrew Crummy designed it.\n• It consists of 160 panels stitched by approximately 1,000 volunteers.\n• Placed end to end, the panels extend 143 meters (469 feet).\n• Since 2021, it has been permanently exhibited in Galashiels, a town in the Scottish Borders.",
+      "stem": "The student wants to emphasize the length of the Great Tapestry of Scotland. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Approximately 1,000 volunteers stitched the panels of the Great Tapestry of Scotland, an embroidered artwork depicting the history of Scotland.",
+        "Conceived by novelist Alexander McCall Smith, the Great Tapestry of Scotland was designed by artist Andrew Crummy.",
+        "Placed end to end, the 160 panels of the Great Tapestry of Scotland extend a remarkable 143 meters (469 feet).",
+        "Since 2021, the Great Tapestry of Scotland has been permanently exhibited in Galashiels, a town in the Scottish Borders."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to emphasize length. The notes say that “Placed end to end, the panels extend 143 meters (469 feet).” Choice C gives that measurement and stresses it with “a remarkable.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (who made it and what it shows)",
+          "why_wrong": "It says how many volunteers stitched the work and what it depicts, not how long it is."
+        },
+        "B": {
+          "recipe": "OG (who proposed and designed it)",
+          "why_wrong": "It names the people who conceived and designed the work but says nothing about its length."
+        },
+        "D": {
+          "recipe": "OG (where it is shown)",
+          "why_wrong": "It tells where the work is displayed, not how long it is."
+        }
+      },
+      "models": [
+        "2.40",
+        "2.6",
+        "2.33"
+      ],
+      "word_count": 82,
+      "sources": [],
+      "notes": "Subject: arts (the Great Tapestry of Scotland, 160 panels, about 143 m, about 1,000 stitchers, displayed in Galashiels since 2021; real people Alexander McCall Smith and Andrew Crummy, facts well known to me). Three OG options as in 2.40 and 2.33.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium.w5b2_14",
+      "template": "EXAMPLE",
+      "subtype": "Explanation and example",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In evolutionary biology, an exaptation is a trait that evolved to serve one function and was later adapted for a different purpose.\n• Biologists Stephen Jay Gould and Elisabeth Vrba introduced the term in 1982.\n• In mammals’ ancestors, small bones at the back of the jaw formed part of the jaw joint.\n• Over millions of years, two of these bones migrated into the middle ear.\n• In modern mammals, they transmit sound vibrations to the inner ear.",
+      "stem": "The student wants to provide an explanation and an example of an exaptation. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Exaptations, a term that Stephen Jay Gould and Elisabeth Vrba introduced in 1982, are traits that evolved to serve one function and were later adapted for a different purpose.",
+        "Two small bones that once formed part of the jaw joint in the ancestors of mammals now transmit sound vibrations to the inner ear in modern mammals.",
+        "The jaw joint and the middle ear are two examples of exaptations, since both of them transmit sound vibrations to the inner ear in mammals.",
+        "An exaptation is a trait that evolved for one function and was later adapted for another, such as two jaw bones of mammals’ ancestors that now help mammals hear."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: what an exaptation is and an instance of one. Choice D gives the definition, a trait that “evolved to serve one function and was later adapted for a different purpose,” and then the jaw bones that “migrated into the middle ear” and now “transmit sound vibrations to the inner ear.”",
+      "distractors": {
+        "A": {
+          "recipe": "PART (definition only)",
+          "why_wrong": "It explains the term and who introduced it but gives no example."
+        },
+        "B": {
+          "recipe": "PART (example only)",
+          "why_wrong": "It describes the jaw bones that moved to the ear but never says what an exaptation is or that these bones are one."
+        },
+        "C": {
+          "recipe": "FALSE (misreads the example)",
+          "why_wrong": "It calls the jaw joint and the middle ear two exaptations that both carry sound, but the notes say the jaw bones once “formed part of the jaw joint” and only later “migrated into the middle ear.”"
+        }
+      },
+      "models": [
+        "2.16",
+        "2.25",
+        "2.42"
+      ],
+      "word_count": 91,
+      "sources": [],
+      "notes": "Subject: science (exaptation, Gould and Vrba 1982; mammalian middle-ear bones derived from reptile-like ancestors' jaw-joint bones; textbook-accurate, little known to students). Feathers avoided as the canonical example and close to official feather items. PART definition, PART example, FALSE misreading as in 2.16.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes trimmed (dropped “several” and “gradually”); explanation quote matched"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w5b2_15",
+      "template": "STUDY",
+      "subtype": "Present aim and methodology",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Previous research suggested that a dish’s color can influence how its contents taste.\n• A team of food scientists investigated whether bowl color affects how salty a soup seems.\n• They served an identical soup to 120 volunteers, half in white bowls and half in blue bowls.\n• Each participant rated the soup’s saltiness on a scale from 1 to 10.\n• Participants eating from blue bowls rated the soup as noticeably saltier.",
+      "stem": "The student wants to present the study’s aim and methodology. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Food scientists found that participants eating soup from blue bowls rated it as noticeably saltier than participants eating from white bowls did.",
+        "To learn whether bowl color affects how salty a soup seems, food scientists had volunteers rate one soup served in white or blue bowls.",
+        "Building on previous research about the color of dishes, a team of food scientists investigated whether bowl color affects how salty a soup seems.",
+        "Food scientists served an identical soup to 120 volunteers, half in white bowls and half in blue bowls, and had each of them rate its saltiness."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks for both the aim and the method. Choice B gives the aim, to learn whether “bowl color affects how salty a soup seems,” and the method: volunteers rated “an identical soup” served “in white bowls” or “in blue bowls.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (results instead of aim and method)",
+          "why_wrong": "It reports what the study found, not what it set out to learn or how it was done."
+        },
+        "C": {
+          "recipe": "PART (aim only)",
+          "why_wrong": "It gives the scientists’ aim but not how they tested it."
+        },
+        "D": {
+          "recipe": "PART (method only)",
+          "why_wrong": "It describes how the study was run but not what it was meant to find out."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.5",
+        "2.2"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: social science (food perception). Unnamed, generic study; the design and the one figure (120 volunteers) are invented, the general idea (dish color shapes taste) is a real research theme. Aim-and-method goal as in 2.21; PART aim, PART method, OG results.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "first bullet shortened (a dish’s color)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w5b2_16",
+      "template": "AUD_FAM",
+      "subtype": "Describe to an audience familiar with the term",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Larder hoarding is a behavior in which an animal accumulates food in a single central stockpile.\n• Other animals bury food in numerous small, scattered caches.\n• The American red squirrel, a larder hoarder, inhabits the coniferous forests of northern North America.\n• Each autumn, it gathers thousands of spruce cones into an enormous heap called a midden.\n• The midden’s cool, damp interior prevents the cones from opening and releasing their seeds.",
+      "stem": "The student wants to describe the American red squirrel’s food storage to an audience already familiar with larder hoarding. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Each autumn, the American red squirrel, a larder hoarder, gathers thousands of spruce cones into a midden, where cool, damp conditions keep the cones from opening.",
+        "A larder hoarder, the American red squirrel accumulates its food in a single central stockpile rather than burying it in numerous small, scattered caches.",
+        "The American red squirrel practices larder hoarding, a behavior in which an animal accumulates food in a single central stockpile, such as a midden.",
+        "The American red squirrel, a larder hoarder that stores food for later use, inhabits the coniferous forests of northern North America."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience that already knows what larder hoarding is can be given the term without a definition, along with the new details. Choice A calls the squirrel “a larder hoarder” without explaining the term and describes how it gathers “thousands of spruce cones” into a midden whose “cool, damp interior prevents the cones from opening.”",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (re-explains the familiar term)",
+          "why_wrong": "It spends the sentence explaining what larder hoarding is, which this audience already knows, and gives nothing new about the squirrel’s storage."
+        },
+        "C": {
+          "recipe": "AUD (re-defines the familiar term)",
+          "why_wrong": "It defines larder hoarding again for an audience that already understands it."
+        },
+        "D": {
+          "recipe": "OG (habitat, not storage)",
+          "why_wrong": "It tells where the squirrel lives but not how it stores its food."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.1",
+        "2.28"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: science (American red squirrel middens of spruce cones; well known to me). A live RS EXAMPLE item (sky islands) mentions the Mount Graham red squirrel's habitat, a different subject; nothing there about caching. Two AUD options as in 2.18. Reviewer: kept beside the live Mount Graham red squirrel item (same species, a different subject); the key now names the familiar term unglossed, as 2.18’s key does.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "key A now uses “a larder hoarder” unglossed, as the 2.18 key uses “leporello”; explanation rewritten",
+          "kept beside the live Mount Graham red squirrel item (rhetorical_synthesis.EXAMPLE.medium.w2b1_16): same species, different subject (sky-island endemism, not caching)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium.w5b2_17",
+      "template": "SIM",
+      "subtype": "Emphasize a similarity",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The majority of sharks hunt fish, seals, or other sizable prey.\n• The whale shark inhabits warm tropical waters and can exceed 50 feet in length.\n• It feeds by gulping seawater and filtering out plankton, minuscule organisms that drift with ocean currents.\n• The basking shark inhabits cooler temperate waters and can exceed 30 feet in length.\n• It swims with its enormous mouth open, straining plankton out of the passing water.",
+      "stem": "The student wants to emphasize a similarity between the diets of the whale shark and the basking shark. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "While the whale shark inhabits warm tropical waters, the basking shark inhabits cooler temperate waters.",
+        "The whale shark feeds by gulping seawater and filtering out plankton, minuscule organisms that drift with ocean currents.",
+        "Unlike most sharks, which hunt sizable prey, the whale shark and the basking shark both feed on plankton, minuscule drifting organisms.",
+        "The whale shark can exceed 50 feet in length, while the basking shark, the smaller of the two, can exceed 30 feet."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The two sharks feed in different ways, but the notes say both take in “plankton, minuscule organisms that drift with ocean currents”: the whale shark by “filtering out plankton” and the basking shark by “straining plankton out of the passing water.” Choice C states this shared diet with “both.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (difference instead of similarity)",
+          "why_wrong": "It contrasts where the two sharks live; it is about habitat, not diet, and it stresses a difference."
+        },
+        "B": {
+          "recipe": "PART (one shark only)",
+          "why_wrong": "It describes the whale shark’s feeding alone, so it shows no similarity."
+        },
+        "D": {
+          "recipe": "REL (contrast on the wrong dimension)",
+          "why_wrong": "It compares the sharks’ sizes, not their diets."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.30",
+        "2.46"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: science (whale and basking sharks, both plankton filter feeders; sizes rounded down). A live TSP item is about whale sharks digesting Sargassum, a different subject. The feeding methods differ, so the shared trait is the diet only.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "basking-shark feeding bullet shortened toward the models’ median; explanation quote matched"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.medium.w5b2_18",
+      "template": "GEN",
+      "subtype": "Make a generalization",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Seeds of most flowering plants ripen above ground.\n• Subterranean clover (Trifolium subterraneum) is a small herb native to the Mediterranean.\n• After the plant flowers, its stalks bend down and push the young seed heads into the soil, where the seeds ripen.\n• The hog peanut (Amphicarpaea bracteata) is a vine of North American woodlands.\n• It also grows small flowers near its base that produce seeds underground.",
+      "stem": "The student wants to make a generalization about where some plants’ seeds ripen. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Examples of plants whose seeds ripen underground include subterranean clover of the Mediterranean and the hog peanut of North America.",
+        "While subterranean clover pushes its seed heads into the soil, the hog peanut grows small flowers near its base that produce seeds underground.",
+        "Subterranean clover, a small Mediterranean herb, pushes its young seed heads into the soil, where the seeds ripen.",
+        "Unlike those of most flowering plants, the seeds of some plants ripen underground."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "A generalization makes a broad claim drawn from the specific cases. Subterranean clover pushes its seed heads “into the soil, where the seeds ripen,” and the hog peanut grows flowers that “produce seeds underground.” Choice D draws the general pattern from both cases: the seeds of some plants ripen underground.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (examples without the generalization)",
+          "why_wrong": "It names two plants whose seeds ripen underground, but it only lists examples; it never draws a broad claim from them."
+        },
+        "B": {
+          "recipe": "OG (contrasts the two cases)",
+          "why_wrong": "It contrasts how the two plants get their seeds into the ground instead of stating what they show about plants in general."
+        },
+        "C": {
+          "recipe": "PART (one case)",
+          "why_wrong": "It describes subterranean clover alone, a single specific case rather than a generalization."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.22"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: science (plants that ripen seeds underground: subterranean clover, Trifolium subterraneum, buries its seed heads; the hog peanut, Amphicarpaea bracteata, sets underground seeds from flowers near its base; standard botany, no named people). Replaced at review: the fire lily and grass tree draft (fire-triggered flowering) sat beside the live RS item on plants recovering after fire (w4b5_03) and the CB fynbos fire-germination item. Key is the short abstract claim, as in 2.12.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "subject replaced (fire-triggered flowering was the same fire-plant concept as live rhetorical_synthesis.DIFF.hard.w4b5_03 and the CB Cross-Text fynbos item); new subject: plants that ripen seeds underground, grepped and claimed; key letter, option shapes and length kept"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.medium.w5b2_19",
+      "template": "QUOTE",
+      "subtype": "Quotation that explains why",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Textile artist Marisol Ybarra creates embroidered maps of the San Antonio River and its surrounding neighborhoods.\n• She assembles the maps from shirts, dresses, and other clothing contributed by residents of riverside communities.\n• “I stitch the river in old blue jeans and the streets in whatever arrives that week,” she explains.\n• “Every scrap once belonged to someone who lives on this map,” she says.\n• An art critic described her 2019 map of the river as “a deeply personal atlas.”",
+      "stem": "The student wants to provide a quotation from Ybarra that explains why she makes her maps from residents’ clothing. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Ybarra assembles her maps from contributed garments because, as she puts it, “every scrap once belonged to someone who lives on this map.”",
+        "An art critic called Ybarra’s 2019 map of the San Antonio River “a deeply personal atlas.”",
+        "Ybarra’s embroidered maps of the San Antonio River are assembled from clothing contributed by residents of riverside communities.",
+        "Ybarra explains that she stitches “the river in old blue jeans and the streets in whatever arrives that week.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal requires Ybarra’s own words giving her reason for making her maps from residents’ clothing. Her remark that “Every scrap once belonged to someone who lives on this map” explains why the garments matter: the people on the map supply the cloth. Choice A quotes it and ties it to the contributed garments.",
+      "distractors": {
+        "B": {
+          "recipe": "NOQ (someone else’s quotation)",
+          "why_wrong": "It quotes a critic’s praise, not Ybarra, and says nothing about why she uses residents’ clothing."
+        },
+        "C": {
+          "recipe": "NOQ (paraphrase with no quotation)",
+          "why_wrong": "It says the maps are made from contributed garments but uses no quotation and gives no reason."
+        },
+        "D": {
+          "recipe": "NOQ (quotation doing another job)",
+          "why_wrong": "It quotes Ybarra, but the words describe how she assigns fabrics to parts of the map, not why she uses residents’ clothing."
+        }
+      },
+      "models": [
+        "2.29",
+        "2.9"
+      ],
+      "word_count": 94,
+      "sources": [],
+      "notes": "Subject: arts. Marisol Ybarra is an invented artist with invented quotations (RS: no fact-checking); the name was searched once and no textile artist with it turned up. Shape of 2.29: artist quote that explains why (stem paraphrases the notes' garments as residents' clothing), a second artist quote about technique, an outside quote, a paraphrase.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "notes trimmed (dropped “large”, “garments” to “clothing”); option B shortened and C matched",
+          "invented names searched once (Marisol Ybarra): no real person in the field turned up; no change"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.medium.w5b2_20",
+      "template": "SPEC",
+      "subtype": "Specify a material",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 2008, archaeologists excavating Hohle Fels, a cave in southwestern Germany, recovered twelve fragments of an ancient flute.\n• At least 35,000 years old, the flute ranks among the oldest known musical instruments.\n• It has five finger holes and a V-shaped notch for blowing.\n• It was carved from the wing bone of a griffon vulture.\n• Several other flutes discovered in nearby caves were carved from mammoth ivory.",
+      "stem": "The student wants to specify what the Hohle Fels flute was made from. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Like several other flutes found near Hohle Fels, the Hohle Fels flute was carved from mammoth ivory.",
+        "The Hohle Fels flute, which is at least 35,000 years old, was carved from the wing bone of a griffon vulture.",
+        "In 2008, archaeologists recovered twelve fragments of the Hohle Fels flute in a cave in southwestern Germany.",
+        "The Hohle Fels flute, among the oldest known musical instruments, has five finger holes and a V-shaped notch."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks what the flute was made from. The notes say “It was carved from the wing bone of a griffon vulture.” Choice B gives that material.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (another flute’s material attached to this one)",
+          "why_wrong": "Mammoth ivory was the material of “Several other flutes discovered in nearby caves,” not of the Hohle Fels flute."
+        },
+        "C": {
+          "recipe": "OG (when and where it was found)",
+          "why_wrong": "It tells when and where the flute was found, not what it was made from."
+        },
+        "D": {
+          "recipe": "OG (its age and features)",
+          "why_wrong": "It describes the flute’s holes and age but not its material."
+        }
+      },
+      "models": [
+        "2.39",
+        "2.45"
+      ],
+      "word_count": 82,
+      "sources": [],
+      "notes": "Subject: history and archaeology (the Hohle Fels bone flute, found 2008 in twelve pieces, griffon vulture wing bone, five finger holes, at least 35,000 years old; ivory flutes from nearby caves such as Geissenklösterle; well known to me). One FALSE option misattaching a neighbor's material.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes trimmed toward the models’ median (age bullet and notch bullet shortened)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.easy.w5b2_21",
+      "template": "SPEC",
+      "subtype": "Specify a location",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Hang Son Doong is the largest known cave passage in the world.\n• It is located in Phong Nha-Kẻ Bàng National Park in central Vietnam.\n• A local man, Hồ Khanh, discovered its entrance around 1990.\n• British explorers first surveyed the cave in 2009.\n• Its ceiling has partly collapsed, admitting enough sunlight for a jungle to grow inside.",
+      "stem": "The student wants to specify the location of Hang Son Doong. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Hang Son Doong, the largest known cave passage in the world, was first surveyed by British explorers in 2009.",
+        "A local man named Hồ Khanh discovered the entrance to Hang Son Doong around 1990.",
+        "Sunlight entering through parts of Hang Son Doong’s collapsed ceiling has allowed a jungle to grow inside the cave.",
+        "Hang Son Doong is located in Phong Nha-Kẻ Bàng National Park in central Vietnam."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks where the cave is. The notes say it “is located in Phong Nha-Kẻ Bàng National Park in central Vietnam.” Choice D gives that location.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (size and first exploration)",
+          "why_wrong": "It says how large the cave is and who first surveyed it, not where it is."
+        },
+        "B": {
+          "recipe": "OG (who found it)",
+          "why_wrong": "It says who discovered the entrance and when, not where the cave is located."
+        },
+        "C": {
+          "recipe": "OG (a feature inside)",
+          "why_wrong": "It describes the jungle inside the cave, not the cave’s location."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.4"
+      ],
+      "word_count": 72,
+      "sources": [],
+      "notes": "Subject: science and geography (Hang Son Doong, Vietnam; entrance found by Hồ Khanh about 1990, explored by British cavers in 2009; well known to me). Three OG options as in 1.9.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes trimmed toward the easy median (dropped “named”, ceiling bullet shortened); option C matched"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.easy.w5b2_22",
+      "template": "SIM",
+      "subtype": "Emphasize a similarity",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Pongal is a harvest festival celebrated each January in Tamil Nadu, India.\n• It is named for a traditional dish of rice boiled with milk and sugar that families cook during the festival.\n• Chuseok is a harvest festival celebrated in Korea each September or October.\n• During Chuseok, families prepare songpyeon, small rice cakes filled with sesame seeds and steamed on fragrant pine needles.",
+      "stem": "The student wants to emphasize a similarity between the foods traditionally prepared for Pongal and Chuseok. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Both Pongal and Chuseok are celebrated with traditional dishes that families prepare from rice.",
+        "Pongal is celebrated each January in Tamil Nadu, while Chuseok is celebrated in Korea each September or October.",
+        "During Chuseok, families prepare songpyeon, small rice cakes that are steamed on fragrant pine needles.",
+        "Pongal, a harvest festival in southern India, is named for a traditional dish."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes describe the dish that gives Pongal its name as “a traditional dish of rice boiled with milk and sugar that families cook during the festival” and songpyeon as “small rice cakes.” Choice A states this shared trait of the two festivals’ foods with “Both.”",
+      "distractors": {
+        "B": {
+          "recipe": "REL (difference instead of similarity)",
+          "why_wrong": "It contrasts where and when the festivals are held, which is a difference, and it does not mention food."
+        },
+        "C": {
+          "recipe": "PART (one festival only)",
+          "why_wrong": "It describes the food of Chuseok alone, so there is no similarity."
+        },
+        "D": {
+          "recipe": "PART (one festival only)",
+          "why_wrong": "It mentions Pongal’s dish without saying what it is made of and says nothing about Chuseok."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.22"
+      ],
+      "word_count": 77,
+      "sources": [],
+      "notes": "Subject: social science and culture (Pongal of Tamil Nadu, named for the rice dish; Chuseok and songpyeon rice cakes steamed on pine needles; well known to me). Goal names the dimension (foods) so the shared harvest category is not a second key.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes trimmed toward the easy median (jaggery gloss dropped, the two songpyeon bullets merged, sesame detail cut); options C and D and the explanation quote matched"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.easy.w5b2_23",
+      "template": "DESC",
+      "subtype": "Describe an arrangement",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Carnac stones are more than 3,000 standing stones in Brittany, France.\n• Prehistoric communities erected them between about 4500 and 3300 BCE.\n• Most of the stones are arranged in long, straight, parallel rows.\n• In one section, Le Ménec, eleven rows stretch for approximately a kilometer.\n• Local legend holds that the stones are soldiers transformed into stone.",
+      "stem": "The student wants to describe how the Carnac stones are arranged. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Erected by prehistoric communities between about 4500 and 3300 BCE, the Carnac stones stand in Brittany, France.",
+        "According to local legend, the more than 3,000 Carnac stones are soldiers who were transformed into stone.",
+        "Most of the Carnac stones are arranged in long, straight, parallel rows, with eleven rows in one section stretching about a kilometer.",
+        "The Carnac stones, which stand in Brittany, France, include a section called Le Ménec."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is the arrangement of the stones. The notes say “Most of the stones are arranged in long, straight, parallel rows” and that at Le Ménec “eleven rows stretch for approximately a kilometer.” Choice C combines these details.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (age and location)",
+          "why_wrong": "It tells when the stones were erected and where they stand, not how they are arranged."
+        },
+        "B": {
+          "recipe": "OG (legend and number)",
+          "why_wrong": "It gives a legend about the stones and their number, not their arrangement."
+        },
+        "D": {
+          "recipe": "VAGUE (names a section, no arrangement)",
+          "why_wrong": "It names one section of the site but does not describe how any of the stones are laid out."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.18",
+        "1.1"
+      ],
+      "word_count": 72,
+      "sources": [],
+      "notes": "Subject: history (the Carnac alignments in Brittany, more than 3,000 standing stones raised before 3000 BCE; Le Ménec with eleven rows about a kilometer long; the soldiers-turned-to-stone legend; well known to me).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes trimmed toward the easy median (rows bullet shortened, “called” dropped); options A and C and the explanation quote matched"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.easy.w5b2_24",
+      "template": "EXAMPLE",
+      "subtype": "Define a term and give an example",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• New words enter English through various processes.\n• A back-formation is a word created by removing what appears to be a prefix or suffix from an existing word.\n• The verb “edit” is a back-formation from the older noun “editor.”\n• Speakers reinterpreted “editor” as if it came from a verb.\n• A similar example is “burgle,” which originated from “burglar.”",
+      "stem": "The student wants to define the term “back-formation” and provide an example of one. Which choice most effectively uses relevant information from the notes to accomplish these goals?",
+      "options": [
+        "New words, such as the verb “edit,” enter English through various processes.",
+        "A back-formation is a word created by removing what appears to be a suffix from an existing word, as “edit” was created from the older noun “editor.”",
+        "The verb “burgle” originated from the noun “burglar.”",
+        "Back-formations are new words that are created by removing parts of words."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: a definition and an example. Choice B defines a back-formation as “a word created by removing what appears to be a prefix or suffix from an existing word” and gives the example of “edit,” formed from “editor.”",
+      "distractors": {
+        "A": {
+          "recipe": "VAGUE (no definition)",
+          "why_wrong": "It mentions “edit” but only says that new words enter English through various processes; it never says what a back-formation is."
+        },
+        "C": {
+          "recipe": "PART (example only)",
+          "why_wrong": "It gives an example of a back-formation without defining the term or even naming it."
+        },
+        "D": {
+          "recipe": "PART (definition only, no example)",
+          "why_wrong": "It gives a loose definition but no example."
+        }
+      },
+      "models": [
+        "1.19"
+      ],
+      "word_count": 73,
+      "sources": [],
+      "notes": "Subject: social science (linguistics: back-formation; edit from editor, burgle from burglar; standard etymology). Two-part goal with the plural “these goals,” as in 1.19.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes trimmed toward the easy median (through various processes, as if it came from a verb); option A matched"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}

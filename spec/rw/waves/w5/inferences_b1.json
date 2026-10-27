@@ -1,0 +1,1181 @@
+{
+  "skill": "Inferences",
+  "slug": "inferences",
+  "part": "w5b1",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1",
+        "name": "Controlled comparison of two groups"
+      },
+      {
+        "code": "S2",
+        "name": "Principle plus case leads to consequence (S10 trade-off folded in)"
+      },
+      {
+        "code": "S3",
+        "name": "Rule or timeline plus observation rejects a premise"
+      },
+      {
+        "code": "S5",
+        "name": "Undercut leads to a hedged conclusion"
+      },
+      {
+        "code": "S6",
+        "name": "X but not Y, so Z"
+      },
+      {
+        "code": "S7",
+        "name": "Two cases or two accounts lead to a conditional or a common ground"
+      },
+      {
+        "code": "S8",
+        "name": "Co-occurrence or repeated pattern leads to a link"
+      },
+      {
+        "code": "S9",
+        "name": "Behaviour, design or content reveals a motive or belief (S12 example folded in)"
+      },
+      {
+        "code": "S11",
+        "name": "Received view plus counterevidence leads to revision"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "inferences.S2.hard.w5b1_01",
+      "template": "S2",
+      "subtype": "T3 consequence: a chemical cue in silk applied to a rejected male who adds silk to the same gift",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Males of the nursery web spider Pisaura mirabilis offer prospective mates a nuptial gift: a prey item wrapped in silk, which the female consumes during mating. Investigating whether the silk itself influences female responses, Michelle Beyer, Julia Mangliers, and Cristina Tuni presented females with standardized gifts covered in male silk that had been either washed with solvents, removing any chemical compounds, or left unwashed, and found that females more frequently accepted gifts wrapped in unwashed silk. This finding suggests that a male whose gift has been rejected and who subsequently wraps that gift in additional silk is likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "to be rejected again, since the compounds on male silk made females less willing to accept the gifts that the silk covered.",
+        "to be adding compounds that can make a female more willing to accept the gift, even though the prey inside is unchanged.",
+        "to be accepted whatever prey the gift contains, since the females in the study responded to the silk rather than to the prey inside it.",
+        "to be accepted mainly because the extra silk makes the gift more nourishing for the female to eat during mating."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The gifts were “standardized,” and the only difference was whether the silk had been “washed with solvents, removing any chemical compounds”; the text says “females more frequently accepted gifts wrapped in unwashed silk,” so compounds on male silk make acceptance more likely. A male who “wraps that gift in additional silk” is adding more of that silk, and with it those compounds, while the prey stays the same, as B says. B claims only that he adds such compounds, since the study did not compare more silk with less.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The finding runs the other way: females “more frequently accepted gifts wrapped in unwashed silk,” so the compounds on male silk make acceptance more likely, not less."
+        },
+        "C": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The gifts were “standardized,” so the prey never varied in the study; the finding shows that compounds on the silk raise acceptance, not that the prey makes no difference, and “whatever prey the gift contains” claims more than the study tested."
+        },
+        "D": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The gifts in the study were standardized and differed only in whether the silk had been washed, so the effect points to chemical compounds, not to food value; the text never says silk is nourishing."
+        }
+      },
+      "models": [
+        "6b8a7c74",
+        "03701ef3",
+        "4b3d6062"
+      ],
+      "word_count": 99,
+      "sources": [
+        {
+          "what": "Beyer, Mangliers, Tuni 2021, Biology Letters: Pisaura mirabilis males silk-wrap prey offered as nuptial gifts and eaten during mating; rejected males often add silk; females more likely to accept standardized gifts covered with unwashed rather than solvent-washed male silk",
+          "url": "https://doi.org/10.1098/rsbl.2021.0386"
+        }
+      ],
+      "notes": "Area: natural science (animal behaviour). S2 hard: chemical cue in silk (principle) applied to a rejected male re-wrapping the same gift (case). Kept to the wash experiment; the worthless-gift cheating angle is left out. Distractors: REV (the compounds read as deterrents), EXT (prey said not to matter; reviewer replaced an off-topic CMP), CAUSE (nutrition).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "replaced C (off-topic comparison of females by past acceptance) with an overreach option (accepted whatever the prey), first clause true, fails on the standardized gifts; re-solved cold: B"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): before the swap A (plain reversal) and C (off-topic) each fell at once and the item read band 5; now C is a stronger version of the key and D a rival mechanism, and the key needs two steps (compounds raise acceptance, more silk adds compounds to the same prey)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": "B is best but rests on an untested dose step: the study compared washed vs unwashed silk, not more vs less silk, and the rejected gift already had unwashed silk.",
+        "lead_override": "2026-10-27 lead: safety agreed on B but flagged an untested dose step (more silk, better odds). Key reworded to what the study supports (he adds compounds that can raise acceptance); distractors unchanged."
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b1_02",
+      "template": "S2",
+      "subtype": "T2 belief: what repair shops assumed about insured customers in a credence-goods market",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Repairs are a classic example of credence goods: customers typically cannot evaluate how much work a repair required, so they must trust the seller’s assessment. In a field experiment, economists Rudolf Kerschbamer, Daniel Neururer, and Matthias Sutter brought identical computers, each with the same defective memory module, to repair shops; when the customer mentioned that insurance would reimburse the cost, the average bill rose by more than 80%, primarily because shops installed unnecessary parts and charged for additional working time. This pattern suggests that the shops assumed that customers whose repairs were covered by insurance ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "would examine their bills more closely than other customers would, since they would have to submit those bills to an insurer.",
+        "would come back to the same shop for later repairs, so overcharging them once would not cost the shop their business.",
+        "would be less able than other customers to tell whether a repair had actually been needed.",
+        "would be less concerned than other customers about the size of the bill, since someone else would be paying it."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The shops received “identical computers, each with the same defective memory module,” and the only change was that the customer said “insurance would reimburse the cost.” Shops then charged more “primarily because shops installed unnecessary parts and charged for additional working time,” which makes sense if they expected insured customers to care less about the cost because a third party would pay it, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "If the shops had expected closer scrutiny, they would have had reason to charge less, not more; the higher bills point the other way."
+        },
+        "B": {
+          "recipe": "off-topic motive (OUT)",
+          "why_wrong": "The text says nothing about repeat visits, and expected loyalty would not explain why only the mention of insurance changed the bill."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The text says that customers in general cannot judge the work a repair needs; nothing about insurance makes a customer less able to judge, so this cannot explain why only insured customers were overcharged."
+        }
+      },
+      "models": [
+        "4889580c",
+        "6b8a7c74",
+        "0dccbf17"
+      ],
+      "word_count": 96,
+      "sources": [
+        {
+          "what": "Kerschbamer, Neururer, Sutter 2016, PNAS: five identical computers with one RAM module destroyed taken to repair shops (Austria); stating that insurance covers the repair raised the average bill (about EUR 70) by more than 80%, mainly through overprovision of parts and overcharged working time; shops ascribed it to insured customers being less concerned about costs",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4941439/"
+        }
+      ],
+      "notes": "Area: social science (economics). S2 hard, T2: the credence-goods principle plus the insurance case, blank asks what the shops assumed. Distractors: REV (closer scrutiny), OUT (repeat business), MIX (a trait of all customers offered as the insured ones' difference).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): C (a trait of all customers offered as the insured ones' difference) and A (insurer scrutiny) are close; the key needs the step from the one changed condition to what shops expected. The moral-hazard idea is intuitive, so it sits at the low end of band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b1_03",
+      "template": "S2",
+      "subtype": "T3 consequence: lost color prints applied to a count of color films made from surviving versions",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "From 1928 into the early 1930s, Hollywood studios released dozens of feature films, many of them musicals, filmed entirely or partially in two-color Technicolor, a process that recorded each scene through red and green filters. Few of these films can now be viewed as original audiences experienced them: in the late 1940s, Technicolor discarded most of the original camera negatives from storage, and many surviving color prints were subsequently used to produce black-and-white copies for television broadcast and then destroyed. A historian who assessed how frequently studios of that period employed color exclusively on the basis of the versions that survive today would therefore likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "underestimate how many films from that period were first shown to audiences in color rather than in black and white.",
+        "overestimate how many films from that period were released in color, since the color prints that were kept would have been those in the best condition.",
+        "conclude that audiences of the period preferred black-and-white films, since studios made many more black-and-white copies of their films than color ones.",
+        "find that two-color Technicolor films were shown on television more often than other films of the period were."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that “Technicolor discarded most of the original camera negatives” and that “many surviving color prints were subsequently used to produce black-and-white copies for television broadcast and then destroyed.” Many films that audiences saw in color therefore survive only in black and white, so a historian counting color films from today’s versions would miss some of them and undercount, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Every loss the text describes removes color versions of films, which pushes a count based on survivors down, not up; which prints were best kept cannot add color films to the record."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The black-and-white copies were made later for television, not by studios of the period for their audiences, so they say nothing about what audiences preferred at the time."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text says some color prints were copied for television but never compares how often these films were shown on television with other films."
+        }
+      },
+      "models": [
+        "4b3d6062",
+        "61228830",
+        "0dccbf17"
+      ],
+      "word_count": 106,
+      "sources": [
+        {
+          "what": "Technicolor: two-color Processes 2 and 3 (1922 to early 1930s, red and green filters; many musicals 1929 to 1931); very few original camera negatives survive, most discarded from storage in the late 1940s; surviving prints often used to make black-and-white television prints and then discarded, so many early color films exist only in black and white",
+          "url": "https://en.wikipedia.org/wiki/Technicolor"
+        }
+      ],
+      "notes": "Area: humanities and arts (film history). S2 hard, T3: survival losses (principle) applied to a historian counting color films from survivors. Distractors: REV (survivorship read the wrong way), MIX (later TV copies attributed to period audiences), CMP.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): two-step survivorship reasoning (colour versions lost, so a count of survivors runs low); B is a plausible reversal with its own reason, C a swap of later TV copies onto period audiences."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b1_04",
+      "template": "S2",
+      "subtype": "T3 consequence: male-biased collections applied to a body-size estimate for a species with larger males",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Using DNA to determine the sex of nearly 300 subfossil remains of bison and brown bears, Graham Gower and colleagues found that about 75% belonged to males; they also detected a strong male bias among specimens in four large museum collections of mammals. The researchers attribute this imbalance to males’ wider geographic ranges and to differences in male behavior and appearance, which make males more likely to be encountered and collected. If this explanation is correct, a study that estimated the typical body size of a mammal species whose males greatly exceed females in size, relying solely on museum specimens, would likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "find that the species’ females are larger than its males, since female specimens in museum collections tend to come from older animals.",
+        "produce an accurate estimate, since the male bias the researchers describe applies to subfossil remains rather than to modern museum specimens.",
+        "overstate the species’ typical size, since the larger sex would make up a disproportionate share of the specimens measured.",
+        "understate the size of the species’ males, since males that range widely are less likely than females to be collected near any one site."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text reports “a strong male bias among specimens in four large museum collections of mammals” and explains it by traits “which make males more likely to be encountered and collected.” In a species “whose males greatly exceed females in size,” a sample drawn only from museum specimens would hold too many of the larger animals, so the estimate of typical size would come out too high, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about the ages of female specimens, and it gives no reason to expect females to measure larger in a species whose males are larger."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The bias is not limited to subfossils: the team also found “a strong male bias among specimens in four large museum collections of mammals.”"
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says males’ wider ranges make them more likely, not less likely, to be encountered and collected, and it says nothing about where specimens were collected."
+        }
+      },
+      "models": [
+        "4b3d6062",
+        "0dccbf17",
+        "3f236877"
+      ],
+      "word_count": 103,
+      "sources": [
+        {
+          "what": "Gower et al. 2019, PNAS: genetically sexed 186 Holarctic bison and 91 brown bear subfossils, about 75% male (mammoths 72%); strong male bias in four large museum mammal collections; proposed causes wider male ranges and sexually dimorphic behaviour or appearance; major implications for studies of fossil and museum material",
+          "url": "https://doi.org/10.1073/pnas.1903275116"
+        }
+      ],
+      "notes": "Area: natural science (palaeontology, museum collections). S2 hard, T3: the sampling bias (principle) applied to a body-size study of a species with larger males (case); two steps (more males sampled, males larger). Distractors: OUT, REV (bias said to spare museums), REV (direction of the range effect).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "trimmed the mammoth aside (passage 111 to 103 words, models' median 83)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): the key needs two linked steps (males oversampled, males larger); B and D are partly right reversals that each name a real element of the text."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b1_05",
+      "template": "S2",
+      "subtype": "T3 consequence: a charring-proof malting marker applied to sites without brewing installations",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Direct archaeological evidence of brewing is scarce, since most proposed markers of alcoholic beverages either decay over time or are not distinctive enough to serve as proof. Andreas G. Heiss and colleagues germinated cereal grains in the laboratory, as is done when grain is malted, and found that after charring, a process that preserves much of the plant material found at archaeological sites, the grains retained clearly thinned cell walls in their aleurone layer; they then identified the same thinning in charred cereal remains from recognizable brewing installations in Predynastic Egypt. The marker could therefore enable archaeologists to ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "date charred cereal remains by measuring how far the walls of their aleurone cells have thinned since the grains were charred.",
+        "recognize that grain had been malted even at sites where no structures used for brewing have been identified.",
+        "conclude that beer was produced at every site where charred grain with thinned aleurone cell walls has been found.",
+        "distinguish malted from unmalted grain only in remains from Egypt, where brewing installations confirm what the marker shows."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The thinning appeared in malted grain “after charring,” and charring “preserves much of the plant material found at archaeological sites,” so the sign of malting can survive in ordinary charred remains. The Egyptian finds from “recognizable brewing installations” show that the marker matches real brewing, so it could reveal malting in charred grain even where no brewing structures survive, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The thinning comes from germination during malting, not from the passing of time after charring, so it cannot serve as a clock."
+        },
+        "C": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The marker shows that grain was malted; the text does not say that malted grain was always used for beer, and “every site” claims more than the evidence supports."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The Egyptian remains confirm that the marker works; they do not limit it to Egypt, and the laboratory results show the change appears in any malted grain that is charred."
+        }
+      },
+      "models": [
+        "03701ef3",
+        "61228830",
+        "0dccbf17"
+      ],
+      "word_count": 99,
+      "sources": [
+        {
+          "what": "Heiss et al. 2020, PLoS ONE: most markers of alcoholic beverages are not durable or diagnostic; experimentally germinated and charred grains show thinned aleurone cell walls; same thinning in charred remains from Predynastic Egyptian brewing installations and in Neolithic central European lakeshore sites without brewing contexts; proposed as a general marker for malting",
+          "url": "https://doi.org/10.1371/journal.pone.0231696"
+        }
+      ],
+      "notes": "Area: history and archaeology. S2 hard, T3: a marker that survives charring (principle) applied to sites lacking brewing installations (case). Beer is the overreach distractor, never the key (the source says malting; beer only possibly). Distractors: MIX, EXT, REV.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): C (beer at every site) overreaches from malting to brewing, a close trap; D and A misuse the Egyptian confirmation and the charring step."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S6.hard.w5b1_06",
+      "template": "S6",
+      "subtype": "Traditional lead white is datable but industrial lead white is not, so an impossibly old date marks later paint",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Radiocarbon dating requires carbon that organisms recently absorbed from the atmosphere, which excludes most mineral pigments. Lucile Beck and colleagues demonstrated, however, that lead white is datable if it was manufactured traditionally, in pots of lead and vinegar embedded in fermenting horse manure or tanbark that released carbon dioxide; they dated fourteenth- to sixteenth-century wall paintings this way. Lead white from the industrial processes used since the nineteenth century, by contrast, incorporates fossil carbon and yields apparent ages many thousands of years too old. Thus, if a lead white sample from a wall painting attributed to the 1300s yields such an age, the sample ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "indicates that the painting is far older than the 1300s, since radiocarbon dating reveals when the carbon in a pigment was taken up from the air.",
+        "shows that the lead white was made by the traditional method, since that method drew on carbon dioxide released by fermenting materials.",
+        "likely contains lead white produced centuries after the period to which the wall painting has been attributed.",
+        "suggests that radiocarbon dating cannot be applied to lead white in wall paintings, since carbon in the plaster would distort the results."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Traditionally made lead white can be dated, but lead white from “the industrial processes used since the nineteenth century” “incorporates fossil carbon” and “yields apparent ages many thousands of years too old.” A sample from a painting attributed to the 1300s that gives such an age most likely contains industrial lead white, made centuries after that period, as C says; either the paint was added later or the painting is younger than believed.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "An age many thousands of years old is the mark of fossil carbon in industrial lead white, so it reveals nothing about when the wall was painted; read literally it would also place the painting long before the pigment was used."
+        },
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Traditional lead white gives a usable date, which is why the team could date medieval wall paintings; it is the industrial kind that yields ages many thousands of years too old."
+        },
+        "D": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text never mentions plaster, and the team did date “fourteenth- to sixteenth-century wall paintings” from their lead white."
+        }
+      },
+      "models": [
+        "5cd55c77",
+        "0dba14e6",
+        "a68fd3e7"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "Beck et al. 2020, Scientific Reports: radiocarbon limited to organic materials; lead white made by corrosion of lead with vinegar in pots embedded in horse manure or tan bark (CO2 carrying 14C) can be dated; used to date 14th to 16th century wall paintings; industrial or natural lead carbonate, made with fossil carbon in 19th-century processes, gives very old apparent ages",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7293340/"
+        }
+      ],
+      "notes": "Area: humanities and arts (painting conservation). S6 hard: two kinds of one pigment differ on one property (datable carbon), and the difference implies that an impossibly old date marks later paint. Natural mineral lead carbonate (also very old in the source) is left out so that no option rests on it. Distractors: REV (literal reading of the date), MIX (which kind gives the old age), CAUSE.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "trimmed the passage (112 to 105 words) keeping its register; explanation quotes updated to the new wording",
+          "theme note: the key (industrial lead white postdating a 1300s attribution) sits next to the saturated 'material postdates attribution' frame (WAVE.md; cf. rhetorical_synthesis.SIM.hard.w2b1_04, zinc white). Kept: new mechanism, no forgery, solves cleanly; flag for gating"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): A (the literal reading of the old date) and B (which kind gives the old age, swapped) are tempting; the key requires linking fossil carbon to post-1800 manufacture and then to a later addition."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S9.hard.w5b1_07",
+      "template": "S9",
+      "subtype": "Timing of a move reveals anticipation of a predator rather than reaction to it",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "At night, the grass lizard Takydromus viridipunctatus perches on the tips of grass blades, a position that probably protects it from terrestrial predators such as snakes, rodents, and shrews. During morning twilight, however, the lizards descend into dense grass clumps, where they are better concealed from their principal predator, the cattle egret, a visually hunting bird. Chih-Wei Chen and colleagues determined that the lizards relocate at the earliest time egrets depart their communal roosts, precisely when, according to computational models of egret vision, the lizards become considerably more conspicuous to the birds. This timing suggests that the lizards ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "move to safer positions in anticipation of the danger egrets pose, not in response to an egret that has already arrived.",
+        "leave their nighttime perches mainly to escape the snakes, rodents, and shrews that become more active as daylight returns.",
+        "can watch for egrets more easily from inside grass clumps, which is why they move there as the birds leave their roosts.",
+        "remain on their perches until egrets are close enough to see them, since moving sooner would expose them to predators on the ground."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The lizards relocate “at the earliest time egrets depart their communal roosts,” when the birds are only setting out, and “precisely when” the lizards “become considerably more conspicuous to the birds.” Moving then, before any egret reaches them, means that they act ahead of the danger rather than waiting for it, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text says the perch “probably protects it from terrestrial predators,” so descending toward the ground would not be a way to escape them; the move is tied to egrets."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The models describe how visible the lizards are to egrets, not how well lizards can see egrets; the text links the clumps to being “better concealed,” not to watching."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The lizards move as soon as egrets leave their roosts, not once the birds are close; the text gives no sign that they wait."
+        }
+      },
+      "models": [
+        "cef77aa7",
+        "08395130",
+        "1bf2173e"
+      ],
+      "word_count": 99,
+      "sources": [
+        {
+          "what": "Chen, Whiting, Yang, Lin 2021, Biology Letters: Takydromus viridipunctatus perches on grass blades at night (likely reducing predation by snakes, rodents, shrews), moves into grass clumps during twilight; shift occurs at the earliest time cattle egrets depart communal roosts, when visual modelling shows a sharp rise in lizard detectability to egrets; anticipatory behaviour",
+          "url": "https://doi.org/10.1098/rsbl.2021.0388"
+        }
+      ],
+      "notes": "Area: natural science (animal behaviour). S9 hard: the timing of an action reveals that it anticipates a threat. Distractors: CAUSE (ground predators), MIX (who sees whom), REV (waiting until egrets are close).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): C (who sees whom) and D (waiting) are close; B falls to the stated role of the night perch, so the item sits at the low end of band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S3.hard.w5b1_08",
+      "template": "S3",
+      "subtype": "Timeline rejects a premise: nocturnal synapsids long before mammals, so nocturnality did not originate with mammals",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Nocturnality is widespread among living mammals and is frequently regarded as ancestral to the entire group. Mammals, however, belong to a much older lineage, the synapsids, whose non-mammalian members diversified long before mammals evolved. Analyzing scleral rings (bony plates that support the eye) and eye sockets in fossils of 24 extinct non-mammalian synapsid species, Kenneth Angielczyk and Lars Schmitz identified eye proportions characteristic of nocturnal animals in several species, the oldest dating to approximately 300 million years ago, more than 100 million years before the first mammals, whereas most anomodonts, a group of herbivores, were apparently diurnal. These findings suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the first mammals were most likely active during the day, as most anomodonts were, and became nocturnal only after mammals had appeared.",
+        "nocturnality arose only once among synapsids, about 300 million years ago, and was then inherited by every later synapsid species.",
+        "eye proportions are less reliable indicators of daily activity patterns in herbivores than in carnivores, which explains why the anomodonts seem diurnal.",
+        "being active at night was not an innovation of mammals but a habit that some of their synapsid relatives had acquired far earlier."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The team found nocturnal eye proportions in synapsids “dating to approximately 300 million years ago, more than 100 million years before the first mammals.” If some synapsids were already active at night that long before mammals evolved, nocturnality cannot have first appeared with mammals, even if it was common among the earliest of them, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The diurnal pattern belongs to “most anomodonts,” not to the first mammals; the study examined only non-mammalian synapsids and says nothing about whether early mammals were active by day."
+        },
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Most anomodonts, which lived after the oldest nocturnal species, “were apparently diurnal,” so nocturnality was not inherited by every later synapsid; the text also never says it arose only once."
+        },
+        "C": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text gives no reason to doubt the method for herbivores; it reports diurnal anomodonts as a finding, not as an error."
+        }
+      },
+      "models": [
+        "aaddd60f",
+        "b5e9f3c2",
+        "5c7e0d62"
+      ],
+      "word_count": 102,
+      "sources": [
+        {
+          "what": "Angielczyk, Schmitz 2014, Proc. R. Soc. B, Nocturnality in synapsids predates the origin of mammals by over 100 million years: scleral ring and orbit dimensions of 24 Carboniferous to Jurassic non-mammalian synapsid species; nocturnality as old as the Late Carboniferous (about 300 Ma), not an innovation unique to mammals, possibly arising several times; most anomodont herbivores reconstructed as diurnal",
+          "url": "https://doi.org/10.1098/rspb.2014.1642"
+        }
+      ],
+      "notes": "Area: natural science (palaeontology). S3 hard: a timeline (nocturnal synapsids 100 million years before mammals) rejects the premise that nocturnality began with mammals; the key is a negative conclusion. Distractors: MIX (anomodont pattern moved to early mammals), EXT (single origin inherited by all), CAUSE (method doubt).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): the key is a negative conclusion from a timeline; A moves the anomodont pattern to early mammals and B is a single-origin overreach, both built on real pieces of the text."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S7.hard.w5b1_09",
+      "template": "S7",
+      "subtype": "Two contexts, different aggressive workers: aggressiveness depends on the situation",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In many social insects, aggression serves two purposes: defending the nest against intruders and “policing,” in which workers attack nestmates attempting to reproduce. One hypothesis holds that colonies benefit from a minority of especially aggressive individuals who take on fighting in both contexts. Examining the clonal ant Platythyrea punctata, Benjamin Barth, Katrin Kellner, and Jürgen Heinze recorded which workers attacked reproductives after colonies were experimentally merged and which workers participated in nest defense. A minority of workers did perform most of the aggression in each context; however, those that attacked reproductives were comparatively inactive during nest defense, and vice versa. These results suggest that a P. punctata worker’s aggressiveness ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "is determined mainly by its age, with younger workers policing the colony and older workers defending the nest.",
+        "depends on the situation it faces rather than reflecting a fixed tendency that it displays in every context.",
+        "is consistent across contexts, since a small minority of workers was responsible for most of the aggression in both policing and nest defense.",
+        "increases after colonies merge, since the workers that attacked reproductives had been inactive before the merger."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "A minority of workers did “most of the aggression in each context,” but they were not the same workers: those “that attacked reproductives were comparatively inactive during nest defense, and vice versa.” A worker that is aggressive in one situation is therefore not aggressive in the other, so its aggressiveness depends on the situation, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The text never mentions the workers’ ages, so it gives no basis for linking either task to younger or older ants."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "A minority did most of the fighting in each context, but the policing workers were inactive in defense and vice versa, so they were different minorities, not one consistently aggressive group."
+        },
+        "D": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The text says that the workers that attacked reproductives “were comparatively inactive during nest defense,” not before the colonies were merged; the study never compared aggression before and after a merger."
+        }
+      },
+      "models": [
+        "d1539546",
+        "9abc3ba5",
+        "3882ddf6"
+      ],
+      "word_count": 110,
+      "sources": [
+        {
+          "what": "Barth, Kellner, Heinze 2010, Biology Letters: in the clonal ant Platythyrea punctata, participation in policing and nest defence was highly skewed (a minority did most aggression), but workers that attacked reproductives after colony fusion were less active in nest defence and vice versa, suggesting situation-dependent behaviour rather than consistently aggressive personalities",
+          "url": "https://doi.org/10.1098/rsbl.2009.0849"
+        }
+      ],
+      "notes": "Area: natural science (animal behaviour). S7 hard: two contexts with different aggressive workers lead to a conditional key (\"depends on the situation\"), as in 3.14. First author M. Benjamin Barth. Distractors: VAR, REV (the tested hypothesis, the two minorities taken as one), MIX (inactive in defense misread as inactive before the merger; reviewer replaced an off-topic CAUSE).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "replaced D (off-topic claim about colony defenses) with a misread-detail option (inactive during defense read as inactive before the merger); C relabelled REV (the tested hypothesis); re-solved cold: B"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): before the swap D was off-topic and C the plain mirror of the key (band 5); now D misreads a stated detail and C is the hypothesis the study tested."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S1.hard.w5b1_10",
+      "template": "S1",
+      "subtype": "Controlled comparison: pheromone vs solvent dispensers beside artificial larvae, birds use the larvae's own signal",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Although birds were long assumed to lack a sense of smell, insectivorous birds are now known to exploit odors such as the volatile compounds that plants release when herbivorous insects damage them. Because many of these birds feed on insects in their immature stages, Pablo Díaz-Siefer and colleagues investigated whether birds also detect chemicals produced by larvae themselves. They attached groups of five artificial larvae to 72 trees in a remnant of sclerophyllous forest in central Chile, each group beside a dispenser containing either the aggregation pheromone that carpenter worm larvae (Chilecomadia valdiviana) use to gather or only the solvent. Significantly more larvae bore bird peck marks in the pheromone groups, suggesting that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "birds can detect the pheromone of C. valdiviana larvae only when the larvae have gathered in groups rather than feeding alone.",
+        "birds locate C. valdiviana larvae mainly through the volatile compounds released by the trees on which the larvae feed.",
+        "the chemical that C. valdiviana larvae use to find one another may also help birds find the larvae.",
+        "the pheromone dispensers drew birds by their appearance rather than their scent, since birds were long assumed to lack a sense of smell."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The two kinds of groups differed only in whether the dispenser held “the aggregation pheromone that carpenter worm larvae (Chilecomadia valdiviana) use to gather or only the solvent,” and “Significantly more larvae bore bird peck marks in the pheromone groups.” Birds therefore appear to be drawn by the pheromone, so the signal that helps the larvae gather may also lead birds to them, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The team placed “groups of five artificial larvae” beside every dispenser, so the study cannot show that birds detect the pheromone only around groups; it shows only that groups beside the pheromone were pecked more."
+        },
+        "B": {
+          "recipe": "true but not the step (REP)",
+          "why_wrong": "Birds are known to use plant volatiles, but the larvae were artificial and could not damage the trees, and the groups differed only in whether the dispenser held the pheromone, so plant volatiles cannot explain the result."
+        },
+        "D": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "Birds were long assumed to lack a sense of smell, but every group had a dispenser beside it, and the solvent-only dispensers differed only in their contents, so appearance cannot explain why the pheromone groups were pecked more."
+        }
+      },
+      "models": [
+        "cae97f58",
+        "e6e6be2d"
+      ],
+      "word_count": 114,
+      "sources": [
+        {
+          "what": "Díaz-Siefer et al. 2021, Biology Letters: birds traditionally considered anosmic but known to use herbivore-induced plant volatiles; groups of five artificial larvae on 72 trees in a sclerophyllous forest fragment in central Chile, each with a septum loaded with larval aggregation pheromone of Chilecomadia valdiviana or solvent; significantly more bird-pecked larvae in pheromone groups",
+          "url": "https://doi.org/10.1098/rsbl.2021.0360"
+        }
+      ],
+      "notes": "Area: natural science (chemical ecology). S1 hard: a controlled comparison (pheromone vs solvent) read as birds using the larvae's own signal, the cost to the larvae left for the student. Distractors: EXT (only around groups, untestable here; reviewer replaced a plain REV), REP (the known plant-volatile route), CAUSE (the dispensers themselves).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "replaced A (plain reversal, birds avoid pheromone groups) with an overreach (birds detect the pheromone only around groups, untestable when every larva sat in a group of five); re-solved cold: C"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Inferences hard cells are planned at band_target 6 (WAVE.md): before the swap A fell to the main result (band 5); now A and B are true-sounding but untested by the design. The key is still a short step, so low band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S11.medium.w5b1_11",
+      "template": "S11",
+      "subtype": "Received view (jays plan ahead) plus a species that does the opposite leads to a narrower view",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Over the past two decades, research on California scrub-jays has challenged the belief that planning for the future is a uniquely human capacity. Both scrub-jays and Canada jays store food for later consumption, and in one experimental procedure, scrub-jays cached food in locations where they had learned they would subsequently experience a shortage. When R. Jeffrey Martin, David Sherry, and colleagues tested Canada jays using the identical procedure, however, the jays showed no evidence of such planning, instead caching food where it was usually available, the opposite of the scrub-jays’ behavior. This result suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "evidence of future planning in one species of jay may not hold for other jay species.",
+        "Canada jays are generally less capable than California scrub-jays at remembering where they have stored food.",
+        "the California scrub-jays did not actually plan for the future, since they cached food where it was usually available.",
+        "no species of jay other than the California scrub-jay is capable of planning for the future."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Scrub-jays “cached food in locations where they had learned they would subsequently experience a shortage,” which was taken as planning, but Canada jays given “the identical procedure” showed “no evidence of such planning.” A result found in one jay species therefore did not carry over to another, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The test concerned where the birds chose to cache food, not how well they remembered their caches, and “generally less capable” goes far beyond one result."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "It was the Canada jays, not the scrub-jays, that cached food “where it was usually available”; the scrub-jays cached where a shortage was coming."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The text reports one test of one other species, Canada jays; it cannot show that every other jay species lacks the ability to plan."
+        }
+      },
+      "models": [
+        "55688b3c",
+        "3190835d",
+        "bcf2f169"
+      ],
+      "word_count": 96,
+      "sources": [
+        {
+          "what": "Martin, Martin, Roberts, Sherry 2021, Biology Letters: research on future planning in jays challenged the belief that complex cognition is uniquely human; using a procedure that produced evidence of planning in California scrub-jays (caching where food will predictably be lacking), Canada jays showed no evidence of future planning and cached where food was usually available, opposite to scrub-jays",
+          "url": "https://doi.org/10.1098/rsbl.2021.0504"
+        }
+      ],
+      "notes": "Area: natural science (animal cognition). S11 medium: a received view built on one species plus contrary evidence from another leads to a narrower claim. Kept clear of the lab-versus-wild frame of an official Central Ideas item that mentions scrub-jays. Distractors: OUT (memory, never tested), MIX (behaviours swapped), EXT (no other jay can plan, the key overstated).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S2.medium.w5b1_12",
+      "template": "S2",
+      "subtype": "T3 consequence: renting an exemplar in sections lets several copyists work at once",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In the thirteenth century, universities in Italian cities and in Paris developed the pecia system for reproducing texts required for university study. Rather than lending out a complete authorized copy of a book, known as an exemplar, a university stationer divided it into sections called peciae, each typically four leaves long, and rented them individually to students and others who wished to produce their own copies. Because different copyists could work on different sections of the same exemplar simultaneously, the pecia system most likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "required each copyist to rent the complete exemplar before beginning to copy any section of it.",
+        "made copies produced from rented sections less accurate than copies made from complete books.",
+        "reduced the number of students who needed to own copies of the texts that they studied.",
+        "enabled one exemplar to produce new copies faster than lending it whole to one copyist would have."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The stationer rented the sections “individually,” and “different copyists could work on different sections of the same exemplar simultaneously.” Several people copying at once from one exemplar would finish copies sooner than a single copyist working through the whole book, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The point of the system was that the exemplar was divided and its sections rented “individually,” not lent out whole."
+        },
+        "B": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about the accuracy of the copies; each section was part of an authorized exemplar."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The system helped people make “their own copies”; nothing suggests that fewer students needed copies."
+        }
+      },
+      "models": [
+        "db876fd5",
+        "6409016a",
+        "299c5303"
+      ],
+      "word_count": 85,
+      "sources": [
+        {
+          "what": "Manuscript culture, Pecia system section: developed in Italian university cities by the early 13th century and regulated at the University of Paris; the exemplar was broken into peciae, generally four folios long, rented section by section to students to copy, so many copiers working simultaneously could produce copies far faster than one person",
+          "url": "https://en.wikipedia.org/wiki/Manuscript_culture"
+        }
+      ],
+      "notes": "Area: humanities (book history). S2 medium, T3: renting sections one at a time (principle) applied to copying speed. Distractors: REV, OUT, OUT.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S5.medium.w5b1_13",
+      "template": "S5",
+      "subtype": "Undercut: a skeletal marker common in non-working dogs and wolves is not evidence of hauling",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "For decades, archaeologists have treated spondylosis deformans, a condition in which bony growths develop along the spine, as evidence that ancient dogs were used to pull sleds or carry loads. Katherine Latham and Robert Losey examined the skeletons of 136 modern dogs that had never been used for transport, 19 sled dogs, and 241 wolves, and they found the condition prevalent in all three groups, regardless of the animals’ working histories; its occurrence correlated instead with factors such as age, body size, and sex. Therefore, the presence of spondylosis deformans in an ancient dog’s skeleton ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "indicates that the dog was older and larger than most other dogs of its time.",
+        "suggests that ancient people may also have used wolves to pull sleds and carry loads.",
+        "is not, on its own, reliable evidence that the dog hauled loads.",
+        "rules out the possibility that the dog was ever used for transport."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The condition was “prevalent in all three groups, regardless of the animals’ working histories,” including dogs “that had never been used for transport” and wolves. Finding it in an ancient dog therefore cannot by itself show that the dog pulled or carried loads, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The condition correlates with age and body size, but a correlation does not show that any one affected dog was older and larger than most dogs of its time."
+        },
+        "B": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The wolves were studied as animals that never hauled anything; the text gives no reason to think people used wolves for transport."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The condition also appeared in sled dogs, so its presence does not rule out hauling; it simply cannot prove it."
+        }
+      },
+      "models": [
+        "5105ca38",
+        "485962a6",
+        "d8b78a2b"
+      ],
+      "word_count": 96,
+      "sources": [
+        {
+          "what": "Latham, Losey 2019, PLoS ONE: archaeologists have used spondylosis deformans as an indicator of dog transport; 136 modern non-transport dogs, 19 sled dogs and 241 wolves analysed; the pathology is prevalent in dogs and wolves regardless of occupational history and correlates with age, body size, sex and inbreeding, so it is not a reliable indicator of transport",
+          "url": "https://doi.org/10.1371/journal.pone.0214575"
+        }
+      ],
+      "notes": "Area: history and archaeology (zooarchaeology). S5 medium: evidence for a claim undercut by its presence in animals that never hauled, so the conclusion is a hedge. Distractors: EXT, OUT, EXT (rules out).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "light trim (passage 101 to 96 words, models' median 77)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "inferences.S8.medium.w5b1_14",
+      "template": "S8",
+      "subtype": "Repeated pattern (gates scale with population) leads to gates as an index of traffic",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Historians know relatively little about how much traffic moved into and out of ancient cities, partly because traded goods are a poor guide to such movement. Archaeologist John W. Hanson therefore examined built infrastructure instead, developing a model of how such infrastructure should expand with population and then comparing the estimated populations of cities in the Greek and Roman world with the total number and width of their gates. He found a systematic relationship between the two, with more populous cities having more and wider gates, a pattern consistent with theoretical expectations about how transport infrastructure expands as populations grow. This relationship suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "a city’s gates may give a rough indication of how much traffic passed through it.",
+        "Roman cities generally had wider gates than Greek cities with similar populations had.",
+        "cities with many gates were more vulnerable to attack than cities with only a few gates.",
+        "ancient cities grew larger mainly because building more gates allowed more traders to enter them."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Hanson found that “more populous cities” had “more and wider gates,” in line with how “transport infrastructure expands as populations grow.” Since gates grew with the number of people who needed to pass through them, a city’s gates may serve as a rough guide to its traffic, which is the kind of evidence that traded goods fail to give, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text treats Greek and Roman cities together and never compares the gates of one group with the other."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text discusses gates as transport infrastructure, not as weak points in a city’s defenses."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text describes infrastructure expanding as populations grow, not gates causing growth."
+        }
+      },
+      "models": [
+        "7afdcca2",
+        "7ae8065c"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "Hanson 2020, PLoS ONE: little is known about traffic flows in and out of ancient cities, partly because commodities are poor proxies for trade; models how transport infrastructure should expand with population and finds a systematic relationship between estimated populations and the total numbers and widths of city gates in the Greek and Roman world; a new way to explore the connectivity of ancient cities",
+          "url": "https://doi.org/10.1371/journal.pone.0229580"
+        }
+      ],
+      "notes": "Area: history and archaeology. S8 medium: a repeated pattern (gates scale with population) leads to a link (gates as an index of traffic). Distractors: CMP, OUT, REV (direction).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S9.medium.w5b1_15",
+      "template": "S9",
+      "subtype": "Practice reveals motive: fees shown only at checkout raise spending",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Many online ticket marketplaces display prices excluding fees and add the fees only at the final step of a transaction. In a large-scale field experiment on the resale platform StubHub, economists Thomas Blake, Sarah Moshary, Kane Sweeney, and Steven Tadelis showed some shoppers prices that already included all fees, while others encountered the fees only at checkout. Shoppers shown the full price immediately purchased fewer tickets and selected less expensive seats, and the researchers determined that concealing fees made price comparisons more difficult. These results suggest that marketplaces that reveal fees only at checkout probably do so because ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "shoppers prefer to see fees listed separately so that they can judge whether the fees are reasonable.",
+        "shoppers who learn the full cost only after choosing their tickets tend to spend more than they otherwise would.",
+        "fees revealed at checkout are generally smaller than fees displayed at the start of a purchase.",
+        "concealing fees until checkout helps shoppers compare the prices of different tickets more easily."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Shoppers “shown the full price immediately purchased fewer tickets and selected less expensive seats,” so those who saw fees only at checkout spent more. A marketplace that waits until checkout to reveal fees would therefore likely be doing so because the practice raises spending, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "rival motive (CAUSE)",
+          "why_wrong": "The text says nothing about shoppers wanting to judge the fees, and the results show the practice changes how much they buy, not how they rate fees."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The experiment changed when the fees were shown, not how large they were."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The researchers determined that “concealing fees made price comparisons more difficult,” not easier."
+        }
+      },
+      "models": [
+        "350e2336",
+        "d748c3fd"
+      ],
+      "word_count": 99,
+      "sources": [
+        {
+          "what": "Blake, Moshary, Sweeney, Tadelis, Price Salience and Product Choice, Marketing Science (2021): a large-scale field experiment on StubHub.com shows that disclosing fees upfront reduces both the quantity and quality of purchases",
+          "url": "https://doi.org/10.1287/mksc.2020.1261"
+        },
+        {
+          "what": "NBER working paper 25186 abstract: making the full price salient reduces quality and quantity purchased; price obfuscation makes price comparisons difficult and results in consumers spending more than they otherwise would",
+          "url": "https://www.nber.org/papers/w25186"
+        }
+      ],
+      "notes": "Area: social science (economics). S9 medium: a common practice (fees shown only at checkout) read as revealing a motive. Distractors: CAUSE, OUT, REV.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S3.medium.w5b1_16",
+      "template": "S3",
+      "subtype": "Timber provenance and repairs show a ship worked in several regions before it was sunk",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In the eleventh century, five ships were apparently sunk on purpose in Denmark’s Roskilde Fjord to block a channel against attack from the sea. Their remains, the Skuldelev ships, were raised between 1957 and 1962 and studied using dendrochronology, which shows where and when timber grew by matching patterns in its growth rings. Skuldelev 1, a seagoing cargo vessel, was constructed of pine in western Norway around 1030, but its hull had been repaired with oak and linden from the Oslo Fjord region and from eastern Denmark. Skuldelev 1 therefore most likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "was built in eastern Denmark from pine that had been shipped there from western Norway.",
+        "was repaired with Danish wood only after it was raised from the fjord in the twentieth century.",
+        "was constructed specifically to be sunk as part of the barrier in Roskilde Fjord.",
+        "sailed in more than one region during its working life before it was sunk in the fjord."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Skuldelev 1 “was constructed of pine in western Norway around 1030,” but its hull “had been repaired with oak and linden from the Oslo Fjord region and from eastern Denmark.” A ship built in one region and mended with wood from two others was most likely used in several places over a working life before it ended up in the fjord, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the ship was “constructed of pine in western Norway,” not in Denmark."
+        },
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The repairs are part of the hull that was sunk in the eleventh century; nothing suggests they were made after the remains were raised."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Repairs made with wood from two different regions show a ship that had been in use for some time, not one built only to be sunk."
+        }
+      },
+      "models": [
+        "25fc2534",
+        "8fbed1cb"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Skuldelev ships: five 11th-century ships salvaged 1957 to 1962 from Roskilde Fjord, thought to be blockships; Skuldelev 1, a seagoing cargo vessel, built in Sognefjorden in western Norway around 1030 from pine and repeatedly repaired with oak and linden in the Oslo Fjord and eastern Denmark",
+          "url": "https://en.wikipedia.org/wiki/Skuldelev_ships"
+        }
+      ],
+      "notes": "Area: history and archaeology (Viking ships). S3 medium: a dating and provenance method plus an observation (Norwegian build, repairs with wood from two other regions) rejects the premise of a local or purpose-built ship. Skuldelev 2 and the knarr-versus-longship contrast are left out. Distractors: REV, MIX (time of the repairs), REV.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "trimmed the passage (100 to 93 words, models' median 71); explanation quote updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "inferences.S6.medium.w5b1_17",
+      "template": "S6",
+      "subtype": "Interest in being a scientist declines but not in doing science, so action wording may sustain engagement",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "During middle childhood, many children’s interest in science and confidence in their scientific abilities decline, a pattern especially clear among girls. Psychologist Ryan Lei and colleagues asked 306 children aged 6 to 11 how interested and confident they felt about two descriptions of the same activity: “being a scientist” and “doing science.” Older children expressed less interest and confidence in being scientists than younger children did, but their interest and confidence in doing science held fairly steady. These findings suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "describing science as an activity rather than as an identity may help sustain children’s engagement with it as they grow older.",
+        "children lose interest in science activities once they discover how difficult and time-consuming the work of professional scientists can be.",
+        "younger children are more confident than older children about both being scientists and doing science.",
+        "girls are more interested than boys in doing science but less interested than boys in becoming scientists."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Interest and confidence in “being a scientist” fell with age, but interest and confidence in “doing science” “held fairly steady.” Since only the identity wording lost ground, presenting science as something one does may help keep children engaged as they get older, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "Interest in doing science stayed stable, so children did not lose interest in science activities, and the text never mentions the difficulty of scientists’ work."
+        },
+        "C": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "This fits being a scientist but not doing science, where older children’s interest and confidence “held fairly steady.”"
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text mentions that the general decline is especially clear among girls, but it reports no comparison of girls and boys on the two descriptions."
+        }
+      },
+      "models": [
+        "4e9afd7a"
+      ],
+      "word_count": 82,
+      "sources": [
+        {
+          "what": "Lei, Green, Leslie, Rhodes 2019, Developmental Science: interest and efficacy in science decline over middle childhood, especially among underrepresented groups including girls; in 306 children aged 6 to 11, interest and efficacy about being scientists declined while interest and efficacy about doing science remained more robust; action-focused language may lead to more science engagement",
+          "url": "https://doi.org/10.1111/desc.12837"
+        }
+      ],
+      "notes": "Area: social science (developmental psychology). S6 medium: two framings of one pursuit differ on one property (decline with age), and the difference implies Z. Distractors: CAUSE, PART, CMP.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "trimmed the passage (97 to 82 words, models' median 68): four author names to 'Ryan Lei and colleagues', underrepresented-groups clause to girls (kept for D)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "inferences.S9.easy.w5b1_18",
+      "template": "S9",
+      "subtype": "Design reveals purpose: a book that hangs ready to read",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Girdle books were small books carried by some European monks, clergymen, and aristocrats between the 1200s and the 1500s. The leather binding of a girdle book extended past the bottom of the book in a long tail. At the end of the tail was a large knot that could be tucked into the owner’s belt, or girdle. The book hung upside down and backward from the belt. When the owner swung it up, the book was right side up and ready to read. This design suggests that owners of girdle books ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "rarely took their books with them when they traveled.",
+        "made girdle books for themselves from leftover pieces of leather.",
+        "wanted to be able to read their books quickly without taking them off.",
+        "preferred large, heavy books to small, light ones."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "A girdle book stayed tucked into the owner’s belt, and the text says, “When the owner swung it up, the book was right side up and ready to read.” This design lets an owner open and read the book at once while keeping it attached, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The books were designed to be carried on the owner’s belt, so they went wherever the owner went."
+        },
+        "B": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text never says who made girdle books or what leather was used."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says girdle books were “small books,” which suits carrying them on a belt."
+        }
+      },
+      "models": [
+        "25893fc7",
+        "7a895def",
+        "787729be"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Girdle book: small portable books worn by medieval European monks, clergymen and aristocratic nobles between the 13th and 16th centuries; leather binding continued in a long tail with a knot tucked into the girdle or belt; the book hung upside down and backwards so that when swung upwards it was ready for reading",
+          "url": "https://en.wikipedia.org/wiki/Girdle_book"
+        }
+      ],
+      "notes": "Area: humanities (book history). S9 easy: a design reveals its purpose. Distractors: REV, OUT, REV.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S2.easy.w5b1_19",
+      "template": "S2",
+      "subtype": "Principle plus case: restaurants follow customers, so restaurant data can stand in for missing neighborhood data",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "In many cities, especially in developing countries, reliable information about how many people live and work in each neighborhood is hard to find. Planners need this information to decide where to put services such as schools and bus lines. Restaurants tend to open where there are customers, and their prices reflect what those customers can pay. Researchers Lei Dong, Carlo Ratti, and Siqi Zheng used restaurant data from an online platform to train computer models for nine Chinese cities. The models accurately estimated each neighborhood’s population, number of businesses, and spending level. The researchers suggest that their method could therefore help ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "restaurant owners in Chinese cities decide how much to charge for their meals.",
+        "planners in cities without good neighborhood data estimate where people live and work.",
+        "online platforms bring more customers to restaurants in the poorest neighborhoods.",
+        "show that people in large cities eat at restaurants more often than people in small cities do."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that reliable neighborhood information “is hard to find” in many cities and that planners need it. Because the models “accurately estimated each neighborhood’s population, number of businesses, and spending level” from restaurant data, the method could help planners where such data are missing, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The models used restaurant prices to learn about neighborhoods; the text says nothing about helping owners set prices."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The online platform was only a source of data; the text never discusses bringing customers to restaurants."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The study estimated facts about neighborhoods, not how often people eat out, and it compares no city sizes."
+        }
+      },
+      "models": [
+        "20000f5f",
+        "4025e00c"
+      ],
+      "word_count": 102,
+      "sources": [
+        {
+          "what": "Dong, Ratti, Zheng 2019, PNAS: neighborhood-level socioeconomic data are scarce in many developing countries or cities; restaurant data from an online platform for 9 Chinese cities used to train machine-learning models that estimate daytime and nighttime population, number of firms and consumption level, explaining 90 to 95% of the variation; transferable between cities",
+          "url": "https://doi.org/10.1073/pnas.1903064116"
+        }
+      ],
+      "notes": "Area: social science (urban studies). S2 easy: restaurants follow customers (principle) applied to cities lacking data (case). Distractors: OUT, OUT, CMP.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

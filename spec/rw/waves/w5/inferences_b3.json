@@ -1,0 +1,1166 @@
+{
+  "skill": "Inferences",
+  "slug": "inferences",
+  "part": "w5b3",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1",
+        "name": "Controlled comparison of two groups"
+      },
+      {
+        "code": "S2",
+        "name": "Principle plus case leads to consequence (S10 trade-off folded in)"
+      },
+      {
+        "code": "S5",
+        "name": "Undercut leads to a hedged conclusion"
+      },
+      {
+        "code": "S6",
+        "name": "X but not Y, so Z"
+      },
+      {
+        "code": "S7",
+        "name": "Two cases or two accounts lead to a conditional or a common ground"
+      },
+      {
+        "code": "S9",
+        "name": "Behaviour, design or content reveals a motive or belief (S12 example folded in)"
+      },
+      {
+        "code": "S11",
+        "name": "Received view plus counterevidence leads to revision"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "inferences.S2.hard.w5b3_01",
+      "template": "S2",
+      "subtype": "T3 consequence: a farming strategy with a cost and a site-dependent payoff, applied to varied sites",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "When the bacteria it consumes are exhausted, the soil amoeba Dictyostelium discoideum aggregates into a fruiting body, a stalk topped by a mass of spores that are subsequently dispersed to new locations. Biologist Debra Brock and colleagues discovered that roughly one-third of wild-collected clones practice a primitive form of agriculture: these “farmers” cease feeding before their patch is exhausted—a sacrifice that goes unrewarded wherever suitable bacteria already exist—and incorporate bacteria into their fruiting bodies, so that their spores can seed a new crop at sites lacking edible bacteria. If the locations that spores reach vary in whether they contain such bacteria, it follows that ______",
+      "options": [
+        "farming clones should outcompete other clones at almost every site, since bringing bacteria along guarantees them a source of food wherever their spores land.",
+        "neither farming nor nonfarming clones would be expected to do better at every site, which may help explain why only some clones farm.",
+        "nonfarming clones would likely begin carrying bacteria as well, since doing so would let them keep feeding longer before forming fruiting bodies.",
+        "nonfarming clones should do better than farming clones at sites that already contain edible bacteria, so farming should gradually disappear from wild populations."
+      ],
+      "answer_letter": "B",
+      "explanation": "Farming lets spores “seed a new crop at sites lacking edible bacteria,” but stopping early is “a sacrifice that goes unrewarded wherever suitable bacteria already exist.” So farmers do better at some sites and nonfarmers at others. If spores land at sites of both kinds, neither strategy wins everywhere, which fits the finding that only “roughly one-third of wild-collected clones” farm.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Carrying bacteria does help at sites that lack them, but the text says that at sites where bacteria are already present the farmers lose out, so they would not win at almost every site."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Farmers “cease feeding before their patch is exhausted”; carrying bacteria means giving up feeding, not feeding longer, so the stated benefit runs the wrong way."
+        },
+        "D": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "Nonfarmers do have the edge where bacteria are already present, since there stopping early is “a sacrifice that goes unrewarded,” but farmers can “seed a new crop at sites lacking edible bacteria,” so where spores reach both kinds of site, farming keeps its advantage at some of them and would not be expected to disappear."
+        }
+      },
+      "models": [
+        "6b8a7c74",
+        "4b3d6062",
+        "0dccbf17"
+      ],
+      "sources": [
+        {
+          "what": "Brock, Douglas, Queller, Strassmann 2011, Nature 469:393 (PubMed abstract): about one-third of wild D. discoideum clones farm bacteria, stop feeding early, carry bacteria in fruiting bodies, seed a new crop; a major advantage where edible bacteria are lacking, costs not compensated at sites already containing bacteria, which may account for the dichotomy",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/21248849/"
+        }
+      ],
+      "notes": "Area: natural science (microbiology, ecology). S2 hard: a two-part principle (benefit where bacteria are lacking, uncompensated cost where present, the cost set in a dash aside away from the blank) applied to sites that vary; two steps (each strategy wins at one kind of site; so neither wins everywhere). Distractors: EXT (ignores the cost), REV (farming means feeding longer), PART (reviewer rebuild: D keeps the nonfarmers' edge where bacteria exist and drops the farmers' edge where they are lacking).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 105,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "read a little easier than band 6 (A and D both died to the same aside, C to a stated fact): D rebuilt as a near miss that keeps the nonfarmers' edge at bacteria-rich sites and fails on the farmers' edge where bacteria are lacking (old D: farming clones should fare best at sites already rich in edible bacteria, where the bacteria they carry would add to an existing food supply.); why_wrong and notes updated; re-solved, B only"
+        ],
+        "status": "fixed",
+        "facts": "PubMed 21248849 abstract (Brock, Douglas, Queller, Strassmann 2011): about one-third of wild clones farm, stop feeding early, carry bacteria in fruiting bodies, major advantage where edible bacteria are lacking, costs not compensated where bacteria are present, may account for the dichotomy"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "After the fix: two steps (each strategy wins at one kind of site, so neither wins everywhere, which fits only a third farming). D now keeps the right half and drops the farmers' advantage elsewhere; A ignores the cost; C reverses the early stop. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b3_02",
+      "template": "S2",
+      "subtype": "T4 explanation: a per-bag price explains why trash volume fell more than weight",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "When Charlottesville, Virginia, began requiring residents to purchase an 80-cent sticker for every bag of garbage set out for collection, a household’s expenses came to depend on the number of bags it used. Economists Don Fullerton and Thomas Kinnaman measured the curbside garbage of 75 households before and after the policy took effect. The volume of garbage declined by 37 percent, but its weight declined by only 14 percent; meanwhile, the households’ recycling increased, and some garbage was apparently disposed of illegally. The discrepancy between the two reductions most likely occurred because ______",
+      "options": [
+        "households diverted more of their trash to recycling, and recyclable materials such as glass are typically heavier than the trash that remained.",
+        "some households dumped trash illegally, which reduced the volume of garbage collected at the curb without reducing its weight.",
+        "the city began collecting trash less often, so bags that sat at the curb for longer had more time to settle.",
+        "the fee gave households a reason to pack more garbage into each bag, not only to throw less of it away."
+      ],
+      "answer_letter": "D",
+      "explanation": "The fee depended “on the number of bags it used,” not on how heavy the bags were. A household could therefore save money by fitting more garbage into each bag, which shrinks the volume set out without shrinking the weight. That explains why volume “declined by 37 percent” while weight “declined by only 14 percent.”",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "Recycling did increase, but moving heavy materials out of the trash would make weight fall faster than volume, the opposite of the gap the text reports."
+        },
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Trash dumped illegally never reaches the curb at all, so it lowers weight and volume alike; it cannot make volume fall more than weight."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about a change in how often trash was collected; the only change it describes is the per-bag fee."
+        }
+      },
+      "models": [
+        "0dccbf17",
+        "f942646f",
+        "22b3da87"
+      ],
+      "sources": [
+        {
+          "what": "Fullerton and Kinnaman, NBER Working Paper 4670 (AER 1996), Household Responses to Pricing Garbage by the Bag: 75 Charlottesville households, 80-cent sticker per bag; garbage weight fell 14 percent and volume 37 percent; recycling rose 16 percent; estimated illegal or suspicious disposal; effect on garbage density estimated",
+          "url": "https://www.nber.org/papers/w4670"
+        }
+      ],
+      "notes": "Area: social science (environmental economics). S2 hard, T4: the pricing rule (per bag, not per pound) applied to the result. Two steps (the fee counts bags, not weight, which the student must supply; fewer bags can come from packing them tighter, which lowers volume more than weight). Distractors each keep a true element of the passage (recycling, illegal dumping) or a plausible settling story, and fail on direction or support.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 93,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "NBER w4670 abstract (Fullerton, Kinnaman): 75 Charlottesville households, eighty-cent sticker per bag, garbage weight down 14%, volume down 37%, recycling up 16%, illegal or suspicious disposal estimated, density effect estimated"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The fee counts bags, not weight, a link the student must supply. A needs the density direction worked out (heavy recyclables would cut weight faster), B keeps a true element (illegal dumping) that lowers both measures alike, C an invented collection change. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b3_03",
+      "template": "S2",
+      "subtype": "T3 requirement: varied, misremembered filming rates force a film-by-film estimate",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Ever since sound films became the norm at the end of the 1920s, motion pictures have been projected at a uniform rate of 24 frames per second. Silent films observed no such convention: depending on the studio and the year, they were photographed at anywhere from approximately 12 to 40 frames per second, and certain scenes were deliberately filmed at a reduced rate so that the action would appear accelerated on screen. Many camera operators of the period later insisted that they had invariably filmed at precisely 16 frames per second, but examination of surviving prints has demonstrated those recollections to be inaccurate. An archivist preparing a silent film for exhibition today would therefore most likely need to ______",
+      "options": [
+        "estimate from the surviving footage the rate at which that particular film was shot instead of assuming that any single rate applies.",
+        "project the film at 16 frames per second, the rate that camera operators who worked during the silent era reported using.",
+        "slow down any scene in which the action appears faster than normal, so that every scene in the film moves at a natural pace.",
+        "use the rate of 24 frames per second that is standard for sound films, so that the film can be shown on modern projectors without adjustment."
+      ],
+      "answer_letter": "A",
+      "explanation": "Silent films were shot at rates from “approximately 12 to 40 frames per second,” so no single projection rate fits them all. The operators’ claim of “precisely 16 frames per second” cannot be trusted either, since “examination of surviving prints has demonstrated those recollections to be inaccurate.” An archivist would therefore have to work out each film’s rate from the footage itself.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "This relies on the operators’ recollections, which the text says examination of the films has demonstrated “to be inaccurate.”"
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Some scenes were “deliberately filmed at a reduced rate so that the action would appear accelerated on screen,” so slowing every fast-looking scene would undo effects the filmmakers intended."
+        },
+        "D": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "24 frames per second is the standard for sound films; silent films were shot at many other rates, so showing them all at 24 would misrepresent most of them."
+        }
+      },
+      "models": [
+        "0dccbf17",
+        "f942646f",
+        "61228830"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Silent film (projection speed section): silent films shot at variable speeds from 12 to 40 frames/s with no actual standard; 24 frames/s standardized for sound films 1926 to 1930; cameramen insisted they cranked at exactly 16 frames/s but modern examination of the films shows this to be in error; some scenes intentionally undercranked to accelerate action; unless shown at intended speeds, silent films can appear unnaturally fast or slow",
+          "url": "https://en.wikipedia.org/wiki/Silent_film"
+        }
+      ],
+      "notes": "Area: humanities (film history, archiving). S2 hard, T3 requirement. Three premises must be held together: no standard rate, unreliable testimony, deliberate fast scenes. B fails on the testimony, C on the deliberate undercranking, D on the sound-era standard; each keeps a true first part.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 119,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Silent film: 12 to 40 frames/s by year and studio, 24 standardized for sound 1926 to 1930, cameramen insisted on exactly 16 but examination of the films shows this in error, some scenes intentionally undercranked to accelerate the action"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Three premises held together (no standard rate, unreliable testimony, deliberate undercranking). B, C and D each keep a true first part (operators said 16, some scenes look fast, 24 is the sound standard) and fail on one later link. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b3_04",
+      "template": "S2",
+      "subtype": "T3 consequence: a price ceiling with no legal way around it leaves a merchant only withdrawal",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "By the late third century CE, repeated debasement of Roman currency, in which coins were minted with progressively less precious metal, had driven prices sharply upward. In 301 Emperor Diocletian responded with the Edict on Maximum Prices, which established legal ceilings for well over a thousand commodities and services, from grain and wine to maritime freight. Exceeding these ceilings was punishable by death, merchants were prohibited from transporting their merchandise to another region in order to charge more, and increased transportation costs could not justify a higher price. For a merchant whose own expenses had already surpassed the legal maximum, the edict therefore left little alternative but to ______",
+      "options": [
+        "add the cost of shipping goods over long distances to the prices charged, since those costs reflected genuine expenses.",
+        "sell goods at the maximum price allowed, since the edict ensured that rival merchants could not undercut that price.",
+        "keep goods off the market altogether, since selling them would mean either taking a loss or committing a capital crime.",
+        "charge more only when selling to buyers from other regions, since the ban on higher prices applied mainly to local sales."
+      ],
+      "answer_letter": "C",
+      "explanation": "The merchant’s expenses have “surpassed the legal maximum,” so selling at or below the ceiling means a loss. Selling higher “was punishable by death,” merchants were “prohibited from transporting their merchandise to another region in order to charge more,” and “increased transportation costs could not justify a higher price.” With every legal way to recover costs closed, the merchant’s remaining option is not to sell at all.",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The costs may be genuine, but the edict says “increased transportation costs could not justify a higher price,” so this route is closed."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "A ceiling limits how high prices go, not how low, and for this merchant even the maximum price is below his costs, so selling at it means a loss."
+        },
+        "D": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Exceeding the ceilings “was punishable by death” with no exception for distant buyers, and merchants were “prohibited from transporting their merchandise to another region in order to charge more,” so the edict did not apply mainly to local sales."
+        }
+      },
+      "models": [
+        "22b3da87",
+        "0dccbf17",
+        "f942646f"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Edict on Maximum Prices: 301 edict set maximum prices and wages for well over a thousand products, death penalty for profiteers, merchants forbidden to take goods elsewhere and charge more, transport costs no excuse to raise prices; coinage greatly debased, inflation; patchily enforced, mostly ignored by 305. Lactantius (On the Deaths of the Persecutors 7, newadvent.org/fathers/0705.htm): men were afraid to expose anything to sale and scarcity grew until the ordinance was abrogated",
+          "url": "https://en.wikipedia.org/wiki/Edict_on_Maximum_Prices"
+        }
+      ],
+      "notes": "Area: history (Roman economic history). S2 hard: a rule with several constraints (ceiling, death penalty, no moving goods, no transport excuse) applied to a merchant whose costs exceed the ceiling; the key is the outcome Lactantius reports (goods withheld), which the passage leaves out. Distractors: CAUSE (transport costs, closed by the edict), REV (ceiling read as a floor), MIX (the ban misread as local only).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 109,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Edict on Maximum Prices: issued 301, debased coinage and rising prices, ceiling for well over a thousand products incl. grain, wine and sea freight, death penalty for profiteers, merchants forbidden to take goods elsewhere to charge more, transport costs no excuse to raise prices"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Four stated constraints must be combined to reach an unstated outcome; B (sell at the ceiling) is a near miss that fails on reading the ceiling as a floor. A and D each die to one stated clause, and withholding goods is the textbook price-ceiling result some students know, so it sits at the low end of band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S6.hard.w5b3_05",
+      "template": "S6",
+      "subtype": "T4 explanation: a slowdown with friends that appears only when workers can see each other",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "On a fruit farm in the United Kingdom, pickers were initially compensated under a relative incentive scheme: each worker’s pay per kilogram depended on how that individual’s productivity compared with the average productivity of all pickers, so that a worker who picked faster reduced coworkers’ earnings. Economists Oriana Bandiera, Iwan Barankay, and Imran Rasul compared this period with a subsequent one in which the farm paid a fixed piece rate, under which productivity was at least 50 percent higher. Under the relative scheme, pickers worked more slowly when more of their friends were harvesting alongside them, but only when the pickers could observe one another’s work. These findings suggest that ______",
+      "options": [
+        "pickers may have held back under the relative scheme less out of goodwill toward friends than because friends could see how hard each one worked.",
+        "pickers under the relative scheme actually worked faster when friends were nearby, since they could watch those friends closely and try to match their pace.",
+        "pickers under the relative scheme slowed down mainly out of concern for their friends’ earnings, regardless of whether those friends could observe them.",
+        "the higher productivity under the fixed rate came mostly from pickers no longer being able to see one another as they worked."
+      ],
+      "answer_letter": "A",
+      "explanation": "Under the relative scheme, picking faster “reduced coworkers’ earnings,” and pickers slowed down with friends nearby, “but only when the pickers could observe one another’s work.” If simple goodwill were the reason, pickers would have held back for friends whether or not they could be seen. Since the slowdown required being observed, it more likely reflected friends watching, and holding one another to, a shared pace.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says pickers “worked more slowly when more of their friends were harvesting alongside them,” not faster."
+        },
+        "C": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "Concern for friends fits the slowdown, but the text says it happened “only when the pickers could observe one another’s work,” so it did not occur regardless of observation."
+        },
+        "D": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Visibility matters in the text only for the slowdown under the relative scheme; nothing suggests that pickers could see one another less under the fixed rate."
+        }
+      },
+      "models": [
+        "0dba14e6",
+        "5cd55c77",
+        "a68fd3e7"
+      ],
+      "sources": [
+        {
+          "what": "Bandiera, Barankay, Rasul 2005, Quarterly Journal of Economics 120(3):917 (IDEAS/RePEc abstract): productivity at least 50 percent higher under piece rates than under relative incentives; under relative incentives workers partly internalize the externality, more so when working with friends; they do so only when they can monitor and be monitored, which rules out pure altruism",
+          "url": "https://ideas.repec.org/a/oup/qjecon/v120y2005i3p917-962..html"
+        }
+      ],
+      "notes": "Area: social science (personnel economics). S6 hard: the slowdown appears with observation but not without, so pure goodwill is ruled out (the paper's own conclusion). Two steps: read the condition (only if seen), then infer what that excludes. Distractors: REV, PART (goodwill without the condition), MIX (visibility moved to the fixed-rate period).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 111,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "IDEAS/RePEc abstract of Bandiera, Barankay, Rasul 2005 (QJE): productivity at least 50 percent higher under piece rates; workers internalize the externality, especially with friends, only when they can monitor and be monitored; rules out pure altruism"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Key needs the step from slowing only when observed to a motive other than goodwill, paraphrased away from the text. C keeps the goodwill reading and fails on the condition, D moves visibility to the fixed-rate period, B reverses. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S6.hard.w5b3_06",
+      "template": "S6",
+      "subtype": "T3 consequence: hybrids cross terrain both parent groups avoid on migration",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Swainson’s thrushes that breed along North America’s Pacific coast fly south along the coast to Mexico and Central America, whereas those that breed farther inland follow an eastern route to South America; both routes circumvent the arid, mountainous regions of the western interior. In western Canada, where the two populations meet and interbreed, biologists Kira Delmore and Darren Irwin tracked migrating hybrids with small geolocators. Compared with birds from either parental population, the hybrids followed more varied routes: some traveled between the two parental routes, directly across arid and mountainous terrain, and others followed one population’s route in autumn and the other population’s route in spring. Delmore and Irwin’s results therefore suggest that ______",
+      "options": [
+        "hybrid thrushes learn their routes by following whichever parent group they happen to encounter first on their first fall migration.",
+        "the arid interior is less dangerous for migrating thrushes than biologists had assumed, since some hybrids are able to fly across it.",
+        "hybrids reach their wintering areas sooner than other thrushes do, since routes between the two parental routes are more direct.",
+        "hybrids may be less likely than birds of either parent group to survive migration, which could help keep the two groups distinct."
+      ],
+      "answer_letter": "D",
+      "explanation": "Both parental routes “circumvent the arid, mountainous regions of the western interior,” which suggests that those regions are hard for migrating thrushes. Some hybrids, though, flew “across arid and mountainous terrain.” Taking routes that neither parent group uses may put hybrids at greater risk, and if fewer hybrids survive, interbreeding would do less to blend the two groups.",
+      "distractors": {
+        "A": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about how thrushes acquire their routes, and some hybrids used the coastal route in one season and the inland route in the other, which a single first encounter would not explain."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "That some hybrids crossed the interior does not show the crossing was safe; the parent groups’ routes avoid it, and the text gives no evidence about how the hybrids fared."
+        },
+        "C": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text compares the routes’ paths, not travel times, and routes over mountains and dry land are not shown to be faster."
+        }
+      },
+      "models": [
+        "5cd55c77",
+        "0dba14e6",
+        "4b3d6062"
+      ],
+      "sources": [
+        {
+          "what": "Delmore and Irwin 2014, Ecology Letters 17:1211 (PubMed abstract): migratory divides are contact zones between populations using different routes around unsuitable areas; geolocators on hybrid Swainson's thrushes in western Canada; hybrids more variable, some intermediate routes crossing arid and mountainous regions, some using one parental route in fall and the other in spring; moderately strong selection against hybrids; migration a possible source of selection against hybrids",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/25040456/"
+        }
+      ],
+      "notes": "Area: natural science (ornithology, speciation). S6 hard: parents avoid the interior, some hybrids cross it; two steps (the interior is what the parental routes go around; so hybrids take riskier routes, which could limit blending). Coastal and inland wintering areas simplified from general knowledge (light checking). Distractors: OUT (learning), REV (crossing means safe), CMP (faster).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 114,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 25040456 abstract (Delmore, Irwin 2014): divides are zones between populations routing around unsuitable areas; geolocators on hybrid Swainson's thrushes in western Canada; more variable routes, some crossing arid and mountainous regions, some using one parental route in fall and the other in spring; selection against hybrids"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (parental routes avoid the interior, so hybrids' routes are riskier; fewer surviving hybrids help keep the groups apart). B keeps the true crossing and draws the wrong lesson, C keeps the more direct path and fails on timing. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S9.hard.w5b3_07",
+      "template": "S9",
+      "subtype": "T2 intended readers: a printer's format choices reveal whom he expected to buy his books",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In the late fifteenth century, printed editions of classical authors frequently appeared in large formats, with the ancient text often surrounded by extensive scholarly commentary: volumes better suited to a desk or lectern than to travel. In 1501, however, the Venetian printer Aldus Manutius published the poetry of Virgil as a compact octavo volume, set in a new slanted typeface cut by the punchcutter Francesco Griffo—the first italic—and printed without any commentary whatsoever. Aldus promoted such books as portable, and although they were moderately priced for the time, they were by no means inexpensive. Considered together, Aldus’s decisions suggest that he anticipated purchasers who ______",
+      "options": [
+        "had little money to spend on books and were willing to give up scholars’ notes in exchange for the lowest possible price.",
+        "were just beginning to study Latin and needed shortened versions of Virgil’s poems to prepare for lessons with a teacher.",
+        "could make sense of the ancient texts without scholars’ guidance and wanted books that they could easily carry with them.",
+        "found the new italic type easier to read than the type used in large volumes, which had become difficult to see clearly."
+      ],
+      "answer_letter": "C",
+      "explanation": "Aldus printed Virgil “without any commentary,” so his buyers would have to read the poems without scholars’ help, and he made the book small and “promoted such books as portable,” unlike volumes “suited to a desk or lectern.” Since the books were “by no means inexpensive,” the buyers were not simply looking for a bargain: they were readers able to manage the texts alone who wanted to carry them.",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The books did lack scholars’ notes, but the text says they were “by no means inexpensive,” so the lowest possible price was not the attraction."
+        },
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The book was small, not shortened: the text says Aldus published “the poetry of Virgil,” and beginners would be the readers most in need of the commentary he left out."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says only that the italic was new; it makes no claim about how easy it was to read or about any difficulty reading large volumes."
+        }
+      },
+      "models": [
+        "08395130",
+        "cef77aa7",
+        "350e2336"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Aldus Manutius: libelli portatiles (portable small books); books published without commentary and in smaller sizes, usually octavos; the 1501 Virgil introduced italic print, designed for the pocket-sized classics; moderately priced but not cheap; he jettisoned commentary because he felt it prevented the dialogue between author and reader; a boon to scholars",
+          "url": "https://en.wikipedia.org/wiki/Aldus_Manutius"
+        }
+      ],
+      "notes": "Area: humanities (book history). S9 hard, T2: three design facts (no commentary, small portable format, not cheap) must be combined; each distractor uses one of them wrongly (price, size as abridgment, the italic). The large-format, commentary-heavy norm before Aldus is general background, stated softly (\"many\", \"often\").",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 105,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Aldus Manutius: publishers often added commentary, making large books hard to transport; Aldine books without commentary and in smaller sizes, usually octavos; libelli portatiles; moderately priced but not cheap; the 1501 Virgil the first complete book in italic, type cut by Francesco Griffo"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Three design facts must be combined (no commentary, portable, not cheap). A keeps the missing notes and fails on price, B keeps the small size and fails on abridgment, D keeps the new italic. A dies to one phrase, so low end of band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S7.hard.w5b3_08",
+      "template": "S7",
+      "subtype": "T3 consequence: praise with opposite effects in two groups, combined with who receives it most",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Adults frequently respond to children’s accomplishments with inflated praise (“That’s not just beautiful—that’s incredibly beautiful!”), often intending to bolster the children’s self-esteem. Psychologist Eddie Brummelman and colleagues found that adults are especially inclined to offer such praise to children with low self-esteem. In a subsequent experiment, children received either inflated or ordinary praise for a drawing and then chose between simpler and more difficult drawing tasks: inflated praise made children with high self-esteem more likely to attempt the difficult task but made children with low self-esteem less likely to do so. These findings suggest that adults who give inflated praise ______",
+      "options": [
+        "tend to help children with low self-esteem more than children with high self-esteem, since the former receive more of that praise.",
+        "may most often give it to the very children whom it is least likely to encourage to take on challenges.",
+        "may discourage children with high self-esteem from seeking challenges, since such praise sets standards those children feel they must meet.",
+        "would encourage more children to seek challenges if they praised the effort children put into their work rather than its quality."
+      ],
+      "answer_letter": "B",
+      "explanation": "Adults are “especially inclined to offer such praise to children with low self-esteem,” yet inflated praise made those same children “less likely” to take on the harder task, while it encouraged children with high self-esteem. So the children who receive inflated praise most often are the ones it is least likely to push toward challenges.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Children with low self-esteem do receive more of the praise, but the experiment shows it made them less likely to take on challenges, so it did not help them more."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The text says inflated praise made children with high self-esteem more likely, not less likely, to take on the harder task; the discouraging effect was in the other group."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The experiment compared inflated with ordinary praise of a drawing; praise for effort was never tested."
+        }
+      },
+      "models": [
+        "d1539546",
+        "9abc3ba5",
+        "6b8a7c74"
+      ],
+      "sources": [
+        {
+          "what": "Brummelman, Thomaes, Orobio de Castro, Overbeek, Bushman 2014, Psychological Science 25:728 (PubMed abstract): adults especially inclined to give inflated praise to children with low self-esteem; inflated praise decreases challenge seeking in children with low self-esteem and has the opposite effect on children with high self-esteem",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/24434235/"
+        }
+      ],
+      "notes": "Area: social science (developmental psychology). S7 hard: two groups with opposite outcomes (the conditional), joined to a second finding about which group gets the praise; the key needs both. Easier and harder drawing tasks simplified from the study's picture-copying choice. Distractors: REV, MIX (groups swapped), OUT (effort praise, attractive from background knowledge).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 101,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 24434235 abstract (Brummelman et al. 2014): adults especially inclined to give inflated praise to children with low self-esteem; inflated praise decreases challenge seeking in children with low self-esteem and has the opposite effect in children with high self-esteem"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two findings must be joined (who gets inflated praise, whom it discourages). A keeps the true first half (low self-esteem children get more of it) and fails on its effect, C swaps the groups, D is the familiar effort-praise idea. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S11.hard.w5b3_09",
+      "template": "S11",
+      "subtype": "T1 revision: celebrated improvisations built from recurring figures relocate their originality",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Jazz improvisation is often characterized as the spontaneous invention of melody, and the solos of saxophonist Charlie Parker, celebrated since the 1940s for their inventiveness, have long been regarded as a model of that ideal. In a 1974 study of Parker’s recordings, however, musicologist Thomas Owens identified roughly a hundred short melodic figures that recur from solo to solo across many different tunes, and a 2018 computer analysis of 56 transcribed Parker solos by Klaus Frieler confirmed that Parker constructed his improvised lines almost entirely from such recurring patterns. These findings suggest that ______",
+      "options": [
+        "the originality admired in Parker’s playing may have lain less in creating each phrase anew than in how he selected and combined familiar ones.",
+        "Parker likely composed and memorized most of his solos well before performing them, rather than improvising them as he played.",
+        "Parker probably relied on recurring melodic patterns far more heavily than other jazz saxophonists of the 1940s did when they improvised solos.",
+        "listeners who praised Parker’s inventiveness during the 1940s were probably unaware that many of the same short figures appeared in solo after solo."
+      ],
+      "answer_letter": "A",
+      "explanation": "Parker’s solos are “celebrated since the 1940s for their inventiveness,” yet he “constructed his improvised lines almost entirely from such recurring patterns.” If the phrases themselves recur, the inventiveness cannot lie mainly in new phrases; it more likely lies in how he chose and joined the figures he already had.",
+      "distractors": {
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Reusing short figures “across many different tunes” is not the same as fixing whole solos in advance; the findings concern the building blocks, not prepared performances."
+        },
+        "C": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "Both studies examined only Parker’s solos, so they say nothing about how other saxophonists of the time compared."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about what Parker’s listeners knew; it reports only what later analyses of his recordings found."
+        }
+      },
+      "models": [
+        "a13c1c66",
+        "e185a21f",
+        "f27559d4"
+      ],
+      "sources": [
+        {
+          "what": "Frieler 2018, Patternology: Melodic Pattern Usage in Charlie Parker's Solos (IRCAM talk abstract, Dig That Lick project): replicates and extends Thomas Owens's seminal work on Parker's use of patterns; algorithmic analysis of 56 Omnibook transcriptions supports Owens's finding that Parker makes extensive and nearly exclusive use of patterns. Owens 1974, Charlie Parker: Techniques of Improvisation (UCLA dissertation), about 100 principal motives",
+          "url": "https://medias.ircam.fr/x54b408"
+        }
+      ],
+      "notes": "Area: humanities (music). S11 hard: received view (invention in the moment, with Parker as its model) plus counterevidence (recurring figures); the key reconciles both facts rather than discarding one. Distractors: EXT (pre-composed solos), CMP (other players), OUT (listeners' awareness). The \"about a hundred\" figure is Owens's own count as quoted from his front matter; rounded.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 94,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "IRCAM talk abstract (Frieler 2018, Patternology): replicates Thomas Owens's work; algorithmic pattern extraction on 56 Omnibook transcriptions; Parker makes extensive and nearly exclusive use of patterns to construct his solos"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Received view and counterevidence reconciled rather than one discarded, key paraphrased. B overreaches from recurring figures to memorized solos, C invents a comparison with other players, D an unsupported claim about listeners. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S11.medium.w5b3_10",
+      "template": "S11",
+      "subtype": "T1 revision: historical references to two sleeps undercut the single-stretch norm",
+      "tier": "medium",
+      "passage": "Sleeping in a single uninterrupted stretch each night is widely regarded as the natural human pattern. Historian Roger Ekirch, however, has assembled more than 500 references, in documents ranging from antiquity to the modern era, to a “first sleep” and a “second sleep” separated by roughly an hour of wakefulness around midnight, an interval that people devoted to prayer, to reflection on their dreams, or even to visits with neighbors. Ekirch attributes the disappearance of this pattern primarily to the spread of electric lighting. His findings suggest that ______",
+      "options": [
+        "people who sleep in one stretch today probably sleep less deeply than people in earlier centuries who slept in two stretches did.",
+        "the hour of wakefulness between the two sleeps was mainly a result of people’s fears about crime and danger at night.",
+        "sleeping straight through the night may be a fairly recent habit rather than the only pattern that is natural to humans.",
+        "electric lighting has made it impossible for people today to sleep in two separate periods during the night."
+      ],
+      "answer_letter": "C",
+      "explanation": "The received view treats one “uninterrupted stretch” as natural, but Ekirch found “more than 500 references” to a “first sleep” and a “second sleep” across many centuries, and he ties the change to “the spread of electric lighting.” This suggests that sleeping in one stretch may be a recent habit, not the only natural pattern.",
+      "distractors": {
+        "A": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text says nothing about how deeply people slept in either pattern."
+        },
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text describes what people did while awake, such as praying and visiting neighbors, but gives no cause for the waking period, and fear of crime is never mentioned."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Ekirch links electric lighting to “the disappearance of this pattern”; that does not mean sleeping in two periods has become impossible."
+        }
+      },
+      "models": [
+        "3190835d",
+        "df654a2b",
+        "bcf2f169"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Biphasic and polyphasic sleep (Ekirch section): A. Roger Ekirch found more than 500 references to a segmented sleeping pattern (first sleep and second sleep) in documents from the ancient, medieval and modern world; waking interval used to pray, reflect, interpret dreams, visit neighbors; he attributes its disappearance to modern electric lighting",
+          "url": "https://en.wikipedia.org/wiki/Biphasic_and_polyphasic_sleep"
+        }
+      ],
+      "notes": "Area: history (social history). S11 medium: received view plus counterevidence; one step to the revised view. Distractors: CMP, CAUSE, EXT (the hedge \"most people\" turned into impossibility).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 89,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Polyphasic sleep (Ekirch passage, reached via the cited redirect): more than 500 references to segmented sleep in ancient, medieval and modern documents; waking used to pray, reflect, interpret dreams, visit neighbors; Ekirch ties its loss to modern electric lighting"
+      }
+    },
+    {
+      "id": "inferences.S11.medium.w5b3_11",
+      "template": "S11",
+      "subtype": "T1 revision: emigration demand raised the number of nurses at home",
+      "tier": "medium",
+      "passage": "When health workers leave poorer countries for jobs in wealthier ones, their home countries are often thought to suffer a “brain drain,” and fears of such losses have led to calls to limit the international recruitment of nurses and doctors. In 2000, the United States greatly expanded the number of visas available to foreign nurses. Economists Paolo Abarcar and Caroline Theoharides found that nursing enrollment and graduation in the Philippines rose sharply in response: for each Filipino nurse who emigrated, approximately nine additional nurses became licensed in the Philippines. This finding suggests that ______",
+      "options": [
+        "the visa expansion led many Filipino nurses who had planned to emigrate to stay in the Philippines instead.",
+        "the opportunity to work abroad may have added to, rather than reduced, the number of licensed nurses in the Philippines.",
+        "countries hoping to improve their health care should encourage as many of their nurses as possible to go to work abroad.",
+        "the nurses who became licensed in the Philippines after 2000 were more highly trained than those who emigrated."
+      ],
+      "answer_letter": "B",
+      "explanation": "The brain-drain view expects emigration to shrink a country’s supply of health workers. But “for each Filipino nurse who emigrated, approximately nine additional nurses became licensed in the Philippines.” Because more nurses were added than left, the chance to work abroad may have increased the number of nurses in the Philippines.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The visa expansion made emigration easier, and nurses did move abroad; the text describes more people entering nursing, not would-be emigrants staying home."
+        },
+        "C": {
+          "recipe": "recommendation (REC)",
+          "why_wrong": "The study counted licensed nurses; it does not show that sending as many nurses abroad as possible would improve health care."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text compares the numbers of nurses, not their training, so it gives no basis for judging which group was more highly trained."
+        }
+      },
+      "models": [
+        "3190835d",
+        "55688b3c",
+        "df654a2b"
+      ],
+      "sources": [
+        {
+          "what": "Abarcar and Theoharides, World Bank People Move blog, Brain gain: providing healthcare workers opportunities to migrate can increase education (study published in Review of Economics and Statistics 2024): in 2000 the US dramatically expanded visas for foreign nurses; nursing enrollment and graduation in the Philippines increased substantially; for each new nurse who moved abroad, nine additional nurses were licensed; new nurses passed the licensure exam at lower rates",
+          "url": "https://blogs.worldbank.org/en/peoplemove/brain-gain-providing-healthcare-workers-opportunities-migrate-can-increase-education-and"
+        }
+      ],
+      "notes": "Area: social science (development economics). S11 medium: received view (brain drain) plus counterevidence (nine licensed per migrant). D is also contradicted by the study's lower pass rates (left out of the passage). Distractors: REV, REC, CMP.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 94,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "World Bank People Move blog (Abarcar, Theoharides 2021): US expanded nurse visas in 2000; Philippine nursing enrollment and graduation rose sharply; for each new nurse who moved abroad, nine additional nurses were licensed"
+      }
+    },
+    {
+      "id": "inferences.S2.medium.w5b3_12",
+      "template": "S2",
+      "subtype": "T3 prediction: if a ban caused the raids, lifting it should reduce them",
+      "tier": "medium",
+      "passage": "In 1371 the founder of China’s Ming dynasty issued a maritime prohibition, or haijin, that made private commerce with foreign countries punishable by death; overseas trade was to pass only through official tribute missions. Trade abroad nevertheless remained profitable, and many coastal merchants and sailors whose livelihoods the prohibition had destroyed turned to smuggling and piracy, so that most of the pirates who raided China’s coastline were themselves Chinese. If the raids were largely a consequence of the prohibition, then the court’s decision in 1567 to begin issuing permits for most private overseas trade would most likely have ______",
+      "options": [
+        "increased piracy along the coast, since the permits drew more foreign ships into Chinese waters.",
+        "ended the tribute system, since official missions would no longer be needed to carry on overseas trade.",
+        "led the court to make smuggling a capital crime, since smugglers could no longer claim that trade was forbidden.",
+        "reduced piracy along the coast, since many who had turned to raiding could again earn a living through legal trade."
+      ],
+      "answer_letter": "D",
+      "explanation": "The raiders were mostly people “whose livelihoods the prohibition had destroyed.” If the raids were largely a consequence of the prohibition, permits for private trade would give those people a lawful way to earn a living again, so piracy would most likely decline.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text traces the raids to the ban on trade, not to foreign ships, so reopening trade would be expected to reduce piracy, not increase it."
+        },
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The text says nothing about what happened to the tribute missions; permitting private trade need not have ended official missions."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Private foreign trade was already “punishable by death” under the 1371 ban, so the court did not first make it a capital crime in 1567."
+        }
+      },
+      "models": [
+        "db876fd5",
+        "299c5303",
+        "4b3d6062"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Haijin: first sea ban issued 1371 by the Hongwu emperor; private foreign trade punishable by death, trade restricted to tribute missions; counterproductive, smuggling and piracy mostly perpetrated by Chinese dispossessed by the policy; from 1567 merchants could apply for permits for all foreign trade except with Japan, Yuegang (Fujian) thrived; piracy dropped to negligible levels upon the end of the policy in 1567",
+          "url": "https://en.wikipedia.org/wiki/Haijin"
+        }
+      ],
+      "notes": "Area: history (Ming China). S2 medium with a conditional lead-in (\"If the raids were largely a product of the ban\"), as in the official 3.33 frame. The key matches the recorded outcome. \"Most private overseas trade\" covers the exception for Japan.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 99,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Haijin: 1371 sea ban by the Ming founder, private foreign trade punishable by death, trade through tribute missions; piracy mostly by Chinese dispossessed by the policy; from 1567 permits for all foreign trade except with Japan; piracy dropped to negligible levels"
+      }
+    },
+    {
+      "id": "inferences.S5.medium.w5b3_13",
+      "template": "S5",
+      "subtype": "T5 status: a coin that could have arrived by Indigenous trade does not prove a Norse visit",
+      "tier": "medium",
+      "passage": "In 1957 an amateur archaeologist reported discovering a Norwegian silver coin at the Goddard site in Maine, an extensive Native American settlement occupied from approximately 1180 to 1235. The coin was minted between 1065 and 1080, during the reign of King Olaf Kyrre, and some commentators have interpreted it as evidence that Norse voyagers reached the coast of Maine. However, excavations at the site also recovered a stone tool produced by the Dorset culture, whose people inhabited regions far to the north, suggesting that certain objects arrived at the settlement from distant places through trade networks. Therefore, ______",
+      "options": [
+        "the coin’s presence at the site is not conclusive evidence that Norse voyagers ever traveled as far south as Maine.",
+        "the coin was most likely made at the site by local people who copied the designs of Norwegian coins.",
+        "the Dorset people probably traded directly with Norwegian merchants who sailed to North America during the reign of King Olaf Kyrre.",
+        "the coin must have been left at the site by Norse voyagers sometime between 1065 and 1080."
+      ],
+      "answer_letter": "A",
+      "explanation": "Some have “interpreted it as evidence that Norse voyagers reached the coast of Maine,” but the Dorset tool suggests that “certain objects arrived at the settlement from distant places through trade networks.” The coin could have arrived the same way, so it does not settle whether the Norse came to Maine.",
+      "distractors": {
+        "B": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text identifies the coin as “Norwegian” and gives its minting dates; nothing suggests it was a local copy."
+        },
+        "C": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The text shows only that objects traveled through trade; it gives no evidence of direct contact between Dorset people and Norwegian merchants."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The Dorset tool raises another way the coin could have arrived, and the settlement was occupied only from about 1180, more than a century after the coin was minted."
+        }
+      },
+      "models": [
+        "5105ca38",
+        "485962a6",
+        "d8b78a2b"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Maine penny: Norwegian coin of Olaf Kyrre, minted 1065 to 1080, reportedly found in 1957 by amateur archaeologist Guy Mellgren at the Goddard site, a Native American settlement dated 1180 to 1235; a Dorset culture burin was also recovered; the Maine State Museum considers it most likely obtained by natives elsewhere",
+          "url": "https://en.wikipedia.org/wiki/Maine_penny"
+        }
+      ],
+      "notes": "Area: history (archaeology). S5 medium: evidence for a Norse visit plus an equally good rival route (Indigenous trade). The passage says \"reported finding\" because some numismatists doubt the find; the item does not depend on that question.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 98,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Maine penny: Mellgren reported finding it in 1957 at the Goddard site, a Native American settlement dated 1180 to 1235; minted 1065 to 1080 under Olaf Kyrre; a Dorset burin also recovered, the site a hub in a native trade network"
+      }
+    },
+    {
+      "id": "inferences.S9.medium.w5b3_14",
+      "template": "S9",
+      "subtype": "T4 function: oxygen falling in a rebreathed bubble shows the bubble is breathed",
+      "tier": "medium",
+      "passage": "Several semiaquatic species of anoles, lizards that inhabit streamside forests in Central and South America, dive to escape predators and can remain submerged for as long as 18 minutes. While underwater, these lizards repeatedly exhale a bubble of air that adheres to their snouts and subsequently inhale it again. Biologist Christopher Boccia and colleagues measured the oxygen concentration in these bubbles and found that it decreased the longer a lizard remained submerged, whereas the oxygen in bubbles attached to lifeless mechanical models did not decrease. These measurements indicate that the bubble ______",
+      "options": [
+        "mainly protects the lizards’ eyes and nostrils from the debris that fast-moving streams carry along.",
+        "is a store of air that the lizards actually breathe, which may help them stay hidden underwater for longer.",
+        "is a sign that a lizard is running out of air and will need to return to the surface within seconds.",
+        "takes in oxygen from the surrounding water faster than the lizards use it, so its oxygen supply keeps rising."
+      ],
+      "answer_letter": "B",
+      "explanation": "The oxygen in the bubbles “decreased the longer a lizard remained submerged,” but not in bubbles on “lifeless mechanical models,” so the living lizards were using the bubble’s oxygen. Since the lizards “dive to escape predators,” breathing this air may let them stay hidden longer.",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The study measured the bubble’s oxygen, which fell only with living lizards; nothing in the text concerns debris or protecting the eyes."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The lizards breathe the bubble “repeatedly” and can stay under “for as long as 18 minutes,” so the bubble is not a sign of an imminent return to the surface."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the oxygen in the bubbles “decreased,” not that it kept rising."
+        }
+      },
+      "models": [
+        "787729be",
+        "25893fc7",
+        "350e2336"
+      ],
+      "sources": [
+        {
+          "what": "Boccia et al. 2021, Current Biology 31:2947 (PubMed abstract): semi-aquatic anoles along neotropical streams dive for refuge or food, staying underwater up to 18 min; they iteratively expire and re-inspire narial air bubbles; oxygen partial pressure in the bubbles decreases with submersion time in living anoles but not in mechanical controls",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33984265/"
+        }
+      ],
+      "notes": "Area: natural science (herpetology, physiology). S9 medium: a behaviour plus a control measurement reveal its function. The control (mechanical models) rules out a purely physical change. Distractors: CAUSE, REV, REV.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 92,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 33984265 abstract (Boccia et al. 2021): semi-aquatic anoles dive for refuge, up to 18 min; iteratively expire and re-inspire narial bubbles; bubble oxygen falls with submersion time in living anoles but not in mechanical controls"
+      }
+    },
+    {
+      "id": "inferences.S1.medium.w5b3_15",
+      "template": "S1",
+      "subtype": "T1 conclusion: groups differing only in what they expected to do with the material",
+      "tier": "medium",
+      "passage": "Educators have long observed that people who must explain a subject to others come to understand it better, but it has been unclear whether the act of teaching is necessary for that benefit. Psychologist Elizabeth Bjork and colleagues asked participants to study a written passage. Some participants were told that they would be tested on the passage; others were told that they would teach the material to another student, who would then be tested. In reality, nobody taught: all the participants completed the same test. Participants who had anticipated teaching recalled more of the passage, organized their recollections more coherently, and correctly answered more questions about its central points than did participants who had anticipated a test. The researchers concluded that ______",
+      "options": [
+        "teaching material to another student is the most effective way for a person to learn that material.",
+        "students tend to learn more from other students than they do from their teachers.",
+        "merely expecting to teach may lead people to study in ways that improve their learning.",
+        "people who expect a test study a passage more carefully than people who expect to teach it."
+      ],
+      "answer_letter": "C",
+      "explanation": "The two groups differed only in what they expected: “nobody taught,” and “all the participants completed the same test.” Yet those “who had anticipated teaching recalled more of the passage” and answered more questions about main points. So the expectation alone, not teaching itself, likely changed how they studied.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "In the study “nobody taught,” so it cannot show anything about actually teaching, let alone that teaching is the most effective method."
+        },
+        "B": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "No one in the study learned from another student or from a teacher; all participants studied the passage themselves."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Participants who expected to teach did better, which suggests they studied more effectively, not less carefully, than those who expected a test."
+        }
+      },
+      "models": [
+        "5432d1de",
+        "575e67df",
+        "5b4829d2"
+      ],
+      "sources": [
+        {
+          "what": "Nestojko, Bui, Kornell, Bjork 2014, Memory and Cognition 42:1038 (PubMed abstract): participants studied passages expecting a test or expecting to teach; in reality all were tested and no one taught; those expecting to teach produced more complete and better organized free recall and answered more questions, particularly on main points",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/24845756/"
+        }
+      ],
+      "notes": "Area: social science (cognitive psychology). S1 medium: one factor (expected task) varied, outcome recall. Named the senior author (Bjork) rather than the first author, whose first name could not be confirmed. Distractors: VAR, OUT, REV.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 122,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 24845756 abstract (Nestojko, Bui, Kornell, Bjork 2014): expecting to teach vs expecting a test, no one taught, all tested; more complete and better organized recall, more questions answered, especially on main points"
+      }
+    },
+    {
+      "id": "inferences.S7.medium.w5b3_16",
+      "template": "S7",
+      "subtype": "T1 bound: beeswax present in farmers' pots in the south, absent in the north, marks the bees' range",
+      "tier": "medium",
+      "passage": "Because honeybees left almost no fossil record, their range in prehistory has been hard to trace. Beeswax, however, has a chemical makeup so constant that it can be identified in residues absorbed into ancient pottery. Chemist Mélanie Roffet-Salque and colleagues analyzed more than 6,000 potsherds from over 150 archaeological sites and found beeswax in vessels used by Neolithic farmers across Europe, the Near East, and North Africa. North of approximately 57 degrees latitude, in regions such as Scotland and Scandinavia, they detected no beeswax whatsoever, even though animal fats had survived in the vessels there. The team therefore concluded that ______",
+      "options": [
+        "Neolithic people in Scotland and Scandinavia avoided bee products for cultural reasons even though honeybees were common there.",
+        "beeswax breaks down too quickly in cold northern soils to be detected in ancient pottery from Scotland and Scandinavia.",
+        "honeybees first spread into Europe and North Africa from the Near East during the period when farming began.",
+        "the natural range of honeybees at that time likely did not extend much farther north than about 57 degrees latitude."
+      ],
+      "answer_letter": "D",
+      "explanation": "Beeswax turned up in farmers’ vessels “across Europe, the Near East, and North Africa,” but none was found farther north, in “regions such as Scotland and Scandinavia.” Since “animal fats had survived in the vessels there,” poor preservation is unlikely to explain the gap. The simplest explanation is that honeybees did not live that far north, so their range likely ended near that latitude.",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text gives no evidence about cultural choices, and nothing suggests honeybees were common in the north; the pots there held no beeswax at all."
+        },
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "Other residues, “animal fats,” survived in the northern pots, and beeswax is described as chemically constant, so poor preservation is not the likely reason."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The study traced where bee products were used, not where honeybees came from or when they spread."
+        }
+      },
+      "models": [
+        "3882ddf6",
+        "cac82f9b",
+        "d1539546"
+      ],
+      "sources": [
+        {
+          "what": "University of Exeter news release (Nov 2015) on Roffet-Salque et al. 2015, Nature 527:226: more than 6,000 potsherds from over 150 Old World sites; beeswax across Neolithic Europe, Near East and North Africa; lack of beeswax at Neolithic sites above the 57th parallel North (e.g., Scotland, Fennoscandia) points to an ecological limit to the natural occurrence of honeybees; no fossil record of the honeybee. Roffet-Salque (Christian Science Monitor, 11 Nov 2015): northern sherds held fats but no wax",
+          "url": "https://news-archive.exeter.ac.uk/2015/november/title_480863_en.html"
+        },
+        {
+          "what": "Christian Science Monitor, 11 Nov 2015: above the 57th parallel North no beeswax found; Roffet-Salque: we are finding lots of animal fats, but we have not found any beeswax; probably means bees were absent at the time (the premise that rules out poor preservation, distractor B)",
+          "url": "https://www.csmonitor.com/Science/2015/1111/Humans-have-minded-their-own-beeswax-for-thousands-of-years"
+        }
+      ],
+      "notes": "Area: history and archaeology (with ecology). S7 medium: two sets of sites with opposite results lead to a boundary. The animal-fat detail rules out the preservation rival (B).",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 101,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Exeter news release, Nov 2015 (Roffet-Salque et al.): more than 6,000 potsherds from over 150 sites, beeswax across Neolithic Europe, none above the 57th parallel (Scotland, Fennoscandia), an ecological limit to honeybees; CSM 11 Nov 2015: many animal fats but no beeswax in those sherds"
+      }
+    },
+    {
+      "id": "inferences.S1.easy.w5b3_17",
+      "template": "S1",
+      "subtype": "T1 conclusion: lab-raised mice of two species dig their species' wild burrows",
+      "tier": "easy",
+      "passage": "Oldfield mice and deer mice are closely related species found in North America, but they build very different burrows. In the wild, oldfield mice dig long, complex burrows with an entrance tunnel, a nest chamber, and a second tunnel that serves as an escape route. Deer mice, by contrast, dig shallow, simple burrows. Biologist Hopi Hoekstra and her team placed mice of both species in identical laboratory burrowing boxes, and each species dug the same kind of burrow that its members dig in the wild. The team also bred the two species together. The hybrid offspring dug deep, complex burrows like those of oldfield mice. These findings suggest that ______",
+      "options": [
+        "the difference between the two species’ burrows is largely inherited rather than shaped by where the mice live.",
+        "deer mice dig simple burrows because they spend less of their time underground than oldfield mice do.",
+        "oldfield mice dig longer burrows in sandy soil than they do in other kinds of soil.",
+        "deer mice could learn to dig escape tunnels if they were raised alongside oldfield mice."
+      ],
+      "answer_letter": "A",
+      "explanation": "In “identical laboratory burrowing boxes,” each species still dug “the same kind of burrow that its members dig in the wild,” so the surroundings do not explain the difference. And the hybrids “dug deep, complex burrows like those of oldfield mice,” which shows the burrowing style being passed from parents to offspring. The difference is therefore likely inherited.",
+      "distractors": {
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text never says how much time either species spends underground."
+        },
+        "C": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The burrowing boxes were identical, so the study did not compare different kinds of soil."
+        },
+        "D": {
+          "recipe": "speculative future (FUT)",
+          "why_wrong": "The text gives no evidence that deer mice can learn to dig escape tunnels; the hybrids dug oldfield-style burrows because of their parentage, not because of what they saw."
+        }
+      },
+      "models": [
+        "01989d77",
+        "6bc0e595",
+        "5b4829d2"
+      ],
+      "sources": [
+        {
+          "what": "Weber, Peterson, Hoekstra 2013, Nature 493:402 (PubMed abstract): oldfield mice (Peromyscus polionotus) build complex burrows with long entrance and escape tunnels; deer mice (P. maniculatus) build small, simple burrows; under laboratory conditions both species recapitulate their natural burrowing behaviour; genetic crosses show the derived burrows of oldfield mice are dominant",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/23325221/"
+        },
+        {
+          "what": "Harvard Gazette, Jan 2013, Digging yields clues: when placed in a burrowing box in the lab, hybrid mice dug deep, complex burrows similar to those of the oldfield mice; deer mouse digs relatively shallow and simple burrows",
+          "url": "https://news.harvard.edu/gazette/story/2013/01/digging-yields-clues"
+        }
+      ],
+      "notes": "Area: natural science (animal behaviour, genetics). S1 easy: same environment, different species, behaviour matches the wild, and hybrids dig like oldfield mice; one step to inheritance. Distractors: CAUSE, VAR, FUT.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 110,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 23325221 abstract (Weber, Peterson, Hoekstra 2013): oldfield mice build complex burrows with entrance and escape tunnels, deer mice small simple ones; both recapitulate natural burrowing in the lab; crosses show the oldfield burrow dominant (Harvard Gazette: hybrids dug deep, complex burrows)"
+      }
+    },
+    {
+      "id": "inferences.S9.easy.w5b3_18",
+      "template": "S9",
+      "subtype": "T6 purpose: a concealed adult in early child portraits",
+      "tier": "easy",
+      "passage": "In the 1840s, taking a photograph required exposures lasting from tens of seconds to several minutes, and anyone who moved during that time appeared blurred in the finished picture. Persuading a baby or a young child to remain motionless for so long was difficult. In many photographs of small children from the 1800s, now known as “hidden mother” photographs, the child sits on the lap of an adult who is concealed beneath a dark cloth or curtain or even disguised as a chair. Photographers most likely used this technique because it ______",
+      "options": [
+        "made the photographs less expensive for families to buy.",
+        "allowed the mother to appear in the photograph more clearly than the child did.",
+        "let an adult hold the child still while keeping that adult out of the portrait.",
+        "protected the child’s eyes from the bright light that early cameras needed in order to take photographs."
+      ],
+      "answer_letter": "C",
+      "explanation": "Long exposures meant that a child who moved “appeared blurred in the finished picture,” and keeping a child still was “difficult.” An adult holding the child could keep it still, and covering the adult with “a dark cloth or curtain” kept the adult from being part of the picture.",
+      "distractors": {
+        "A": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about the cost of photographs."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The adult was “concealed” or “disguised,” so the method hid the mother rather than showing her clearly."
+        },
+        "D": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The cloth covered the adult, not the child, and the text never mentions bright light."
+        }
+      },
+      "models": [
+        "25893fc7",
+        "7a895def",
+        "787729be"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Hidden mother photography: Victorian-era genre in which young children were photographed with their mother present but hidden, behind curtains, under cloaks or disguised as chairs; 1840s daguerreotypes had exposure times from tens of seconds to several minutes, making it hard to keep a child still; continued into the 1920s",
+          "url": "https://en.wikipedia.org/wiki/Hidden_mother_photography"
+        }
+      ],
+      "notes": "Area: humanities (history of photography). S9 easy: a practice and its context reveal its purpose; one step. Distractors: OUT, REV, CAUSE.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 92,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia Hidden mother photography: 1840s daguerreotype exposures from tens of seconds to several minutes, hard to keep a child still; the adult hidden behind curtains, under cloaks or disguised as chairs"
+      }
+    },
+    {
+      "id": "inferences.S6.easy.w5b3_19",
+      "template": "S6",
+      "subtype": "T1 conclusion: related orphans adopted, unrelated orphans never",
+      "tier": "easy",
+      "passage": "North American red squirrels live alone, and each squirrel defends its own territory. Mothers raise their young without assistance from other adults, and adding an extra pup to a litter is costly, because a mother has only limited resources to share among her young. In Canada’s Yukon, biologist Andrew McAdam and his colleagues monitored a population of red squirrels for 19 years, a period that included more than 2,000 litters. The researchers recorded only five cases in which a female adopted pups whose mother had died. In every case, the orphaned pups were relatives of the female who adopted them. Orphans that had no relatives living nearby were never adopted. This suggests that ______",
+      "options": [
+        "red squirrels adopt orphaned pups more often than other kinds of squirrels do.",
+        "whether a female red squirrel adopts orphaned pups may depend on whether she is related to them.",
+        "females that adopt orphaned pups usually raise more of their own young than other females do.",
+        "orphaned pups are more likely to survive when they are adopted by females that are not related to them."
+      ],
+      "answer_letter": "B",
+      "explanation": "In every adoption, “the orphaned pups were relatives of the female who adopted them,” and orphans with “no relatives living nearby were never adopted.” Since adopted orphans were always relatives and unrelated orphans were not taken in, relatedness may decide whether a female adopts.",
+      "distractors": {
+        "A": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The study looked only at red squirrels, and it found adoption to be very rare."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about how many of their own young adopting females raised."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Unrelated females never adopted orphans in the study, so there is no evidence about such adoptions at all."
+        }
+      },
+      "models": [
+        "493c46bc",
+        "9077be25",
+        "01989d77"
+      ],
+      "sources": [
+        {
+          "what": "Gorrell, McAdam, Coltman, Humphries, Boutin 2010, Nature Communications 1:22 (PubMed abstract): five adoptions among 2,230 litters over 19 years in asocial red squirrels; adoptions always between kin, orphans without nearby kin never adopted (Hamilton's rule). University of Guelph news (June 2010) names Andrew McAdam as study lead",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/20975694/"
+        }
+      ],
+      "notes": "Area: natural science (behavioural ecology). S6 easy: kin adopted, non-kin not, so relatedness matters; one step. Distractors: CMP, OUT, REV.",
+      "stem": "Which choice most logically completes the text?",
+      "table": null,
+      "figure": null,
+      "word_count": 114,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 20975694 abstract (Gorrell, McAdam, Coltman, Humphries, Boutin 2010): five adoptions among 2,230 litters over 19 years in asocial red squirrels; always between kin; orphans without nearby kin never adopted"
+      }
+    }
+  ],
+  "done": true
+}

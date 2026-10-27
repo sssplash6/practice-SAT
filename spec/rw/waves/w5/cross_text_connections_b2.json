@@ -1,0 +1,1103 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "w5b2",
+  "domain": "Craft and Structure",
+  "done": true,
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_concede_rebut",
+        "name": "Respond: concede part of the target, rebut the rest (two-part options)"
+      },
+      {
+        "code": "S1_solution",
+        "name": "Respond: one text supplies a solution to the other's problem"
+      },
+      {
+        "code": "S2_joint_inference",
+        "name": "Agree: joint inference from two compatible studies"
+      },
+      {
+        "code": "S3_difference",
+        "name": "Difference: how the two authors view an object, compared on one axis"
+      },
+      {
+        "code": "S1_alt_explanation",
+        "name": "Respond: the behavior might be explained without the target's interpretation"
+      },
+      {
+        "code": "S4_relate",
+        "name": "Relationship: function of each text"
+      },
+      {
+        "code": "S1_counterexample",
+        "name": "Respond: counterexample to a 'first', 'only' or 'requires' claim"
+      },
+      {
+        "code": "S1_limit_degree",
+        "name": "Respond: limit the degree or scope of the target claim"
+      },
+      {
+        "code": "S1_second_factor",
+        "name": "Respond: target is incomplete, a second cause or source"
+      },
+      {
+        "code": "S1_case_fits_frame",
+        "name": "Respond (Text 1 speaking): Text 2's case fits Text 1's general frame"
+      },
+      {
+        "code": "S2_shared_premise",
+        "name": "Agree: shared premise beneath a visible disagreement"
+      },
+      {
+        "code": "S1_rival_hypothesis",
+        "name": "Respond: rival hypothesis with evidence the target does not account for"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w5b2_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nAntibiotic resistance usually comes at a cost to bacteria: genes that protect them from a drug can slow their reproduction when the drug is absent. Many researchers have therefore regarded resistance as reversible, at least in principle. <u>If physicians sharply curtail prescriptions of a particular antibiotic, susceptible strains should gradually outcompete resistant ones, and the drug should regain its effectiveness.</u>\n\nText 2\n\nResistance often does burden bacteria, and restricting prescriptions is a reasonable response. But after a national restriction in the United Kingdom, annual sulfonamide prescriptions fell from over three million in 1991 to fewer than 80,000 in 1999, and when Vivienne Enne and colleagues tested E. coli from a London hospital, they found that resistance to sulfonamides had not declined. The genes for it were often carried alongside genes that protect bacteria against other drugs.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By accepting that sulfonamide prescriptions declined sharply in the United Kingdom but arguing that resistant bacteria grow faster than susceptible ones even without the drug",
+        "By disputing that resistance genes slow the growth of bacteria and observing that resistance to sulfonamides remained common after prescriptions fell",
+        "By granting that resistance can put bacteria at a disadvantage but cautioning that using a drug far less does not reliably restore its power against them",
+        "By endorsing the reasoning behind limiting prescriptions but suggesting that samples from a single London hospital may not reflect bacteria elsewhere"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that if physicians “sharply curtail prescriptions” of an antibiotic, susceptible strains “should gradually outcompete resistant ones” and the drug “should regain its effectiveness.” The author of Text 2 grants that resistance “often does burden bacteria,” but reports that UK sulfonamide prescriptions “fell from over three million in 1991 to fewer than 80,000 in 1999” while resistance “had not declined,” since the genes for it were “carried alongside genes that protect bacteria against other drugs.” So the author would accept the cost of resistance while denying that cutting use reliably brings a drug back.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (true first part, invented second part)",
+          "why_wrong": "Prescriptions did fall, but Text 2 never says resistant bacteria outgrow susceptible ones; it grants that resistance “often does burden bacteria.”"
+        },
+        "B": {
+          "recipe": "D2 denial where the author concedes",
+          "why_wrong": "The second half matches Text 2, but the author agrees that resistance “often does burden bacteria,” so the author would not dispute that resistance genes slow growth."
+        },
+        "D": {
+          "recipe": "D7 half right (right concession, wrong rebuttal: a sampling caveat Text 2 never raises)",
+          "why_wrong": "Text 2 calls restricting prescriptions “a reasonable response,” but its objection rests on linked resistance genes, not on doubts about where the samples came from."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.13"
+      ],
+      "word_count": 138,
+      "sources": [
+        {
+          "what": "Enne, Livermore, Stephens, Hall 2001, Lancet 357: 1325: UK sulphonamide prescriptions fell from 3,208,000 a year (1991) to 77,000 (1999), yet resistance in E. coli at the Royal London Hospital stayed high (46.0% vs 39.7%); sul genes on plasmids linked to other resistance determinants",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/11343738/"
+        }
+      ],
+      "notes": "Area: natural science (microbiology, medicine). Text 1’s reasoning is unattributed; the fitness cost of resistance is the general premise Enne’s background states (whether a reduction in use can reverse resistance “is less clear”). “Same pieces of DNA” simplifies plasmid linkage. The rebuttal needs the prescription drop plus the unchanged resistance.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Concede-rebut with two-part options: A and D keep a true concession (the prescription drop, the reasonableness of restriction) and fail in the rebuttal, B rebuts the right fact but denies what Text 2 grants. The key needs the prescription drop plus unchanged resistance and is paraphrased (“does not reliably restore its power”)."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w5b2_02",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nThe History of Mary Prince (1831), the first published account of an enslaved Black woman’s life in Britain, reached readers only through intermediaries. Prince, who was illiterate, dictated her story in London to Susanna Strickland; Thomas Pringle, secretary of the Anti-Slavery Society, then edited and published it to advance the abolitionist campaign. <u>The narrative should therefore be considered a record of how abolitionists wished an enslaved woman to sound, not of Prince’s own voice.</u>\n\nText 2\n\nThe editorial shaping of The History of Mary Prince is undeniable: Pringle edited and annotated the account for a British readership he hoped to persuade. Nevertheless, passages such as Prince’s insistence that “I have been a slave myself—I know what slaves feel” possess a directness distinct from the more elaborate prose of the period, and Pringle himself remarked that such forceful expressions were reproduced exactly as she uttered them.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By acknowledging that the narrative was shaped by others to serve a political cause but contending that parts of it likely preserve Prince’s own manner of speaking",
+        "By agreeing that Pringle prepared the narrative for a British audience but arguing that his editing made Prince’s account more persuasive than she could have made it",
+        "By conceding that Prince’s own words survive in parts of the narrative but arguing that Pringle’s notes show that he altered most of them",
+        "By rejecting the view that the narrative was shaped to advance the antislavery campaign but noting that Pringle’s comments differ in style from Prince’s words"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says the narrative is a record of how abolitionists “wished an enslaved woman to sound, not of Prince’s own voice.” The author of Text 2 grants that the account was shaped, since Pringle “edited and annotated the account for a British readership he hoped to persuade,” but points to passages with “a directness distinct from the more elaborate prose of the period” and to Pringle’s remark that such expressions “were reproduced exactly as she uttered them.” So the author accepts the editing but holds that some of Prince’s own voice survives.",
+      "distractors": {
+        "B": {
+          "recipe": "D7 half right (right concession, invented rebuttal)",
+          "why_wrong": "Text 2 says nothing about Pringle’s editing improving the account; it argues that Prince’s own directness comes through despite the editing."
+        },
+        "C": {
+          "recipe": "D7 recombined halves (key’s rebuttal used as the concession, contradicted rebuttal)",
+          "why_wrong": "Pringle’s remark in Text 2 says that forceful expressions “were reproduced exactly as she uttered them,” the opposite of showing that he altered most of her words."
+        },
+        "D": {
+          "recipe": "D2 denial where the author concedes",
+          "why_wrong": "The author of Text 2 accepts that Pringle edited the account “for a British readership he hoped to persuade,” so the author would not reject the view that it was shaped for the campaign."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.2"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "The History of Mary Prince (1831): first account of the life of a Black enslaved woman published in the UK; Prince dictated it to Susanna Strickland in Thomas Pringle’s household; Pringle, secretary of the Anti-Slavery Society, edited it; quotation “I have been a slave myself—I know what slaves feel”; Pringle’s footnote that strong expressions are “given verbatim as uttered by Mary Prince”; tone described as direct, unlike the more laboured style of the day",
+          "url": "https://en.wikipedia.org/wiki/The_History_of_Mary_Prince"
+        }
+      ],
+      "notes": "Area: literature (slave narrative, editing and authorship). Both evaluations are the authors’ own. The quotation is Prince’s, copied as the source gives it. The concession is the editing for a political audience; the rebuttal needs the passage’s directness plus Pringle’s own note.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Concede-rebut; B keeps the right concession with an invented rebuttal, C recombines the halves. The key needs the directness of the passage plus Pringle’s note, paraphrased as “manner of speaking.”"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w5b2_03",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nAlong the Pacific coast from northern California to Vancouver Island, buried marsh soils and stands of dead trees in tidal mud indicate that the land abruptly subsided during an enormous earthquake on the Cascadia subduction zone several centuries ago. <u>Determining precisely when that earthquake occurred has proved difficult, however, because the region lacks written records from the period and radiocarbon dating of buried vegetation is accurate only to within several decades.</u>\n\nText 2\n\nSeismologist Kenji Satake and colleagues examined historical documents from communities along Japan’s Pacific coast. These records describe a tsunami that inundated fields and dwellings in January 1700, a wave unaccompanied by any earthquake felt in Japan. By modeling the wave’s transpacific travel, the researchers concluded that it originated in a magnitude 9 Cascadia earthquake on the evening of January 26, 1700.",
+      "stem": "Based on the texts, how would Satake and colleagues (Text 2) most likely respond to the underlined portion of Text 1?",
+      "options": [
+        "They would argue that the dead trees along the Cascadia coast were killed by the tsunami rather than by the sinking of the land.",
+        "They would contend that radiocarbon dates from the Cascadia coast become reliable once they are checked against tsunamis recorded in Japan.",
+        "They would suggest that the records from Japan confirm that the Cascadia coast subsided but cannot show when the subsidence took place.",
+        "They would point out that evidence preserved across the ocean makes it possible to date the event more precisely than the region’s own record allows."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined portion says that dating the Cascadia earthquake is hard because the region “lacks written records from the period” and radiocarbon dating “is accurate only to within several decades.” Satake’s team used “historical documents” from Japan describing a tsunami “unaccompanied by any earthquake felt in Japan” and, by modeling “the wave’s transpacific travel,” dated the earthquake to “the evening of January 26, 1700.” So they would say that records kept on the other side of the Pacific supply the precise date that local evidence cannot.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says the land “abruptly subsided” during the earthquake; Text 2 says nothing about the tsunami killing the trees in Cascadia."
+        },
+        "B": {
+          "recipe": "D6 right idea, wrong mechanism",
+          "why_wrong": "Text 2 dates the earthquake from the Japanese records and a model of the wave, not by making radiocarbon dates reliable."
+        },
+        "C": {
+          "recipe": "D7 half right (plausible link, wrong conclusion)",
+          "why_wrong": "The Japanese records describe a tsunami, not the subsidence itself, and the team used them to date the earthquake precisely, to “the evening of January 26, 1700.”"
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7"
+      ],
+      "word_count": 136,
+      "sources": [
+        {
+          "what": "1700 Cascadia earthquake: timing inferred from Japanese records of a tsunami with no local earthquake (the orphan tsunami), Satake et al. 1996 Nature; about 9 pm Pacific time on January 26, 1700; ghost forests of red cedars with last rings from 1699; Atwater et al. 2005 USGS Professional Paper 1707",
+          "url": "https://en.wikipedia.org/wiki/1700_Cascadia_earthquake"
+        }
+      ],
+      "notes": "Area: natural science (earth science, with historical records). The radiocarbon limit is simplified to “within several decades.” Magnitude 9 and the evening of January 26, 1700 are Satake’s published estimate.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Solution mapping (3.6, 3.7). B (radiocarbon made reliable by the Japanese records) is a close wrong mechanism and C a near-miss reading of what the records show; the key is phrased one level up (“evidence preserved across the ocean”)."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_joint_inference.hard.w5b2_04",
+      "template": "S2_joint_inference",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nKoalas subsist almost exclusively on eucalyptus foliage, which is fibrous and laden with defensive chemicals, and they depend on gut microbes to digest it. Before a juvenile koala, or joey, begins eating leaves, it consumes pap, a soft, microbe-rich form of feces produced by its mother. In a study of captive koalas published in 2022, researchers determined that each joey’s gut microbiome came to resemble its own mother’s more closely than those of other adults.\n\nText 2\n\nMany wild koalas reject eucalyptus species that other individuals readily consume, even when facing starvation. A team led by Michaela Blyton determined that wild koalas feeding primarily on manna gum harbored gut microbiomes distinct from those of koalas feeding primarily on messmate, a less preferred species. After manna gum eaters received capsules of feces from messmate eaters, the more their microbiomes shifted toward those of messmate eaters, the more messmate they subsequently consumed.",
+      "stem": "Based on the texts, if the authors of Text 1 and Text 2 were aware of the findings of both studies, they would most likely agree with which statement?",
+      "options": [
+        "Pap contains a greater number of microbes than the capsules of feces that Blyton’s team gave to the koalas feeding on manna gum did.",
+        "A joey whose mother feeds mainly on messmate is probably better equipped to eat messmate than a joey whose mother feeds mainly on manna gum.",
+        "Because a koala’s gut microbes are inherited from its mother, changing an adult koala’s microbes is unlikely to affect which eucalyptus species it eats.",
+        "Messmate leaves probably contain more of the defensive chemicals found in eucalyptus than manna gum leaves do."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reports that joeys consume their mother’s pap and that each joey’s gut microbiome “came to resemble its own mother’s.” Text 2 reports that manna gum eaters “harbored gut microbiomes distinct from those of koalas feeding primarily on messmate” and that the more their microbiomes shifted toward those of messmate eaters, “the more messmate they subsequently consumed.” Together, the findings suggest that a joey inherits microbes suited to its mother’s diet, so a joey of a messmate eater is likely better prepared to eat messmate.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail (comparison neither text makes)",
+          "why_wrong": "Text 1 calls pap “microbe-rich,” but neither text measures the microbes in the capsules, so no comparison can be drawn."
+        },
+        "C": {
+          "recipe": "D7 half right (true Text 1 premise, conclusion Text 2 contradicts)",
+          "why_wrong": "Text 1 does show that a joey’s microbiome comes to resemble its mother’s, but Text 2 shows that an adult’s microbiome can be shifted and that “the more their microbiomes shifted toward those of messmate eaters, the more messmate they subsequently consumed.”"
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 calls messmate “a less preferred species,” but neither text compares the chemical content of the two species’ leaves."
+        }
+      },
+      "models": [
+        "3.4"
+      ],
+      "word_count": 152,
+      "sources": [
+        {
+          "what": "Blyton, Soo, Hugenholtz, Moore 2022 (Epub 2021), Environmental Microbiology 24: 475: joeys inoculated by feeding on maternal faeces (pap), which has higher microbial density; captive joeys’ microbiomes more similar to their mothers’ than to other koalas’",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/34863030/"
+        },
+        {
+          "what": "Blyton et al. 2019, Animal Microbiome 1: 6: microbiomes of wild koalas feeding on manna gum distinct from those feeding on messmate; faecal inoculations from messmate eaters; the greater the microbiome change, the more messmate consumed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33499955/"
+        }
+      ],
+      "notes": "Area: natural science (animal physiology, microbiology). Both studies share a lead author (Blyton); Text 1 leaves its team unnamed, and the stem asks about the two texts’ authors, in the 3.4 “aware of the findings of both” form. The key needs both texts: maternal inheritance of microbes (Text 1) and microbes linked to which species a koala eats (Text 2); neither states the joey inference.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "replaced C (joeys raised apart refuse every species, a one-fact overstatement) with a half-right joint inference: true Text 1 premise, conclusion contradicted by Text 2’s inoculation result; re-solved cold: B"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Joint inference (3.4 form): the key is in neither text alone. A and D are cross-text comparisons neither study makes (D tempts by joining “defensive chemicals” to “less preferred”), new C needs Text 2 to reject."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S3_difference.hard.w5b2_05",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nHenry Rowe Schoolcraft’s Algic Researches (1839), a collection of Ojibwe narratives compiled while he served as a federal Indian agent in northern Michigan, is valuable chiefly as a record of traditions that might otherwise have vanished. As a record, however, it is unreliable: Schoolcraft adapted the narratives into the polished literary English his audience expected, so the volume preserves his versions rather than the stories as their tellers recounted them.\n\nText 2\n\nAlgic Researches achieved renown as a principal source for Henry Wadsworth Longfellow’s The Song of Hiawatha, but the volume misrepresents its own origins. Many of its stories were collected, translated, and occasionally composed by Schoolcraft’s wife, Jane Johnston Schoolcraft, an Ojibwe writer whose family supplied much of his knowledge of Ojibwe culture. Nevertheless, the stories appeared under his name alone, without acknowledgment of her contributions.",
+      "stem": "Which choice best describes a difference in how the authors of Text 1 and Text 2 view Henry Rowe Schoolcraft’s Algic Researches?",
+      "options": [
+        "The author of Text 1 values the book mainly for preserving Ojibwe stories, whereas the author of Text 2 values it mainly for its influence on a celebrated poem.",
+        "The author of Text 1 regards the book as an unreliable record of Ojibwe stories, whereas the author of Text 2 regards it as reliable because Jane Johnston Schoolcraft collected many of them.",
+        "The author of Text 1 praises Schoolcraft for making Ojibwe stories accessible to a wide audience, whereas the author of Text 2 criticizes him for relying too heavily on one family’s knowledge.",
+        "The author of Text 1 faults the book for altering the stories it presents, whereas the author of Text 2 faults it for concealing who collected and wrote many of them."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 1 calls the book “unreliable” as a record because Schoolcraft “adapted the narratives into the polished literary English his audience expected,” so it preserves “his versions rather than the stories as their tellers recounted them.” The author of Text 2 objects instead that the volume “misrepresents its own origins”: many stories “were collected, translated, and occasionally composed” by Jane Johnston Schoolcraft, yet they “appeared under his name alone, without acknowledgment of her contributions.” One author faults how the stories were changed; the other faults how their sources were credited.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (right Text 1 half, wrong axis for Text 2)",
+          "why_wrong": "Text 1 does value the book as a record, but Text 2 mentions Longfellow only to note the book’s fame; its point is that the book fails to credit Jane Johnston Schoolcraft."
+        },
+        "B": {
+          "recipe": "D7 half right (right Text 1 half, invented Text 2 half)",
+          "why_wrong": "Text 1 does call the book unreliable, but Text 2 never says it is reliable; it says the volume “misrepresents its own origins.”"
+        },
+        "C": {
+          "recipe": "D3 twisted details on both sides",
+          "why_wrong": "Text 1 faults the “polished literary English” rather than praising it, and Text 2 mentions the family’s knowledge only to show whose work went uncredited, not to criticize Schoolcraft for using it."
+        }
+      },
+      "models": [
+        "3.10"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Robert Dale Parker (University of Illinois, 2007): Jane Johnston Schoolcraft collected and wrote many stories that her husband published in adapted, unattributed versions in Algic Researches, a key source for Longfellow’s Hiawatha; Henry’s editing obscured the contributions of Jane and other Indian people",
+          "url": "https://las.illinois.edu/news/2007-05-01/shores-gitche-gumee"
+        },
+        {
+          "what": "Henry Rowe Schoolcraft: Algic Researches (2 vols., 1839), Native stories many of which his wife Jane Johnston Schoolcraft told him or translated for him; Indian agent at Sault Ste. Marie",
+          "url": "https://en.wikipedia.org/wiki/Henry_Rowe_Schoolcraft"
+        }
+      ],
+      "notes": "Area: literature (literary history, authorship). Both evaluations are the authors’ own; Text 1’s “adapted” follows Parker’s description of the published versions. Axis: what each author holds is wrong with the book (the stories’ form versus their credit).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Difference on one axis (3.10): A and B get the Text 1 half right and miss on Text 2, C twists details on both sides; the student must see that both authors fault the book but for different things."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_alt_explanation.hard.w5b2_06",
+      "template": "S1_alt_explanation",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nDogs, horses, and goats faced with food sealed in a container often look back and forth between it and a nearby person, behavior commonly interpreted as an attempt to communicate and thought to have emerged through domestication. In 2020, Alan McElligott and colleagues reported that 10 of 11 captive kangaroos given an unopenable box of food gazed at the experimenter, and 9 alternated their gaze between box and person. The researchers suggest that kangaroos, though never domesticated, may likewise direct communication toward humans.\n\nText 2\n\nAn animal glancing from a stuck food container to a nearby person invites an obvious reading: a request for help. Yet captive animals fed by people throughout their lives may simply have learned to orient toward a person whenever food is out of reach, much as they might glance toward the spot where food usually appears, without any intention of signaling.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the researchers’ interpretation in Text 1 of the kangaroos’ behavior?",
+      "options": [
+        "That behavior may reflect a habit formed through the kangaroos’ past experience with people rather than an effort to communicate with the experimenter.",
+        "That behavior likely shows that the kangaroos expected the experimenter to open the box, since a person was responsible for placing the food inside it.",
+        "That behavior might have occurred because the kangaroos were wary of an unfamiliar person and watched the experimenter for signs of danger.",
+        "That behavior is likely a request for help, though one the kangaroos learned from people rather than inherited through domestication."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers in Text 1 suggest that kangaroos “may likewise direct communication toward humans.” The author of Text 2 grants that such a glance “invites an obvious reading: a request for help” but notes that captive animals “fed by people throughout their lives may simply have learned to orient toward a person whenever food is out of reach,” “without any intention of signaling.” So the author would say the gazing might be explained by learned habit rather than by an attempt to communicate.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 wrong side (supports the intent Text 2 doubts)",
+          "why_wrong": "An expectation that the person would open the box is the kind of intent Text 2 questions; the author says the glance may come “without any intention of signaling.”"
+        },
+        "C": {
+          "recipe": "D1 unaddressed alternative (hedged like the key)",
+          "why_wrong": "Text 2 offers an alternative explanation, but it rests on rewards from people, not on fear of a stranger, which neither text mentions."
+        },
+        "D": {
+          "recipe": "D7 half right (learning kept, communication kept too)",
+          "why_wrong": "Text 2 does point to learning from people, but it says the learned glance may come “without any intention of signaling,” so it would not call the behavior a request for help."
+        }
+      },
+      "models": [
+        "3.12"
+      ],
+      "word_count": 148,
+      "sources": [
+        {
+          "what": "McElligott, O’Keeffe, Green 2020, Biology Letters 16: 20200607: 10 of 11 kangaroos gazed at the experimenter during an unsolvable problem task and 9 showed gaze alternations; such gazing is often interpreted as referential intentional communication; challenges the notion that it results from domestication; subjects were captive, habituated kangaroos",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33321066/"
+        }
+      ],
+      "notes": "Area: natural science (animal cognition). Text 2 is the author’s own caution; the paper itself notes that learning through positive interactions with humans may matter. The key and distractor C are both hedged so that hedging is not the tell.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Alternative explanation (3.12): D keeps learning but also keeps the request for help, B and C supply other intents or motives; key hedged like C so hedging is not the tell."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S4_relate.hard.w5b2_07",
+      "template": "S4_relate",
+      "subtype": "Relationship",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nA nearly complete skeleton of Thescelosaurus, a small plant-eating dinosaur nicknamed Willo, was recovered in South Dakota with an iron-cemented mass lodged in its chest. In 2000, after examining the mass with computed tomography (CT) scans, Paul Fisher and colleagues interpreted it as a fossilized four-chambered heart with a single aorta—an arrangement found today only in birds and mammals, both of which are warm-blooded. The finding, they proposed, supported the idea that some dinosaurs had elevated metabolic rates.\n\nText 2\n\nTimothy Cleland and colleagues reexamined the mass in 2011 using higher-resolution CT scans. The scans revealed the same three low-density regions seen earlier and none of the additional cavities that a heart would be expected to show. Microscopic examination of a fragment found a structure consistent with cemented sand grains, and chemical analyses detected no signal of biological origin.",
+      "stem": "Which choice best describes how Text 1 and Text 2 relate to each other?",
+      "options": [
+        "Text 1 presents an argument about dinosaur metabolism, whereas Text 2 accepts that the mass found in Willo is a heart but questions what that heart reveals about metabolism.",
+        "Text 1 describes an interpretation of a fossil structure and a broader conclusion drawn from it, whereas Text 2 reports analyses that undercut that interpretation.",
+        "Text 1 reports how researchers identified a structure inside a fossil, whereas Text 2 faults the earlier CT scans for missing the low-density regions within that structure.",
+        "Text 1 presents evidence that some dinosaurs were warm-blooded, whereas Text 2 presents evidence that Thescelosaurus was instead cold-blooded."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 describes how Fisher’s team “interpreted” the mass in Willo’s chest “as a fossilized four-chambered heart” and took the finding to support “the idea that some dinosaurs had elevated metabolic rates.” Text 2 reports that Cleland’s team found “none of the additional cavities that a heart would be expected to show,” a structure “consistent with cemented sand grains,” and “no signal of biological origin.” Text 2 therefore undercuts the interpretation on which Text 1’s broader conclusion rests.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (moves Text 2’s doubt from the identification to the implication)",
+          "why_wrong": "Text 2 does not accept that the mass is a heart; its findings suggest the mass is cemented sand with “no signal of biological origin.”"
+        },
+        "C": {
+          "recipe": "D3 twisted detail (recycles the scans)",
+          "why_wrong": "Text 2 says the newer scans “revealed the same three low-density regions seen earlier,” so it does not fault the earlier scans for missing them; it faults the reading of those regions as a heart."
+        },
+        "D": {
+          "recipe": "D7 half right (fair Text 1 half, overreaching Text 2 half)",
+          "why_wrong": "Text 1 does treat the finding as support for elevated metabolic rates, but Text 2 only undercuts the evidence for a heart; it draws no conclusion about how warm-blooded Thescelosaurus was."
+        }
+      },
+      "models": [
+        "3.11"
+      ],
+      "word_count": 141,
+      "sources": [
+        {
+          "what": "Cleland, Stoskopf, Schweitzer 2011, Naturwissenschaften 98: 203: reexamination of the iron-cemented thoracic structure in a Thescelosaurus hypothesized to be a four-chambered heart (linked to endothermy); higher-resolution CT showed the same three low-density areas and no additional ones; fragment consistent with cemented sand grains; no chemical signal of biological origin",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/21279321/"
+        },
+        {
+          "what": "Thescelosaurus specimen Willo (NCSM 15728), Hell Creek Formation, South Dakota; Fisher et al. 2000 heart interpretation and elevated metabolic rate; later reexaminations",
+          "url": "https://en.wikipedia.org/wiki/Thescelosaurus"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Text 1 holds a finding, its interpretation, and the broader conclusion; Text 2 undercuts the interpretation, so distractor A (doubt moved to the conclusion) is the close trap. The 2001 Rowe et al. critique is left out to keep one challenger.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "rebuilt C (Text 2 confirms the heart, killed by one word) as a twisted detail about the earlier scans and D (CT cannot show soft tissue, killed by Text 2’s own scans) as a half-right option that turns undercut evidence into evidence of cold blood; re-solved cold: B"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Relate (3.11, itself band 5): A moves Text 2’s doubt to the conclusion, new C needs the “same three low-density regions seen earlier” detail, new D tempts by treating weakened evidence as contrary evidence. Template has a band-5 model only, so a strong band 6 is the ceiling."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w5b2_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nOn land, many flowering plants depend on animals such as bees, birds, and bats to carry pollen from one flower to another. Seagrasses, the only flowering plants that live fully submerged in the ocean and form vast meadows in coastal waters, are generally described as a striking exception. <u>Because no pollinating animals work underwater, marine flowering plants have been thought to rely entirely on water currents to transport their pollen.</u>\n\nText 2\n\nBrigitta van Tussenbroek and colleagues studied turtle grass, a seagrass of shallow Caribbean waters whose male flowers open at night and release pollen embedded in a sticky mucilage. In aquarium tanks without any water flow, the researchers observed small crustaceans and worms visiting the flowers and carrying the pollen-filled mucilage to female flowers, where pollen tubes then formed on the stigmas, indicating that pollination had succeeded.",
+      "stem": "Based on the texts, how would van Tussenbroek and colleagues (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Turtle grass flowers open at night because ocean currents are usually weakest then.",
+        "Seagrasses kept in tanks without water flow are generally unable to form pollen tubes.",
+        "Animals can play a part in pollinating at least some of the flowering plants that live in the sea.",
+        "Water currents play no part in carrying the pollen of turtle grass from flower to flower."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says marine flowering plants “rely entirely on water currents to transport their pollen.” Van Tussenbroek’s team saw “small crustaceans and worms” carry “the pollen-filled mucilage to female flowers” of turtle grass in tanks “without any water flow,” after which “pollen tubes then formed on the stigmas.” This counterexample shows that animals can help pollinate at least one marine flowering plant.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 says the flowers open at night but gives no reason, and it says nothing about when currents are weakest."
+        },
+        "B": {
+          "recipe": "D2 reversal of the finding",
+          "why_wrong": "In the tanks without water flow, pollen tubes did form, “indicating that pollination had succeeded.”"
+        },
+        "D": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "The researchers removed water flow to test the animals’ role; Text 2 does not claim that currents never carry turtle grass pollen."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "van Tussenbroek, Villamil, Marquez-Guzman, Wong, Monroy-Velazquez, Solis-Weiss 2016, Nature Communications 7: 12980: animals thought not to be involved in pollination in the sea; Thalassia testudinum male flowers release pollen in mucilage at night; in the absence of water flow invertebrates carried mucilage with pollen to female stigmas; pollen tubes formed; mixed abiotic-biotic pollination",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/27680661/"
+        }
+      ],
+      "notes": "Area: natural science (marine botany). Text 1’s view is the one the paper describes as the standing assumption. Seagrasses are described as the only fully marine flowering plants, a simplification.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "“usually described” to “generally described” (register: keeps the medium long-word share at CB’s floor after the item 13 swap)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w5b2_09",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nRising temperatures and drier soils are projected to reduce yields of major grain crops by 2050. Many crop models predict, however, that these losses will be offset by increasing concentrations of atmospheric carbon dioxide, which plants use in photosynthesis. The models’ estimates of this fertilization effect derive largely from experiments, conducted mostly in the 1980s, in which crops were grown in greenhouses or closed chambers enriched with additional carbon dioxide.\n\nText 2\n\nFree-air concentration enrichment (FACE) experiments release carbon dioxide over crops growing in open fields, exposing them to ordinary wind, pests, and weather. Reviewing results from FACE trials of the major grain crops, plant biologist Stephen Long and colleagues found that elevated carbon dioxide increased yields by only about half as much as it had in the earlier enclosure studies.",
+      "stem": "Based on the texts, how would Long and colleagues (Text 2) most likely respond to the predictions of the crop models discussed in Text 1?",
+      "options": [
+        "By arguing that elevated carbon dioxide lowers grain yields when crops are grown in open fields",
+        "By recommending that future enclosure experiments expose crops to the wind, pests, and weather found in open fields",
+        "By pointing out that rising temperatures harm crops in open fields more than crops in greenhouses",
+        "By suggesting that extra carbon dioxide may do less to offset climate-related losses than the models assume"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The models in Text 1 predict that crop losses “will be offset” by rising carbon dioxide, using estimates from crops grown “in greenhouses or closed chambers.” Long’s team found that in open fields, elevated carbon dioxide raised yields “by only about half as much as it had in the earlier enclosure studies.” They would therefore suggest that the benefit is real but smaller than the models assume.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 reversal",
+          "why_wrong": "Text 2 says elevated carbon dioxide still “increased yields,” only by less than in enclosures."
+        },
+        "B": {
+          "recipe": "D9 generic research move",
+          "why_wrong": "Text 2 reviews trials already run in open fields; it makes no recommendation about future enclosure experiments."
+        },
+        "C": {
+          "recipe": "D8 wrong target",
+          "why_wrong": "Text 2 compares the effect of carbon dioxide in fields and enclosures, not the effect of rising temperatures."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.9"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Long, Ainsworth, Leakey, Nosberger, Ort 2006, Science 312: 1918: models project CO2 fertilization will offset temperature and soil-moisture losses by 2050; fertilization factors came from enclosure studies; in FACE trials of major grain crops, elevated CO2 enhanced yield about 50% less than in enclosure studies",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16809532/"
+        }
+      ],
+      "notes": "Area: natural science (agronomy, climate). Limit of degree: the effect is real but smaller. “Long and colleagues” is the paper’s author group.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w5b2_10",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nBefore a study appears in a medical journal, editors typically send the manuscript to independent experts for peer review. Because these reviewers scrutinize a study’s design, analysis, and conclusions, many readers regard publication in a peer-reviewed journal as assurance that any serious methodological flaws have been identified and corrected. As a result, doctors, reporters, and public officials often rely on peer review to decide which findings they can trust.\n\nText 2\n\nTo test how well peer review catches mistakes, Sara Schroter and colleagues sent more than 600 reviewers for the medical journal The BMJ a test manuscript into which they had deliberately inserted nine major methodological errors, such as biased randomization. On average, the reviewers identified only about 2.6 of the nine errors, and brief training improved their performance only slightly.",
+      "stem": "Based on the texts, how would Schroter and colleagues (Text 2) most likely respond to the view of peer review described in Text 1?",
+      "options": [
+        "By arguing that peer reviewers tend to reject flawed studies rather than help authors correct them",
+        "By suggesting that peer review may detect only a fraction of the serious flaws in a study",
+        "By recommending that journals replace peer review with brief training programs for their editors",
+        "By pointing out that biased randomization is the only major error that most reviewers fail to notice"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says many readers treat peer review as “assurance that any serious methodological flaws have been identified and corrected.” Schroter’s team found that reviewers given a manuscript with “nine major methodological errors” identified “only about 2.6 of the nine,” and that training helped “only slightly.” They would therefore suggest that peer review catches some serious flaws but far from all of them.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 reports how many errors reviewers found; it says nothing about whether reviewers reject studies or help authors."
+        },
+        "C": {
+          "recipe": "D3 twisted detail (training)",
+          "why_wrong": "Text 2 mentions training for reviewers, which helped “only slightly”; it does not propose replacing peer review or training editors."
+        },
+        "D": {
+          "recipe": "D3 twisted detail (example turned into the whole)",
+          "why_wrong": "Biased randomization is given as one example of the nine inserted errors; Text 2 does not say it was the only error reviewers missed."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.9"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Schroter, Black, Evans, Godlee, Osorio, Smith 2008, Journal of the Royal Society of Medicine 101: 507: 607 BMJ reviewers sent test papers with nine major and five minor methodological errors inserted; at baseline reviewers found an average of 2.58 of the nine major errors; training had only a slight impact; biased randomization one of the errors",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/18840867/"
+        }
+      ],
+      "notes": "Area: social science (research practice, science studies). Text 1’s view is general and unattributed. Limit of degree: peer review catches some flaws, not most.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "plainer wording (“To test how well”, “brief training”), no change in meaning"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.medium.w5b2_11",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nThe influenza pandemic of 1918–1919 killed tens of millions of people worldwide and was unusually deadly for young, healthy adults. Many accounts attribute this extraordinary toll to the virus itself. An exceptionally virulent strain, they argue, invaded the lungs so aggressively and provoked such a violent immune response that it killed many patients directly, often within days of their first symptoms.\n\nText 2\n\nA team at the US National Institutes of Health led by David Morens examined preserved lung tissue from 58 people who died during the pandemic and reviewed more than 8,000 autopsy reports published at the time. The tissue samples uniformly showed severe bacterial pneumonia, and the reports implicated common bacteria, which had invaded lungs already damaged by the virus, in most of the deaths, in an era before antibiotics could treat such infections.",
+      "stem": "Based on the texts, how would Morens and colleagues (Text 2) most likely respond to the accounts discussed in Text 1?",
+      "options": [
+        "By cautioning that the accounts overlook the part that bacterial infections played in most of the deaths",
+        "By arguing that the 1918 virus was too mild to damage the lungs of healthy young adults on its own",
+        "By pointing out that young adults were more likely than older people to have their lungs examined after death",
+        "By suggesting that the pandemic’s death toll has been overestimated because many autopsy reports were lost"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The accounts in Text 1 attribute the pandemic’s toll “to the virus itself,” which they say “killed many patients directly.” Morens’s team found that tissue samples “uniformly showed severe bacterial pneumonia” and that the reports implicated “common bacteria” in “most of the deaths.” The team would say the accounts leave out a second cause: bacteria that invaded lungs the virus had already damaged.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 overcorrection (denies the first cause)",
+          "why_wrong": "Text 2 says the bacteria invaded “lungs already damaged by the virus,” so the team does not claim the virus was harmless on its own."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says nothing about which age groups were examined after death; the young adults appear only in Text 1."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 questions the cause of the deaths, not their number, and it does not mention lost reports."
+        }
+      },
+      "models": [
+        "2.7",
+        "1.15"
+      ],
+      "word_count": 138,
+      "sources": [
+        {
+          "what": "Morens, Taubenberger, Fauci 2008, Journal of Infectious Diseases 198: 962: lung tissue sections from 58 autopsies and 109 published autopsy series covering 8,398 autopsies from the 1918–1919 pandemic; samples uniformly showed bacterial pneumonia; secondary bacterial pneumonia from common upper respiratory bacteria implicated in most deaths; era before antibiotics",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/18710327/"
+        }
+      ],
+      "notes": "Area: natural science and history (medicine, epidemiology). Text 1 is the general virus-centered account (unusual virulence, immune overreaction), unattributed. The team is named by its first author to keep the subject little-known.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w5b2_12",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn a 1983 essay, historian Eric Hobsbawm observed that many traditions that appear or claim to be old are actually quite recent in origin, and some were deliberately invented. Such traditions, he argued, tend to emerge when rapid social transformation erodes established customs. They typically seek to establish continuity with a historic past that a community regards as its own.\n\nText 2\n\nThe Welsh national costume—a tall black hat, a shawl, and a woolen skirt and apron—is now worn on Saint David’s Day as an emblem of Welsh heritage. Its components derive from the everyday clothing of rural Welsh women. However, the tall hat became fashionable only in the 1830s, and the ensemble was adopted as national dress in the late 1800s, a period of rapid industrialization, after such everyday clothing had largely disappeared.",
+      "stem": "Based on the texts, how would Hobsbawm (Text 1) most likely regard the Welsh national costume described in Text 2?",
+      "options": [
+        "As an invented tradition, because its elements were designed by artists who had never seen rural Welsh dress",
+        "As an authentic survival from the distant past, because rural Welsh women had worn its elements in daily life",
+        "As a tradition that is younger than it looks, because it became national dress only in the late 1800s",
+        "As an unusual case, because traditions that emerge during periods of rapid change seldom involve clothing"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Hobsbawm held that traditions that “appear or claim to be old are actually quite recent in origin” and tend to emerge “when rapid social transformation erodes established customs.” Text 2 says the costume, now “an emblem of Welsh heritage,” was “adopted as national dress in the late 1800s, a period of rapid industrialization, after such everyday clothing had largely disappeared.” Hobsbawm would see it as a tradition younger than it appears.",
+      "distractors": {
+        "A": {
+          "recipe": "D6 right label, wrong reason",
+          "why_wrong": "Text 2 says the costume’s elements “derive from the everyday clothing of rural Welsh women,” not from artists unfamiliar with that dress."
+        },
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Hobsbawm’s point is that such traditions are recent; Text 2 shows the outfit became national dress only in the late 1800s, with a hat fashionable only from the 1830s."
+        },
+        "D": {
+          "recipe": "D6 attitude with an invented reason",
+          "why_wrong": "Text 1 says nothing about clothing being rare in such traditions, and the costume’s history fits the frame rather than standing apart from it."
+        }
+      },
+      "models": [
+        "1.11",
+        "2.2"
+      ],
+      "word_count": 136,
+      "sources": [
+        {
+          "what": "Welsh national costume: worn by rural women; traditional dress largely out of common use by the mid-19th century; from the 1880s selected elements adopted as a National Costume, linked to Welsh nationalism and concern over industrialisation; Lady Llanover’s influence greatly exaggerated; Welsh hat appears in the 1830s",
+          "url": "https://en.wikipedia.org/wiki/Welsh_national_costume"
+        },
+        {
+          "what": "Hobsbawm and Ranger, eds., The Invention of Tradition (1983): traditions which appear or claim to be old are often quite recent in origin and sometimes invented",
+          "url": "https://en.wikipedia.org/wiki/Invented_tradition"
+        }
+      ],
+      "notes": "Area: history (Welsh cultural history). Text 1 speaks about Text 2. Hobsbawm’s point is paraphrased from his introduction to The Invention of Tradition; the rapid-transformation and continuity points are also from that introduction. Lady Llanover, named in the claim line, is left out because the source says her role was exaggerated. Reviewer: industrialization now dates the adoption rather than causing the clothing’s disappearance, as the source has it (adoption coincided with industrialisation seen as a threat).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "last sentence no longer says the everyday clothing disappeared amid industrialization (the source ties industrialization to the adoption, not to the disappearance); “elements” to “components”; explanation updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w5b2_13",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nEconomists have long struggled to determine how much residents value the services that local governments provide. In 1956, economist Charles Tiebout proposed a solution. Where a metropolitan area is divided into numerous municipalities, each offering its own combination of taxes and services, households choose among them as shoppers choose among stores. By relocating to the municipality whose mix best suits their preferences, residents reveal how much they value what it provides.\n\nText 2\n\nEconomist Sandra Black compared sale prices of houses on the boundaries between elementary school attendance zones within individual school districts. Houses on opposite sides of a boundary share a neighborhood and identical taxes, differing primarily in which school children attend. Black found that purchasers would pay about 2.5 percent more for a house assigned to a school whose test scores were 5 percent higher.",
+      "stem": "Based on the texts, what would the author of Text 1 most likely say about Black’s findings in Text 2?",
+      "options": [
+        "They show that houses located on attendance-zone boundaries tend to sell for less than houses located farther from them.",
+        "They suggest that municipalities with stronger schools must charge higher taxes than municipalities with weaker schools do.",
+        "They indicate that buyers cared more about a house’s neighborhood than about the school its children would attend.",
+        "They are consistent with the idea that where people choose to live reveals how much they value local services."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 1 presents Tiebout’s view that residents choose “the municipality whose mix best suits their preferences” and so “reveal how much they value what it provides.” Black compared houses that “share a neighborhood and identical taxes,” differing “primarily in which school children attend,” and found that purchasers “would pay about 2.5 percent more” for a house assigned to a school with higher test scores. The author would see this as buyers revealing, through where they choose to live, how much they value a local service: schooling.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail (recycles the boundaries)",
+          "why_wrong": "Black compared houses on opposite sides of each boundary with one another; Text 2 does not compare houses on boundaries with houses farther away."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on (borrows Text 1’s taxes)",
+          "why_wrong": "The houses Black compared paid “identical taxes,” and neither text says that municipalities with better schools must charge more."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Houses on either side of a boundary “share a neighborhood,” so the price difference points to the school, not the neighborhood."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Black 1999, Quarterly Journal of Economics 114(2): 577-599, “Do Better Schools Matter? Parental Valuation of Elementary Education”: houses on attendance district boundaries within school districts differ only by the elementary school attended, removing variation in neighborhoods, taxes and school spending; parents are willing to pay 2.5 percent more for a 5 percent increase in test scores",
+          "url": "https://ideas.repec.org/a/oup/qjecon/v114y1999i2p577-599..html"
+        },
+        {
+          "what": "Tiebout model: Charles Tiebout, “A Pure Theory of Local Expenditures” (1956); municipalities offer varying baskets of services at different tax rates, people move to the community that suits them, which addresses preference revelation",
+          "url": "https://en.wikipedia.org/wiki/Tiebout_model"
+        }
+      ],
+      "notes": "Area: social science (economics). Text 1 holds the general frame in the author’s voice (Tiebout’s 1956 model) and speaks about Text 2’s case, as in 2.2 and 2.6. Reviewer-written replacement for a Red Queen snail item (third snail subject in reach of the batch and a textbook frame). Where Black’s data came from is left out because the abstract does not say.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "subject replaced: the Red Queen snail item was the third snail subject near this batch (with item 16 and six live snail items) and rests on a textbook frame; new subject Tiebout sorting and Sandra Black’s attendance-zone house prices (social science), same template, models, stem form and key letter; claim withdrawn and new claim appended in claims.txt; reviewer-written, so every option was tested for a second defensible reading"
+        ],
+        "status": "fixed",
+        "note": "Original item blind-solved D, agreeing with its key; the replacement is reviewer-written and was checked option by option rather than blind-solved."
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w5b2_14",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nCambodian American families own most of California’s independent doughnut shops—perhaps 80 to 90 percent, by one filmmaker’s estimate—and that dominance can be traced largely to one entrepreneur. After fleeing the Khmer Rouge in 1975, Ted Ngoy trained at a doughnut chain and in 1977 purchased his own shop in La Habra. He subsequently acquired dozens more, leasing them to fellow refugees and sponsoring more than 100 families.\n\nText 2\n\nCrediting Ngoy alone overlooks why doughnut shops in particular suited refugee families. A shop required little capital, and its long overnight hours could be covered by parents, children, and cousins working in shifts. Families who prospered then brought relatives into the trade, so ownership spread from household to household through networks of kinship and friendship.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Ted Ngoy was chiefly responsible for the large number of Cambodian-owned doughnut shops in California.",
+        "Personal connections among Cambodian refugees helped doughnut shop ownership spread within their community.",
+        "Cambodian-owned doughnut shops succeeded mainly by charging lower prices than national doughnut chains did.",
+        "Most of the refugees who opened doughnut shops in California had already run similar businesses before leaving Cambodia."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 credits Ngoy, who leased shops “to fellow refugees” and sponsored “more than 100 families.” Text 2 rejects crediting Ngoy alone but says ownership “spread from household to household through networks of kinship and friendship.” The authors disagree about how much one man mattered, yet both describe ties among refugees as a way the business spread.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only (the conflict point)",
+          "why_wrong": "Text 1 makes this claim, but Text 2 objects that crediting Ngoy alone “overlooks why doughnut shops in particular suited refugee families.”"
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses prices or competition with chains."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says what work the refugees did before leaving Cambodia; Text 1 says Ngoy himself trained at a chain after arriving."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 126,
+      "sources": [
+        {
+          "what": "LAist 2020: filmmaker Alice Gu’s research suggests maybe 80 to 90 percent of California doughnut shops are owned by Cambodian Americans, mostly thanks to Ngoy; he leased shops to other Cambodian immigrants who ran them with their families; sponsored more than 100 families",
+          "url": "https://laist.com/news/food/donut-king-ted-ngoys-life-was-even-crazier-than-the-documentary-about-him-reveals"
+        },
+        {
+          "what": "Ted Ngoy: fled the Khmer Rouge in 1975; trained at Winchell’s; bought Christy’s Donuts in La Habra by 1977; leased shops to relatives and Cambodian refugees; sponsored more than 100 families",
+          "url": "https://en.wikipedia.org/wiki/Ted_Ngoy"
+        }
+      ],
+      "notes": "Area: social science (economic sociology, immigration). Text 2’s structural account is the author’s own argument. Shared premise: ties among refugees spread ownership (leasing and sponsorship in Text 1, kin networks in Text 2).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "“went on to acquire” to “subsequently acquired” (register floor)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_solution.medium.w5b2_15",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nSurveys are a fundamental tool for estimating how common a behavior is, but they perform poorly for sensitive behaviors such as tax evasion or academic cheating. Respondents who fear embarrassment or punishment frequently give the answer they consider socially acceptable rather than the truthful one. As a result, surveys tend to underestimate how often such behaviors occur, sometimes considerably.\n\nText 2\n\nIn 1965, statistician Stanley Warner proposed the randomized response technique. Each respondent privately uses a chance device, such as a die, to determine whether to answer a sensitive statement or its opposite, and the interviewer never learns which statement was answered. Because the probability of each statement is known in advance, researchers can still calculate the overall rate of the behavior across the group.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the problem described in Text 1?",
+      "options": [
+        "By presenting a way to estimate how common a behavior is without revealing what any one respondent has done",
+        "By suggesting that researchers study sensitive behaviors through direct observation instead of surveys",
+        "By arguing that respondents will answer sensitive questions honestly as long as they first roll a die",
+        "By recommending that surveys about sensitive behaviors promise to keep respondents’ names private"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says that on sensitive topics, respondents give “the answer they consider socially acceptable,” so surveys “tend to underestimate” such behaviors. In Warner’s technique, “the interviewer never learns which statement was answered,” yet researchers “can still calculate the overall rate of the behavior across the group.” The author of Text 2 would offer this method as a way around the problem.",
+      "distractors": {
+        "B": {
+          "recipe": "D9 generic research move",
+          "why_wrong": "Text 2 keeps the survey and changes how questions are answered; it does not propose observation instead."
+        },
+        "C": {
+          "recipe": "D3 twisted detail (mechanism misread)",
+          "why_wrong": "The die decides which statement a respondent answers; honesty follows because the interviewer cannot tell which statement was answered, not from rolling the die itself."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 protects respondents by hiding the meaning of each answer, not by promising to keep names off the record, which neither text mentions."
+        }
+      },
+      "models": [
+        "2.11"
+      ],
+      "word_count": 127,
+      "sources": [
+        {
+          "what": "Randomized response: Warner 1965, Journal of the American Statistical Association 60: 63, a survey technique for eliminating evasive answer bias; a randomizing device decides, unknown to the interviewer, whether the respondent answers the sensitive statement or its complement; the known probability lets the true proportion be estimated",
+          "url": "https://en.wikipedia.org/wiki/Randomized_response"
+        }
+      ],
+      "notes": "Area: social science (survey methods, statistics). Text 1’s problem is general and unattributed. The die example follows the source’s illustration.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_rival_hypothesis.medium.w5b2_16",
+      "template": "S1_rival_hypothesis",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn the margins of numerous Gothic manuscripts, armored knights are depicted battling snails, sometimes kneeling before them or fleeing in apparent terror. Some art historians interpret these whimsical scenes as satire aimed at the knightly class itself: a warrior who could be routed by the slowest of creatures, they suggest, was a fitting object of ridicule.\n\nText 2\n\nArt historian Lilian Randall cataloged about 70 snail combats in 29 manuscripts and found that most were produced between about 1290 and 1310, primarily in northern France, Flanders, and England. She proposed that the snail represented the Lombards, Italian merchants and moneylenders widely resented in northern Europe at the time. As support, she noted that a twelfth-century Latin poem had already linked a Lombard with a snail.",
+      "stem": "Based on the texts, how would Randall (Text 2) most likely respond to the interpretation presented in Text 1?",
+      "options": [
+        "By agreeing that the scenes ridicule knights but adding that the knights depicted in them represent Lombards",
+        "By pointing out that Lombard merchants commissioned most of the manuscripts that contain snail combats",
+        "By contending that it overlooks evidence associating the snail with a particular group of people",
+        "By insisting that the artists who painted the snail combats never intended them to be humorous"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reads the scenes as satire of knights routed “by the slowest of creatures.” Randall instead proposed that “the snail represented the Lombards,” a group “widely resented in northern Europe at the time,” and noted that a twelfth-century poem “had already linked a Lombard with a snail.” She would therefore argue that the interpretation in Text 1 does not account for evidence tying the snail to a particular group.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail (roles swapped)",
+          "why_wrong": "In Randall’s reading the snail, not the knight, stands for the Lombards."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 says where and when the manuscripts were made, not who commissioned them, and the Lombards it mentions were resented, not patrons."
+        },
+        "D": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Randall changes what the snail stands for; nothing in Text 2 suggests the scenes were not meant to mock anyone."
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 127,
+      "sources": [
+        {
+          "what": "Lilian Randall, “The Snail in Gothic Marginal Warfare,” Speculum 37 (1962): about 70 snail-and-knight scenes in 29 manuscripts, mostly about 1290–1310, northern French, Franco-Flemish and English; snail read as the Lombards, resented in northern Europe as foreigners, usurers and pawnbrokers; literary support from the pseudo-Ovidian De Lombardo et lumaca (late twelfth century); other readings include parody of armored knights",
+          "url": "https://differentvisions.org/i-have-the-high-ground/"
+        },
+        {
+          "what": "British Library Medieval Manuscripts blog, “Knight v Snail” (2013): Lilian Randall proposed that the snail was a symbol of the Lombards, vilified for usury and non-chivalrous conduct",
+          "url": "https://blogs.bl.uk/digitisedmanuscripts/2013/09/knight-v-snail.html"
+        }
+      ],
+      "notes": "Area: arts (art history, medieval manuscripts). Text 1 states one of the other readings in the literature (the armored-knight joke), unattributed. The poem is described only as linking a Lombard with a snail, since its plot was not checked.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "added the British Library blog as a second source: it states the premise in the passage’s words (the snail as a symbol of the Lombards), which the first source gives only as a reference to the Lombards; “roughly” to “about”, “chiefly” to “primarily”"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.easy.w5b2_17",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "easy",
+      "passage": "Text 1\n\nThe aloha shirt, a loose, short-sleeved garment printed with vivid designs, is frequently credited to Ellery Chun, a Honolulu merchant. Chun began selling such shirts at his clothing store in Waikiki in the early 1930s, and in 1937 he registered the name “Aloha Shirt” as a trademark, which he held for two decades. For these reasons, many popular accounts identify him as the shirt’s inventor.\n\nText 2\n\nCredit for the aloha shirt probably belongs to several people. Even before Chun’s trademark, Kōichirō Miyamoto’s Honolulu shop, Musa-Shiya, was producing shirts from colorful Japanese fabrics, and the name “aloha shirt” first appeared in print in a 1935 advertisement for Musa-Shiya. Local residents initially considered the designs too wild, but visitors to the islands embraced the bright patterns and contributed to the shirt’s growing popularity.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "The aloha shirt was first designed for tourists rather than for people living in Hawaii.",
+        "Ellery Chun was the first person to use the name “aloha shirt” in print.",
+        "The earliest aloha shirts were made from fabric that was printed in Honolulu.",
+        "Shirts of the kind now known as aloha shirts were already being sold in Honolulu by the 1930s."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says Chun “began selling such shirts” in Waikiki “in the early 1930s.” Text 2 says Musa-Shiya, a “Honolulu shop,” was “producing shirts from colorful Japanese fabrics” before Chun’s trademark and advertised them in 1935. Although the authors disagree about who deserves credit, both agree that the shirts were on sale in Honolulu by the 1930s.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says visitors “embraced the bright patterns,” not that the shirt was designed for them, and Text 1 does not mention visitors."
+        },
+        "B": {
+          "recipe": "D4 one text only, contradicted by the other",
+          "why_wrong": "Text 2 says the name “first appeared in print in a 1935 advertisement for Musa-Shiya,” two years before Chun’s trademark."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on, contradicted",
+          "why_wrong": "Text 2 says Musa-Shiya used “colorful Japanese fabrics,” and Text 1 says nothing about where the fabric was printed."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.6"
+      ],
+      "word_count": 134,
+      "sources": [
+        {
+          "what": "Aloha shirt: Musa-Shiya (Koichiro Miyamoto) made shirts from colorful Japanese prints in the 1920s or early 1930s; the term first appeared in print in a June 28, 1935 Musa-Shiya advertisement; Ellery Chun of King-Smith Clothiers in Waikiki sold the shirts from the early 1930s and trademarked “Aloha Shirt” in 1937; tourists embraced the bright designs",
+          "url": "https://en.wikipedia.org/wiki/Aloha_shirt"
+        }
+      ],
+      "notes": "Area: arts and history (fashion, Hawaii). Both texts state real accounts; Text 2’s “more than one person” is the author’s view. Shared premise: the shirts were sold in Honolulu by the 1930s.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.easy.w5b2_18",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "easy",
+      "passage": "Text 1\n\nThe didgeridoo, a wind instrument developed by Aboriginal peoples of northern Australia, is traditionally made from a eucalyptus branch hollowed out by termites. A player produces its deep, droning sound by vibrating the lips at one end. Many listeners assume that the instrument’s wide range of tones depends mainly on the tube itself: the length and width of the hollow, they suppose, determine the sound.\n\nText 2\n\nA team of Australian physicists recorded the sound of a didgeridoo while at the same time measuring the acoustics of the player’s mouth and throat. They found that the strongest components of the sound matched features of the player’s vocal tract, much as vowel sounds do in speech. Experienced players, the researchers concluded, use their own vocal tracts to shape the instrument’s tone.",
+      "stem": "Based on the texts, how would the researchers in Text 2 most likely respond to the assumption described in Text 1?",
+      "options": [
+        "By arguing that termites determine the length and width of each didgeridoo’s hollow",
+        "By noting that the player’s own body also helps determine the instrument’s tones",
+        "By claiming that experienced players prefer didgeridoos with narrow tubes",
+        "By suggesting that the player’s lips have little effect on the didgeridoo’s sound"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says many people assume the didgeridoo’s tones depend “mainly on the tube itself.” The researchers in Text 2 found that “the strongest components of the sound matched features of the player’s vocal tract” and concluded that experienced players “use their own vocal tracts to shape the instrument’s tone.” So they would say the tube is not the only thing that shapes the sound.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says termites hollow the branch, but Text 2 is about the player, not about how the hollow is formed."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says anything about which tubes players prefer."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1 says the sound is produced by “vibrating the lips,” and Text 2 adds the vocal tract; neither downplays the lips."
+        }
+      },
+      "models": [
+        "1.15"
+      ],
+      "word_count": 132,
+      "sources": [
+        {
+          "what": "Tarnopolsky, Fletcher, Hollenberg, Lange, Smith, Wolfe 2005, Nature 436: 39 (University of New South Wales): sound of the didgeridoo (yidaki) measured with the acoustic impedance of the player’s vocal tract; maxima in the sound spectrum associated with minima in vocal-tract impedance, similar to vowels; experienced players use the vocal tract to accentuate the instrument’s tonal variation",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16001056/"
+        }
+      ],
+      "notes": "Area: arts and science (music, acoustics). Text 1’s assumption is general and unattributed. “Vocal tract” is kept plain for the easy tier.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Text 2’s conclusion softened from players “reshaping their own vocal tracts” to players who “use their own vocal tracts to shape the instrument’s tone” (the paper says players use the glottis subconsciously); explanation updated"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}
