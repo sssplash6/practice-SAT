@@ -1,6 +1,6 @@
 # SAT Freshman
 
-![commits](https://img.shields.io/github/commit-activity/t/sssplash6/ssat) · live at [prac.fsat.io](https://prac.fsat.io)
+![commits](https://img.shields.io/github/commit-activity/t/sssplash6/practice-SAT) · live at [prac.fsat.io](https://prac.fsat.io)
 
 **The problem.** Freshman Academy's SAT students practise on question banks that run out. Paid prep sites sell a fixed set of items behind quotas, questions start repeating, and a wrong answer is only marked wrong, never explained by the mistake behind it.
 
